@@ -1,0 +1,20 @@
+{
+  "extends": "./node_modules/@polkadot/dev/config/tsconfig",
+  "exclude": [
+    "build/**/*",
+    "**/build/**/*"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths":
+    {
+      "@dappforce/types": ["packages/types/src"],
+      "@dappforce/types/*": ["packages/types/src/*"],
+    },
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./node_modules/@polkadot/ts",
+      "./node_modules/@types"
+    ]
+  }
+}

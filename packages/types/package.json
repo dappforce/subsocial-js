@@ -1,0 +1,35 @@
+{
+  "name": "@subsocial/types",
+  "version": "0.1.0",
+  "description": "JavaScript type definitions for Subsocial blockchain.",
+  "author": "DappForce contributors",
+  "license": "GPL-3.0-only",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dappforce/dappforce-subsocial-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dappforce/dappforce-subsocial-js/issues"
+  },
+  "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
+  "dependencies": {
+    "@babel/runtime": "^7.8.4"
+  },
+  "devDependencies": {
+    "@polkadot/typegen": "beta"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dappforce",
+    "subsocial",
+    "substrate",
+    "polkadot",
+    "kusama"
+  ]
+}
