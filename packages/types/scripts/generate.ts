@@ -15,7 +15,7 @@ const definations = {
 generateTsDef(definations, 'packages/types/src/interfaces', '@dappforce/types/interfaces');
 generateInterfaceTypes(definations, 'packages/types/src/interfaceRegistry.ts');
 
-function from() {
+function from () {
   return 1;
 }
 
