@@ -1,3 +1,5 @@
+/* eslint-disable quote-props */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const base = require('@polkadot/dev/config/eslint');
 
 // add override for any (a metric ton of them, initial conversion)
@@ -13,7 +15,7 @@ module.exports = {
     ...base.rules,
     'semi': 'off',
     'comma-spacing': 'warn',
-    'array-bracket-spacing': ['warn', "always"],
+    'array-bracket-spacing': ['warn', 'always'],
     'react/display-name': 'off',
     'padded-blocks': 'off',
     'prefer-promise-reject-errors': 'warn',
