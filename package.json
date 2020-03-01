@@ -12,8 +12,9 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "build": "node -r ts-node/register packages/types/scripts/generate.ts",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx . && tsc --noEmit --pretty",
+    "build": "yarn build:interfaces && polkadot-dev-build-ts",
+    "build:interfaces": "node -r ts-node/register packages/types/scripts/generate.ts",
+    "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
     "test": "jest --testPathIgnorePatterns e2e"
