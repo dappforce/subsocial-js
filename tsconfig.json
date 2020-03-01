@@ -8,8 +8,10 @@
     "baseUrl": ".",
     "paths":
     {
-      "@dappforce/types": ["packages/types/src"],
-      "@dappforce/types/*": ["packages/types/src/*"],
+      "@subsocial/types": ["packages/types/src"],
+      "@subsocial/types/*": ["packages/types/src/*"],
+      "@subsocial/utils": ["packages/types/src"],
+      "@subsocial/utils/*": ["packages/types/src/*"]
     },
     "skipLibCheck": true,
     "typeRoots": [

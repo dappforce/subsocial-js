@@ -1,7 +1,7 @@
 {
-  "name": "@subsocial/types",
-  "version": "0.1.2",
-  "description": "JavaScript type definitions for Subsocial blockchain.",
+  "name": "@subsocial/config",
+  "version": "0.1.0",
+  "description": "JavaScript configs for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
   "publishConfig": {
@@ -30,6 +30,7 @@
     "subsocial",
     "substrate",
     "polkadot",
-    "kusama"
+    "kusama",
+    "eslint"
   ]
 }
