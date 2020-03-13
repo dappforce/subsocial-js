@@ -1,3 +1,5 @@
 import * as InterfaceTypes from './interfaceRegistry';
-export { runtime as types } from './interfaces/definitions';
+import definitions from './interfaces/subsocial/definitions';
 export { InterfaceTypes };
+export const types = definitions.types;
+export { registerSubsocialTypes } from './DfRegisterTypes'

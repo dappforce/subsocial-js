@@ -1,6 +1,6 @@
 import { RegistryTypes } from '@polkadot/types/types';
 
-import * as dfDefinations from '@subsocial/types/src/interfaces/definitions';
+import * as dfDefinations from './interfaces/subsocial/definitions';
 import { registry } from '@polkadot/react-api';
 
 export const allDefinitions = {

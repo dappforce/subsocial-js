@@ -1,7 +1,7 @@
 {
-  "name": "@subsocial/utils",
-  "version": "0.1.5",
-  "description": "JavaScript utils for Subsocial blockchain.",
+  "name": "@subsocial/api",
+  "version": "0.1.0",
+  "description": "JavaScript api for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
   "publishConfig": {
@@ -18,8 +18,13 @@
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
     "@subsocial/types": "^0.1.3",
+    "@polkadot/api": "^1.4.0-beta.46",
     "@babel/runtime": "^7.8.4",
-    "@polkadot/react-api": "^0.39.1"
+    "ipfs": "0.36.4",
+    "ipfs-http-client": "^42.0.0",
+    "ipfs-only-hash": "^1.0.2",
+    "cids": "^0.7.1",
+    "typestub-ipfs": "^0.23.14"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -29,6 +34,7 @@
     "subsocial",
     "substrate",
     "polkadot",
-    "kusama"
+    "kusama",
+    "ipfs"
   ]
 }

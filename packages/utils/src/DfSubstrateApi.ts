@@ -1,5 +1,5 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { registerSubsocialTypes } from './DfRegisterTypes';
+import { registerSubsocialTypes } from '../../types/src/DfRegisterTypes';
 
 let api: ApiPromise | undefined
 
