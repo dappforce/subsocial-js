@@ -22,9 +22,14 @@ export class SubsocialSubstrateApi {
   // Multiple
 
   async findStructs<T extends CommonStruct> (ids: SubstrateId[], methodName: string): Promise<T[]> {
-    const optionStruct = await this.socialQuery()[methodName].multi(ids) as unknown as Option<any>[];
-    const optionFillStruct = optionStruct.filter(x => x.isSome);
-    return optionFillStruct.map(x => x.unwrap());
+    try {
+      const optionStruct = await this.socialQuery()[methodName].multi(ids) as unknown as Option<any>[];
+      const optionFillStruct = optionStruct.filter(x => x.isSome);
+      return optionFillStruct.map(x => x.unwrap());
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
   }
 
   async findBlogs (ids: SubstrateId[]): Promise<Blog[]> {
@@ -42,7 +47,7 @@ export class SubsocialSubstrateApi {
   async findStructsAndSubscribe<T extends CommonStruct> (methodName: string, args: SubstrateId[]): Promise<T[]> {
     const optionStruct = await this.socialQuery()[methodName].multi(args) as unknown as Option<any>[];
     return optionStruct.filter(x => x.isSome).map(x => x.unwrapOr(undefined)) as T[];
-  }
+  } // TODO create functions
 
   // ---------------------------------------------------------------------
   // Single

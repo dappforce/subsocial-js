@@ -8,15 +8,13 @@ const ipfsClient = require('ipfs-http-client')
 
 export type CommonStruct = Blog | Post | Comment | Profile;
 
-export type IpfsCid = string | CID;
+export type IpfsCid = string | CID | IpfsHash;
 
-interface IpfsConnectConfig {
+type IpfsConnectConfig = {
   host: string,
   port: string,
   protocol: string
 }
-
-class IpfsConnectConfig implements IpfsConnectConfig {}
 
 export type IpfsApi = IPFS.FilesAPI & {
   pin: {
@@ -41,18 +39,28 @@ export class SubsocialIpfsApi {
   private api: IpfsApi // IPFS Api (connected)
 
   constructor (connect: IpfsApi | IpfsConnectConfig) {
-    this.api = connect instanceof IpfsConnectConfig ? ipfsClient(connect) : connect;
+    this.api = typeof (connect as IpfsConnectConfig).port === 'string' ? ipfsClient(connect) : connect;
     console.log('Created SubsocialIpfsApi instance')
   }
 
   // ---------------------------------------------------------------------
   // Multiple
 
+  get isConnecting () {
+    return typeof this.api !== 'undefined';
+  }
+
   async getContentArray<T extends CommonContent> (cids: IpfsCid[]): Promise<T[]> {
-    const ipfsCids = cids.map(cid => asIpfsCid(cid));
-    const loadContent = ipfsCids.map(cid => this.api.cat(cid))
-    const jsonContentArray = await Promise.all(loadContent);
-    return jsonContentArray.map(x => JSON.parse(x.toString())) as T[];
+
+    try {
+      const ipfsCids = cids.map(cid => asIpfsCid(cid));
+      const loadContent = ipfsCids.map(cid => this.api.cat(cid))
+      const jsonContentArray = await Promise.all(loadContent);
+      return jsonContentArray.map(x => JSON.parse(x.toString())) as T[];
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
   }
 
   async findBlogs (cids: IpfsCid[]): Promise<BlogContent[]> {
@@ -91,10 +99,15 @@ export class SubsocialIpfsApi {
   }
 
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
-    const json = Buffer.from(JSON.stringify(content));
-    console.log('Data', json);
-    const results = await this.api.add(json);
-    return results[results.length - 1].hash as unknown as IpfsHash;
+    try {
+      const json = Buffer.from(JSON.stringify(content));
+      console.log('Data', json);
+      const results = await this.api.add(json);
+      return results[results.length - 1].hash as unknown as IpfsHash;
+    } catch (error) {
+      console.log(error)
+      return undefined;
+    }
   }
 
   async saveBlog (content: BlogContent): Promise<IpfsHash | undefined> {
