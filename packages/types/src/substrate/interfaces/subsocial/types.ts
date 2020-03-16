@@ -3,7 +3,7 @@
 
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
 import { Text, i32, u16, u32, u64 } from '@polkadot/types/primitive';
-import { AccountId, BlockNumber, Moment } from '@subsocial/types/interfaces/runtime';
+import { AccountId, BlockNumber, Moment } from '@subsocial/types/substrate/interfaces/runtime';
 
 /** @name Blog */
 export interface Blog extends Struct {

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import * as IPFS from 'typestub-ipfs';
-import { Profile, Blog, Post, Comment, IpfsHash, CommonContent, BlogContent, PostContent, CommentContent } from '@subsocial/types/interfaces';
+import { Profile, Blog, Post, Comment, IpfsHash } from '@subsocial/types/substrate/interfaces';
+import { CommonContent, BlogContent, PostContent, CommentContent } from '@subsocial/types/offchain';
 import { getFirstOrUndefinded } from './utils';
 import CID from 'cids';
 const ipfsClient = require('ipfs-http-client')
@@ -9,11 +10,13 @@ export type CommonStruct = Blog | Post | Comment | Profile;
 
 export type IpfsCid = string | CID;
 
-type IpfsConnectConfig = {
+interface IpfsConnectConfig {
   host: string,
   port: string,
   protocol: string
-};
+}
+
+class IpfsConnectConfig implements IpfsConnectConfig {}
 
 export type IpfsApi = IPFS.FilesAPI & {
   pin: {
@@ -38,7 +41,7 @@ export class SubsocialIpfsApi {
   private api: IpfsApi // IPFS Api (connected)
 
   constructor (connect: IpfsApi | IpfsConnectConfig) {
-    this.api = connect && (connect).repo ? connect : ipfsClient(connect);
+    this.api = connect instanceof IpfsConnectConfig ? ipfsClient(connect) : connect;
     console.log('Created SubsocialIpfsApi instance')
   }
 

@@ -1,4 +1,4 @@
-import { BlogId, PostId, CommentId, Blog, Post, Comment } from '@subsocial/types/interfaces';
+import { BlogId, PostId, CommentId, Blog, Post, Comment } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefinded } from './utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option } from '@polkadot/types';
@@ -22,9 +22,9 @@ export class SubsocialSubstrateApi {
   // Multiple
 
   async findStructs<T extends CommonStruct> (ids: SubstrateId[], methodName: string): Promise<T[]> {
-    const optionStruct = await this.socialQuery()[methodName].multi(ids) as Option<T>[];
+    const optionStruct = await this.socialQuery()[methodName].multi(ids) as unknown as Option<any>[];
     const optionFillStruct = optionStruct.filter(x => x.isSome);
-    return optionFillStruct.map(x => x.unwrap()) as T[];
+    return optionFillStruct.map(x => x.unwrap());
   }
 
   async findBlogs (ids: SubstrateId[]): Promise<Blog[]> {
@@ -40,7 +40,7 @@ export class SubsocialSubstrateApi {
   }
 
   async findStructsAndSubscribe<T extends CommonStruct> (methodName: string, args: SubstrateId[]): Promise<T[]> {
-    const optionStruct = await this.socialQuery()[methodName].multi(args) as Option<T>[];
+    const optionStruct = await this.socialQuery()[methodName].multi(args) as unknown as Option<any>[];
     return optionStruct.filter(x => x.isSome).map(x => x.unwrapOr(undefined)) as T[];
   }
 

@@ -1,5 +1,3 @@
-import { RegistryTypes } from '@polkadot/types/types';
-
 import * as dfDefinations from './interfaces/subsocial/definitions';
 import { registry } from '@polkadot/react-api';
 
@@ -7,7 +5,7 @@ export const allDefinitions = {
   ...dfDefinations
 };
 
-export const types: RegistryTypes = Object.values(allDefinitions).map(({ types }) => types).reduce((all, types) => Object.assign(all, types), {});
+export const types = Object.values(allDefinitions).map(({ types }) => types).reduce((all, types) => Object.assign(all, types), {});
 
 export const registerSubsocialTypes = (): void => {
   try {

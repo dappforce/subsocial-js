@@ -1,5 +1,5 @@
-import { Blog, Post, Comment } from '@subsocial/types/interfaces/runtime'
-import { BlogContent, PostContent, CommentContent, CommonContent } from '../components/types'
+import { Blog, Post, Comment } from '@subsocial/types/substrate/interfaces/subsocial'
+import { BlogContent, PostContent, CommentContent, CommonContent } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi, CommonStruct, SubstrateId } from './substrate'
 import { SubsocialIpfsApi, getCidsOfStructs, IpfsApi, IpfsCid } from './ipfs'
 import { getFirstOrUndefinded } from './utils'
@@ -72,24 +72,24 @@ export class SubsocialApi {
   // Multiple
 
   async findBlogs (ids: SubstrateId[]): Promise<BlogData[]> {
-    const findStructs = this.substrate.findBlogs
-    const findCids = this.ipfs.findBlogs
+    const findStructs = this.substrate.findBlogs.bind(this.substrate);
+    const findCids = this.ipfs.findBlogs.bind(this.ipfs);
     return this.findDataArray<Blog, BlogContent, BlogData>(
       ids, findStructs, findCids, BlogData
     )
   }
 
   async findPosts (ids: SubstrateId[]): Promise<PostData[]> {
-    const findStructs = this.substrate.findPosts
-    const findCids = this.ipfs.findPosts
+    const findStructs = this.substrate.findPosts.bind(this.substrate)
+    const findCids = this.ipfs.findPosts.bind(this.ipfs)
     return this.findDataArray<Post, PostContent, PostData>(
       ids, findStructs, findCids, PostData
     )
   }
 
   async findComments (ids: SubstrateId[]): Promise<CommentData[]> {
-    const findStructs = this.substrate.findComments
-    const findCids = this.ipfs.findComments
+    const findStructs = this.substrate.findComments.bind(this.substrate)
+    const findCids = this.ipfs.findComments.bind(this.ipfs)
     return this.findDataArray<Comment, CommentContent, CommentData>(
       ids, findStructs, findCids, CommentData
     )
