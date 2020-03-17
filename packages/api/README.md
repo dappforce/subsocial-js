@@ -7,7 +7,7 @@ JavaScript API wrappers for Substrate and IPFS specific to Subsocial blockchain.
 Using npm:
 
 ```bash
-npm i @subsocial/utils
+npm i @subsocial/api
 ```
 
 Using yarn:
