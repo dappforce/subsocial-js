@@ -64,7 +64,7 @@ export class BlogUpdate extends Struct {
   }
 
   get slug (): OptionText {
-    return this.get('slug') as OptionIpfsHash;
+    return this.get('slug') as OptionText;
   }
 
   get ipfs_hash (): OptionIpfsHash {
