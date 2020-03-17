@@ -13,7 +13,7 @@ npm i @subsocial/api
 Using yarn:
 
 ```bash
-yarn add @subsocial/utils
+yarn add @subsocial/api
 ```
 
 ## License
