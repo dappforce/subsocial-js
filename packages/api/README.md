@@ -1,4 +1,4 @@
-# Subsocial Utils by [DappForce](https://github.com/dappforce)
+# Subsocial API by [DappForce](https://github.com/dappforce)
 
 JavaScript API wrappers for Substrate and IPFS specific to Subsocial blockchain.
 
