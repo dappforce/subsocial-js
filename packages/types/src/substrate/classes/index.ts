@@ -164,7 +164,7 @@ export class ProfileUpdate extends Struct {
     return this.get('ipfs_hash') as OptionIpfsHash;
   }
 
-  get username (): OptionIpfsHash {
+  get username (): OptionText {
     return this.get('username') as OptionText;
   }
 
