@@ -1,4 +1,5 @@
 export type CommonContent = CommentContent | PostContent | BlogContent | ProfileContent | SharedPostContent;
+
 export type Activity = {
   id: number,
   account: string,
