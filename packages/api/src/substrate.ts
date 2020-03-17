@@ -2,8 +2,9 @@ import { BlogId, PostId, CommentId, Blog, Post, Comment } from '@subsocial/types
 import { getFirstOrUndefinded } from './utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option } from '@polkadot/types';
+import BN from 'bn.js';
 
-export type SubstrateId = BlogId | PostId | CommentId;
+export type SubstrateId = BlogId | PostId | CommentId | BN;
 
 export type CommonStruct = Blog | Post | Comment;
 

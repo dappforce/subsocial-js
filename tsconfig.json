@@ -11,7 +11,9 @@
       "@subsocial/types": ["packages/types/src"],
       "@subsocial/types/*": ["packages/types/src/*"],
       "@subsocial/utils": ["packages/types/src"],
-      "@subsocial/utils/*": ["packages/types/src/*"]
+      "@subsocial/utils/*": ["packages/types/src/*"],
+      "@subsocial/api": ["packages/api/src"],
+      "@subsocial/api/*": ["packages/api/src/*"]
     },
     "skipLibCheck": true,
     "typeRoots": [

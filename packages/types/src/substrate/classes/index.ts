@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
-import { registry as typeRegistry } from '@polkadot/react-api';
 import { IpfsHash, BlogId, OptionVecAccountId } from '@subsocial/types/substrate/interfaces/subsocial';
 import { Registry } from '@polkadot/types/types';
 
-const registry = typeRegistry as unknown as Registry; // Hack
-
 export class OptionText extends Option<Text> {
-  constructor (value: string) {
+  constructor (registry: Registry, value: string) {
     super(registry, 'Text', value)
   }
 }
@@ -29,7 +26,7 @@ type PostExtensionEnumValue =
   { SharedComment: SharedComment };
 
 export class PostExtension extends Enum {
-  constructor (value?: PostExtensionEnumValue, index?: number) {
+  constructor (registry: Registry, value?: PostExtensionEnumValue, index?: number) {
     super(
       registry,
       {
@@ -47,7 +44,7 @@ export type BlogUpdateType = {
 };
 
 export class BlogUpdate extends Struct {
-  constructor (value?: BlogUpdateType) {
+  constructor (registry: Registry, value?: BlogUpdateType) {
     super(
       registry,
       {
@@ -86,7 +83,7 @@ export type PostUpdateType = {
 };
 
 export class PostUpdate extends Struct {
-  constructor (value?: PostUpdateType) {
+  constructor (registry: Registry, value?: PostUpdateType) {
     super(
       registry,
       {
@@ -115,7 +112,7 @@ export type CommentUpdateType = {
 };
 
 export class CommentUpdate extends Struct {
-  constructor (value?: CommentUpdateType) {
+  constructor (registry: Registry, value?: CommentUpdateType) {
     super(
       registry,
       {
@@ -138,7 +135,7 @@ export const ReactionKinds: { [key: string]: string } = {
 };
 
 export class ReactionKind extends Enum {
-  constructor (value?: any) {
+  constructor (registry: Registry, value?: any) {
     super(registry, [ 'Upvote', 'Downvote' ], value);
   }
 }
@@ -149,7 +146,7 @@ export type ProfileUpdateType = {
 };
 
 export class ProfileUpdate extends Struct {
-  constructor (value?: ProfileUpdateType) {
+  constructor (registry: Registry, value?: ProfileUpdateType) {
     super(
       registry,
       {
