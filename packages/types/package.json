@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/types",
-  "version": "0.1.2",
+  "version": "0.1.10",
   "description": "JavaScript type definitions for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -20,7 +20,9 @@
     "@babel/runtime": "^7.8.4"
   },
   "devDependencies": {
-    "@polkadot/typegen": "beta"
+    "@polkadot/typegen": "beta",
+    "@polkadot/types": "^1.4.0-beta.46",
+    "cids": "^0.7.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
