@@ -2,4 +2,4 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
 export * from './types';
-export * from './other';
+export * from './utils';

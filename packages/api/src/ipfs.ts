@@ -2,6 +2,7 @@
 import { IpfsHash, CommonStruct } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi } from '@subsocial/types/offchain';
 import { getFirstOrUndefinded } from './utils';
+import all from 'it-all';
 const ipfsClient = require('ipfs-http-client')
 
 const asIpfsCid = (cid: IpfsCid) => (typeof cid === 'string' || cid instanceof String) ? new CID(cid as string) : cid;
@@ -34,8 +35,7 @@ export class SubsocialIpfsApi {
 
     try {
       const ipfsCids = cids.map(cid => asIpfsCid(cid));
-      const loadContent = ipfsCids.map(cid => this.api.cat(cid))
-      const jsonContentArray = await Promise.all(loadContent);
+      const jsonContentArray: Buffer[] = await all(this.api.cat(ipfsCids[0]) as any)
       return jsonContentArray.map(x => JSON.parse(x.toString())) as T[];
     } catch (error) {
       console.log(error);
@@ -58,6 +58,10 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Single
 
+  async getCommonContent<T extends CommentContent> (cid: IpfsCid): Promise<CommentContent | undefined> {
+    return getFirstOrUndefinded<T>(await this.getContentArray([ cid ]));
+  }
+
   async findBlog (cid: IpfsCid): Promise<BlogContent | undefined> {
     return getFirstOrUndefinded(await this.findBlogs([ cid ]))
   }
@@ -75,14 +79,14 @@ export class SubsocialIpfsApi {
 
   async removeContent (hash: string) {
     await this.api.pin.rm(hash);
-    console.log(`${hash} unpined`);
+    console.log(`Unpinned content with hash ${hash}`);
   }
 
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const json = Buffer.from(JSON.stringify(content));
-      const results = await this.api.add(json);
-      return results[results.length - 1].hash as unknown as IpfsHash;
+      const [ { cid } ] = await all(this.api.add(json) as any);
+      return cid.toString() as IpfsHash;
     } catch (error) {
       console.log(error)
       return undefined;
