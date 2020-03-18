@@ -1,28 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import * as IPFS from 'typestub-ipfs';
-import { Profile, Blog, Post, Comment, IpfsHash } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, BlogContent, PostContent, CommentContent } from '@subsocial/types/offchain';
+import { IpfsHash, CommonStruct } from '@subsocial/types/substrate/interfaces';
+import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi } from '@subsocial/types/offchain';
 import { getFirstOrUndefinded } from './utils';
-import CID from 'cids';
 const ipfsClient = require('ipfs-http-client')
-
-export type CommonStruct = Blog | Post | Comment | Profile;
-
-export type IpfsCid = string | CID | IpfsHash;
-
-type IpfsConnectConfig = {
-  host: string,
-  port: string,
-  protocol: string
-}
-
-export type IpfsApi = IPFS.FilesAPI & {
-  pin: {
-    rm: (hash?: string) => any,
-    ls: (hash?: string) => any
-  },
-  repo: IPFS.RepoAPI
-};
 
 const asIpfsCid = (cid: IpfsCid) => (typeof cid === 'string' || cid instanceof String) ? new CID(cid as string) : cid;
 
@@ -38,9 +18,9 @@ export class SubsocialIpfsApi {
 
   private api: IpfsApi // IPFS Api (connected)
 
-  constructor (connect: IpfsApi | IpfsConnectConfig) {
-    this.api = typeof (connect as IpfsConnectConfig).port === 'string' ? ipfsClient(connect) : connect;
-    console.log('Created SubsocialIpfsApi instance')
+  constructor (connect: IpfsApi | string) {
+    this.api = typeof connect === 'string' ? ipfsClient(connect) : connect;
+    console.log('Created SubsocialIpfsApi instance');
   }
 
   // ---------------------------------------------------------------------
@@ -101,7 +81,6 @@ export class SubsocialIpfsApi {
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const json = Buffer.from(JSON.stringify(content));
-      console.log('Data', json);
       const results = await this.api.add(json);
       return results[results.length - 1].hash as unknown as IpfsHash;
     } catch (error) {

@@ -1,33 +1,10 @@
-import { Blog, Post, Comment } from '@subsocial/types/substrate/interfaces/subsocial'
-import { BlogContent, PostContent, CommentContent, CommonContent } from '@subsocial/types/offchain'
-import { SubsocialSubstrateApi, CommonStruct, SubstrateId } from './substrate'
-import { SubsocialIpfsApi, getCidsOfStructs, IpfsApi, IpfsCid } from './ipfs'
+import { Blog, Post, Comment, CommonStruct, SubstrateId } from '@subsocial/types/substrate/interfaces'
+import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid } from '@subsocial/types/offchain'
+import { SubsocialSubstrateApi } from './substrate'
+import { SubsocialIpfsApi, getCidsOfStructs } from './ipfs'
 import { getFirstOrUndefinded } from './utils'
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
-
-abstract class CommonData<S extends CommonStruct, C extends CommonContent> {
-
-  private _struct?: S
-
-  private _content?: C
-
-  constructor (struct?: S, content?: C) {
-    this._struct = struct
-    this._content = content
-  }
-
-  public get struct () {
-    return this._struct
-  }
-
-  public get content () {
-    return this._content
-  }
-}
-
-class BlogData extends CommonData<Blog, BlogContent> {}
-class PostData extends CommonData<Post, PostContent> {}
-class CommentData extends CommonData<Comment, CommentContent> {}
+import { CommonData, BlogData, PostData, CommentData } from '@subsocial/types'
 
 export class SubsocialApi {
 
@@ -35,9 +12,9 @@ export class SubsocialApi {
 
   private _ipfs: SubsocialIpfsApi
 
-  constructor (substrateApi: SubstrateApi, ipfsApi: IpfsApi) {
+  constructor (substrateApi: SubstrateApi, ipfsConnect: IpfsApi | string) {
     this._substrate = new SubsocialSubstrateApi(substrateApi)
-    this._ipfs = new SubsocialIpfsApi(ipfsApi)
+    this._ipfs = new SubsocialIpfsApi(ipfsConnect)
   }
 
   public get substrate (): SubsocialSubstrateApi {

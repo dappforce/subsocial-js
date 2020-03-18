@@ -11,7 +11,7 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "build": "yarn polkadot-dev-build-ts && yarn build:interfaces",
+    "build": "yarn polkadot-dev-build-ts",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate.ts",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "clean": "polkadot-dev-clean-build",

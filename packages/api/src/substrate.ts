@@ -1,12 +1,7 @@
-import { BlogId, PostId, CommentId, Blog, Post, Comment } from '@subsocial/types/substrate/interfaces';
+import { Blog, Post, Comment, CommonStruct, SubstrateId } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefinded } from './utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option } from '@polkadot/types';
-import BN from 'bn.js';
-
-export type SubstrateId = BlogId | PostId | CommentId | BN;
-
-export type CommonStruct = Blog | Post | Comment;
 
 export class SubsocialSubstrateApi {
 
@@ -22,7 +17,7 @@ export class SubsocialSubstrateApi {
   // ---------------------------------------------------------------------
   // Multiple
 
-  async findStructs<T extends CommonStruct> (ids: SubstrateId[], methodName: string): Promise<T[]> {
+  async findStructs<T extends CommonStruct> (methodName: string, ids: SubstrateId[]): Promise<T[]> {
     try {
       const optionStruct = await this.socialQuery()[methodName].multi(ids) as unknown as Option<any>[];
       const optionFillStruct = optionStruct.filter(x => x.isSome);
@@ -34,15 +29,15 @@ export class SubsocialSubstrateApi {
   }
 
   async findBlogs (ids: SubstrateId[]): Promise<Blog[]> {
-    return this.findStructs(ids, 'blogById');
+    return this.findStructs('blogById', ids);
   }
 
   async findPosts (ids: SubstrateId[]): Promise<Post[]> {
-    return this.findStructs(ids, 'postById');
+    return this.findStructs('postById', ids);
   }
 
   async findComments (ids: SubstrateId[]): Promise<Comment[]> {
-    return this.findStructs(ids, 'commentById');
+    return this.findStructs('commentById', ids);
   }
 
   async findStructsAndSubscribe<T extends CommonStruct> (methodName: string, args: SubstrateId[]): Promise<T[]> {

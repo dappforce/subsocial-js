@@ -1,3 +1,9 @@
+import CID from 'cids';
+import * as IPFS from './ipfs.types';
+import { IpfsHash } from '../substrate/interfaces';
+
+export { CID };
+
 export type CommonContent = CommentContent | PostContent | BlogContent | ProfileContent | SharedPostContent;
 
 export type Activity = {
@@ -44,4 +50,14 @@ export type ProfileContent = {
   linkedIn: string;
   github: string;
   instagram: string;
+};
+
+export type IpfsCid = string | CID | IpfsHash;
+
+export type IpfsApi = IPFS.FilesAPI & {
+  pin: {
+    rm: (hash?: string) => any,
+    ls: (hash?: string) => any
+  },
+  repo: IPFS.RepoAPI
 };
