@@ -58,10 +58,6 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Single
 
-  async getCommonContent<T extends CommentContent> (cid: IpfsCid): Promise<CommentContent | undefined> {
-    return getFirstOrUndefinded<T>(await this.getContentArray([ cid ]));
-  }
-
   async findBlog (cid: IpfsCid): Promise<BlogContent | undefined> {
     return getFirstOrUndefinded(await this.findBlogs([ cid ]))
   }
