@@ -26,7 +26,7 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Multiple
 
-  get isConnecting () {
+  get isConnected () {
     return typeof this.api !== 'undefined';
   }
 
