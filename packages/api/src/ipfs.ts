@@ -84,7 +84,7 @@ export class SubsocialIpfsApi {
       const results = await this.api.add(json);
       return results[results.length - 1].hash as unknown as IpfsHash;
     } catch (error) {
-      console.log(error)
+      console.error('Failed to add content to IPFS. Error:', error)
       return undefined;
     }
   }

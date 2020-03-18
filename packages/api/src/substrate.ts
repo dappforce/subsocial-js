@@ -23,7 +23,7 @@ export class SubsocialSubstrateApi {
       const optionFillStruct = optionStruct.filter(x => x.isSome);
       return optionFillStruct.map(x => x.unwrap());
     } catch (error) {
-      console.log(error);
+      console.error('Failed to load structs from Substrate by ids. Error:', error);
       return [];
     }
   }
