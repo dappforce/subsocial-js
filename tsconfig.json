@@ -2,7 +2,8 @@
   "extends": "./node_modules/@polkadot/dev/config/tsconfig",
   "exclude": [
     "build/**/*",
-    "**/build/**/*"
+    "**/build/**/*",
+    "**/test/**/*"
   ],
   "compilerOptions": {
     "baseUrl": ".",

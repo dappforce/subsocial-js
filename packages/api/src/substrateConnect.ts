@@ -1,5 +1,5 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { types } from '@subsocial/types/substrate/registryTypes';
+import { types } from '@subsocial/types/substrate/preparedTypes';
 
 let api: ApiPromise;
 
