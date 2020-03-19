@@ -1,4 +1,4 @@
-import { getApi } from '../scr/substrateConnect';
+import { getApi } from '../src/substrateConnect';
 import { SubsocialApi } from '../src/fullApi';
 import BN from 'bn.js';
 import { BlogData } from '@subsocial/types/src';
