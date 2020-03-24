@@ -2045,6 +2045,21 @@
     "@babel/runtime" "^7.8.3"
     "@polkadot/extension-inject" "^0.21.1"
 
+"@polkadot/extension-dapp@^0.22.0-beta.5":
+  version "0.22.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/extension-dapp/-/extension-dapp-0.22.1.tgz#9c459825458052a52c201941f3157f9a138c3a7c"
+  integrity sha512-K2QFFPZ18UXPCbmLXbL3G+fpgufCQUs4TLdU9tYnO35AeyKo1f6seLZ9scqrRXTgCan8hOlrmnPzVDptKzQCpw==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    "@polkadot/extension-inject" "0.22.1"
+
+"@polkadot/extension-inject@0.22.1":
+  version "0.22.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/extension-inject/-/extension-inject-0.22.1.tgz#ddab02f87027e11a6063a1ea34585ef3220a564b"
+  integrity sha512-r5iaCp+KxqJcBtw9CX6qvCU2pkQqq8IE902ARfCObpLGdAK8VsrIzJ4MwLkupyP3LZikRoFabYnGvuy6simKZw==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+
 "@polkadot/extension-inject@^0.21.1":
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/@polkadot/extension-inject/-/extension-inject-0.21.1.tgz#fc6595ae25f0ae37c2c416fd8a81fbef43dc7752"
@@ -2100,6 +2115,17 @@
     "@polkadot/util" "^2.6.2"
     "@polkadot/util-crypto" "^2.6.2"
     bn.js "^5.1.1"
+
+"@polkadot/react-api@0.40.0-beta.49":
+  version "0.40.0-beta.49"
+  resolved "https://registry.yarnpkg.com/@polkadot/react-api/-/react-api-0.40.0-beta.49.tgz#28e48ecf72620a9448acf66013cc15ae7af1d326"
+  integrity sha512-+NUA5F8kzyHq9YlK7/eqMexHIr+j+qIcsfkDEEUKsU0AgGldv998SU9pw95bWr9zWeZmz+h7WWfL0/eMqKHkXw==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    "@polkadot/api" "^1.4.0-beta.46"
+    "@polkadot/extension-dapp" "^0.22.0-beta.5"
+    edgeware-node-types "^1.1.0"
+    rxjs-compat "^6.5.3"
 
 "@polkadot/react-api@^0.39.1":
   version "0.39.1"

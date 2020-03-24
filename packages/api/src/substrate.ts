@@ -5,14 +5,18 @@ import { Option } from '@polkadot/types';
 
 export class SubsocialSubstrateApi {
 
-  private api: SubstrateApi // Polkadot Api (connected)
+  private _api: SubstrateApi // Polkadot Api (connected)
 
   constructor (api: SubstrateApi) {
-    this.api = api
+    this._api = api
     console.log('Created SubsocialSubstrateApi instance')
   }
 
   socialQuery = () => this.api.query.social;
+
+  public get api () {
+    return this._api;
+  }
 
   // ---------------------------------------------------------------------
   // Multiple
