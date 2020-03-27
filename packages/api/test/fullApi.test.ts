@@ -1,7 +1,7 @@
 import { getApi } from '../src/substrateConnect';
 import { SubsocialApi } from '../src/fullApi';
 import BN from 'bn.js';
-import { BlogData } from '@subsocial/types/src';
+import { BlogData } from '@subsocial/types';
 
 const ipfsUrl = '/ip4/127.0.0.1/tcp/5002/http';
 
