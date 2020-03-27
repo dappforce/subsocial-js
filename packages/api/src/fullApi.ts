@@ -2,7 +2,7 @@ import { Blog, Post, Comment, CommonStruct, SubstrateId } from '@subsocial/types
 import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi } from './substrate'
 import { SubsocialIpfsApi, getCidsOfStructs } from './ipfs'
-import { getFirstOrUndefinded } from './utils'
+import { getFirstOrUndefinded } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
 import { CommonData, BlogData, PostData, CommentData } from '@subsocial/types'
 

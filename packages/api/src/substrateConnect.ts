@@ -1,6 +1,8 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { types } from '@subsocial/types/substrate/preparedTypes';
+import { newLogger } from '@subsocial/utils';
 
+const logger = newLogger('SubstrateConnection');
 let api: ApiPromise;
 
 export { api };
@@ -15,7 +17,7 @@ export class DfApi {
     const provider = new WsProvider(rpcEndpoint);
 
     // Create the API and wait until ready:
-    console.log(`Connecting to Substrate API at ${rpcEndpoint}`);
+    logger.info(`Connecting to Substrate API at ${rpcEndpoint}`);
     DfApi.api = await ApiPromise.create({ provider, types });
     DfApi.connected = true
 
@@ -27,9 +29,9 @@ export class DfApi {
     if (api !== undefined && localApi && localApi.isReady && connected) {
       try {
         localApi.disconnect();
-        console.log('Disconnected from Substrate API.');
+        logger.info('Disconnected from Substrate API.');
       } catch (err) {
-        console.log('Failed to disconnect from Substrate. Error:', err)
+        logger.error('Failed to disconnect from Substrate. Error:', err)
       } finally {
         DfApi.connected = false
       }
@@ -43,25 +45,22 @@ export class DfApi {
     const [ chain, nodeName, nodeVersion ] = await Promise.all(
       [ system.chain(), system.name(), system.version() ]);
 
-    console.log(`Connected to Substrate chain '${chain}' (${nodeName} v${nodeVersion})`)
+    logger.info(`Connected to Substrate chain '${chain}' (${nodeName} v${nodeVersion})`)
   }
 }
 
 export const Api = DfApi;
 export default DfApi;
 
-const MAX_CONN_TIME_SECS = 10
+// const MAX_CONN_TIME_SECS = 10
 
 export const getApi = async () => {
   if (api) {
-    console.log('Get Substrate API: SSR api');
+    logger.info('Get Substrate API: SSR api');
     return api;
   } else {
-    console.log('Get Substrate API: DfApi.setup()');
+    logger.info('Get Substrate API: DfApi.setup()');
     api = await DfApi.connect();
-    setTimeout(() => {
-      DfApi.disconnect()
-    }, MAX_CONN_TIME_SECS * 1000);
     return api;
   }
 }
