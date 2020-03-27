@@ -1,6 +1,7 @@
 import * as winston from 'winston'
 import BrowserConsole from 'winston-transport-browserconsole';
 import chalk from 'chalk'
+
 export const logFormat = (label: string) => winston.format.combine(
   winston.format.colorize(),
   winston.format.timestamp(),

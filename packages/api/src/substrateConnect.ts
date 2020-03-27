@@ -2,7 +2,7 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { types } from '@subsocial/types/substrate/preparedTypes';
 import { newLogger } from '@subsocial/utils';
 
-const logger = newLogger('substrateConnectLogger');
+const logger = newLogger('SubstrateConnection');
 let api: ApiPromise;
 
 export { api };

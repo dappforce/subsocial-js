@@ -3,7 +3,7 @@ import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option } from '@polkadot/types';
 import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
 
-const logger = newLogger('substrateLogger');
+const logger = newLogger(SubsocialSubstrateApi.name);
 
 export class SubsocialSubstrateApi {
 
@@ -11,7 +11,7 @@ export class SubsocialSubstrateApi {
 
   constructor (api: SubstrateApi) {
     this._api = api
-    logger.info('Created SubsocialSubstrateApi instance')
+    logger.info('Initialized')
   }
 
   socialQuery = () => this.api.query.social;
@@ -38,10 +38,10 @@ export class SubsocialSubstrateApi {
     const count = ids.length
 
     if (!count) {
-      logger.debug('Empty ids array for find blogs')
+      logger.debug('Find blogs: no ids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'blog by id: ' + ids[0] : count + 'blogs'} from Substrate`)
+    logger.debug(`Find ${count === 1 ? 'blog by id: ' + ids[0] : count + ' blogs'} from Substrate`)
     return this.findStructs('blogById', ids);
   }
 
@@ -49,10 +49,10 @@ export class SubsocialSubstrateApi {
     const count = ids.length
 
     if (!count) {
-      logger.debug('Empty ids array for find posts')
+      logger.debug('Find posts: no ids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'post by id: ' + ids[0] : count + 'posts'} from Substrate`)
+    logger.debug(`Find ${count === 1 ? 'post by id: ' + ids[0] : count + ' posts'} from Substrate`)
     return this.findStructs('postById', ids);
   }
 
@@ -60,10 +60,10 @@ export class SubsocialSubstrateApi {
     const count = ids.length
 
     if (!count) {
-      logger.debug('Empty ids array for find comments')
+      logger.debug('Find comments: no ids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'comment by id: ' + ids[0] : count + 'comments'} from Substrate`)
+    logger.debug(`Find ${count === 1 ? 'comment by id: ' + ids[0] : count + ' comments'} from Substrate`)
     return this.findStructs('commentById', ids);
   }
 
