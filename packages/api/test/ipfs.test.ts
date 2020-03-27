@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { BlogContent, PostContent, CommentContent } from '@subsocial/types/offchain';
 import { SubsocialIpfsApi } from '../src/ipfs';
-// const ipfsClient = require('ipfs-http-client')
-// const ipfsConnect = ipfsClient({ host: '127.0.0.1', port: '5002', protocol: 'http' });
 const ipfs = new SubsocialIpfsApi('/ip4/127.0.0.1/tcp/5002/http');
 
 const cids = new Map();

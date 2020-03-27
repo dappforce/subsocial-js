@@ -4,7 +4,7 @@ import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, 
 import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
 import all from 'it-all';
 
-const logger = newLogger('ipfsLogger');
+const logger = newLogger(SubsocialIpfsApi.name);
 
 const ipfsClient = require('ipfs-http-client')
 
@@ -24,7 +24,7 @@ export class SubsocialIpfsApi {
 
   constructor (connect: IpfsApi | string) {
     this.api = typeof connect === 'string' ? ipfsClient(connect) : connect;
-    logger.info('Created SubsocialIpfsApi instance');
+    logger.info('Initialized');
   }
 
   // ---------------------------------------------------------------------
@@ -38,11 +38,11 @@ export class SubsocialIpfsApi {
 
     try {
       const ipfsCids = cids.map((cid) => asIpfsCid(cid));
-      const promiseArray = ipfsCids.map((cid) => all(this.api.cat(cid) as any));
-      const jsonContentArray = await Promise.all(promiseArray);
+      const loadContentFns = ipfsCids.map((cid) => all(this.api.cat(cid) as any));
+      const jsonContentArray = await Promise.all(loadContentFns);
       return jsonContentArray.map((x) => JSON.parse(x.toString())) as T[];
     } catch (error) {
-      logger.error(error);
+      logger.error('Failed to load content by cids. Error:', error);
       return [];
     }
   }
@@ -51,10 +51,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Empty cids array for find blogs')
+      logger.debug('Find blogs: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'blog by cid: ' + cids[0] : count + 'blogs'} from IPFS`)
+    logger.debug(`Find ${count === 1 ? 'blog by cid: ' + cids[0] : count + ' blogs'}`)
     return this.getContentArray(cids)
   }
 
@@ -62,10 +62,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Empty cids array for find posts')
+      logger.debug('Find posts: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'post by cid: ' + cids[0] : count + 'posts'} from IPFS`)
+    logger.debug(`Find ${count === 1 ? 'post by cid: ' + cids[0] : count + ' posts'} from IPFS`)
 
     return this.getContentArray(cids)
   }
@@ -74,10 +74,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Empty cids array for find comments')
+      logger.debug('Find comments: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'comment by cid: ' + cids[0] : count + 'comments'} from IPFS`)
+    logger.debug(`Find ${count === 1 ? 'comment by cid: ' + cids[0] : count + ' comments'} from IPFS`)
 
     return this.getContentArray(cids)
   }
