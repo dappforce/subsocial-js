@@ -24,5 +24,7 @@ export const newLogger = (name: string, options?: winston.LoggerOptions) => {
 }
 
 const newTransport = (options?: winston.transports.ConsoleTransportOptions) => {
-  return (typeof window === 'undefined') ? new winston.transports.Console(options) : new BrowserConsole(options)
+  return (typeof window === 'undefined')
+    ? new winston.transports.Console(options)
+    : new BrowserConsole(options)
 }
