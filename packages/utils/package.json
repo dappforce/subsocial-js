@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -24,7 +24,6 @@
     "chalk": "^3.0.0",
     "lodash.truncate": "^4.4.2",
     "markdown-to-txt": "^1.0.1",
-    "winston-transport-browserconsole": "^1.0.5",
     "winston": "^3.2.0"
   },
   "scripts": {

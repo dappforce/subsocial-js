@@ -1,5 +1,4 @@
 import * as winston from 'winston'
-import BrowserConsole from 'winston-transport-browserconsole';
 import chalk from 'chalk'
 
 export const logFormat = (label: string) => winston.format.combine(
@@ -24,7 +23,5 @@ export const newLogger = (name: string, options?: winston.LoggerOptions) => {
 }
 
 const newTransport = (options?: winston.transports.ConsoleTransportOptions) => {
-  return (typeof window === 'undefined')
-    ? new winston.transports.Console(options)
-    : new BrowserConsole(options)
+  return new winston.transports.Console(options)
 }

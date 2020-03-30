@@ -4,8 +4,6 @@ import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, 
 import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
 import all from 'it-all';
 
-const logger = newLogger(SubsocialIpfsApi.name);
-
 const ipfsClient = require('ipfs-http-client')
 
 const asIpfsCid = (cid: IpfsCid) => (typeof cid === 'string' || cid instanceof String) ? new CID(cid as string) : cid;
@@ -138,3 +136,5 @@ export class SubsocialIpfsApi {
     return hash;
   }
 }
+
+const logger = newLogger(SubsocialIpfsApi.name);
