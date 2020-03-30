@@ -3,8 +3,6 @@ import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option } from '@polkadot/types';
 import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
 
-const logger = newLogger(SubsocialSubstrateApi.name);
-
 export class SubsocialSubstrateApi {
 
   private _api: SubstrateApi // Polkadot Api (connected)
@@ -87,3 +85,5 @@ export class SubsocialSubstrateApi {
     return getFirstOrUndefinded(await this.findComments([ id ]))
   }
 }
+
+const logger = newLogger(SubsocialSubstrateApi.name);

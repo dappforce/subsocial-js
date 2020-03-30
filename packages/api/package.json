@@ -20,8 +20,8 @@
     "@babel/runtime": "^7.8.4",
     "@polkadot/api": "^1.4.0-beta.46",
     "@subsocial/types": "^0.1.15",
-    "@subsocial/api": "^0.1.20",
-    "@subsocial/utils": "^0.1.12",
+    "@subsocial/api": "^0.1.21",
+    "@subsocial/utils": "^0.1.14",
     "@types/it-all": "^1.0.0",
     "ipfs-http-client": "^42.0.0",
     "it-all": "^1.0.1"
