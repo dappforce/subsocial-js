@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.1.14",
+  "version": "0.1.16",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -27,7 +27,6 @@
     "winston": "^3.2.0"
   },
   "scripts": {
-    "publish": "cd build && npm publish --access public",
     "test": "jest"
   },
   "keywords": [
