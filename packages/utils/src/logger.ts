@@ -6,10 +6,11 @@ export const logFormat = (label: string) => winston.format.combine(
   winston.format.timestamp(),
   winston.format.label({ label: label }),
   winston.format.align(),
+  winston.format.metadata({ fillExcept: [ 'message', 'level', 'timestamp', 'label' ] }),
   winston.format.printf(
     (info) => {
       const data = new Date(info.timestamp)
-      return `[${data.toLocaleTimeString()}:${data.getMilliseconds()}] ${info.level} ${chalk.bold(label)}:${info.message}`
+      return `[${data.toLocaleTimeString()}:${data.getMilliseconds()}] ${info.level} ${chalk.bold(label)}:${info.message} ${info.metadata}`
     }
   )
 )
