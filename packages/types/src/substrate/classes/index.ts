@@ -101,10 +101,6 @@ export class PostUpdate extends Struct {
   set ipfs_hash (value: OptionIpfsHash) {
     this.set('ipfs_hash', value);
   }
-
-  set handle (value: OptionText) {
-    this.set('handle', value);
-  }
 }
 
 export type CommentUpdateType = {
