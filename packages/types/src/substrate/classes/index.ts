@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
+import { u64, Null, Enum, Option, Struct, Text, TypeRegistry } from '@polkadot/types';
 import { IpfsHash, BlogId, OptionVecAccountId } from '@subsocial/types/substrate/interfaces/subsocial';
-import { Registry } from '@polkadot/types/types';
+const registry = new TypeRegistry();
 
 export class OptionText extends Option<Text> {
-  constructor (registry: Registry, value: string) {
+  constructor (value: string) {
     super(registry, 'Text', value)
   }
 }
@@ -26,7 +26,7 @@ type PostExtensionEnumValue =
   { SharedComment: SharedComment };
 
 export class PostExtension extends Enum {
-  constructor (registry: Registry, value?: PostExtensionEnumValue, index?: number) {
+  constructor (value?: PostExtensionEnumValue, index?: number) {
     super(
       registry,
       {
@@ -39,17 +39,17 @@ export class PostExtension extends Enum {
 
 export type BlogUpdateType = {
   writers: OptionVecAccountId;
-  slug: OptionText;
+  handle: OptionText;
   ipfs_hash: OptionIpfsHash;
 };
 
 export class BlogUpdate extends Struct {
-  constructor (registry: Registry, value?: BlogUpdateType) {
+  constructor (value?: BlogUpdateType) {
     super(
       registry,
       {
         writers: 'Option<BitVec>',
-        slug: 'Option<Text>',
+        handle: 'Option<Text>',
         ipfs_hash: 'Option<Text>'
       },
       value
@@ -60,8 +60,8 @@ export class BlogUpdate extends Struct {
     return this.get('writers') as OptionVecAccountId;
   }
 
-  get slug (): OptionText {
-    return this.get('slug') as OptionText;
+  get handle (): OptionText {
+    return this.get('handle') as OptionText;
   }
 
   get ipfs_hash (): OptionIpfsHash {
@@ -72,8 +72,8 @@ export class BlogUpdate extends Struct {
     this.set('ipfs_hash', value);
   }
 
-  set slug (value: OptionText) {
-    this.set('slug', value);
+  set handle (value: OptionText) {
+    this.set('handle', value);
   }
 }
 
@@ -83,7 +83,7 @@ export type PostUpdateType = {
 };
 
 export class PostUpdate extends Struct {
-  constructor (registry: Registry, value?: PostUpdateType) {
+  constructor (value?: PostUpdateType) {
     super(
       registry,
       {
@@ -102,8 +102,8 @@ export class PostUpdate extends Struct {
     this.set('ipfs_hash', value);
   }
 
-  set slug (value: OptionText) {
-    this.set('slug', value);
+  set handle (value: OptionText) {
+    this.set('handle', value);
   }
 }
 
@@ -112,7 +112,7 @@ export type CommentUpdateType = {
 };
 
 export class CommentUpdate extends Struct {
-  constructor (registry: Registry, value?: CommentUpdateType) {
+  constructor (value?: CommentUpdateType) {
     super(
       registry,
       {
@@ -135,7 +135,7 @@ export const ReactionKinds: { [key: string]: string } = {
 };
 
 export class ReactionKind extends Enum {
-  constructor (registry: Registry, value?: any) {
+  constructor (value?: any) {
     super(registry, [ 'Upvote', 'Downvote' ], value);
   }
 }
@@ -146,7 +146,7 @@ export type ProfileUpdateType = {
 };
 
 export class ProfileUpdate extends Struct {
-  constructor (registry: Registry, value?: ProfileUpdateType) {
+  constructor (value?: ProfileUpdateType) {
     super(
       registry,
       {

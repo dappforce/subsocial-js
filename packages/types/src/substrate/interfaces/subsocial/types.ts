@@ -9,14 +9,14 @@ import { AccountId, BlockNumber, Moment } from '@subsocial/types/substrate/inter
 export interface Blog extends Struct {
   readonly id: BlogId;
   readonly created: WhoAndWhen;
-  readonly updated: OptionWhoAndWhen;
-  readonly writers: VecAccountId;
-  readonly handle: Text;
+  readonly updated: Option<WhoAndWhen>;
+  readonly writers: Vec<AccountId>;
+  readonly handle: Option<Text>;
   readonly ipfs_hash: IpfsHash;
   readonly posts_count: u16;
   readonly followers_count: u32;
   readonly edit_history: Vec<BlogHistoryRecord>;
-  readonly score: Score;
+  readonly score: i32;
 }
 
 /** @name BlogHistoryRecord */
@@ -30,21 +30,21 @@ export interface BlogId extends u64 {}
 
 /** @name BlogUpdate */
 export interface BlogUpdate extends Struct {
-  readonly writers: OptionVecAccountId;
-  readonly handle: OptionText;
-  readonly ipfs_hash: OptionIpfsHash;
+  readonly writers: Option<Vec<AccountId>>;
+  readonly handle: Option<Option<Text>>;
+  readonly ipfs_hash: Option<IpfsHash>;
 }
 
 /** @name Change */
 export interface Change extends Struct {
-  readonly updated_at: WhoAndWhen;
+  readonly created: WhoAndWhen;
   readonly id: ChangeId;
   readonly space_id: SpaceId;
-  readonly add_owners: VecAccountId;
-  readonly remove_owners: VecAccountId;
+  readonly add_owners: Vec<AccountId>;
+  readonly remove_owners: Vec<AccountId>;
   readonly new_threshold: Option<u16>;
   readonly notes: Text;
-  readonly confirmed_by: VecAccountId;
+  readonly confirmed_by: Vec<AccountId>;
   readonly expires_at: BlockNumber;
 }
 
@@ -54,17 +54,17 @@ export interface ChangeId extends u64 {}
 /** @name Comment */
 export interface Comment extends Struct {
   readonly id: CommentId;
-  readonly parent_id: OptionCommentId;
+  readonly parent_id: Option<CommentId>;
   readonly post_id: PostId;
   readonly created: WhoAndWhen;
-  readonly updated: OptionWhoAndWhen;
+  readonly updated: Option<WhoAndWhen>;
   readonly ipfs_hash: IpfsHash;
   readonly upvotes_count: u16;
   readonly downvotes_count: u16;
   readonly shares_count: u16;
   readonly direct_replies_count: u16;
-  readonly edit_history: VecCommentHistoryRecord;
-  readonly score: Score;
+  readonly edit_history: Vec<CommentHistoryRecord>;
+  readonly score: i32;
 }
 
 /** @name CommentHistoryRecord */
@@ -87,14 +87,11 @@ export interface IpfsHash extends Text {}
 /** @name OptionBlogId */
 export interface OptionBlogId extends Option<BlogId> {}
 
+/** @name OptionChange */
+export interface OptionChange extends Option<Change> {}
+
 /** @name OptionCommentId */
 export interface OptionCommentId extends Option<CommentId> {}
-
-/** @name OptionIpfsHash */
-export interface OptionIpfsHash extends Option<IpfsHash> {}
-
-/** @name OptionProfile */
-export interface OptionProfile extends Option<Profile> {}
 
 /** @name OptionText */
 export interface OptionText extends Option<Text> {}
@@ -102,15 +99,12 @@ export interface OptionText extends Option<Text> {}
 /** @name OptionVecAccountId */
 export interface OptionVecAccountId extends Option<VecAccountId> {}
 
-/** @name OptionWhoAndWhen */
-export interface OptionWhoAndWhen extends Option<WhoAndWhen> {}
-
 /** @name Post */
 export interface Post extends Struct {
   readonly id: PostId;
   readonly blog_id: BlogId;
   readonly created: WhoAndWhen;
-  readonly updated: OptionWhoAndWhen;
+  readonly updated: Option<WhoAndWhen>;
   readonly extension: PostExtension;
   readonly ipfs_hash: IpfsHash;
   readonly comments_count: u16;
@@ -118,7 +112,7 @@ export interface Post extends Struct {
   readonly downvotes_count: u16;
   readonly shares_count: u16;
   readonly edit_history: Vec<PostHistoryRecord>;
-  readonly score: Score;
+  readonly score: i32;
 }
 
 /** @name PostExtension */
@@ -141,14 +135,14 @@ export interface PostId extends u64 {}
 
 /** @name PostUpdate */
 export interface PostUpdate extends Struct {
-  readonly blog_id: OptionBlogId;
-  readonly ipfs_hash: OptionIpfsHash;
+  readonly blog_id: Option<BlogId>;
+  readonly ipfs_hash: Option<IpfsHash>;
 }
 
 /** @name Profile */
 export interface Profile extends Struct {
   readonly created: WhoAndWhen;
-  readonly updated: OptionWhoAndWhen;
+  readonly updated: Option<WhoAndWhen>;
   readonly username: Text;
   readonly ipfs_hash: IpfsHash;
   readonly edit_history: Vec<ProfileHistoryRecord>;
@@ -162,15 +156,15 @@ export interface ProfileHistoryRecord extends Struct {
 
 /** @name ProfileUpdate */
 export interface ProfileUpdate extends Struct {
-  readonly username: OptionText;
-  readonly ipfs_hash: OptionIpfsHash;
+  readonly username: Option<Text>;
+  readonly ipfs_hash: Option<IpfsHash>;
 }
 
 /** @name Reaction */
 export interface Reaction extends Struct {
   readonly id: ReactionId;
   readonly created: WhoAndWhen;
-  readonly updated: OptionWhoAndWhen;
+  readonly updated: Option<WhoAndWhen>;
   readonly kind: ReactionKind;
 }
 
@@ -182,9 +176,6 @@ export interface ReactionKind extends Enum {
   readonly isUpvote: boolean;
   readonly isDownvote: boolean;
 }
-
-/** @name Score */
-export interface Score extends i32 {}
 
 /** @name ScoringAction */
 export interface ScoringAction extends Enum {
@@ -204,7 +195,7 @@ export interface SocialAccount extends Struct {
   readonly following_accounts_count: u16;
   readonly following_blogs_count: u16;
   readonly reputation: u32;
-  readonly profile: OptionProfile;
+  readonly profile: Option<Profile>;
 }
 
 /** @name SpaceId */
@@ -212,21 +203,15 @@ export interface SpaceId extends u64 {}
 
 /** @name SpaceOwners */
 export interface SpaceOwners extends Struct {
-  readonly updated_at: WhoAndWhen;
+  readonly created: WhoAndWhen;
   readonly space_id: SpaceId;
-  readonly owners: VecAccountId;
+  readonly owners: Vec<AccountId>;
   readonly threshold: u16;
   readonly changes_count: u64;
 }
 
 /** @name VecAccountId */
 export interface VecAccountId extends Vec<AccountId> {}
-
-/** @name VecCommentHistoryRecord */
-export interface VecCommentHistoryRecord extends Vec<CommentHistoryRecord> {}
-
-/** @name VecProfileHistoryRecord */
-export interface VecProfileHistoryRecord extends Vec<ProfileHistoryRecord> {}
 
 /** @name WhoAndWhen */
 export interface WhoAndWhen extends Struct {
