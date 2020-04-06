@@ -96,6 +96,9 @@ export interface OptionCommentId extends Option<CommentId> {}
 /** @name OptionText */
 export interface OptionText extends Option<Text> {}
 
+/** @name OptionUpdateHandle */
+export interface OptionUpdateHandle extends Option<Option<Text>> {}
+
 /** @name OptionVecAccountId */
 export interface OptionVecAccountId extends Option<VecAccountId> {}
 
