@@ -18,11 +18,33 @@ export type Activity = {
   agg_count: number
 };
 
+type FilterByTags = {
+  data: string[]
+}
+
+type Url = {
+  data: string
+}
+
+type NavTabContent = FilterByTags | Url
+
+type ContentType = 'by-tag' | 'url'
+
+export type NavTab = {
+  id: number
+  type: ContentType
+  content: NavTabContent
+  title: string
+  description: string
+  hidden: boolean
+}
+
 export type BlogContent = {
   name: string;
   desc: string;
   image: string;
   tags: string[];
+  navTabs?: NavTab[];
 };
 
 export type SharedPostContent = {
@@ -33,6 +55,7 @@ export type PostContent = SharedPostContent & {
   title: string;
   image: string;
   tags: string[];
+  canonical: string;
 };
 
 export type CommentContent = {
@@ -43,10 +66,11 @@ export type ProfileContent = {
   fullname: string;
   avatar: string;
   email: string;
-  personal_site: string;
+  personalSite: string;
   about: string;
   facebook: string;
   twitter: string;
+  medium: string;
   linkedIn: string;
   github: string;
   instagram: string;
