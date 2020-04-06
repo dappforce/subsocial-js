@@ -9,6 +9,12 @@ export class OptionText extends Option<Text> {
   }
 }
 
+export class OptionOptionText extends Option<Option<Text>> {
+  constructor (value: string) {
+    super(registry, 'Option<Text>', new OptionText(value))
+  }
+}
+
 export class OptionIpfsHash extends OptionText {}
 
 export class RegularPost extends Null {}
@@ -39,7 +45,7 @@ export class PostExtension extends Enum {
 
 export type BlogUpdateType = {
   writers: OptionVecAccountId;
-  handle: OptionText;
+  handle: OptionOptionText;
   ipfs_hash: OptionIpfsHash;
 };
 
@@ -49,7 +55,7 @@ export class BlogUpdate extends Struct {
       registry,
       {
         writers: 'Option<BitVec>',
-        handle: 'Option<Text>',
+        handle: 'Option<Option<Text>>',
         ipfs_hash: 'Option<Text>'
       },
       value
@@ -60,8 +66,8 @@ export class BlogUpdate extends Struct {
     return this.get('writers') as OptionVecAccountId;
   }
 
-  get handle (): OptionText {
-    return this.get('handle') as OptionText;
+  get handle (): OptionOptionText {
+    return this.get('handle') as OptionOptionText;
   }
 
   get ipfs_hash (): OptionIpfsHash {
@@ -72,7 +78,7 @@ export class BlogUpdate extends Struct {
     this.set('ipfs_hash', value);
   }
 
-  set handle (value: OptionText) {
+  set handle (value: OptionOptionText) {
     this.set('handle', value);
   }
 }
