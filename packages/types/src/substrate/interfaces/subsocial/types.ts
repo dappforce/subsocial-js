@@ -1,5 +1,5 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
-/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable */
 
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
 import { Text, i32, u16, u32, u64 } from '@polkadot/types/primitive';
@@ -8,10 +8,10 @@ import { AccountId, BlockNumber, Moment } from '@subsocial/types/substrate/inter
 /** @name Blog */
 export interface Blog extends Struct {
   readonly id: BlogId;
-  readonly created: Change;
-  readonly updated: Option<Change>;
+  readonly created: WhoAndWhen;
+  readonly updated: OptionWhoAndWhen;
   readonly writers: VecAccountId;
-  readonly slug: Text;
+  readonly handle: Text;
   readonly ipfs_hash: IpfsHash;
   readonly posts_count: u16;
   readonly followers_count: u32;
@@ -21,7 +21,7 @@ export interface Blog extends Struct {
 
 /** @name BlogHistoryRecord */
 export interface BlogHistoryRecord extends Struct {
-  readonly edited: Change;
+  readonly edited: WhoAndWhen;
   readonly old_data: BlogUpdate;
 }
 
@@ -31,24 +31,33 @@ export interface BlogId extends u64 {}
 /** @name BlogUpdate */
 export interface BlogUpdate extends Struct {
   readonly writers: OptionVecAccountId;
-  readonly slug: OptionText;
+  readonly handle: OptionText;
   readonly ipfs_hash: OptionIpfsHash;
 }
 
 /** @name Change */
 export interface Change extends Struct {
-  readonly account: AccountId;
-  readonly block: BlockNumber;
-  readonly time: Moment;
+  readonly updated_at: WhoAndWhen;
+  readonly id: ChangeId;
+  readonly space_id: SpaceId;
+  readonly add_owners: VecAccountId;
+  readonly remove_owners: VecAccountId;
+  readonly new_threshold: Option<u16>;
+  readonly notes: Text;
+  readonly confirmed_by: VecAccountId;
+  readonly expires_at: BlockNumber;
 }
+
+/** @name ChangeId */
+export interface ChangeId extends u64 {}
 
 /** @name Comment */
 export interface Comment extends Struct {
   readonly id: CommentId;
   readonly parent_id: OptionCommentId;
   readonly post_id: PostId;
-  readonly created: Change;
-  readonly updated: OptionChange;
+  readonly created: WhoAndWhen;
+  readonly updated: OptionWhoAndWhen;
   readonly ipfs_hash: IpfsHash;
   readonly upvotes_count: u16;
   readonly downvotes_count: u16;
@@ -60,7 +69,7 @@ export interface Comment extends Struct {
 
 /** @name CommentHistoryRecord */
 export interface CommentHistoryRecord extends Struct {
-  readonly edited: Change;
+  readonly edited: WhoAndWhen;
   readonly old_data: CommentUpdate;
 }
 
@@ -78,9 +87,6 @@ export interface IpfsHash extends Text {}
 /** @name OptionBlogId */
 export interface OptionBlogId extends Option<BlogId> {}
 
-/** @name OptionChange */
-export interface OptionChange extends Option<Change> {}
-
 /** @name OptionCommentId */
 export interface OptionCommentId extends Option<CommentId> {}
 
@@ -96,12 +102,15 @@ export interface OptionText extends Option<Text> {}
 /** @name OptionVecAccountId */
 export interface OptionVecAccountId extends Option<VecAccountId> {}
 
+/** @name OptionWhoAndWhen */
+export interface OptionWhoAndWhen extends Option<WhoAndWhen> {}
+
 /** @name Post */
 export interface Post extends Struct {
   readonly id: PostId;
   readonly blog_id: BlogId;
-  readonly created: Change;
-  readonly updated: OptionChange;
+  readonly created: WhoAndWhen;
+  readonly updated: OptionWhoAndWhen;
   readonly extension: PostExtension;
   readonly ipfs_hash: IpfsHash;
   readonly comments_count: u16;
@@ -123,7 +132,7 @@ export interface PostExtension extends Enum {
 
 /** @name PostHistoryRecord */
 export interface PostHistoryRecord extends Struct {
-  readonly edited: Change;
+  readonly edited: WhoAndWhen;
   readonly old_data: PostUpdate;
 }
 
@@ -138,8 +147,8 @@ export interface PostUpdate extends Struct {
 
 /** @name Profile */
 export interface Profile extends Struct {
-  readonly created: Change;
-  readonly updated: OptionChange;
+  readonly created: WhoAndWhen;
+  readonly updated: OptionWhoAndWhen;
   readonly username: Text;
   readonly ipfs_hash: IpfsHash;
   readonly edit_history: Vec<ProfileHistoryRecord>;
@@ -147,7 +156,7 @@ export interface Profile extends Struct {
 
 /** @name ProfileHistoryRecord */
 export interface ProfileHistoryRecord extends Struct {
-  readonly edited: Change;
+  readonly edited: WhoAndWhen;
   readonly old_data: ProfileUpdate;
 }
 
@@ -160,8 +169,8 @@ export interface ProfileUpdate extends Struct {
 /** @name Reaction */
 export interface Reaction extends Struct {
   readonly id: ReactionId;
-  readonly created: Change;
-  readonly updated: OptionChange;
+  readonly created: WhoAndWhen;
+  readonly updated: OptionWhoAndWhen;
   readonly kind: ReactionKind;
 }
 
@@ -198,6 +207,18 @@ export interface SocialAccount extends Struct {
   readonly profile: OptionProfile;
 }
 
+/** @name SpaceId */
+export interface SpaceId extends u64 {}
+
+/** @name SpaceOwners */
+export interface SpaceOwners extends Struct {
+  readonly updated_at: WhoAndWhen;
+  readonly space_id: SpaceId;
+  readonly owners: VecAccountId;
+  readonly threshold: u16;
+  readonly changes_count: u64;
+}
+
 /** @name VecAccountId */
 export interface VecAccountId extends Vec<AccountId> {}
 
@@ -206,3 +227,12 @@ export interface VecCommentHistoryRecord extends Vec<CommentHistoryRecord> {}
 
 /** @name VecProfileHistoryRecord */
 export interface VecProfileHistoryRecord extends Vec<ProfileHistoryRecord> {}
+
+/** @name WhoAndWhen */
+export interface WhoAndWhen extends Struct {
+  readonly account: AccountId;
+  readonly block: BlockNumber;
+  readonly time: Moment;
+}
+
+export type PHANTOM_SUBSOCIAL = 'subsocial';

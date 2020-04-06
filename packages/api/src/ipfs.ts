@@ -2,7 +2,6 @@
 import { IpfsHash, CommonStruct } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
-import all from 'it-all';
 
 const ipfsClient = require('ipfs-http-client')
 
@@ -36,7 +35,7 @@ export class SubsocialIpfsApi {
 
     try {
       const ipfsCids = cids.map((cid) => asIpfsCid(cid));
-      const loadContentFns = ipfsCids.map((cid) => all(this.api.cat(cid) as any));
+      const loadContentFns = ipfsCids.map((cid) => this.api.cat(cid));
       const jsonContentArray = await Promise.all(loadContentFns);
       return jsonContentArray.map((x) => JSON.parse(x.toString())) as T[];
     } catch (error) {
@@ -110,8 +109,8 @@ export class SubsocialIpfsApi {
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const json = Buffer.from(JSON.stringify(content));
-      const [ { cid } ] = await all(this.api.add(json) as any);
-      return cid.toString() as IpfsHash;
+      const results = await this.api.add(json);
+      return results[results.length - 1].hash as any as IpfsHash;
     } catch (error) {
       logger.error('Failed to add content to IPFS. Error:', error)
       return undefined;
