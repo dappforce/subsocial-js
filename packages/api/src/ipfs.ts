@@ -15,7 +15,7 @@ const asIpfsCid = (cid: IpfsCid) => {
   } else if (typeof cid.toU8a === 'function' && cid.toU8a().length === IPFS_HASH_LEN) {
     return new CID(cid.toString())
   } else {
-    throw new Error('Type isn`t instance IpfsCid (string | IpfsHash | CID)')
+    throw new Error('Wrong type of CID. Valid types are: string | IpfsHash | CID')
   }
 }
 
