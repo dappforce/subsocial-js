@@ -161,7 +161,6 @@ export default {
     OptionChange: 'Option<Change>',
     OptionBlogId: 'Option<BlogId>',
     OptionCommentId: 'Option<CommentId>',
-    OptionVecAccountId: 'Option<VecAccountId>',
-    OptionUpdateHandle: 'Option<Option<Text>>'
+    OptionVecAccountId: 'Option<VecAccountId>'
   }
 }
