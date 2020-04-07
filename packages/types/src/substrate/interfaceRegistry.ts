@@ -36,7 +36,7 @@ import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import { AccountId, AccountIdOf, AccountIndex, Address, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, Consensus, ConsensusEngineId, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, Moment, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Seal, SealV0, SignedBlock, StorageData, ValidatorId, Weight, WeightMultiplier } from '@subsocial/types/substrate/interfaces/runtime';
-import { Blog, BlogHistoryRecord, BlogId, BlogUpdate, Change, ChangeId, Comment, CommentHistoryRecord, CommentId, CommentUpdate, IpfsHash, OptionBlogId, OptionChange, OptionCommentId, OptionText, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, ScoringAction, SocialAccount, SpaceId, SpaceOwners, VecAccountId, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
+import { Blog, BlogHistoryRecord, BlogId, BlogUpdate, Change, ChangeId, Comment, CommentHistoryRecord, CommentId, CommentUpdate, IpfsHash, OptionBlogId, OptionChange, OptionCommentId, OptionText, OptionUpdateHandle, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, ScoringAction, SocialAccount, SpaceId, SpaceOwners, VecAccountId, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -1720,5 +1720,8 @@ declare module '@polkadot/types/types/registry' {
     OptionVecAccountId: OptionVecAccountId;
     'Option<OptionVecAccountId>': Option<OptionVecAccountId>;
     'Vec<OptionVecAccountId>': Vec<OptionVecAccountId>;
+    OptionUpdateHandle: OptionUpdateHandle;
+    'Option<OptionUpdateHandle>': Option<OptionUpdateHandle>;
+    'Vec<OptionUpdateHandle>': Vec<OptionUpdateHandle>;
   }
 }

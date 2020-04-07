@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct, Text, TypeRegistry } from '@polkadot/types';
 import { IpfsHash, BlogId, OptionVecAccountId } from '@subsocial/types/substrate/interfaces/subsocial';
+import { nonEmptyStr } from '@subsocial/utils/src/string';
 const registry = new TypeRegistry();
 
 export class OptionText extends Option<Text> {
-  constructor (value: string) {
-    super(registry, 'Text', value)
+  constructor (value?: string | null) {
+    const textOrNull = nonEmptyStr(value) ? value : new Null(registry)
+    super(registry, 'Text', textOrNull)
   }
 }
 
 export class OptionOptionText extends Option<Option<Text>> {
-  constructor (value: string) {
+  constructor (value?: string | null) {
     super(registry, 'Option<Text>', new OptionText(value))
   }
 }
@@ -55,7 +57,7 @@ export class BlogUpdate extends Struct {
       registry,
       {
         writers: 'Option<BitVec>',
-        handle: 'Option<Option<Text>>',
+        handle: 'Option<Option<Text>>' as any,
         ipfs_hash: 'Option<Text>'
       },
       value
