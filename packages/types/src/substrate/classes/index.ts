@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-import { u64, Null, Enum, Option, Struct, Text, TypeRegistry } from '@polkadot/types';
+import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
 import { IpfsHash, BlogId, OptionVecAccountId } from '@subsocial/types/substrate/interfaces/subsocial';
-import { nonEmptyStr } from '@subsocial/utils/src/string';
-const registry = new TypeRegistry();
+import { nonEmptyStr } from '@subsocial/utils/string'
+import registry from '../registry';
 
 export class OptionText extends Option<Text> {
   constructor (value?: string | null) {
