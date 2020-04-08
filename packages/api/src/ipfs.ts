@@ -32,16 +32,16 @@ export class SubsocialIpfsApi {
   private api!: IpfsApi; // IPFS Api (connected)
 
   constructor (connect: IpfsApi | string) {
-    this.createConnect(connect)
+    this.connect(connect)
   }
 
-  private async createConnect (connect: IpfsApi | string) {
+  private async connect (connection: IpfsApi | string) {
     try {
-      this.api = typeof connect === 'string' ? ipfsClient(connect) : connect;
-      await this.api.pin.ls()
-      logger.info('Initialized')
+      this.api = typeof connection === 'string' ? ipfsClient(connection) : connection;
+      await this.api.pin.ls() // Test IPFS connection.
+      logger.info('Connected to IPFS node')
     } catch (err) {
-      logger.error('Failed in initializations:', err)
+      logger.error('Failed to connected to IPFS node:', err)
     }
   }
 
