@@ -29,11 +29,20 @@ export function getCidsOfStructs (structs: CommonStruct[]): IpfsCid[] {
 
 export class SubsocialIpfsApi {
 
-  private api: IpfsApi // IPFS Api (connected)
+  private api!: IpfsApi; // IPFS Api (connected)
 
   constructor (connect: IpfsApi | string) {
-    this.api = typeof connect === 'string' ? ipfsClient(connect) : connect;
-    logger.info('Initialized');
+    this.connect(connect)
+  }
+
+  private async connect (connection: IpfsApi | string) {
+    try {
+      this.api = typeof connection === 'string' ? ipfsClient(connection) : connection;
+      await this.api.pin.ls() // Test IPFS connection.
+      logger.info('Connected to IPFS node')
+    } catch (err) {
+      logger.error('Failed to connected to IPFS node:', err)
+    }
   }
 
   // ---------------------------------------------------------------------
