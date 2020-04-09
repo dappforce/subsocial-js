@@ -144,6 +144,11 @@ export class SubsocialIpfsApi {
   async saveContentOnClient (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
+
+      if (res.status !== 200) {
+        throw new Error(`Status code ${res.status} with message: ${res.statusText}`)
+      }
+
       return res.data;
     } catch (error) {
       logger.error('Failed to add content to IPFS on client. Error:', error)
