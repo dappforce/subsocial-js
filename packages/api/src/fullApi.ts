@@ -19,9 +19,9 @@ export class SubsocialApi {
   private _ipfs: SubsocialIpfsApi
 
   constructor (props: SubsocialApiProps) {
-    const { substrateApi, ipfs } = props
+    const { substrateApi, ipfsApi, offchainUrl } = props
     this._substrate = new SubsocialSubstrateApi(substrateApi)
-    this._ipfs = new SubsocialIpfsApi(ipfs)
+    this._ipfs = new SubsocialIpfsApi({ connect: ipfsApi, offchainUrl })
   }
 
   public get substrate (): SubsocialSubstrateApi {

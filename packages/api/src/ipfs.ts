@@ -39,7 +39,7 @@ export class SubsocialIpfsApi {
   private offchainUrl!: string // IPFS Api (connected)
 
   constructor (props: SubsocialIpfsProps) {
-    this.connect(connect)
+    this.connect(props.connect)
     this.offchainUrl = `${props.offchainUrl}/v1`
   }
 
@@ -77,10 +77,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Find blogs: no cids provided')
+      logger.debug('Load blogs: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'blog by cid: ' + cids[0] : count + ' blogs'}`)
+    logger.debug(`Load ${count === 1 ? 'blog by cid: ' + cids[0] : count + ' blogs'}`)
     return this.getContentArray(cids)
   }
 
@@ -88,10 +88,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Find posts: no cids provided')
+      logger.debug('Load posts: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'post by cid: ' + cids[0] : count + ' posts'} from IPFS`)
+    logger.debug(`Load ${count === 1 ? 'post by cid: ' + cids[0] : count + ' posts'} from IPFS`)
 
     return this.getContentArray(cids)
   }
@@ -100,10 +100,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Find comments: no cids provided')
+      logger.debug('Load comments: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'comment by cid: ' + cids[0] : count + ' comments'} from IPFS`)
+    logger.debug(`Load ${count === 1 ? 'comment by cid: ' + cids[0] : count + ' comments'} from IPFS`)
 
     return this.getContentArray(cids)
   }

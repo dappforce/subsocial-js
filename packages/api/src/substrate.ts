@@ -42,10 +42,10 @@ export class SubsocialSubstrateApi {
     const count = ids.length
 
     if (!count) {
-      logger.debug('Find blogs: no ids provided')
+      logger.debug('Load blogs: no ids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'blog by id: ' + ids[0] : count + ' blogs'} from Substrate`)
+    logger.debug(`Load ${count === 1 ? 'blog by id: ' + ids[0] : count + ' blogs'} from Substrate`)
     return this.findStructs('blogById', ids);
   }
 
@@ -53,10 +53,10 @@ export class SubsocialSubstrateApi {
     const count = ids.length
 
     if (!count) {
-      logger.debug('Find posts: no ids provided')
+      logger.debug('Load posts: no ids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'post by id: ' + ids[0] : count + ' posts'} from Substrate`)
+    logger.debug(`Load ${count === 1 ? 'post by id: ' + ids[0] : count + ' posts'} from Substrate`)
     return this.findStructs('postById', ids);
   }
 
@@ -64,10 +64,10 @@ export class SubsocialSubstrateApi {
     const count = ids.length
 
     if (!count) {
-      logger.debug('Find comments: no ids provided')
+      logger.debug('Load comments: no ids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'comment by id: ' + ids[0] : count + ' comments'} from Substrate`)
+    logger.debug(`Load ${count === 1 ? 'comment by id: ' + ids[0] : count + ' comments'} from Substrate`)
     return this.findStructs('commentById', ids);
   }
 
@@ -75,7 +75,7 @@ export class SubsocialSubstrateApi {
     const count = ids.length
 
     if (!count) {
-      logger.warn('Find social accounts: no account ids provided')
+      logger.warn('Load social accounts: no account ids provided')
       return [];
     }
 
@@ -120,12 +120,7 @@ export class SubsocialSubstrateApi {
     const isFollow = await this.socialQuery('accountFollowedByAccount', queryParams) as bool
     return isFollow.valueOf()
   }
-
-  // async findStructsAndSubscribe<T extends CommonStruct> (methodName: string, args: SubstrateId[]): Promise<T[]> {
-  //   const optionStruct = await this.socialQuery()[methodName].multi(args) as unknown as Option<any>[];
-  //   return optionStruct.filter((x) => x.isSome).map((x) => x.unwrapOr(undefined)) as T[];
-  // } // TODO create functions
-
+  
   // ---------------------------------------------------------------------
   // Single
 
