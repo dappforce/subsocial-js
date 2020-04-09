@@ -1,4 +1,4 @@
-import { Blog, Post, Comment, CommonStruct, SubstrateId, BlogId, PostId, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { Blog, Post, Comment, CommonStruct, SubstrateId, BlogId, PostId, SocialAccount, ReactionId, Reaction, CommentId } from '@subsocial/types/substrate/interfaces';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option, Tuple, GenericAccountId, bool } from '@polkadot/types';
 import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
@@ -15,18 +15,43 @@ export class SubsocialSubstrateApi {
   }
 
   getSocialQuery = async () => {
-    const api = await this.api.isReady
+    const api = await this.api
     return api.query.social
   };
 
   public get api () {
-    return this._api;
+    return this._api.isReady;
+  }
+
+  // ---------------------------------------------------------------------
+  // Private utils
+
+  private asAccountId (id: (AccountId | string)): AccountId {
+    return typeof id === 'string' ? new GenericAccountId(registry, id) : id
+  }
+
+  private async socialQuery (query: string, value?: any): Promise<any> {
+    const socialQuery = await this.getSocialQuery()
+    return socialQuery[query].multi(value)
+  }
+
+  private async structByAccount (query: string, accountId: AccountId | string, id: SubstrateId): Promise<boolean> {
+    const followedAccountId = this.asAccountId(accountId)
+    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ followedAccountId, id ]);
+    const isFollow = await this.socialQuery(query, queryParams) as bool
+    return isFollow.valueOf()
+  }
+
+  private async getStructReactionIdByAccount (accountId: AccountId | string, id: PostId | CommentId, struct: 'post' | 'comment'): Promise<ReactionId> {
+    const followedAccountId = this.asAccountId(accountId)
+    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ followedAccountId, id ]);
+    return this.socialQuery(`${struct}ReactionIdByAccount`, queryParams)
   }
 
   // ---------------------------------------------------------------------
   // Multiple
 
-  async findStructs<T extends CommonStruct | SocialAccount> (methodName: string, ids: (SubstrateId | AccountId)[]): Promise<T[]> {
+  async findStructs<T extends CommonStruct | SocialAccount | Reaction> (methodName: string, ids: SubstrateId[] | AccountId[] | ReactionId[]): Promise<T[]> {
     try {
       const socialQuery = await this.getSocialQuery()
       const optionStruct = await socialQuery[methodName].multi(ids) as unknown as Option<any>[];
@@ -84,10 +109,43 @@ export class SubsocialSubstrateApi {
     return this.findStructs('socialAccountById', accountIds);
   }
 
-  private async socialQuery (query: string, value?: any): Promise<any> {
-    const socialQuery = await this.getSocialQuery()
-    return socialQuery[query].multi(value)
+  async findReactions (ids: ReactionId[]): Promise<Reaction[]> {
+    const count = ids.length
+
+    if (!count) {
+      logger.warn('Load reactions: no reaction ids provided')
+      return [];
+    }
+
+    logger.debug(`Load ${count === 1 ? 'reaction by id: ' + ids[0] : count + ' reactions'} from Substrate`)
+    return this.findStructs('reactionById', ids);
   }
+
+  // ---------------------------------------------------------------------
+  // Single
+
+  async findBlog (id: SubstrateId): Promise<Blog | undefined> {
+    return getFirstOrUndefinded(await this.findBlogs([ id ]))
+  }
+
+  async findPost (id: SubstrateId): Promise<Post | undefined> {
+    return getFirstOrUndefinded(await this.findPosts([ id ]))
+  }
+
+  async findComment (id: SubstrateId): Promise<Comment | undefined> {
+    return getFirstOrUndefinded(await this.findComments([ id ]))
+  }
+
+  async findSocialAccount (id: AccountId | string): Promise<SocialAccount | undefined> {
+    return getFirstOrUndefinded(await this.findSocialAccounts([ id ]))
+  }
+
+  async findReaction (id: ReactionId): Promise<Reaction | undefined> {
+    return getFirstOrUndefinded(await this.findReactions([ id ]))
+  }
+
+  // ---------------------------------------------------------------------
+  // Get id
 
   async nextBlogId (): Promise<BlogId> {
     return this.socialQuery('nextBlogId')
@@ -109,9 +167,8 @@ export class SubsocialSubstrateApi {
     return this.socialQuery('postIdsByBlogId', id)
   }
 
-  private asAccountId (id: (AccountId | string)): AccountId {
-    return typeof id === 'string' ? new GenericAccountId(registry, id) : id
-  }
+  // ---------------------------------------------------------------------
+  // isFollow
 
   async isAccountFollower (followedAddress: AccountId | string, myAddress: AccountId | string): Promise<boolean> {
     const followedAccountId = this.asAccountId(followedAddress)
@@ -120,25 +177,27 @@ export class SubsocialSubstrateApi {
     const isFollow = await this.socialQuery('accountFollowedByAccount', queryParams) as bool
     return isFollow.valueOf()
   }
-  
-  // ---------------------------------------------------------------------
-  // Single
 
-  async findBlog (id: SubstrateId): Promise<Blog | undefined> {
-    return getFirstOrUndefinded(await this.findBlogs([ id ]))
+  async isBlogFollower (followedAddress: AccountId | string, blogId: BlogId): Promise<boolean> {
+    return this.structByAccount('blogFollowedByAccount', followedAddress, blogId)
   }
 
-  async findPost (id: SubstrateId): Promise<Post | undefined> {
-    return getFirstOrUndefinded(await this.findPosts([ id ]))
+  async sharedPostByAccount (accountId: AccountId | string, postId: PostId): Promise<boolean> {
+    return this.structByAccount('postSharedByAccount', accountId, postId)
   }
 
-  async findComment (id: SubstrateId): Promise<Comment | undefined> {
-    return getFirstOrUndefinded(await this.findComments([ id ]))
+  async sharedCommentByAccount (accountId: AccountId | string, commentId: CommentId): Promise<boolean> {
+    return this.structByAccount('commentSharedByAccount', accountId, commentId)
   }
 
-  async findSocialAccount (id: AccountId | string): Promise<SocialAccount | undefined> {
-    return getFirstOrUndefinded(await this.findSocialAccounts([ id ]))
+  async setPostReactionIdByAccount (accountId: AccountId | string, postId: PostId): Promise<ReactionId> {
+    return this.getStructReactionIdByAccount(accountId, postId, 'post')
   }
+
+  async setCommentReactionIdByAccount (accountId: AccountId | string, commentId: CommentId): Promise<ReactionId> {
+    return this.getStructReactionIdByAccount(accountId, commentId, 'comment')
+  }
+
 }
 
 const logger = newLogger(SubsocialSubstrateApi.name);
