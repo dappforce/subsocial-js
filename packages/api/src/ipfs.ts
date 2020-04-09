@@ -39,17 +39,17 @@ export class SubsocialIpfsApi {
   private offchainUrl!: string // IPFS Api (connected)
 
   constructor (props: SubsocialIpfsProps) {
-    this.createConnect(props.connect)
+    this.connect(connect)
     this.offchainUrl = `${props.offchainUrl}/v1`
   }
 
-  private async createConnect (connect: IpfsApi | string) {
+  private async connect (connection: IpfsApi | string) {
     try {
-      this.api = typeof connect === 'string' ? ipfsClient(connect) : connect;
-      await this.api.pin.ls()
-      logger.info('Initialized')
+      this.api = typeof connection === 'string' ? ipfsClient(connection) : connection;
+      await this.api.pin.ls() // Test IPFS connection.
+      logger.info('Connected to IPFS node')
     } catch (err) {
-      logger.error('Failed in initializations:', err)
+      logger.error('Failed to connected to IPFS node:', err)
     }
   }
 
