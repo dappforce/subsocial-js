@@ -4,7 +4,7 @@ import BN from 'bn.js';
 import { SubsocialIpfsApi } from '../src/ipfs';
 
 let blogHash: string | undefined;
-const ipfs = new SubsocialIpfsApi('/ip4/127.0.0.1/tcp/5001/http');
+const ipfs = new SubsocialIpfsApi({ connect: '/ip4/127.0.0.1/tcp/8080/http', offchainUrl: 'http:localhost:3001' });
 
 test('Get a blog from Substrate', async () => {
   const api = await getApi();

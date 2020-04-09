@@ -46,7 +46,7 @@ export class SubsocialIpfsApi {
   private async connect (connection: IpfsApi | string) {
     try {
       this.api = typeof connection === 'string' ? ipfsClient(connection) : connection;
-      await this.api.pin.ls() // Test IPFS connection.
+      await this.api.cat('/ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme')// Test IPFS connection.
       logger.info('Connected to IPFS node')
     } catch (err) {
       logger.error('Failed to connected to IPFS node:', err)

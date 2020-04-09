@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { BlogContent, PostContent, CommentContent } from '@subsocial/types/offchain';
 import { SubsocialIpfsApi } from '../src/ipfs';
-const ipfs = new SubsocialIpfsApi('/ip4/127.0.0.1/tcp/5001/http');
+const ipfs = new SubsocialIpfsApi({ connect: '/ip4/127.0.0.1/tcp/5001/http', offchainUrl: 'http:localhost:3001' });
 
 const cids = new Map();
 
@@ -15,6 +15,7 @@ const blogContent: BlogContent = {
 const postContent: PostContent = {
   title: 'Test Post',
   body: 'Post body',
+  canonical: 'C',
   image: '',
   tags: [ 'tag_one', 'tag_two' ]
 }
