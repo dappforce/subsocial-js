@@ -35,8 +35,8 @@ export type SubsocialIpfsProps = {
 
 export class SubsocialIpfsApi {
 
-  private api!: IpfsApi;
-  private offchainUrl!: string // IPFS Api (connected)
+  private api!: IpfsApi; // IPFS API (connected)
+  private offchainUrl!: string
 
   constructor (props: SubsocialIpfsProps) {
     this.connect(props.connect)
