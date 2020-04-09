@@ -2,6 +2,7 @@
 import { IpfsHash, CommonStruct } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
+import axios from 'axios';
 
 const IPFS_HASH_LEN = 47;
 
@@ -27,12 +28,19 @@ export function getCidsOfStructs (structs: CommonStruct[]): IpfsCid[] {
   return structs.map((x) => getCidOfStruct(x))
 }
 
+export type SubsocialIpfsProps = {
+  connect: IpfsApi | string,
+  offchainUrl: string
+}
+
 export class SubsocialIpfsApi {
 
-  private api!: IpfsApi; // IPFS Api (connected)
+  private api!: IpfsApi; // IPFS API (connected)
+  private offchainUrl!: string
 
-  constructor (connect: IpfsApi | string) {
-    this.connect(connect)
+  constructor (props: SubsocialIpfsProps) {
+    this.connect(props.connect)
+    this.offchainUrl = `${props.offchainUrl}/v1`
   }
 
   private async connect (connection: IpfsApi | string) {
@@ -69,10 +77,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Find blogs: no cids provided')
+      logger.debug('Load blogs: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'blog by cid: ' + cids[0] : count + ' blogs'}`)
+    logger.debug(`Load ${count === 1 ? 'blog by cid: ' + cids[0] : count + ' blogs'}`)
     return this.getContentArray(cids)
   }
 
@@ -80,10 +88,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Find posts: no cids provided')
+      logger.debug('Load posts: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'post by cid: ' + cids[0] : count + ' posts'} from IPFS`)
+    logger.debug(`Load ${count === 1 ? 'post by cid: ' + cids[0] : count + ' posts'} from IPFS`)
 
     return this.getContentArray(cids)
   }
@@ -92,10 +100,10 @@ export class SubsocialIpfsApi {
     const count = cids.length
 
     if (!count) {
-      logger.debug('Find comments: no cids provided')
+      logger.debug('Load comments: no cids provided')
       return [];
     }
-    logger.debug(`Find ${count === 1 ? 'comment by cid: ' + cids[0] : count + ' comments'} from IPFS`)
+    logger.debug(`Load ${count === 1 ? 'comment by cid: ' + cids[0] : count + ' comments'} from IPFS`)
 
     return this.getContentArray(cids)
   }
@@ -128,12 +136,28 @@ export class SubsocialIpfsApi {
   }
 
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
+    return typeof window === 'undefined'
+      ? this.saveContentOnServer(content)
+      : this.saveContentOnClient(content)
+  }
+
+  async saveContentOnClient (content: CommonContent): Promise<IpfsHash | undefined> {
+    try {
+      const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
+      return res.data;
+    } catch (error) {
+      logger.error('Failed to add content to IPFS on client. Error:', error)
+      return undefined;
+    }
+  }
+
+  async saveContentOnServer (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const json = Buffer.from(JSON.stringify(content));
       const results = await this.api.add(json);
       return results[results.length - 1].hash as any as IpfsHash;
     } catch (error) {
-      logger.error('Failed to add content to IPFS. Error:', error)
+      logger.error('Failed to add content to IPFS on server. Error:', error)
       return undefined;
     }
   }

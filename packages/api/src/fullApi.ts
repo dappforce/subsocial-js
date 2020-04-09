@@ -6,15 +6,22 @@ import { getFirstOrUndefinded } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
 import { CommonData, BlogData, PostData, CommentData } from '@subsocial/types'
 
+export type SubsocialApiProps = {
+  substrateApi: SubstrateApi,
+  ipfsApi: IpfsApi | string,
+  offchainUrl: string
+}
+
 export class SubsocialApi {
 
   private _substrate: SubsocialSubstrateApi
 
   private _ipfs: SubsocialIpfsApi
 
-  constructor (substrateApi: SubstrateApi, ipfsConnect: IpfsApi | string) {
+  constructor (props: SubsocialApiProps) {
+    const { substrateApi, ipfsApi, offchainUrl } = props
     this._substrate = new SubsocialSubstrateApi(substrateApi)
-    this._ipfs = new SubsocialIpfsApi(ipfsConnect)
+    this._ipfs = new SubsocialIpfsApi({ connect: ipfsApi, offchainUrl })
   }
 
   public get substrate (): SubsocialSubstrateApi {
