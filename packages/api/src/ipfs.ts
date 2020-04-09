@@ -46,7 +46,8 @@ export class SubsocialIpfsApi {
   private async connect (connection: IpfsApi | string) {
     try {
       this.api = typeof connection === 'string' ? ipfsClient(connection) : connection;
-      await this.api.pin.ls() // Test IPFS connection.
+      // Test IPFS connection by requesting its readme file.
+      await this.api.cat('/ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme')
       logger.info('Connected to IPFS node')
     } catch (err) {
       logger.error('Failed to connected to IPFS node:', err)
@@ -144,6 +145,11 @@ export class SubsocialIpfsApi {
   async saveContentOnClient (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
+
+      if (res.status !== 200) {
+        throw new Error(`Offchain responded with status code ${res.status} and message: ${res.statusText}`)
+      }
+
       return res.data;
     } catch (error) {
       logger.error('Failed to add content to IPFS on client. Error:', error)
