@@ -7,8 +7,7 @@
     "packages/*"
   ],
   "resolutions": {
-    "babel-core": "^7.0.0-bridge.0",
-    "typescript": "^3.7.2"
+    "babel-core": "^7.0.0-bridge.0"
   },
   "scripts": {
     "build": "yarn polkadot-dev-build-ts",
@@ -30,6 +29,7 @@
   },
   "dependencies": {
     "@polkadot/dev": "^0.32.17",
-    "@subsocial/config": "^0.1.2"
+    "@subsocial/config": "^0.1.2",
+    "typescript": "^3.8.3"
   }
 }

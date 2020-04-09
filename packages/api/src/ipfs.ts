@@ -2,6 +2,7 @@
 import { IpfsHash, CommonStruct } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
+import axios from 'axios';
 
 const IPFS_HASH_LEN = 47;
 
@@ -27,12 +28,19 @@ export function getCidsOfStructs (structs: CommonStruct[]): IpfsCid[] {
   return structs.map((x) => getCidOfStruct(x))
 }
 
+export type SubsocialIpfsProps = {
+  connect: IpfsApi | string,
+  offchainUrl: string
+}
+
 export class SubsocialIpfsApi {
 
-  private api!: IpfsApi; // IPFS Api (connected)
+  private api!: IpfsApi;
+  private offchainUrl!: string // IPFS Api (connected)
 
-  constructor (connect: IpfsApi | string) {
-    this.createConnect(connect)
+  constructor (props: SubsocialIpfsProps) {
+    this.createConnect(props.connect)
+    this.offchainUrl = `${props.offchainUrl}/v1`
   }
 
   private async createConnect (connect: IpfsApi | string) {
@@ -128,12 +136,27 @@ export class SubsocialIpfsApi {
   }
 
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
+    return typeof window === 'undefined' ? this.serverSaveContent(content) : this.clientSaveContent(content)
+  }
+
+  async clientSaveContent (content: CommonContent): Promise<IpfsHash | undefined> {
+    try {
+      const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
+      const { data } = res;
+      return data;
+    } catch (error) {
+      logger.error('Failed to add content to IPFS from client. Error:', error)
+      return undefined;
+    }
+  }
+
+  async serverSaveContent (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const json = Buffer.from(JSON.stringify(content));
       const results = await this.api.add(json);
       return results[results.length - 1].hash as any as IpfsHash;
     } catch (error) {
-      logger.error('Failed to add content to IPFS. Error:', error)
+      logger.error('Failed to add content to IPFS from server. Error:', error)
       return undefined;
     }
   }
