@@ -15,7 +15,7 @@ const blogContent: BlogContent = {
 const postContent: PostContent = {
   title: 'Test Post',
   body: 'Post body',
-  canonical: 'C',
+  canonical: 'http://original.acticle.com',
   image: '',
   tags: [ 'tag_one', 'tag_two' ]
 }

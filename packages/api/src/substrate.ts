@@ -36,16 +36,14 @@ export class SubsocialSubstrateApi {
   }
 
   private async structByAccount (query: string, accountId: AccountId | string, id: SubstrateId): Promise<boolean> {
-    const followedAccountId = this.asAccountId(accountId)
-    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ followedAccountId, id ]);
+    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ this.asAccountId(accountId), id ]);
     const isFollow = await this.socialQuery(query, queryParams) as bool
     return isFollow.valueOf()
   }
 
-  private async getStructReactionIdByAccount (accountId: AccountId | string, id: PostId | CommentId, struct: 'post' | 'comment'): Promise<ReactionId> {
-    const followedAccountId = this.asAccountId(accountId)
-    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ followedAccountId, id ]);
-    return this.socialQuery(`${struct}ReactionIdByAccount`, queryParams)
+  private async getStructReactionIdByAccount (accountId: AccountId | string, id: PostId | CommentId, structType: 'post' | 'comment'): Promise<ReactionId> {
+    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ this.asAccountId(accountId), id ]);
+    return this.socialQuery(`${structType}ReactionIdByAccount`, queryParams)
   }
 
   // ---------------------------------------------------------------------
@@ -182,19 +180,19 @@ export class SubsocialSubstrateApi {
     return this.structByAccount('blogFollowedByAccount', followedAddress, blogId)
   }
 
-  async sharedPostByAccount (accountId: AccountId | string, postId: PostId): Promise<boolean> {
+  async isPostSharedByAccount (accountId: AccountId | string, postId: PostId): Promise<boolean> {
     return this.structByAccount('postSharedByAccount', accountId, postId)
   }
 
-  async sharedCommentByAccount (accountId: AccountId | string, commentId: CommentId): Promise<boolean> {
+  async isCommentSharedByAccount (accountId: AccountId | string, commentId: CommentId): Promise<boolean> {
     return this.structByAccount('commentSharedByAccount', accountId, commentId)
   }
 
-  async setPostReactionIdByAccount (accountId: AccountId | string, postId: PostId): Promise<ReactionId> {
+  async getPostReactionIdByAccount (accountId: AccountId | string, postId: PostId): Promise<ReactionId> {
     return this.getStructReactionIdByAccount(accountId, postId, 'post')
   }
 
-  async setCommentReactionIdByAccount (accountId: AccountId | string, commentId: CommentId): Promise<ReactionId> {
+  async getCommentReactionIdByAccount (accountId: AccountId | string, commentId: CommentId): Promise<ReactionId> {
     return this.getStructReactionIdByAccount(accountId, commentId, 'comment')
   }
 
