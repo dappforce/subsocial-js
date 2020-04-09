@@ -136,27 +136,28 @@ export class SubsocialIpfsApi {
   }
 
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
-    return typeof window === 'undefined' ? this.serverSaveContent(content) : this.clientSaveContent(content)
+    return typeof window === 'undefined'
+      ? this.saveContentOnServer(content)
+      : this.saveContentOnClient(content)
   }
 
-  async clientSaveContent (content: CommonContent): Promise<IpfsHash | undefined> {
+  async saveContentOnClient (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
-      const { data } = res;
-      return data;
+      return res.data;
     } catch (error) {
-      logger.error('Failed to add content to IPFS from client. Error:', error)
+      logger.error('Failed to add content to IPFS on client. Error:', error)
       return undefined;
     }
   }
 
-  async serverSaveContent (content: CommonContent): Promise<IpfsHash | undefined> {
+  async saveContentOnServer (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const json = Buffer.from(JSON.stringify(content));
       const results = await this.api.add(json);
       return results[results.length - 1].hash as any as IpfsHash;
     } catch (error) {
-      logger.error('Failed to add content to IPFS from server. Error:', error)
+      logger.error('Failed to add content to IPFS on server. Error:', error)
       return undefined;
     }
   }

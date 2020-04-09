@@ -75,15 +75,16 @@ export class SubsocialSubstrateApi {
     const count = ids.length
 
     if (!count) {
-      logger.debug('Find social accounts : no ids provided')
+      logger.warn('Find social accounts: no account ids provided')
       return [];
     }
+
     const accountIds = ids.map(id => this.asAccountId(id))
-    logger.debug(`Find ${count === 1 ? 'account by id: ' + ids[0] : count + ' accounts'} from Substrate`)
+    logger.debug(`Load ${count === 1 ? 'account by id: ' + ids[0] : count + ' accounts'} from Substrate`)
     return this.findStructs('socialAccountById', accountIds);
   }
 
-  async socialQuery (query: string, value?: any): Promise<any> {
+  private async socialQuery (query: string, value?: any): Promise<any> {
     const socialQuery = await this.getSocialQuery()
     return socialQuery[query].multi(value)
   }
@@ -108,15 +109,15 @@ export class SubsocialSubstrateApi {
     return this.socialQuery('postIdsByBlogId', id)
   }
 
-  asAccountId (id: (AccountId | string)): AccountId {
+  private asAccountId (id: (AccountId | string)): AccountId {
     return typeof id === 'string' ? new GenericAccountId(registry, id) : id
   }
 
-  async accountFollowedByAccount (followedAddress: AccountId | string, myAddress: AccountId | string): Promise<boolean> {
+  async isAccountFollower (followedAddress: AccountId | string, myAddress: AccountId | string): Promise<boolean> {
     const followedAccountId = this.asAccountId(followedAddress)
     const myAccountId = this.asAccountId(myAddress)
-    const dataForQuery = new Tuple(registry, [ GenericAccountId, GenericAccountId ], [ followedAccountId, myAccountId ]);
-    const isFollow = await this.socialQuery('accountFollowedByAccount', dataForQuery) as bool
+    const queryParams = new Tuple(registry, [ GenericAccountId, GenericAccountId ], [ followedAccountId, myAccountId ]);
+    const isFollow = await this.socialQuery('accountFollowedByAccount', queryParams) as bool
     return isFollow.valueOf()
   }
 

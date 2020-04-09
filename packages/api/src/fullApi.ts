@@ -8,10 +8,8 @@ import { CommonData, BlogData, PostData, CommentData } from '@subsocial/types'
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
-  ipfs: {
-    connect: IpfsApi | string,
-    offchainUrl: string
-  }
+  ipfsApi: IpfsApi | string,
+  offchainUrl: string
 }
 
 export class SubsocialApi {
