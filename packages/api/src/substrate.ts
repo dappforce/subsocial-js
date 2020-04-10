@@ -52,7 +52,7 @@ export class SubsocialSubstrateApi {
     return isFollow.valueOf()
   }
 
-  private async getStructReactionIdByAccount (accountId: AnyAccountId, id: PostId | AnyCommentId, structType: 'post' | 'comment'): Promise<ReactionId> {
+  private async getReactionIdByAccount (accountId: AnyAccountId, id: PostId | AnyCommentId, structType: 'post' | 'comment'): Promise<ReactionId> {
     const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ this.asAccountId(accountId), id ]);
     return this.socialQuery(`${structType}ReactionIdByAccount`, queryParams)
   }
@@ -172,7 +172,7 @@ export class SubsocialSubstrateApi {
     return this.socialQuery('blogIdsByOwner', this.asAccountId(id))
   }
 
-  async blogsFollowedByAccount (id: AnyAccountId): Promise<BlogId[]> {
+  async blogIdsFollowedByAccount (id: AnyAccountId): Promise<BlogId[]> {
     return this.socialQuery('blogsFollowedByAccount', this.asAccountId(id))
   }
 
@@ -204,11 +204,11 @@ export class SubsocialSubstrateApi {
   }
 
   async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<ReactionId> {
-    return this.getStructReactionIdByAccount(accountId, postId, 'post')
+    return this.getReactionIdByAccount(accountId, postId, 'post')
   }
 
   async getCommentReactionIdByAccount (accountId: AnyAccountId, commentId: AnyCommentId): Promise<ReactionId> {
-    return this.getStructReactionIdByAccount(accountId, commentId, 'comment')
+    return this.getReactionIdByAccount(accountId, commentId, 'comment')
   }
 
 }
