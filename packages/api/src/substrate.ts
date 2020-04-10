@@ -33,6 +33,11 @@ export class SubsocialSubstrateApi {
 
   private async socialQuery (query: string, value?: any): Promise<any> {
     const socialQuery = await this.getSocialQuery()
+    return socialQuery[query](value)
+  }
+
+  private async socialMultiQuery (query: string, value: any[]): Promise<any[]> {
+    const socialQuery = await this.getSocialQuery()
     return socialQuery[query].multi(value)
   }
 
@@ -42,7 +47,7 @@ export class SubsocialSubstrateApi {
     return isFollow.valueOf()
   }
 
-  private async getStructReactionIdByAccount (accountId: AccountId | string, id: PostId | CommentId | BN, struct: 'post' | 'comment'): Promise<ReactionId> {
+  private async getStructReactionIdByAccount (accountId: AccountId | string, id: PostId | CommentId | BN, structType: 'post' | 'comment'): Promise<ReactionId> {
     const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ this.asAccountId(accountId), id ]);
     return this.socialQuery(`${structType}ReactionIdByAccount`, queryParams)
   }
@@ -52,8 +57,7 @@ export class SubsocialSubstrateApi {
 
   async findStructs<T extends CommonStruct | SocialAccount | Reaction> (methodName: string, ids: SubstrateId[] | AccountId[] | ReactionId[]): Promise<T[]> {
     try {
-      const socialQuery = await this.getSocialQuery()
-      const optionStruct = await socialQuery[methodName].multi(ids) as unknown as Option<any>[];
+      const optionStruct = await this.socialMultiQuery(methodName, ids);
       const optionFillStruct = optionStruct.filter((x) => x.isSome);
       return optionFillStruct.map((x) => x.unwrap());
     } catch (error) {
@@ -152,6 +156,11 @@ export class SubsocialSubstrateApi {
 
   async nextPostId (): Promise<PostId> {
     return this.socialQuery('nextPostId')
+  }
+
+  async getIdByHandle (handle: string): Promise<BlogId | undefined> {
+    const idOpt = await this.socialQuery('blogIdByHandle', handle) as Option<BlogId>
+    return idOpt.unwrapOr(undefined)
   }
 
   async blogIdsByOwner (id: AccountId | string): Promise<BlogId[]> {
