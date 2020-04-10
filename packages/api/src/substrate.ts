@@ -1,7 +1,7 @@
 import { Blog, Post, Comment, CommonStruct, SubstrateId, BlogId, PostId, SocialAccount, ReactionId, Reaction, AnyAccountId, AnyCommentId, AnyReactionId, AnyBlogId } from '@subsocial/types/substrate/interfaces';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option, Tuple, GenericAccountId, bool } from '@polkadot/types';
-import { newLogger, getFirstOrUndefinded, isEmptyStr } from '@subsocial/utils';
+import { newLogger, getFirstOrUndefinded, nonEmptyStr } from '@subsocial/utils';
 import { AccountId } from '@polkadot/types/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import BN from 'bn.js'
@@ -30,7 +30,7 @@ export class SubsocialSubstrateApi {
   private asAccountId (id: (AnyAccountId)): AccountId | undefined {
     if (id instanceof GenericAccountId) {
       return id
-    } else if (isEmptyStr || id.length !== 48) {
+    } else if (nonEmptyStr && id.length === 48) {
       return new GenericAccountId(registry, id)
     } else {
       return undefined
