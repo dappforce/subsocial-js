@@ -1,10 +1,9 @@
-import { Blog, Post, Comment, CommonStruct, SubstrateId, BlogId, PostId, SocialAccount, ReactionId, Reaction, AnyAccountId, AnyCommentId, AnyReactionId, AnyBlogId } from '@subsocial/types/substrate/interfaces';
+import { Blog, Post, Comment, CommonStruct, SubstrateId, BlogId, PostId, SocialAccount, ReactionId, Reaction, AnyAccountId, AnyCommentId, AnyReactionId, AnyBlogId, AnyPostId } from '@subsocial/types/substrate/interfaces';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option, Tuple, GenericAccountId, bool } from '@polkadot/types';
 import { newLogger, getFirstOrUndefinded, nonEmptyStr } from '@subsocial/utils';
 import { AccountId } from '@polkadot/types/interfaces';
 import registry from '@subsocial/types/substrate/registry';
-import BN from 'bn.js'
 
 export class SubsocialSubstrateApi {
 
@@ -30,7 +29,7 @@ export class SubsocialSubstrateApi {
   private asAccountId (id: (AnyAccountId)): AccountId | undefined {
     if (id instanceof GenericAccountId) {
       return id
-    } else if (nonEmptyStr && id.length === 48) {
+    } else if (nonEmptyStr(id) && id.length === 48) {
       return new GenericAccountId(registry, id)
     } else {
       return undefined
@@ -196,7 +195,7 @@ export class SubsocialSubstrateApi {
     return this.structByAccount('blogFollowedByAccount', myAddress, blogId)
   }
 
-  async isPostSharedByAccount (accountId: AnyAccountId, postId: PostId | BN): Promise<boolean> {
+  async isPostSharedByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<boolean> {
     return this.structByAccount('postSharedByAccount', accountId, postId)
   }
 
@@ -204,7 +203,7 @@ export class SubsocialSubstrateApi {
     return this.structByAccount('commentSharedByAccount', accountId, commentId)
   }
 
-  async getPostReactionIdByAccount (accountId: AnyAccountId, postId: PostId | BN): Promise<ReactionId> {
+  async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<ReactionId> {
     return this.getStructReactionIdByAccount(accountId, postId, 'post')
   }
 
