@@ -163,7 +163,7 @@ export class SubsocialSubstrateApi {
     return this.socialQuery('nextPostId')
   }
 
-  async getIdByHandle (handle: string): Promise<BlogId | undefined> {
+  async getBlogIdByHandle (handle: string): Promise<BlogId | undefined> {
     const idOpt = await this.socialQuery('blogIdByHandle', handle) as Option<BlogId>
     return idOpt.unwrapOr(undefined)
   }
