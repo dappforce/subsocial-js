@@ -3,21 +3,13 @@ import { CommonContent, BlogContent, PostContent, CommentContent } from '../offc
 
 export abstract class CommonData<S extends CommonStruct, C extends CommonContent> {
 
-  private _struct?: S
+  public struct?: S
 
-  private _content?: C
+  public content?: C
 
   constructor (struct?: S, content?: C) {
-    this._struct = struct
-    this._content = content
-  }
-
-  public get struct () {
-    return this._struct
-  }
-
-  public get content () {
-    return this._content
+    this.struct = struct
+    this.content = content
   }
 }
 
