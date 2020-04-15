@@ -1,3 +1,7 @@
+# Code editors
+.idea
+*.code-workspace
+
 # Logs
 logs
 *.log
