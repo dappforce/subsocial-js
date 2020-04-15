@@ -21,12 +21,12 @@ const asIpfsCid = (cid: IpfsCid) => {
   }
 }
 
-export function getCidOfStruct (struct: CommonStruct): IpfsCid {
-  return new CID(struct.ipfs_hash.toString());
+export function getCidOfStruct (struct: CommonStruct): CID {
+  return new CID(struct.ipfs_hash.toString())
 }
 
-export function getCidsOfStructs (structs: CommonStruct[]): IpfsCid[] {
-  return structs.map((x) => getCidOfStruct(x))
+export function getCidsOfStructs (structs: CommonStruct[]): CID[] {
+  return structs.map(getCidOfStruct)
 }
 
 export type SubsocialIpfsProps = {
@@ -73,10 +73,10 @@ export class SubsocialIpfsApi {
       }
 
       const loadContentFns = ipfsCids.map((cid) => this.api.cat(cid));
-      const jsonContentArray = await Promise.all(loadContentFns);
-      const res = jsonContentArray.map((x) => JSON.parse(x.toString())) as T[];
-      logger.debug(`Loaded ${pluralize(res.length, contentName)}`)
-      return res
+      const jsonContents = await Promise.all(loadContentFns);
+      const contents = jsonContents.map((x) => JSON.parse(x.toString())) as T[];
+      logger.debug(`Loaded ${pluralize(contents.length, contentName)}`)
+      return contents
     } catch (err) {
       logger.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
       return [];

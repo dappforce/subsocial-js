@@ -5,7 +5,7 @@ import { SubsocialIpfsApi, getCidsOfStructs } from './ipfs'
 import { getFirstOrUndefinded } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
 import { CommonData, BlogData, PostData, CommentData, ExtendedPostData } from '@subsocial/types'
-import { getSharedPostId } from './utils';
+import { getSharedPostId, getUniqueIds } from './utils';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
@@ -33,22 +33,23 @@ export class SubsocialApi {
     return this._ipfs
   }
 
-  private async findDataArray<S extends CommonStruct, C extends CommonContent, D extends CommonData<S, C>> (
+  private async findDataArray<S extends CommonStruct, C extends CommonContent> (
     ids: SubstrateId[],
     findStructs: (ids: SubstrateId[]) => Promise<S[]>,
     findContents: (cids: IpfsCid[]) => Promise<C[]>
-  ): Promise<D[]> {
+  ): Promise<CommonData<S, C>[]> {
 
     const structs = await findStructs(ids)
-    const cids = getCidsOfStructs(structs)
+    const cids = getUniqueIds(getCidsOfStructs(structs))
     const contents = await findContents(cids)
+    const contentByCidMap = new Map<string, C>()
+    cids.forEach((cid, i) => contentByCidMap.set(cid.toString(), contents[i]))
 
-    if (structs.length !== contents.length) {
-      console.error(`Lengths mismatch: ${structs.length} structs and ${contents.length} contents`)
-      return []
-    }
-    // eslint-disable-next-line new-cap
-    return structs.map((struct, i) => ({ struct, content: contents[i] } as D))
+    return structs.map(struct => {
+      const cid = struct.ipfs_hash.toString()
+      const content = contentByCidMap.get(cid)
+      return { struct, content }
+    })
   }
 
   // ---------------------------------------------------------------------
@@ -56,25 +57,25 @@ export class SubsocialApi {
 
   async findBlogs (ids: SubstrateId[]): Promise<BlogData[]> {
     const findStructs = this.substrate.findBlogs.bind(this.substrate);
-    const findCids = this.ipfs.findBlogs.bind(this.ipfs);
-    return this.findDataArray<Blog, BlogContent, BlogData>(
-      ids, findStructs, findCids
+    const findContents = this.ipfs.findBlogs.bind(this.ipfs);
+    return this.findDataArray<Blog, BlogContent>(
+      ids, findStructs, findContents
     )
   }
 
   async findPosts (ids: SubstrateId[]): Promise<PostData[]> {
     const findStructs = this.substrate.findPosts.bind(this.substrate)
-    const findCids = this.ipfs.findPosts.bind(this.ipfs)
-    return this.findDataArray<Post, PostContent, PostData>(
-      ids, findStructs, findCids
+    const findContents = this.ipfs.findPosts.bind(this.ipfs)
+    return this.findDataArray<Post, PostContent>(
+      ids, findStructs, findContents
     )
   }
 
   async findComments (ids: SubstrateId[]): Promise<CommentData[]> {
     const findStructs = this.substrate.findComments.bind(this.substrate)
-    const findCids = this.ipfs.findComments.bind(this.ipfs)
-    return this.findDataArray<Comment, CommentContent, CommentData>(
-      ids, findStructs, findCids
+    const findContents = this.ipfs.findComments.bind(this.ipfs)
+    return this.findDataArray<Comment, CommentContent>(
+      ids, findStructs, findContents
     )
   }
 
