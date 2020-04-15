@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { IpfsHash, CommonStruct } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi } from '@subsocial/types/offchain';
-import { newLogger, getFirstOrUndefinded } from '@subsocial/utils';
+import { newLogger, getFirstOrUndefinded, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios from 'axios';
-
-const IPFS_HASH_LEN = 47;
+import { getUniqueIds } from './utils';
 
 const ipfsClient = require('ipfs-http-client')
+
+const IPFS_HASH_BINARY_LEN = 47
 
 const asIpfsCid = (cid: IpfsCid) => {
   if (cid instanceof CID) {
     return cid
   } else if (typeof cid === 'string') {
     return new CID(cid)
-  } else if (typeof cid.toU8a === 'function' && cid.toU8a().length === IPFS_HASH_LEN) {
+  } else if (typeof cid.toU8a === 'function' && cid.toU8a().length === IPFS_HASH_BINARY_LEN) {
     return new CID(cid.toString())
   } else {
-    throw new Error('Wrong type of CID. Valid types are: string | IpfsHash | CID')
+    throw new Error('Wrong type of IPFS CID. Valid types are: string | IpfsHash | CID')
   }
 }
 
@@ -50,91 +51,79 @@ export class SubsocialIpfsApi {
       await this.api.cat('/ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme')
       logger.info('Connected to IPFS node')
     } catch (err) {
-      logger.error('Failed to connected to IPFS node:', err)
+      logger.error('Failed to connect to IPFS node:', err)
     }
   }
-
-  // ---------------------------------------------------------------------
-  // Multiple
 
   get isConnected () {
     return typeof this.api !== 'undefined';
   }
 
-  async getContentArray<T extends CommonContent> (cids: IpfsCid[]): Promise<T[]> {
+  // ---------------------------------------------------------------------
+  // Find multiple
 
+  async getContentArray<T extends CommonContent> (cids: IpfsCid[], contentName?: string): Promise<T[]> {
     try {
-      const ipfsCids = cids.map((cid) => asIpfsCid(cid));
+      contentName = nonEmptyStr(contentName) ? contentName + ' content' : 'content'
+      const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
+
+      if (isEmptyArray(ipfsCids)) {
+        logger.debug(`No ${contentName} to load from IPFS: no cids provided`)
+        return []
+      }
+
       const loadContentFns = ipfsCids.map((cid) => this.api.cat(cid));
       const jsonContentArray = await Promise.all(loadContentFns);
-      return jsonContentArray.map((x) => JSON.parse(x.toString())) as T[];
-    } catch (error) {
-      logger.error('Failed to load content by cids. Error:', error);
+      const res = jsonContentArray.map((x) => JSON.parse(x.toString())) as T[];
+      logger.debug(`Loaded ${pluralize(res.length, contentName)}`)
+      return res
+    } catch (err) {
+      logger.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
       return [];
     }
   }
 
   async findBlogs (cids: IpfsCid[]): Promise<BlogContent[]> {
-    const count = cids.length
-
-    if (!count) {
-      logger.debug('Load blogs: no cids provided')
-      return [];
-    }
-    logger.debug(`Load ${count === 1 ? 'blog by cid: ' + cids[0] : count + ' blogs'}`)
-    return this.getContentArray(cids)
+    return this.getContentArray(cids, 'blog')
   }
 
   async findPosts (cids: IpfsCid[]): Promise<PostContent[]> {
-    const count = cids.length
-
-    if (!count) {
-      logger.debug('Load posts: no cids provided')
-      return [];
-    }
-    logger.debug(`Load ${count === 1 ? 'post by cid: ' + cids[0] : count + ' posts'} from IPFS`)
-
-    return this.getContentArray(cids)
+    return this.getContentArray(cids, 'post')
   }
 
   async findComments (cids: IpfsCid[]): Promise<CommentContent[]> {
-    const count = cids.length
-
-    if (!count) {
-      logger.debug('Load comments: no cids provided')
-      return [];
-    }
-    logger.debug(`Load ${count === 1 ? 'comment by cid: ' + cids[0] : count + ' comments'} from IPFS`)
-
-    return this.getContentArray(cids)
+    return this.getContentArray(cids, 'comment')
   }
 
   // ---------------------------------------------------------------------
-  // Single
+  // Find single
 
-  async getContent<T extends CommonContent> (cid: IpfsCid): Promise<T | undefined> {
-    return getFirstOrUndefinded(await this.getContentArray<T>([ cid ]))
+  async getContent<T extends CommonContent> (cid: IpfsCid, contentName?: string): Promise<T | undefined> {
+    return getFirstOrUndefinded(await this.getContentArray<T>([ cid ], contentName))
   }
 
   async findBlog (cid: IpfsCid): Promise<BlogContent | undefined> {
-    return this.getContent<BlogContent>(cid)
+    return this.getContent<BlogContent>(cid, 'blog')
   }
 
   async findPost (cid: IpfsCid): Promise<PostContent | undefined> {
-    return this.getContent<PostContent>(cid)
+    return this.getContent<PostContent>(cid, 'post')
   }
 
   async findComment (cid: IpfsCid): Promise<CommentContent | undefined> {
-    return this.getContent<CommentContent>(cid)
+    return this.getContent<CommentContent>(cid, 'comment')
   }
 
   // ---------------------------------------------------------------------
-  // Single
+  // Remove
 
   async removeContent (hash: string) {
     await this.api.pin.rm(hash);
-    logger.info(`Unpinned content with hash ${hash}`);
+    logger.info(`Unpinned content with hash: ${hash}`);
   }
+
+  // ---------------------------------------------------------------------
+  // Save
 
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
     return typeof window === 'undefined'
@@ -152,7 +141,7 @@ export class SubsocialIpfsApi {
 
       return res.data;
     } catch (error) {
-      logger.error('Failed to add content to IPFS on client. Error:', error)
+      logger.error('Failed to add content to IPFS on client:', error)
       return undefined;
     }
   }
@@ -163,7 +152,7 @@ export class SubsocialIpfsApi {
       const results = await this.api.add(json);
       return results[results.length - 1].hash as any as IpfsHash;
     } catch (error) {
-      logger.error('Failed to add content to IPFS on server. Error:', error)
+      logger.error('Failed to add content to IPFS on server:', error)
       return undefined;
     }
   }

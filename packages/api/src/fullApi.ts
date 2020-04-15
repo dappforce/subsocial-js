@@ -1,4 +1,4 @@
-import { Blog, Post, Comment, CommonStruct, SubstrateId } from '@subsocial/types/substrate/interfaces'
+import { Blog, Post, Comment, CommonStruct, SubstrateId, AnyPostId } from '@subsocial/types/substrate/interfaces'
 import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi } from './substrate'
 import { SubsocialIpfsApi, getCidsOfStructs } from './ipfs'
@@ -6,7 +6,6 @@ import { getFirstOrUndefinded } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
 import { CommonData, BlogData, PostData, CommentData, ExtendedPostData } from '@subsocial/types'
 import { getSharedPostId } from './utils';
-import BN from 'bn.js'
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
@@ -79,32 +78,41 @@ export class SubsocialApi {
     )
   }
 
-  async findPostsWithExt (ids: SubstrateId[]): Promise<ExtendedPostData[]> {
-    const postData = await this.findPosts(ids)
+  async findPostsWithExt (ids: AnyPostId[]): Promise<ExtendedPostData[]> {
+    const posts = await this.findPosts(ids)
 
-    const ExtIdToIndexMap = new Map<string, number>()
-    const resultArr: ExtendedPostData[] = []
+    const results: ExtendedPostData[] = []
+    const extIds: AnyPostId [] = []
 
-    postData.forEach((x, i) => {
-      const extId = getSharedPostId(x)
+    // Key - serialized id of a shared original post.
+    // Value - indices of the posts that share this original post in `results` array.
+    const resultIndicesByExtIdMap = new Map<string, number[]>()
+
+    posts.forEach((post, i) => {
+      results.push({ post })
+      const extId = getSharedPostId(post)
       if (typeof extId !== 'undefined') {
-        ExtIdToIndexMap.set(extId.toString(), i)
-        resultArr.push({ post: x })
-      }
-    })
-    const extIdAsString = new Set([ ...ExtIdToIndexMap.keys() ])
-    const extIds = [ ...extIdAsString.values() ].map(x => new BN(x))
-    const extPostData = await this.findPosts(extIds)
-
-    extPostData.forEach(x => {
-      const extId = x.struct.id.toString()
-      const index = ExtIdToIndexMap.get(extId)
-      if (index) {
-        resultArr[index] = { post: postData[index], ext: x }
+        const idStr = extId.toString()
+        let idxs = resultIndicesByExtIdMap.get(idStr)
+        if (typeof idxs === 'undefined') {
+          idxs = []
+          resultIndicesByExtIdMap.set(idStr, idxs)
+          extIds.push(extId)
+        }
+        idxs.push(i)
       }
     })
 
-    return resultArr;
+    const extPosts = await this.findPosts(extIds)
+    extPosts.forEach(extPost => {
+      const extId = extPost.struct.id.toString()
+      const idxs = resultIndicesByExtIdMap.get(extId) || []
+      idxs.forEach(idx => {
+        results[idx].ext = extPost
+      })
+    })
+
+    return results
   }
 
   // ---------------------------------------------------------------------
