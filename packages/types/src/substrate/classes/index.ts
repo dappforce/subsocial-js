@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
-import { IpfsHash, BlogId, OptionVecAccountId } from '@subsocial/types/substrate/interfaces/subsocial';
+import { IpfsHash, BlogId, OptionVecAccountId, PostId, CommentId } from '@subsocial/types/substrate/interfaces/subsocial';
 import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
 
@@ -42,6 +42,26 @@ export class PostExtension extends Enum {
         SharedPost,
         SharedComment
       }, value, index);
+  }
+
+  get isRegularPost (): boolean {
+    return this.type === 'RegularPost'
+  }
+
+  get isSharedPost (): boolean {
+    return this.type === 'SharedPost'
+  }
+
+  get isSharedComment (): boolean {
+    return this.type === 'SharedComment'
+  }
+
+  get asSharedPost (): PostId {
+    return this.value as PostId;
+  }
+
+  get asSharedComment (): CommentId {
+    return this.value as CommentId;
   }
 }
 
