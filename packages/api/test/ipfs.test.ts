@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { BlogContent, PostContent, CommentContent } from '@subsocial/types/offchain';
+import { BlogContent, PostContent, CommentContent } from '@subsocial/types/src/offchain';
 import { SubsocialIpfsApi } from '../src/ipfs';
 const ipfs = new SubsocialIpfsApi({ connect: '/ip4/127.0.0.1/tcp/5001/http', offchainUrl: 'http:localhost:3001' });
 

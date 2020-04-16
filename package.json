@@ -12,6 +12,10 @@
   "scripts": {
     "build": "yarn polkadot-dev-build-ts",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate.ts",
+    "publish-all": "yarn build && ./scripts/publish-all.sh",
+    "publish-api": "yarn build && ./scripts/publish-api.sh",
+    "publish-types": "yarn build && ./scripts/publish-types.sh",
+    "publish-utils": "yarn build && ./scripts/publish-utils.sh",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
