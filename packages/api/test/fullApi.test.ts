@@ -14,7 +14,7 @@ test('Find blog from Substrate and IPFS', async () => {
   expect(blog.struct.id.toString()).toBe(blogId.toString());
 })
 
-test('Find sharedPost from Substrate and IPFS', async () => {
+test('Find sharedPost in Substrate and IPFS', async () => {
   const substrateApi = await getApi();
   const postId = new BN(2);
   const api = new SubsocialApi({ substrateApi, ipfsApi: ipfsUrl, offchainUrl: offchainUrl} );
