@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
-import { IpfsHash, BlogId, OptionVecAccountId, PostId, CommentId } from '@subsocial/types/substrate/interfaces/subsocial';
+import { IpfsHash, BlogId, OptionVecAccountId, PostId, CommentId, PostExtension as IPostExtension } from '@subsocial/types/substrate/interfaces/subsocial';
 import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
 
@@ -33,7 +33,7 @@ type PostExtensionEnumValue =
   { SharedPost: SharedPost } |
   { SharedComment: SharedComment };
 
-export class PostExtension extends Enum {
+export class PostExtension extends Enum implements IPostExtension {
   constructor (value?: PostExtensionEnumValue, index?: number) {
     super(
       registry,
