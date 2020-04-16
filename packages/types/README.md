@@ -7,13 +7,13 @@ JavaScript type definitions for Subsocial blockchain.
 Using npm:
 
 ```bash
-npm i @subsocial/types/src
+npm i @subsocial/types
 ```
 
 Using yarn:
 
 ```bash
-yarn add @subsocial/types/src
+yarn add @subsocial/types
 ```
 
 ## License
