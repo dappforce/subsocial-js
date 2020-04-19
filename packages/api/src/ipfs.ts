@@ -21,8 +21,12 @@ const asIpfsCid = (cid: IpfsCid) => {
   }
 }
 
+export function getIpfsHashOfStruct (struct: CommonStruct): string {
+  return struct.ipfs_hash.toString()
+}
+
 export function getCidOfStruct (struct: CommonStruct): CID {
-  return new CID(struct.ipfs_hash.toString())
+  return new CID(getIpfsHashOfStruct(struct))
 }
 
 export function getCidsOfStructs (structs: CommonStruct[]): CID[] {

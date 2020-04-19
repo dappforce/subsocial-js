@@ -1,7 +1,7 @@
 import { Blog, Post, Comment, CommonStruct, SubstrateId, AnyPostId } from '@subsocial/types/substrate/interfaces'
 import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi } from './substrate'
-import { SubsocialIpfsApi, getCidsOfStructs } from './ipfs'
+import { SubsocialIpfsApi, getCidsOfStructs, getIpfsHashOfStruct } from './ipfs'
 import { getFirstOrUndefinded } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
 import { CommonData, BlogData, PostData, CommentData, ExtendedPostData } from '@subsocial/types'
@@ -42,12 +42,12 @@ export class SubsocialApi {
     const structs = await findStructs(ids)
     const cids = getUniqueIds(getCidsOfStructs(structs))
     const contents = await findContents(cids)
-    const contentByCidMap = new Map<string, C>()
-    cids.forEach((cid, i) => contentByCidMap.set(cid.toString(), contents[i]))
+    const contentByHashMap = new Map<string, C>()
+    cids.forEach((cid, i) => contentByHashMap.set(cid.toString(), contents[i]))
 
     return structs.map(struct => {
-      const cid = struct.ipfs_hash.toString()
-      const content = contentByCidMap.get(cid)
+      const hash = getIpfsHashOfStruct(struct)
+      const content = contentByHashMap.get(hash)
       return { struct, content }
     })
   }
