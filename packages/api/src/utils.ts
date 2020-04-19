@@ -1,6 +1,8 @@
 import { PostData, IpfsCid } from '@subsocial/types';
-import { newLogger, isEmptyArray } from '@subsocial/utils';
-import { PostId, SubstrateId, AccountId, ReactionId, CommonStruct, SocialAccount, Reaction } from '@subsocial/types/substrate/interfaces';
+import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
+import { PostId, SubstrateId, AccountId, ReactionId, CommonStruct, SocialAccount, Reaction, AnyAccountId } from '@subsocial/types/substrate/interfaces';
+import registry from '@subsocial/types/substrate/registry';
+import { GenericAccountId } from '@polkadot/types'
 
 const log = newLogger('Subsocial Api Utils');
 
@@ -37,4 +39,14 @@ export const getUniqueIds = <ID extends AnyId> (ids: (ID | undefined)[]): ID[] =
   })
 
   return uniqueIds
+}
+
+export function asAccountId (id: AnyAccountId): AccountId | undefined {
+  if (id instanceof GenericAccountId) {
+    return id
+  } else if (nonEmptyStr(id) && id.length === 48) {
+    return new GenericAccountId(registry, id)
+  } else {
+    return undefined
+  }
 }

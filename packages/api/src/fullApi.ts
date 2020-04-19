@@ -1,11 +1,11 @@
-import { Blog, Post, Comment, CommonStruct, SubstrateId, AnyPostId } from '@subsocial/types/substrate/interfaces'
-import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid } from '@subsocial/types/offchain'
+import { Blog, Post, Comment, CommonStruct, SubstrateId, AnyPostId, AnyAccountId, AnyBlogId, AnyCommentId, SocialAccount } from '@subsocial/types/substrate/interfaces'
+import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid, ProfileContent } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi } from './substrate'
 import { SubsocialIpfsApi, getCidsOfStructs, getIpfsHashOfStruct } from './ipfs'
 import { getFirstOrUndefinded } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
-import { CommonData, BlogData, PostData, CommentData, ExtendedPostData } from '@subsocial/types'
-import { getSharedPostId, getUniqueIds } from './utils';
+import { CommonData, BlogData, PostData, CommentData, ExtendedPostData, ProfileData } from '@subsocial/types'
+import { getSharedPostId, getUniqueIds, SupportedSubstrateId } from './utils';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
@@ -34,8 +34,8 @@ export class SubsocialApi {
   }
 
   private async findDataArray<S extends CommonStruct, C extends CommonContent> (
-    ids: SubstrateId[],
-    findStructs: (ids: SubstrateId[]) => Promise<S[]>,
+    ids: SupportedSubstrateId[],
+    findStructs: (ids: SupportedSubstrateId[]) => Promise<S[]>,
     findContents: (cids: IpfsCid[]) => Promise<C[]>
   ): Promise<CommonData<S, C>[]> {
 
@@ -116,22 +116,41 @@ export class SubsocialApi {
     return results
   }
 
+  async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
+    const findStructs = this.substrate.findSocialAccounts.bind(this.substrate)
+    const findContents = this.ipfs.findProfiles.bind(this.ipfs)
+    const commonProfileData = await this.findDataArray<SocialAccount, ProfileContent>(
+      ids, findStructs, findContents
+    ) as ProfileData[]
+    return commonProfileData.map(x => {
+      const { struct, content } = x;
+      if (content) {
+        return { struct, content, profile: struct.profile.unwrap() }
+      }
+      return x;
+    })
+  }
+
   // ---------------------------------------------------------------------
   // Single
 
-  async findBlog (id: SubstrateId): Promise<BlogData | undefined> {
+  async findBlog (id: AnyBlogId): Promise<BlogData | undefined> {
     return getFirstOrUndefinded(await this.findBlogs([ id ]))
   }
 
-  async findPost (id: SubstrateId): Promise<PostData | undefined> {
+  async findPost (id: AnyPostId): Promise<PostData | undefined> {
     return getFirstOrUndefinded(await this.findPosts([ id ]))
   }
 
-  async findPostWithExt (id: SubstrateId): Promise<ExtendedPostData | undefined> {
+  async findPostWithExt (id: AnyPostId): Promise<ExtendedPostData | undefined> {
     return getFirstOrUndefinded(await this.findPostsWithExt([ id ]))
   }
 
-  async findComment (id: SubstrateId): Promise<CommentData | undefined> {
+  async findComment (id: AnyCommentId): Promise<CommentData | undefined> {
     return getFirstOrUndefinded(await this.findComments([ id ]))
+  }
+
+  async findProfile (id: AnyAccountId): Promise<ProfileData | undefined> {
+    return getFirstOrUndefinded(await this.findProfiles([ id ]))
   }
 }
