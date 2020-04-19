@@ -47,7 +47,7 @@ export class SubsocialApi {
 
     return structs.map(struct => {
       const hash = getIpfsHashOfStruct(struct)
-      const content = contentByHashMap.get(hash)
+      const content = hash ? contentByHashMap.get(hash) : undefined
       return { struct, content }
     })
   }

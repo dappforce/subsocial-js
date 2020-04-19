@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { IpfsHash, CommonStruct } from '@subsocial/types/substrate/interfaces';
+import { IpfsHash, CommonStruct, SocialAccount, Profile } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefinded, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios from 'axios';
@@ -21,16 +21,36 @@ const asIpfsCid = (cid: IpfsCid) => {
   }
 }
 
-export function getIpfsHashOfStruct (struct: CommonStruct): string {
-  return struct.ipfs_hash.toString()
+export function getIpfsHashOfSocialAccount (struct: SocialAccount): string | undefined {
+  const profile = struct?.profile
+  if (profile && profile.isSome) {
+    return getIpfsHashOfStruct(profile.unwrap())
+  }
+  return undefined
 }
 
-export function getCidOfStruct (struct: CommonStruct): CID {
-  return new CID(getIpfsHashOfStruct(struct))
+type HasIpfsHash = {
+  ipfs_hash: IpfsHash
 }
 
-export function getCidsOfStructs (structs: CommonStruct[]): CID[] {
-  return structs.map(getCidOfStruct)
+export function getIpfsHashOfStruct<S extends HasIpfsHash | SocialAccount> (struct: S): string | undefined {
+  if ((struct as HasIpfsHash).ipfs_hash) {
+    return (struct as HasIpfsHash).ipfs_hash.toString()
+  } else if ((struct as SocialAccount).profile) {
+    return getIpfsHashOfSocialAccount(struct as SocialAccount)
+  }
+  return undefined
+}
+
+export function getCidOfStruct (struct: CommonStruct | Profile): CID | undefined {
+  const hash = getIpfsHashOfStruct(struct)
+  return hash ? new CID(hash) : undefined
+}
+
+export function getCidsOfStructs (structs: (CommonStruct | Profile)[]): CID[] {
+  return structs
+    .map(getCidOfStruct)
+    .filter(cid => typeof cid !== 'undefined') as CID[]
 }
 
 export type SubsocialIpfsProps = {
