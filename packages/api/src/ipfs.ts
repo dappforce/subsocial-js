@@ -29,25 +29,27 @@ export function getIpfsHashOfSocialAccount (struct: SocialAccount): string | und
   return undefined
 }
 
-type HasIpfsHash = {
+type HasIpfsHashDirectly = {
   ipfs_hash: IpfsHash
 }
 
-export function getIpfsHashOfStruct<S extends HasIpfsHash | SocialAccount> (struct: S): string | undefined {
-  if ((struct as HasIpfsHash).ipfs_hash) {
-    return (struct as HasIpfsHash).ipfs_hash.toString()
+type HasIpfsHashSomewhere = HasIpfsHashDirectly | SocialAccount
+
+export function getIpfsHashOfStruct<S extends HasIpfsHashSomewhere> (struct: S): string | undefined {
+  if ((struct as HasIpfsHashDirectly).ipfs_hash) {
+    return (struct as HasIpfsHashDirectly).ipfs_hash.toString()
   } else if ((struct as SocialAccount).profile) {
     return getIpfsHashOfSocialAccount(struct as SocialAccount)
   }
   return undefined
 }
 
-export function getCidOfStruct (struct: CommonStruct | Profile): CID | undefined {
+export function getCidOfStruct (struct: HasIpfsHashSomewhere): CID | undefined {
   const hash = getIpfsHashOfStruct(struct)
   return hash ? new CID(hash) : undefined
 }
 
-export function getCidsOfStructs (structs: (CommonStruct | Profile)[]): CID[] {
+export function getCidsOfStructs (structs: HasIpfsHashSomewhere[]): CID[] {
   return structs
     .map(getCidOfStruct)
     .filter(cid => typeof cid !== 'undefined') as CID[]
