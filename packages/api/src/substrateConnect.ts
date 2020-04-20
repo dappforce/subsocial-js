@@ -3,25 +3,29 @@ import { types } from '@subsocial/types/substrate/preparedTypes';
 import { newLogger } from '@subsocial/utils';
 
 const logger = newLogger('SubstrateConnection');
+
 let api: ApiPromise;
 
 export { api };
+
 export class DfApi {
 
   protected static api: ApiPromise;
 
   protected static connected = false;
 
-  public static connect = async (url?: string): Promise<ApiPromise> => {
-    const rpcEndpoint = url || 'ws://127.0.0.1:9944/';
+  public static connect = async (nodeUrl?: string): Promise<ApiPromise> => {
+    const rpcEndpoint = nodeUrl || 'ws://127.0.0.1:9944/';
     const provider = new WsProvider(rpcEndpoint);
 
-    // Create the API and wait until ready:
-    logger.info(`Connecting to Substrate API at ${rpcEndpoint}`);
-    DfApi.api = await ApiPromise.create({ provider, types });
+    logger.info(`Connecting to Substrate node at ${rpcEndpoint}...`);
+    const api = await ApiPromise.create({ provider, types });
+    await api.isReady
+    DfApi.api = api
     DfApi.connected = true
+    DfApi.logChainInfo()
 
-    return DfApi.api
+    return api
   }
 
   public static disconnect = () => {
@@ -29,9 +33,9 @@ export class DfApi {
     if (api !== undefined && localApi && localApi.isReady && connected) {
       try {
         localApi.disconnect();
-        logger.info('Disconnected from Substrate API.');
+        logger.info('Disconnected from Substrate node');
       } catch (err) {
-        logger.error('Failed to disconnect from Substrate. Error:', err)
+        logger.error('Failed to disconnect from Substrate node:', err)
       } finally {
         DfApi.connected = false
       }
@@ -40,7 +44,7 @@ export class DfApi {
 
   /** Retrieve the chain & node information via RPC calls and log into console.  */
   protected static logChainInfo = async () => {
-    const system = DfApi.api.rpc.system;
+    const { system } = DfApi.api.rpc;
 
     const [ chain, nodeName, nodeVersion ] = await Promise.all(
       [ system.chain(), system.name(), system.version() ]);
@@ -49,18 +53,14 @@ export class DfApi {
   }
 }
 
-export const Api = DfApi;
-export default DfApi;
+export const Api = DfApi
 
-// const MAX_CONN_TIME_SECS = 10
+export default DfApi
 
+/** Get the current open connection to Substrate node. */
 export const getApi = async () => {
-  if (api) {
-    logger.info('Get Substrate API: SSR api');
-    return api;
-  } else {
-    logger.info('Get Substrate API: DfApi.setup()');
-    api = await DfApi.connect();
-    return api;
+  if (!api) {
+    api = await DfApi.connect()
   }
+  return api
 }
