@@ -3,7 +3,8 @@ import truncate from 'lodash.truncate';
 
 const DEFAULT_SUMMARY_LENGTH = 300;
 
-export const summarize = (body: string, limit: number = DEFAULT_SUMMARY_LENGTH) => {
+/** Shorten a markdown text up to `limit` chars. Split by separators. */
+export const summarize = (body: string, limit: number = DEFAULT_SUMMARY_LENGTH): string => {
   const text = mdToText(body);
   return text.length > limit
     ? truncate(text, {

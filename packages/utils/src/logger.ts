@@ -7,14 +7,19 @@ export const logFormat = (label: string) => winston.format.combine(
   winston.format.label({ label: label }),
   winston.format.splat(),
   winston.format.simple(),
-  winston.format.metadata({ fillExcept: [ 'message', 'level', 'timestamp', 'label' ] }),
+  winston.format.metadata({ fillExcept: [ 'timestamp', 'level', 'label', 'message' ] }),
   winston.format.printf(
-    (info) => {
-      const data = new Date(info.timestamp)
-      return `[${data.toLocaleTimeString()}:${data.getMilliseconds()}] ${info.level} ${chalk.bold(label)}:${info.message}`
+    ({ timestamp, level, label, message }) => {
+      const date = new Date(timestamp)
+      const millis = date.getMilliseconds()
+      return `[${date.toLocaleTimeString()}.${millis}] ${level} ${chalk.bold(label)}: ${message}`
     }
   )
 )
+
+const newTransport = (options?: winston.transports.ConsoleTransportOptions) => {
+  return new winston.transports.Console(options)
+}
 
 export const newLogger = (name: string, options?: winston.LoggerOptions) => {
   return winston.createLogger({
@@ -22,8 +27,4 @@ export const newLogger = (name: string, options?: winston.LoggerOptions) => {
     format: logFormat(name),
     transports: newTransport({ level: options?.level || process.env.LOG_LEVEL || 'info' })
   })
-}
-
-const newTransport = (options?: winston.transports.ConsoleTransportOptions) => {
-  return new winston.transports.Console(options)
 }
