@@ -1,11 +1,11 @@
-import { Blog, Post, Comment, BlogId, PostId, SocialAccount, ReactionId, Reaction } from '@subsocial/types/substrate/interfaces';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
-import { Option, Tuple, GenericAccountId, bool } from '@polkadot/types';
-import { newLogger, getFirstOrUndefined, isEmptyArray, pluralize } from '@subsocial/utils';
+import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
 import { AccountId } from '@polkadot/types/interfaces';
+import { AnyAccountId, AnyBlogId, AnyCommentId, AnyPostId, AnyReactionId, SubstrateId } from '@subsocial/types';
+import { Blog, BlogId, Comment, Post, PostId, Reaction, ReactionId, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
-import { SupportedSubstrateResult, SupportedSubstrateId, getUniqueIds, asAccountId } from './utils';
-import { AnyAccountId, SubstrateId, AnyPostId, AnyCommentId, AnyReactionId, AnyBlogId } from '@subsocial/types';
+import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
+import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
 
 export class SubsocialSubstrateApi {
 
@@ -75,15 +75,15 @@ export class SubsocialSubstrateApi {
     }
   }
 
-  async findBlogs (ids: SubstrateId[]): Promise<Blog[]> {
+  async findBlogs (ids: AnyBlogId[]): Promise<Blog[]> {
     return this.findStructs('blogById', ids);
   }
 
-  async findPosts (ids: SubstrateId[]): Promise<Post[]> {
+  async findPosts (ids: AnyPostId[]): Promise<Post[]> {
     return this.findStructs('postById', ids);
   }
 
-  async findComments (ids: SubstrateId[]): Promise<Comment[]> {
+  async findComments (ids: AnyCommentId[]): Promise<Comment[]> {
     return this.findStructs('commentById', ids);
   }
 
@@ -131,6 +131,9 @@ export class SubsocialSubstrateApi {
   }
 
   async getBlogIdByHandle (handle: string): Promise<BlogId | undefined> {
+    if (isEmptyStr(handle)) {
+      return undefined
+    }
     const idOpt = await this.socialQuery('blogIdByHandle', handle) as Option<BlogId>
     return idOpt.unwrapOr(undefined)
   }
