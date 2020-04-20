@@ -1,10 +1,11 @@
-import { Blog, Post, Comment, SubstrateId, BlogId, PostId, SocialAccount, ReactionId, Reaction, AnyAccountId, AnyCommentId, AnyReactionId, AnyBlogId, AnyPostId } from '@subsocial/types/substrate/interfaces';
+import { Blog, Post, Comment, BlogId, PostId, SocialAccount, ReactionId, Reaction } from '@subsocial/types/substrate/interfaces';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option, Tuple, GenericAccountId, bool } from '@polkadot/types';
-import { newLogger, getFirstOrUndefined, nonEmptyStr, isEmptyArray, pluralize } from '@subsocial/utils';
+import { newLogger, getFirstOrUndefined, isEmptyArray, pluralize } from '@subsocial/utils';
 import { AccountId } from '@polkadot/types/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { SupportedSubstrateResult, SupportedSubstrateId, getUniqueIds, asAccountId } from './utils';
+import { AnyAccountId, SubstrateId, AnyPostId, AnyCommentId, AnyReactionId, AnyBlogId } from '@subsocial/types';
 
 export class SubsocialSubstrateApi {
 

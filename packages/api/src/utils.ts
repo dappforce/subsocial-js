@@ -1,6 +1,6 @@
-import { PostData, IpfsCid } from '@subsocial/types';
+import { PostData, IpfsCid, SubstrateId, AnyAccountId, CommonStruct } from '@subsocial/types';
 import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
-import { PostId, SubstrateId, AccountId, ReactionId, CommonStruct, SocialAccount, Reaction, AnyAccountId } from '@subsocial/types/substrate/interfaces';
+import { PostId, AccountId, ReactionId, SocialAccount, Reaction } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { GenericAccountId } from '@polkadot/types'
 

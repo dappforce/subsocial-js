@@ -1,5 +1,6 @@
-import { CommonStruct, Blog, Post, Comment, SocialAccount, Profile } from '../substrate/interfaces';
+import { Blog, Post, Comment, SocialAccount, Profile } from '../substrate/interfaces';
 import { CommonContent, BlogContent, PostContent, CommentContent, ProfileContent } from '../offchain'
+import { CommonStruct } from '../substrate';
 
 export type CommonData<S extends CommonStruct, C extends CommonContent> = {
   struct: S,
@@ -12,6 +13,8 @@ export type CommentData = CommonData<Comment, CommentContent>
 export type ProfileData = CommonData<SocialAccount, ProfileContent> & {
   profile?: Profile,
 }
+
+export type AnySubsocialData = BlogData | PostData | CommentData | ProfileData;
 
 export type ExtendedPostData = {
   post: PostData,

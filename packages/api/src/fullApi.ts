@@ -1,4 +1,4 @@
-import { Blog, Post, Comment, CommonStruct, AnyPostId, AnyAccountId, AnyBlogId, AnyCommentId, SocialAccount, AccountId } from '@subsocial/types/substrate/interfaces'
+import { CommonStruct, AnyPostId, AnyAccountId, AnyBlogId, AnyCommentId } from '@subsocial/types/substrate'
 import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid, ProfileContent } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi } from './substrate'
 import { SubsocialIpfsApi, getCidsOfStructs, getIpfsHashOfStruct } from './ipfs'
@@ -6,6 +6,7 @@ import { getFirstOrUndefined } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
 import { CommonData, BlogData, PostData, CommentData, ExtendedPostData, ProfileData } from '@subsocial/types'
 import { getSharedPostId, getUniqueIds, SupportedSubstrateId } from './utils';
+import { Blog, Post, AccountId, SocialAccount, Comment } from '@subsocial/types/substrate/interfaces';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
