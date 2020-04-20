@@ -117,7 +117,7 @@ export class SubsocialApi {
     return results
   }
 
-  async findPostWithDetails (ids: AnyPostId[]): Promise<ExtendedPostData[]> {
+  async findPostsWithDetails (ids: AnyPostId[]): Promise<ExtendedPostData[]> {
     const posts = await this.findPostsWithExt(ids);
 
     const ownerIds: AccountId[] = []
