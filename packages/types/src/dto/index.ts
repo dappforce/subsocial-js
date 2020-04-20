@@ -15,5 +15,6 @@ export type ProfileData = CommonData<SocialAccount, ProfileContent> & {
 
 export type ExtendedPostData = {
   post: PostData,
-  ext?: PostData
+  ext?: PostData,
+  owner?: ProfileData
 }

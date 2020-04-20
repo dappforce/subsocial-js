@@ -16,7 +16,7 @@ export const getSharedPostId = (postData?: PostData): PostId | undefined => {
   return sharedPostId
 }
 
-export type SupportedSubstrateId = SubstrateId | AccountId | ReactionId
+export type SupportedSubstrateId = SubstrateId | AnyAccountId | ReactionId
 
 export type SupportedSubstrateResult = CommonStruct | SocialAccount | Reaction
 

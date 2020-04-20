@@ -1,4 +1,4 @@
-import { Blog, Post, Comment, CommonStruct, SubstrateId, AnyPostId, AnyAccountId, AnyBlogId, AnyCommentId, SocialAccount } from '@subsocial/types/substrate/interfaces'
+import { Blog, Post, Comment, CommonStruct, AnyPostId, AnyAccountId, AnyBlogId, AnyCommentId, SocialAccount, AccountId } from '@subsocial/types/substrate/interfaces'
 import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid, ProfileContent } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi } from './substrate'
 import { SubsocialIpfsApi, getCidsOfStructs, getIpfsHashOfStruct } from './ipfs'
@@ -35,7 +35,7 @@ export class SubsocialApi {
 
   private async findDataArray<S extends CommonStruct, C extends CommonContent> (
     ids: SupportedSubstrateId[],
-    findStructs: (ids: SupportedSubstrateId[]) => Promise<S[]>,
+    findStructs: (ids: any[]) => Promise<S[]>,
     findContents: (cids: IpfsCid[]) => Promise<C[]>
   ): Promise<CommonData<S, C>[]> {
 
@@ -55,7 +55,7 @@ export class SubsocialApi {
   // ---------------------------------------------------------------------
   // Multiple
 
-  async findBlogs (ids: SubstrateId[]): Promise<BlogData[]> {
+  async findBlogs (ids: AnyBlogId[]): Promise<BlogData[]> {
     const findStructs = this.substrate.findBlogs.bind(this.substrate);
     const findContents = this.ipfs.findBlogs.bind(this.ipfs);
     return this.findDataArray<Blog, BlogContent>(
@@ -63,7 +63,7 @@ export class SubsocialApi {
     )
   }
 
-  async findPosts (ids: SubstrateId[]): Promise<PostData[]> {
+  async findPosts (ids: AnyPostId[]): Promise<PostData[]> {
     const findStructs = this.substrate.findPosts.bind(this.substrate)
     const findContents = this.ipfs.findPosts.bind(this.ipfs)
     return this.findDataArray<Post, PostContent>(
@@ -71,7 +71,7 @@ export class SubsocialApi {
     )
   }
 
-  async findComments (ids: SubstrateId[]): Promise<CommentData[]> {
+  async findComments (ids: AnyCommentId[]): Promise<CommentData[]> {
     const findStructs = this.substrate.findComments.bind(this.substrate)
     const findContents = this.ipfs.findComments.bind(this.ipfs)
     return this.findDataArray<Comment, CommentContent>(
@@ -114,6 +114,39 @@ export class SubsocialApi {
     })
 
     return results
+  }
+
+  async findPostWithDetails (ids: AnyPostId[]): Promise<ExtendedPostData[]> {
+    const posts = await this.findPostsWithExt(ids);
+
+    const ownerIds: AccountId[] = []
+
+    const resultIndicesByAuthorIdMap = new Map<string, number[]>()
+
+    posts.forEach((post, i) => {
+      const ownerId = post.post.struct.created.account
+      if (typeof ownerId !== 'undefined') {
+        const idStr = ownerId.toString()
+        let idxs = resultIndicesByAuthorIdMap.get(idStr)
+        if (typeof idxs === 'undefined') {
+          idxs = []
+          resultIndicesByAuthorIdMap.set(idStr, idxs)
+          ownerIds.push(ownerId)
+        }
+        idxs.push(i)
+      }
+    })
+
+    const postOwners = await this.findProfiles(ownerIds)
+    postOwners.forEach(postOwner => {
+      const id = postOwner.profile?.created.account.toString()
+      const idxs = resultIndicesByAuthorIdMap.get(id || '') || []
+      idxs.forEach(idx => {
+        posts[idx].owner = postOwner
+      })
+    })
+
+    return posts;
   }
 
   async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
