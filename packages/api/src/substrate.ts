@@ -1,7 +1,7 @@
 import { Blog, Post, Comment, SubstrateId, BlogId, PostId, SocialAccount, ReactionId, Reaction, AnyAccountId, AnyCommentId, AnyReactionId, AnyBlogId, AnyPostId } from '@subsocial/types/substrate/interfaces';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option, Tuple, GenericAccountId, bool } from '@polkadot/types';
-import { newLogger, getFirstOrUndefinded, nonEmptyStr, isEmptyArray, pluralize } from '@subsocial/utils';
+import { newLogger, getFirstOrUndefined, nonEmptyStr, isEmptyArray, pluralize } from '@subsocial/utils';
 import { AccountId } from '@polkadot/types/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { SupportedSubstrateResult, SupportedSubstrateId, getUniqueIds } from './utils';
@@ -109,23 +109,23 @@ export class SubsocialSubstrateApi {
   // Single
 
   async findBlog (id: AnyBlogId): Promise<Blog | undefined> {
-    return getFirstOrUndefinded(await this.findBlogs([ id ]))
+    return getFirstOrUndefined(await this.findBlogs([ id ]))
   }
 
   async findPost (id: AnyPostId): Promise<Post | undefined> {
-    return getFirstOrUndefinded(await this.findPosts([ id ]))
+    return getFirstOrUndefined(await this.findPosts([ id ]))
   }
 
   async findComment (id: AnyCommentId): Promise<Comment | undefined> {
-    return getFirstOrUndefinded(await this.findComments([ id ]))
+    return getFirstOrUndefined(await this.findComments([ id ]))
   }
 
   async findSocialAccount (id: AnyAccountId): Promise<SocialAccount | undefined> {
-    return getFirstOrUndefinded(await this.findSocialAccounts([ id ]))
+    return getFirstOrUndefined(await this.findSocialAccounts([ id ]))
   }
 
   async findReaction (id: AnyReactionId): Promise<Reaction | undefined> {
-    return getFirstOrUndefinded(await this.findReactions([ id ]))
+    return getFirstOrUndefined(await this.findReactions([ id ]))
   }
 
   // ---------------------------------------------------------------------

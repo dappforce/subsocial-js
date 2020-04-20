@@ -2,7 +2,7 @@ import { Blog, Post, Comment, CommonStruct, SubstrateId, AnyPostId } from '@subs
 import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi } from './substrate'
 import { SubsocialIpfsApi, getCidsOfStructs, getIpfsHashOfStruct } from './ipfs'
-import { getFirstOrUndefinded } from '@subsocial/utils';
+import { getFirstOrUndefined } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
 import { CommonData, BlogData, PostData, CommentData, ExtendedPostData } from '@subsocial/types'
 import { getSharedPostId, getUniqueIds } from './utils';
@@ -83,7 +83,7 @@ export class SubsocialApi {
     const posts = await this.findPosts(ids)
 
     const results: ExtendedPostData[] = []
-    const extIds: AnyPostId [] = []
+    const extIds: AnyPostId[] = []
 
     // Key - serialized id of a shared original post.
     // Value - indices of the posts that share this original post in `results` array.
@@ -120,18 +120,18 @@ export class SubsocialApi {
   // Single
 
   async findBlog (id: SubstrateId): Promise<BlogData | undefined> {
-    return getFirstOrUndefinded(await this.findBlogs([ id ]))
+    return getFirstOrUndefined(await this.findBlogs([ id ]))
   }
 
   async findPost (id: SubstrateId): Promise<PostData | undefined> {
-    return getFirstOrUndefinded(await this.findPosts([ id ]))
+    return getFirstOrUndefined(await this.findPosts([ id ]))
   }
 
   async findPostWithExt (id: SubstrateId): Promise<ExtendedPostData | undefined> {
-    return getFirstOrUndefinded(await this.findPostsWithExt([ id ]))
+    return getFirstOrUndefined(await this.findPostsWithExt([ id ]))
   }
 
   async findComment (id: SubstrateId): Promise<CommentData | undefined> {
-    return getFirstOrUndefinded(await this.findComments([ id ]))
+    return getFirstOrUndefined(await this.findComments([ id ]))
   }
 }
