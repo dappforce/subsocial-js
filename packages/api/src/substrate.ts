@@ -1,10 +1,11 @@
-import { Blog, Post, Comment, SubstrateId, BlogId, PostId, SocialAccount, ReactionId, Reaction, AnyAccountId, AnyCommentId, AnyReactionId, AnyBlogId, AnyPostId } from '@subsocial/types/substrate/interfaces';
+import { Blog, Post, Comment, BlogId, PostId, SocialAccount, ReactionId, Reaction } from '@subsocial/types/substrate/interfaces';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { Option, Tuple, GenericAccountId, bool } from '@polkadot/types';
-import { newLogger, getFirstOrUndefined, nonEmptyStr, isEmptyArray, pluralize } from '@subsocial/utils';
+import { newLogger, getFirstOrUndefined, isEmptyArray, pluralize } from '@subsocial/utils';
 import { AccountId } from '@polkadot/types/interfaces';
 import registry from '@subsocial/types/substrate/registry';
-import { SupportedSubstrateResult, SupportedSubstrateId, getUniqueIds } from './utils';
+import { SupportedSubstrateResult, SupportedSubstrateId, getUniqueIds, asAccountId } from './utils';
+import { AnyAccountId, SubstrateId, AnyPostId, AnyCommentId, AnyReactionId, AnyBlogId } from '@subsocial/types';
 
 export class SubsocialSubstrateApi {
 
@@ -27,16 +28,6 @@ export class SubsocialSubstrateApi {
   // ---------------------------------------------------------------------
   // Private utils
 
-  private asAccountId (id: AnyAccountId): AccountId | undefined {
-    if (id instanceof GenericAccountId) {
-      return id
-    } else if (nonEmptyStr(id) && id.length === 48) {
-      return new GenericAccountId(registry, id)
-    } else {
-      return undefined
-    }
-  }
-
   private async socialQuery (storage: string, value?: any): Promise<any> {
     const socialQuery = await this.getSocialQuery()
     return socialQuery[storage](value)
@@ -48,13 +39,13 @@ export class SubsocialSubstrateApi {
   }
 
   private async isBooleanByAccount (storage: string, accountId: AnyAccountId, subjectId: SubstrateId): Promise<boolean> {
-    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ this.asAccountId(accountId), subjectId ]);
+    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), subjectId ]);
     const isBoolean = await this.socialQuery(storage, queryParams) as bool
     return isBoolean.valueOf()
   }
 
   private async getReactionIdByAccount (accountId: AnyAccountId, structId: AnyPostId | AnyCommentId, structType: 'post' | 'comment'): Promise<ReactionId> {
-    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ this.asAccountId(accountId), structId ]);
+    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), structId ]);
     return this.socialQuery(`${structType}ReactionIdByAccount`, queryParams)
   }
 
@@ -97,7 +88,7 @@ export class SubsocialSubstrateApi {
   }
 
   async findSocialAccounts (ids: AnyAccountId[]): Promise<SocialAccount[]> {
-    const accountIds = ids.map(id => this.asAccountId(id)).filter(x => typeof x !== 'undefined') as AccountId[]
+    const accountIds = ids.map(id => asAccountId(id)).filter(x => typeof x !== 'undefined') as AccountId[]
     return this.findStructs('socialAccountById', accountIds);
   }
 
@@ -145,11 +136,11 @@ export class SubsocialSubstrateApi {
   }
 
   async blogIdsByOwner (id: AnyAccountId): Promise<BlogId[]> {
-    return this.socialQuery('blogIdsByOwner', this.asAccountId(id))
+    return this.socialQuery('blogIdsByOwner', asAccountId(id))
   }
 
   async blogIdsFollowedByAccount (id: AnyAccountId): Promise<BlogId[]> {
-    return this.socialQuery('blogsFollowedByAccount', this.asAccountId(id))
+    return this.socialQuery('blogsFollowedByAccount', asAccountId(id))
   }
 
   async postIdsByBlogId (id: AnyBlogId): Promise<PostId[]> {
@@ -160,8 +151,8 @@ export class SubsocialSubstrateApi {
   // Is boolean
 
   async isAccountFollower (myAddress: AnyAccountId, followedAddress: AnyAccountId): Promise<boolean> {
-    const followedAccountId = this.asAccountId(followedAddress)
-    const myAccountId = this.asAccountId(myAddress)
+    const followedAccountId = asAccountId(followedAddress)
+    const myAccountId = asAccountId(myAddress)
     const queryParams = new Tuple(registry, [ GenericAccountId, GenericAccountId ], [ myAccountId, followedAccountId ]);
     const isFollow = await this.socialQuery('accountFollowedByAccount', queryParams) as bool
     return isFollow.valueOf()

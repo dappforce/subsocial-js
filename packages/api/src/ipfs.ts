@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { IpfsHash, SocialAccount } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi } from '@subsocial/types/offchain';
+import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios from 'axios';
 import { getUniqueIds } from './utils';
@@ -124,6 +124,10 @@ export class SubsocialIpfsApi {
     return this.getContentArray(cids, 'comment')
   }
 
+  async findProfiles (cids: IpfsCid[]): Promise<ProfileContent[]> {
+    return this.getContentArray(cids, 'account')
+  }
+
   // ---------------------------------------------------------------------
   // Find single
 
@@ -141,6 +145,10 @@ export class SubsocialIpfsApi {
 
   async findComment (cid: IpfsCid): Promise<CommentContent | undefined> {
     return this.getContent<CommentContent>(cid, 'comment')
+  }
+
+  async findProfile (cid: IpfsCid): Promise<ProfileContent | undefined> {
+    return this.getContent<ProfileContent>(cid, 'account')
   }
 
   // ---------------------------------------------------------------------
