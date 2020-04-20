@@ -135,22 +135,22 @@ export class SubsocialApi {
   // Single
 
   async findBlog (id: AnyBlogId): Promise<BlogData | undefined> {
-    return getFirstOrUndefinded(await this.findBlogs([ id ]))
+    return getFirstOrUndefined(await this.findBlogs([ id ]))
   }
 
   async findPost (id: AnyPostId): Promise<PostData | undefined> {
-    return getFirstOrUndefinded(await this.findPosts([ id ]))
+    return getFirstOrUndefined(await this.findPosts([ id ]))
   }
 
   async findPostWithExt (id: AnyPostId): Promise<ExtendedPostData | undefined> {
-    return getFirstOrUndefinded(await this.findPostsWithExt([ id ]))
+    return getFirstOrUndefined(await this.findPostsWithExt([ id ]))
   }
 
   async findComment (id: AnyCommentId): Promise<CommentData | undefined> {
-    return getFirstOrUndefinded(await this.findComments([ id ]))
+    return getFirstOrUndefined(await this.findComments([ id ]))
   }
 
   async findProfile (id: AnyAccountId): Promise<ProfileData | undefined> {
-    return getFirstOrUndefinded(await this.findProfiles([ id ]))
+    return getFirstOrUndefined(await this.findProfiles([ id ]))
   }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { IpfsHash, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi, ProfileContent } from '@subsocial/types/offchain';
-import { newLogger, getFirstOrUndefinded, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
+import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios from 'axios';
 import { getUniqueIds } from './utils';
 
