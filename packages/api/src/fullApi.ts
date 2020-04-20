@@ -2,7 +2,7 @@ import { Blog, Post, Comment, CommonStruct, SubstrateId, AnyPostId, AnyAccountId
 import { BlogContent, PostContent, CommentContent, CommonContent, IpfsApi, IpfsCid, ProfileContent } from '@subsocial/types/offchain'
 import { SubsocialSubstrateApi } from './substrate'
 import { SubsocialIpfsApi, getCidsOfStructs, getIpfsHashOfStruct } from './ipfs'
-import { getFirstOrUndefinded } from '@subsocial/utils';
+import { getFirstOrUndefined } from '@subsocial/utils';
 import { ApiPromise as SubstrateApi } from '@polkadot/api'
 import { CommonData, BlogData, PostData, CommentData, ExtendedPostData, ProfileData } from '@subsocial/types'
 import { getSharedPostId, getUniqueIds, SupportedSubstrateId } from './utils';
@@ -83,7 +83,7 @@ export class SubsocialApi {
     const posts = await this.findPosts(ids)
 
     const results: ExtendedPostData[] = []
-    const extIds: AnyPostId [] = []
+    const extIds: AnyPostId[] = []
 
     // Key - serialized id of a shared original post.
     // Value - indices of the posts that share this original post in `results` array.

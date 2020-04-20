@@ -12,15 +12,13 @@
   "scripts": {
     "build": "yarn polkadot-dev-build-ts",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate.ts",
-    "publish-all": "yarn build && ./scripts/publish-all.sh",
-    "publish-api": "yarn build && ./scripts/publish-api.sh",
-    "publish-types": "yarn build && ./scripts/publish-types.sh",
-    "publish-utils": "yarn build && ./scripts/publish-utils.sh",
+    "publish-api": "./scripts/publish-api.sh",
+    "publish-types": "./scripts/publish-types.sh",
+    "publish-utils": "./scripts/publish-utils.sh",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
-    "test": "jest --testPathIgnorePatterns e2e",
-    "publish": "npm publish --access public"
+    "test": "jest --testPathIgnorePatterns e2e"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -33,7 +31,7 @@
   },
   "dependencies": {
     "@polkadot/dev": "^0.32.17",
-    "@subsocial/config": "^0.1.2",
+    "@subsocial/config": "^0.1.4",
     "typescript": "^3.8.3"
   }
 }

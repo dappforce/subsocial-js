@@ -1,2 +1,2 @@
-export const isObj = (x: any): boolean =>
+export const isObj = <T> (x: any): x is T =>
   x !== null && typeof x === 'object';

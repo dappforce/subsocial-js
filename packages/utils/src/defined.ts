@@ -1,4 +1,4 @@
-export const isDefined = (x: any): boolean =>
+export const isDefined = <T> (x: any | T): x is T =>
   !notDefined(x);
 
 export const isDef = isDefined;

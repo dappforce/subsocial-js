@@ -9,7 +9,7 @@ const ipfsClient = require('ipfs-http-client')
 
 const IPFS_HASH_BINARY_LEN = 47
 
-const asIpfsCid = (cid: IpfsCid) => {
+const asIpfsCid = (cid: IpfsCid): CID => {
   if (cid instanceof CID) {
     return cid
   } else if (typeof cid === 'string') {
@@ -55,14 +55,17 @@ export function getCidsOfStructs (structs: HasIpfsHashSomewhere[]): CID[] {
     .filter(cid => typeof cid !== 'undefined') as CID[]
 }
 
+type IpfsUrl = string
+
 export type SubsocialIpfsProps = {
-  connect: IpfsApi | string,
+  connect: IpfsApi | IpfsUrl,
   offchainUrl: string
 }
 
 export class SubsocialIpfsApi {
 
-  private api!: IpfsApi; // IPFS API (connected)
+  private api!: IpfsApi // IPFS API (connected)
+
   private offchainUrl!: string
 
   constructor (props: SubsocialIpfsProps) {
@@ -70,7 +73,7 @@ export class SubsocialIpfsApi {
     this.offchainUrl = `${props.offchainUrl}/v1`
   }
 
-  private async connect (connection: IpfsApi | string) {
+  private async connect (connection: IpfsApi | IpfsUrl) {
     try {
       this.api = typeof connection === 'string' ? ipfsClient(connection) : connection;
       // Test IPFS connection by requesting its readme file.
@@ -129,7 +132,7 @@ export class SubsocialIpfsApi {
   // Find single
 
   async getContent<T extends CommonContent> (cid: IpfsCid, contentName?: string): Promise<T | undefined> {
-    return getFirstOrUndefinded(await this.getContentArray<T>([ cid ], contentName))
+    return getFirstOrUndefined(await this.getContentArray<T>([ cid ], contentName))
   }
 
   async findBlog (cid: IpfsCid): Promise<BlogContent | undefined> {
@@ -170,12 +173,12 @@ export class SubsocialIpfsApi {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
 
       if (res.status !== 200) {
-        throw new Error(`Offchain responded with status code ${res.status} and message: ${res.statusText}`)
+        throw new Error(`Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
       }
 
       return res.data;
     } catch (error) {
-      logger.error('Failed to add content to IPFS on client:', error)
+      logger.error('Failed to add content to IPFS from client side:', error)
       return undefined;
     }
   }
@@ -186,7 +189,7 @@ export class SubsocialIpfsApi {
       const results = await this.api.add(json);
       return results[results.length - 1].hash as any as IpfsHash;
     } catch (error) {
-      logger.error('Failed to add content to IPFS on server:', error)
+      logger.error('Failed to add content to IPFS from server side:', error)
       return undefined;
     }
   }
