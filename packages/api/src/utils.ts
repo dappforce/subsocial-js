@@ -1,7 +1,6 @@
 import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct } from '@subsocial/types';
 import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import { PostId, AccountId, ReactionId, SocialAccount, Reaction } from '@subsocial/types/substrate/interfaces';
-import { PostData } from '@subsocial/types/dto'
 import registry from '@subsocial/types/substrate/registry';
 import { GenericAccountId } from '@polkadot/types'
 
@@ -42,7 +41,7 @@ export function asAccountId (id: AnyAccountId): AccountId | undefined {
   }
 }
 
-export const getSharedPostId = (postData: PostData): PostId | undefined => {
+export const getSharedPostId = (postData: any): PostId | undefined => {
   if (!postData) return undefined;
 
   const ext = postData?.struct?.extension
