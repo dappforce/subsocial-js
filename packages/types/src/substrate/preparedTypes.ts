@@ -1,4 +1,4 @@
-import * as dfDefinations from './interfaces/subsocial/definitions';
+import * as dfDefinations from './interfaces/definitions';
 
 export const allDefinitions = {
   ...dfDefinations
