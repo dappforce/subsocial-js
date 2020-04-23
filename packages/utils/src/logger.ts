@@ -1,5 +1,6 @@
 import * as winston from 'winston'
 import chalk from 'chalk'
+import CitcularJSON from 'circular-json';
 
 export const logFormat = (label: string) => winston.format.combine(
   winston.format.colorize(),
@@ -9,10 +10,10 @@ export const logFormat = (label: string) => winston.format.combine(
   winston.format.simple(),
   winston.format.metadata({ fillExcept: [ 'timestamp', 'level', 'label', 'message' ] }),
   winston.format.printf(
-    ({ timestamp, level, label, message }) => {
+    ({ timestamp, level, label, message, metadata }) => {
       const date = new Date(timestamp)
       const millis = date.getMilliseconds()
-      return `[${date.toLocaleTimeString()}.${millis}] ${level} ${chalk.bold(label)}: ${message}`
+      return `[${date.toLocaleTimeString()}.${millis}] ${level} ${chalk.bold(label)}: ${message} ${CitcularJSON.stringify(metadata, null, 2)}`
     }
   )
 )

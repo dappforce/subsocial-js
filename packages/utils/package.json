@@ -18,10 +18,12 @@
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
+    "@types/circular-json": "^0.4.0",
     "@types/lodash.truncate": "^4.4.6",
     "@types/winston": "^2.4.4",
     "bn.js": "^5.1.1",
     "chalk": "^3.0.0",
+    "circular-json": "^0.5.9",
     "lodash.truncate": "^4.4.2",
     "markdown-to-txt": "^1.0.1",
     "winston": "^3.2.0"
