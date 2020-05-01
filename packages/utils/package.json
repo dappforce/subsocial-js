@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -26,7 +26,8 @@
     "circular-json": "^0.5.9",
     "lodash.truncate": "^4.4.2",
     "markdown-to-txt": "^1.0.1",
-    "winston": "^3.2.0"
+    "winston": "^3.2.0",
+    "dotenv": "^8.0.0"
   },
   "scripts": {
     "test": "jest"

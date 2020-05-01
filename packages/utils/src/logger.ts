@@ -2,6 +2,8 @@ import * as winston from 'winston'
 import chalk from 'chalk'
 import CitcularJSON from 'circular-json';
 
+require('dotenv').config()
+
 export const logFormat = (label: string) => winston.format.combine(
   winston.format.colorize(),
   winston.format.timestamp(),

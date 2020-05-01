@@ -138,6 +138,14 @@ export class SubsocialSubstrateApi {
     return idOpt.unwrapOr(undefined)
   }
 
+  async getAccountIdByHandle (handle: string): Promise<AccountId | undefined> {
+    if (isEmptyStr(handle)) {
+      return undefined
+    }
+    const idOpt = await this.socialQuery('accountByProfileUsername', handle) as Option<AccountId>
+    return idOpt.unwrapOr(undefined)
+  }
+
   async blogIdsByOwner (id: AnyAccountId): Promise<BlogId[]> {
     return this.socialQuery('blogIdsByOwner', asAccountId(id))
   }
