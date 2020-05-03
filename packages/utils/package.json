@@ -24,10 +24,9 @@
     "bn.js": "^5.1.1",
     "chalk": "^3.0.0",
     "circular-json": "^0.5.9",
+    "dotenv": "^8.0.0",
     "lodash.truncate": "^4.4.2",
-    "markdown-to-txt": "^1.0.1",
-    "winston": "^3.2.0",
-    "dotenv": "^8.0.0"
+    "winston": "^3.2.0"
   },
   "scripts": {
     "test": "jest"
