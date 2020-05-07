@@ -5,7 +5,8 @@ import { SubsocialIpfsApi } from '../src/ipfs';
 
 let blogHash: string | undefined;
 const ipfs = new SubsocialIpfsApi({
-  connect: '/ip4/127.0.0.1/tcp/8080/http',
+  ipfsNodeUrl: 'http://localhost:8080',
+  ipfsClusterUrl: 'http://localhost:9094',
   offchainUrl: 'http:localhost:3001'
 });
 

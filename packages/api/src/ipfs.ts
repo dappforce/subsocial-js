@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { IpfsHash, SocialAccount } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi, ProfileContent } from '@subsocial/types/offchain';
+import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios from 'axios';
 import { getUniqueIds } from './utils';
+import request from 'request'
+import CircularJSON from 'circular-json';
+import { promisify } from 'util'
 
-const ipfsClient = require('ipfs-http-client')
+const asyncRequest = promisify(request)
 
 const IPFS_HASH_BINARY_LEN = 47
 
@@ -56,36 +59,98 @@ export function getCidsOfStructs (structs: HasIpfsHashSomewhere[]): CID[] {
 }
 
 type IpfsUrl = string
+type IpfsClusterEndpoint = 'add' | 'version' | 'pin' | 'unpin'
+type IpfsNodeEndpoint = 'cat' | 'version'
 
 export type SubsocialIpfsProps = {
-  connect: IpfsApi | IpfsUrl,
+  ipfsNodeUrl: IpfsUrl,
+  ipfsClusterUrl: IpfsUrl,
   offchainUrl: string
 }
 
 export class SubsocialIpfsApi {
 
-  private api!: IpfsApi // IPFS API (connected)
+  private ipfsNodeUrl!: IpfsUrl // IPFS Node ReadOnly Gateway
+  private ipfsClusterUrl!: IpfsUrl // IPFS Cluster HTTP API
 
   private offchainUrl!: string
 
   constructor (props: SubsocialIpfsProps) {
-    this.connect(props.connect)
-    this.offchainUrl = `${props.offchainUrl}/v1`
+    const { ipfsNodeUrl, ipfsClusterUrl, offchainUrl } = props;
+
+    this.ipfsNodeUrl = `${ipfsNodeUrl}/api/v0`
+    this.ipfsClusterUrl = `${ipfsClusterUrl}`
+    this.offchainUrl = `${offchainUrl}/v1`
+
+    this.tryConnection()
   }
 
-  private async connect (connection: IpfsApi | IpfsUrl) {
+  private async tryConnection () {
     try {
-      this.api = typeof connection === 'string' ? ipfsClient(connection) : connection;
-      // Test IPFS connection by requesting its readme file.
-      await this.api.cat('/ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme')
-      logger.info('Connected to IPFS node')
+      // Test IPFS Node connection by requesting its version
+      const nodeResponse = await this.ipfsNodeRequest('version')
+      logger.info('Connected to IPFS Node with version ', nodeResponse.body.version)
+
+      if (typeof window === undefined) {
+        const clusterResponse = await this.ipfsClusterRequest('version')
+        logger.info('Connected to IPFS Cluster with version ', clusterResponse.body.version)
+      }
     } catch (err) {
-      logger.error('Failed to connect to IPFS node:', err)
+      logger.error('Failed to connect to IPFS node: %o', err)
     }
   }
 
-  get isConnected () {
-    return typeof this.api !== 'undefined';
+  // ---------------------------------------------------------------------
+  // IPFS Request wrapper
+
+  private async ipfsNodeRequest( endpoint: IpfsNodeEndpoint, cid?: CID): Promise<request.Response> {
+    let options: request.UrlOptions & request.CoreOptions = {
+      method: 'GET',
+      url: `${this.ipfsNodeUrl}/${endpoint}`
+    };
+
+    if (typeof cid !== undefined) {
+      options.url += `?arg=${cid}`
+    }
+
+    return asyncRequest(options)
+  }
+
+  private async ipfsClusterRequest(
+    endpoint: IpfsClusterEndpoint,
+    data?: CommonContent | IpfsHash
+  ): Promise<request.Response> {
+    let options: request.UrlOptions & request.CoreOptions = {
+      url: `${this.ipfsClusterUrl}/${endpoint}`
+    };
+
+    switch (endpoint) {
+      case 'add': {
+        options = {
+          ...options,
+          method: 'POST',
+          formData: {
+            '' : CircularJSON.stringify(data)
+          }
+        }
+        break
+      }
+      case 'pin':
+      case 'unpin': {
+        options.method = endpoint === 'pin' ? 'POST' : 'DELETE'
+        options.url = `${this.ipfsClusterUrl}/pins/${data}`
+        break
+      }
+      case 'version': {
+        options.method = 'GET';
+        break
+      }
+      default: {
+        throw Error(`Unsupported endpoint recieved: ${endpoint}`)
+      }
+    }
+
+    return asyncRequest(options)
   }
 
   // ---------------------------------------------------------------------
@@ -101,13 +166,13 @@ export class SubsocialIpfsApi {
         return []
       }
 
-      const loadContentFns = ipfsCids.map((cid) => this.api.cat(cid));
+      const loadContentFns = ipfsCids.map((cid) => this.ipfsNodeRequest('cat', cid));
       const jsonContents = await Promise.all(loadContentFns);
-      const contents = jsonContents.map((x) => JSON.parse(x.toString())) as T[];
+      const contents = jsonContents.map((x) => JSON.parse(x.body)) as T[];
       logger.debug(`Loaded ${pluralize(contents.length, contentName)}`)
       return contents
     } catch (err) {
-      logger.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
+      console.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
       return [];
     }
   }
@@ -154,18 +219,23 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Remove
 
-  async removeContent (hash: string) {
-    await this.api.pin.rm(hash);
-    logger.info(`Unpinned content with hash: ${hash}`);
+  async removeContent (hash: IpfsHash) {
+    const { statusCode } = await this.ipfsClusterRequest('unpin', hash);
+    if (statusCode !== 200) {
+      throw Error(`Failed to unpin content with hash '${hash}'; Error ${statusCode}`)
+    } else {
+      logger.info(`Unpinned content with hash: ${hash}`);
+    }
   }
 
   // ---------------------------------------------------------------------
   // Save
 
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
-    return typeof window === 'undefined'
-      ? this.saveContentOnServer(content)
-      : this.saveContentOnClient(content)
+    // return typeof window === 'undefined'
+    //   ? this.saveContentOnServer(content)
+    //   : this.saveContentOnClient(content)
+    return this.saveContentOnServer(content)
   }
 
   async saveContentOnClient (content: CommonContent): Promise<IpfsHash | undefined> {
@@ -185,11 +255,19 @@ export class SubsocialIpfsApi {
 
   async saveContentOnServer (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
-      const json = Buffer.from(JSON.stringify(content));
-      const results = await this.api.add(json);
-      return results[results.length - 1].hash as any as IpfsHash;
+      const res = await this.ipfsClusterRequest('add', content)
+      if (res.statusCode !== 200) {
+        throw Error(`Failed to add content to IPFS. Status message: ${res.statusMessage}`)
+      }
+
+      const body = JSON.parse(res.body)
+      const cid = body.cid['/'] as IpfsHash
+      logger.debug('Content added under CID: %s', cid)
+
+      return cid
+
     } catch (error) {
-      logger.error('Failed to add content to IPFS from server side:', error)
+      logger.error('Failed to add content to IPFS from server side: %o', error)
       return undefined;
     }
   }
