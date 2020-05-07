@@ -1,6 +1,7 @@
 import * as winston from 'winston'
 import chalk from 'chalk'
-import CitcularJSON from 'circular-json';
+import { stringify } from 'circular-json'
+import isEmpty from 'lodash.isempty'
 
 require('dotenv').config()
 
@@ -15,7 +16,8 @@ export const logFormat = (label: string) => winston.format.combine(
     ({ timestamp, level, label, message, metadata }) => {
       const date = new Date(timestamp)
       const millis = date.getMilliseconds()
-      return `[${date.toLocaleTimeString()}.${millis}] ${level} ${chalk.bold(label)}: ${message} ${CitcularJSON.stringify(metadata, null, 2)}`
+      const metaStr = isEmpty(metadata) ? '' : ' ' + stringify(metadata, null, 2)
+      return `[${date.toLocaleTimeString()}.${millis}] ${level} ${chalk.bold(label)}: ${message}${metaStr}`
     }
   )
 )
