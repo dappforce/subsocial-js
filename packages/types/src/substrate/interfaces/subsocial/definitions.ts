@@ -121,6 +121,7 @@ export default {
         'UpvotePost',
         'DownvotePost',
         'SharePost',
+        'CreateComment',
         'UpvoteComment',
         'DownvoteComment',
         'ShareComment',
