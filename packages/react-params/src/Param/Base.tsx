@@ -2,11 +2,11 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { BareProps } from '@polkadot/react-components/types';
+import { BareProps } from '@subsocial/react-components/types';
 import { Size } from '../types';
 
 import React from 'react';
-import { Labelled } from '@polkadot/react-components';
+import { Labelled } from '@subsocial/react-components';
 
 import Bare from './Bare';
 

@@ -6,7 +6,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Password } from '@polkadot/react-components';
+import { Password } from '@subsocial/react-components';
 import keyring from '@polkadot/ui-keyring';
 
 import { useTranslation } from './translate';

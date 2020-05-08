@@ -2,13 +2,13 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { LinkTypes } from '@polkadot/apps-config/links/types';
+import { LinkTypes } from '@subsocial/apps-config/links/types';
 
 import BN from 'bn.js';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import linked from '@polkadot/apps-config/links';
-import { useApi } from '@polkadot/react-hooks';
+import linked from '@subsocial/apps-config/links';
+import { useApi } from '@subsocial/react-hooks';
 
 import { useTranslation } from './translate';
 import Icon from './Icon';

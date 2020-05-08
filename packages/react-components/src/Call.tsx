@@ -10,8 +10,8 @@ import BN from 'bn.js';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { GenericCall, getTypeDef } from '@polkadot/types';
-import Params from '@polkadot/react-params';
-import { FormatBalance } from '@polkadot/react-query';
+import Params from '@subsocial/react-params';
+import { FormatBalance } from '@subsocial/react-query';
 
 import Static from './Static';
 import { classes } from './util';

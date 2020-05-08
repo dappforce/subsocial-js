@@ -8,7 +8,7 @@ import { BareProps } from './types';
 
 import React from 'react';
 import { getTypeDef } from '@polkadot/types';
-import Params from '@polkadot/react-params';
+import Params from '@subsocial/react-params';
 
 import { classes } from './util';
 

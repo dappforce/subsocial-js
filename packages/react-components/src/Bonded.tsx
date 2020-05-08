@@ -7,7 +7,7 @@ import { BareProps } from './types';
 
 import BN from 'bn.js';
 import React from 'react';
-import { Bonded } from '@polkadot/react-query';
+import { Bonded } from '@subsocial/react-query';
 
 import { renderProvided } from './Balance';
 import { classes } from './util';

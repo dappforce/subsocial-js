@@ -5,7 +5,7 @@
 import { DeriveStakingAccount } from '@polkadot/api-derive/types';
 
 import React from 'react';
-import { FormatBalance } from '@polkadot/react-query';
+import { FormatBalance } from '@subsocial/react-query';
 
 interface Props {
   className?: string;

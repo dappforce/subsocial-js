@@ -5,7 +5,7 @@
 import { Props } from '../types';
 
 import React from 'react';
-import { Input } from '@polkadot/react-components';
+import { Input } from '@subsocial/react-components';
 
 import Bare from './Bare';
 

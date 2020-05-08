@@ -5,8 +5,8 @@
 import { DeriveStakingAccount } from '@polkadot/api-derive/types';
 
 import React from 'react';
-import { useAccounts } from '@polkadot/react-hooks';
-import { FormatBalance } from '@polkadot/react-query';
+import { useAccounts } from '@subsocial/react-hooks';
+import { FormatBalance } from '@subsocial/react-query';
 
 import TxButton from './TxButton';
 import { useTranslation } from './translate';

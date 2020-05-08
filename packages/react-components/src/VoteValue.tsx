@@ -6,8 +6,8 @@ import { DeriveBalancesAll } from '@polkadot/api-derive/types';
 
 import BN from 'bn.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useApi, useCall } from '@polkadot/react-hooks';
-import { BalanceVoting } from '@polkadot/react-query';
+import { useApi, useCall } from '@subsocial/react-hooks';
+import { BalanceVoting } from '@subsocial/react-query';
 import { formatBalance, isBn } from '@polkadot/util';
 
 import InputBalance from './InputBalance';

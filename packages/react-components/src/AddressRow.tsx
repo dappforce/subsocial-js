@@ -5,14 +5,14 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
 import { DeriveAccountInfo, DeriveStakingAccount } from '@polkadot/api-derive/types';
-import { ApiProps } from '@polkadot/react-api/types';
-import { I18nProps } from '@polkadot/react-components/types';
+import { ApiProps } from '@subsocial/react-api/types';
+import { I18nProps } from '@subsocial/react-components/types';
 import { AccountId, AccountIndex, Address } from '@polkadot/types/interfaces';
 
 import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
-import { withCalls, withMulti } from '@polkadot/react-api/hoc';
+import { withCalls, withMulti } from '@subsocial/react-api/hoc';
 import BaseIdentityIcon from '@polkadot/react-identicon';
 import keyring from '@polkadot/ui-keyring';
 

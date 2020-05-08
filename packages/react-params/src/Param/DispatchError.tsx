@@ -6,8 +6,8 @@ import { DispatchError } from '@polkadot/types/interfaces';
 import { Props } from '../types';
 
 import React, { useEffect, useState } from 'react';
-import { registry } from '@polkadot/react-api';
-import { Input } from '@polkadot/react-components';
+import { registry } from '@subsocial/react-api';
+import { Input } from '@subsocial/react-components';
 
 import { useTranslation } from '../translate';
 import Static from './Static';

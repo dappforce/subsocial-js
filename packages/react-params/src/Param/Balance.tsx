@@ -6,7 +6,7 @@ import { Props } from '../types';
 
 import BN from 'bn.js';
 import React, { useCallback } from 'react';
-import { InputBalance } from '@polkadot/react-components';
+import { InputBalance } from '@subsocial/react-components';
 
 import Bare from './Bare';
 

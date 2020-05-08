@@ -2,13 +2,13 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { QueueTx } from '@polkadot/react-components/Status/types';
+import { QueueTx } from '@subsocial/react-components/Status/types';
 
 import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
-import { registry } from '@polkadot/react-api';
-import { Call, InputAddress, Expander, Modal } from '@polkadot/react-components';
+import { registry } from '@subsocial/react-api';
+import { Call, InputAddress, Expander, Modal } from '@subsocial/react-components';
 
 import Checks from './Checks';
 import { useTranslation } from './translate';

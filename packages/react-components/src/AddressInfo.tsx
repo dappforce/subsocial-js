@@ -10,10 +10,10 @@ import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
 import { formatBalance, formatNumber, hexToString, isObject } from '@polkadot/util';
-import { Expander, Icon, Tooltip } from '@polkadot/react-components';
-import { withCalls, withMulti } from '@polkadot/react-api/hoc';
-import { useAccounts } from '@polkadot/react-hooks';
-import { FormatBalance } from '@polkadot/react-query';
+import { Expander, Icon, Tooltip } from '@subsocial/react-components';
+import { withCalls, withMulti } from '@subsocial/react-api/hoc';
+import { useAccounts } from '@subsocial/react-hooks';
+import { FormatBalance } from '@subsocial/react-query';
 
 import StakingRedeemable from './StakingRedeemable';
 import StakingUnbonding from './StakingUnbonding';

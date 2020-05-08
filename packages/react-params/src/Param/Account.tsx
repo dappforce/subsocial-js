@@ -5,7 +5,7 @@
 import { Props } from '../types';
 
 import React from 'react';
-import { InputAddress } from '@polkadot/react-components';
+import { InputAddress } from '@subsocial/react-components';
 import keyring from '@polkadot/ui-keyring';
 
 import Bare from './Bare';

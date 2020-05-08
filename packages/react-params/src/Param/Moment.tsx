@@ -5,7 +5,7 @@
 import { Props, RawParamOnChangeValue } from '../types';
 
 import React from 'react';
-import { Static } from '@polkadot/react-components';
+import { Static } from '@subsocial/react-components';
 
 import Amount from './Amount';
 

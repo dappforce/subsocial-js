@@ -5,7 +5,7 @@
 import { DeriveFees, DeriveBalancesAll, DeriveContractFees } from '@polkadot/api-derive/types';
 
 import BN from 'bn.js';
-import { registry } from '@polkadot/react-api';
+import { registry } from '@subsocial/react-api';
 import { createType } from '@polkadot/types';
 
 const ZERO_BALANCE: DeriveBalancesAll = {

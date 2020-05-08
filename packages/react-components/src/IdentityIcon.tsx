@@ -6,11 +6,11 @@ import { IdentityProps as Props } from '@polkadot/react-identicon/types';
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getSystemIcon } from '@polkadot/apps-config/ui';
-import { useApi } from '@polkadot/react-hooks';
+import { getSystemIcon } from '@subsocial/apps-config/ui';
+import { useApi } from '@subsocial/react-hooks';
 import BaseIdentityIcon from '@polkadot/react-identicon';
 import uiSettings from '@polkadot/ui-settings';
-import { ValidatorsContext } from '@polkadot/react-query';
+import { ValidatorsContext } from '@subsocial/react-query';
 
 import StatusContext from './Status/Context';
 import { useTranslation } from './translate';

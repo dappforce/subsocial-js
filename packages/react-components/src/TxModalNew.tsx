@@ -5,8 +5,8 @@
 import { TxModalProps as Props } from './types';
 
 import React, { useState, useEffect } from 'react';
-import { Button, InputAddress, Modal } from '@polkadot/react-components';
-// import { useTx } from '@polkadot/react-hooks';
+import { Button, InputAddress, Modal } from '@subsocial/react-components';
+// import { useTx } from '@subsocial/react-hooks';
 import { isUndefined } from '@polkadot/util';
 
 import translate from './translate';

@@ -21,7 +21,6 @@ export { default as Call } from './Call';
 export { default as Card } from './Card';
 export { default as CardGrid } from './CardGrid';
 export { default as CardSummary } from './CardSummary';
-export { default as ChainImg } from './ChainImg';
 export { default as ChainLock } from './ChainLock';
 export { default as Chart } from './Chart';
 export { default as Columar } from './Columar';

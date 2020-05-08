@@ -3,7 +3,7 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import React, { useEffect, useState } from 'react';
-import { useApi } from '@polkadot/react-hooks';
+import { useApi } from '@subsocial/react-hooks';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { stringToU8a } from '@polkadot/util';
 import { xxhashAsHex } from '@polkadot/util-crypto';

@@ -8,8 +8,8 @@ import { RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import BN from 'bn.js';
 import React, { useState, useEffect } from 'react';
 import { Trans } from 'react-i18next';
-import { Expander } from '@polkadot/react-components';
-import { useApi } from '@polkadot/react-hooks';
+import { Expander } from '@subsocial/react-components';
+import { useApi } from '@subsocial/react-hooks';
 import { formatBalance } from '@polkadot/util';
 
 interface Props {

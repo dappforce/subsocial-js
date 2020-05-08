@@ -6,7 +6,7 @@ import { TxButtonProps as Props } from './types';
 
 import React, { useCallback, useContext } from 'react';
 import { SubmittableResult } from '@polkadot/api';
-import { useApi, useToggle } from '@polkadot/react-hooks';
+import { useApi, useToggle } from '@subsocial/react-hooks';
 import { assert, isFunction, isUndefined } from '@polkadot/util';
 
 import Button from './Button';

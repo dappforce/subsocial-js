@@ -6,7 +6,7 @@ import { EraRewardPoints } from '@polkadot/types/interfaces';
 
 import React, { useEffect, useState } from 'react';
 import { HeaderExtended } from '@polkadot/api-derive';
-import { useApi, useCall } from '@polkadot/react-hooks';
+import { useApi, useCall } from '@subsocial/react-hooks';
 import { formatNumber } from '@polkadot/util';
 
 export interface Authors {

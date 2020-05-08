@@ -6,7 +6,7 @@ import { BareProps } from './types';
 
 import React from 'react';
 import { MAX_PASS_LEN } from '@polkadot/ui-keyring/defaults';
-import { useToggle } from '@polkadot/react-hooks';
+import { useToggle } from '@subsocial/react-hooks';
 
 import { classes } from './util';
 import Button from './Button';

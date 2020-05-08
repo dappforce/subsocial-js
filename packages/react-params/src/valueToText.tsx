@@ -5,7 +5,7 @@
 import { Keys, ValidatorId } from '@polkadot/types/interfaces';
 
 import React from 'react';
-import { classes } from '@polkadot/react-components/util';
+import { classes } from '@subsocial/react-components/util';
 import { isNull, isUndefined, u8aToHex } from '@polkadot/util';
 import { Option, Raw } from '@polkadot/types';
 

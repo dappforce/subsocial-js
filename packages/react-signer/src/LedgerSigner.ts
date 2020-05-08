@@ -5,7 +5,7 @@
 import { Signer, SignerResult } from '@polkadot/api/types';
 import { SignerPayloadJSON } from '@polkadot/types/types';
 
-import { getLedger, registry } from '@polkadot/react-api';
+import { getLedger, registry } from '@subsocial/react-api';
 import { createType } from '@polkadot/types';
 
 export class LedgerSigner implements Signer {

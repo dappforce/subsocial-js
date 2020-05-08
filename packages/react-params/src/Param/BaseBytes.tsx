@@ -6,7 +6,7 @@ import { Props as BaseProps, Size } from '../types';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Compact } from '@polkadot/types';
-import { Input } from '@polkadot/react-components';
+import { Input } from '@subsocial/react-components';
 import { hexToU8a, isHex, u8aToHex } from '@polkadot/util';
 import { decodeAddress } from '@polkadot/util-crypto';
 

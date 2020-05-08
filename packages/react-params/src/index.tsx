@@ -2,13 +2,13 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { I18nProps } from '@polkadot/react-components/types';
+import { I18nProps } from '@subsocial/react-components/types';
 import { ComponentMap, ParamDef, RawParam, RawParams, RawParamOnChangeValue } from './types';
 
 import React from 'react';
 import styled from 'styled-components';
-import { ErrorBoundary } from '@polkadot/react-components';
-import { classes } from '@polkadot/react-components/util';
+import { ErrorBoundary } from '@subsocial/react-components';
+import { classes } from '@subsocial/react-components/util';
 
 import ParamComp from './ParamComp';
 import translate from './translate';

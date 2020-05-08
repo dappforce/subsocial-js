@@ -10,7 +10,7 @@ import { ActionStatus, PartialQueueTxExtrinsic, PartialQueueTxRpc, QueueStatus, 
 
 import React, { useCallback, useRef, useState } from 'react';
 import { SubmittableResult } from '@polkadot/api';
-import { registry } from '@polkadot/react-api';
+import { registry } from '@subsocial/react-api';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import { createType } from '@polkadot/types';
 

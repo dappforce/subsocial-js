@@ -8,7 +8,7 @@ import { StorageEntryPromise } from './types';
 
 import React from 'react';
 import { ApiPromise } from '@polkadot/api';
-import { useApi } from '@polkadot/react-hooks';
+import { useApi } from '@subsocial/react-hooks';
 
 import Dropdown from '../Dropdown';
 import { classes } from '../util';

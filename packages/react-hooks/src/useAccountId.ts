@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { StringOrNull } from '@polkadot/react-components/types';
+import { StringOrNull } from '@subsocial/react-components/types';
 
 import { useCallback, useState } from 'react';
 

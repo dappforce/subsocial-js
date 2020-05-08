@@ -6,7 +6,7 @@ import { TypeDef, TypeDefInfo } from '@polkadot/types/types';
 import { RawParamValue } from './types';
 
 import BN from 'bn.js';
-import { registry } from '@polkadot/react-api';
+import { registry } from '@subsocial/react-api';
 import { Bytes, Raw, createType, getTypeDef } from '@polkadot/types';
 import { isBn } from '@polkadot/util';
 

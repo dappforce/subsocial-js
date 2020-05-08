@@ -6,7 +6,7 @@ import { TypeDef } from '@polkadot/types/types';
 import { ParamDef, Props, RawParam } from '../types';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button } from '@polkadot/react-components';
+import { Button } from '@subsocial/react-components';
 import { isUndefined } from '@polkadot/util';
 
 import { useTranslation } from '../translate';

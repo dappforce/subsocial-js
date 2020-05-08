@@ -2,11 +2,11 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { Props, RawParam } from '@polkadot/react-params/types';
+import { Props, RawParam } from '@subsocial/react-params/types';
 
 import React, { useCallback } from 'react';
-import { registry } from '@polkadot/react-api';
-import { useApi } from '@polkadot/react-hooks';
+import { registry } from '@subsocial/react-api';
+import { useApi } from '@subsocial/react-hooks';
 
 import ExtrinsicDisplay from './Extrinsic';
 

@@ -7,8 +7,8 @@ import { DeriveSessionProgress, DeriveStakingAccount, DeriveUnlocking } from '@p
 import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
-import { useApi, useCall } from '@polkadot/react-hooks';
-import { BlockToTime, FormatBalance } from '@polkadot/react-query';
+import { useApi, useCall } from '@subsocial/react-hooks';
+import { BlockToTime, FormatBalance } from '@subsocial/react-query';
 import { formatBalance, formatNumber } from '@polkadot/util';
 
 import Icon from './Icon';

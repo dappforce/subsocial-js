@@ -3,13 +3,13 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { DeriveAccountInfo, DeriveAccountRegistration } from '@polkadot/api-derive/types';
-import { BareProps } from '@polkadot/react-api/types';
+import { BareProps } from '@subsocial/react-api/types';
 import { AccountId, AccountIndex, Address } from '@polkadot/types/interfaces';
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import registry from '@polkadot/react-api/typeRegistry';
-import { useCall, useApi, useRegistrars, useToggle } from '@polkadot/react-hooks';
+import registry from '@subsocial/react-api/typeRegistry';
+import { useCall, useApi, useRegistrars, useToggle } from '@subsocial/react-hooks';
 import { stringToU8a } from '@polkadot/util';
 
 import { useTranslation } from './translate';

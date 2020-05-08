@@ -4,11 +4,11 @@
 
 import { AccountId, Address } from '@polkadot/types/interfaces';
 import { DeriveAccountInfo } from '@polkadot/api-derive/types';
-import { BareProps } from '@polkadot/react-api/types';
+import { BareProps } from '@subsocial/react-api/types';
 
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useApi, useCall } from '@polkadot/react-hooks';
+import { useApi, useCall } from '@subsocial/react-hooks';
 
 interface Props extends BareProps {
   children?: React.ReactNode;

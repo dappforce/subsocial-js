@@ -6,8 +6,8 @@ import { Props } from '../types';
 
 import React from 'react';
 import { ClassOf } from '@polkadot/types';
-import { registry } from '@polkadot/react-api';
-import { Dropdown } from '@polkadot/react-components';
+import { registry } from '@subsocial/react-api';
+import { Dropdown } from '@subsocial/react-components';
 import { bnToBn } from '@polkadot/util';
 
 import Bare from './Bare';

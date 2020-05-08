@@ -6,7 +6,7 @@ import { AccountId, AccountIndex, Address } from '@polkadot/types/interfaces';
 import { BareProps } from './types';
 
 import React from 'react';
-import { Nonce } from '@polkadot/react-query';
+import { Nonce } from '@subsocial/react-query';
 
 import { classes } from './util';
 

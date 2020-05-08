@@ -6,9 +6,9 @@ import { Extrinsic } from '@polkadot/types/interfaces';
 import { Props } from '../types';
 
 import React from 'react';
-import { registry } from '@polkadot/react-api';
-import { Call, Static } from '@polkadot/react-components';
-import { classes } from '@polkadot/react-components/util';
+import { registry } from '@subsocial/react-api';
+import { Call, Static } from '@subsocial/react-components';
+import { classes } from '@subsocial/react-components/util';
 
 import Bare from './Bare';
 import Unknown from './Unknown';

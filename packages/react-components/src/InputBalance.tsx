@@ -7,8 +7,8 @@ import { BareProps, BitLength } from './types';
 import BN from 'bn.js';
 import React from 'react';
 import styled from 'styled-components';
-import { BitLengthOption } from '@polkadot/react-components/constants';
-import { InputNumber } from '@polkadot/react-components';
+import { BitLengthOption } from '@subsocial/react-components/constants';
+import { InputNumber } from '@subsocial/react-components';
 import { formatBalance } from '@polkadot/util';
 
 interface Props extends BareProps {

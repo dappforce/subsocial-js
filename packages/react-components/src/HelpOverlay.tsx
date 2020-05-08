@@ -7,7 +7,7 @@ import { BareProps } from './types';
 import React from 'react';
 import ReactMd from 'react-markdown';
 import styled from 'styled-components';
-import { useToggle } from '@polkadot/react-hooks';
+import { useToggle } from '@subsocial/react-hooks';
 
 import Icon from './Icon';
 

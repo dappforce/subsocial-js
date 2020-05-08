@@ -4,11 +4,11 @@
 
 import { Signer, SignerResult } from '@polkadot/api/types';
 import { SubmittableResult } from '@polkadot/api';
-import { QueueTxPayloadAdd, QueueTxMessageSetStatus, QueueTxStatus } from '@polkadot/react-components/Status/types';
+import { QueueTxPayloadAdd, QueueTxMessageSetStatus, QueueTxStatus } from '@subsocial/react-components/Status/types';
 import { Hash } from '@polkadot/types/interfaces';
 import { SignerPayloadJSON } from '@polkadot/types/types';
 
-import { registry } from '@polkadot/react-api';
+import { registry } from '@subsocial/react-api';
 import { ClassOf } from '@polkadot/types';
 
 export default class ApiSigner implements Signer {

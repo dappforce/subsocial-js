@@ -8,7 +8,7 @@ import { DropdownOptions } from '../util/types';
 import { StorageEntryPromise } from './types';
 
 import React, { useCallback, useState } from 'react';
-import { useApi } from '@polkadot/react-hooks';
+import { useApi } from '@subsocial/react-hooks';
 
 import LinkedWrapper from '../InputExtrinsic/LinkedWrapper';
 import SelectKey from './SelectKey';

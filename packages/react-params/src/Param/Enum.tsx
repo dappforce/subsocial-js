@@ -6,8 +6,8 @@ import { TypeDef } from '@polkadot/types/types';
 import { ParamDef, Props, RawParam } from '../types';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { registry } from '@polkadot/react-api';
-import { Dropdown } from '@polkadot/react-components';
+import { registry } from '@subsocial/react-api';
+import { Dropdown } from '@subsocial/react-components';
 import { Enum, createType, getTypeDef } from '@polkadot/types';
 
 import Params from '../';

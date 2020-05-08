@@ -4,7 +4,7 @@
 
 import { Proposal } from '@polkadot/types/interfaces';
 
-import { registry } from '@polkadot/react-api';
+import { registry } from '@subsocial/react-api';
 
 export default function isTreasuryProposalVote (proposal?: Proposal | null): boolean {
   if (!proposal) {

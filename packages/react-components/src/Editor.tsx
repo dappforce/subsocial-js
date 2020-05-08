@@ -2,12 +2,12 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { BareProps } from '@polkadot/react-components/types';
+import { BareProps } from '@subsocial/react-components/types';
 
 import CodeFlask from 'codeflask';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { classes } from '@polkadot/react-components/util';
+import { classes } from '@subsocial/react-components/util';
 
 interface Props extends BareProps {
   code: string;
@@ -24,7 +24,7 @@ interface Props extends BareProps {
  * <BR>
  *
  * ```javascript
- * import {Editor} from '@polkadot/react-components';
+ * import {Editor} from '@subsocial/react-components';
  *
  * <Editor
  *    className={string} // optional

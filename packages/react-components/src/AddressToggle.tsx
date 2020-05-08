@@ -6,7 +6,7 @@ import { DeriveAccountInfo } from '@polkadot/api-derive/types';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useApi, useCall } from '@polkadot/react-hooks';
+import { useApi, useCall } from '@subsocial/react-hooks';
 
 import { getAddressName } from './util';
 import AddressMini from './AddressMini';

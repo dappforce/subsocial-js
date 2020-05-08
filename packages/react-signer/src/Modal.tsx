@@ -4,11 +4,11 @@
 
 import { SignerOptions, SignerResult, Signer as ApiSigner } from '@polkadot/api/types';
 import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
-import { ApiProps } from '@polkadot/react-api/types';
-import { I18nProps, BareProps } from '@polkadot/react-components/types';
+import { ApiProps } from '@subsocial/react-api/types';
+import { I18nProps, BareProps } from '@subsocial/react-components/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { SubjectInfo } from '@polkadot/ui-keyring/observable/types';
-import { QueueTx, QueueTxMessageSetStatus, QueueTxResult, QueueTxStatus } from '@polkadot/react-components/Status/types';
+import { QueueTx, QueueTxMessageSetStatus, QueueTxResult, QueueTxStatus } from '@subsocial/react-components/Status/types';
 import { DefinitionRpcExt, SignerPayloadJSON } from '@polkadot/types/types';
 
 import BN from 'bn.js';
@@ -16,9 +16,9 @@ import React from 'react';
 import { SubmittableResult } from '@polkadot/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { createType } from '@polkadot/types';
-import { Button, InputBalance, Modal, Toggle, Output, ErrorBoundary, InputNumber } from '@polkadot/react-components';
-import { registry } from '@polkadot/react-api';
-import { withApi, withMulti, withObservable } from '@polkadot/react-api/hoc';
+import { Button, InputBalance, Modal, Toggle, Output, ErrorBoundary, InputNumber } from '@subsocial/react-components';
+import { registry } from '@subsocial/react-api';
+import { withApi, withMulti, withObservable } from '@subsocial/react-api/hoc';
 import keyring from '@polkadot/ui-keyring';
 import { assert, isFunction } from '@polkadot/util';
 import { format } from '@polkadot/util/logger';

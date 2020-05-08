@@ -6,7 +6,7 @@ import { QueueStatus, QueueTx, QueueTxStatus } from './types';
 
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { registry } from '@polkadot/react-api';
+import { registry } from '@subsocial/react-api';
 
 import AddressMini from '../AddressMini';
 import Button from '../Button';

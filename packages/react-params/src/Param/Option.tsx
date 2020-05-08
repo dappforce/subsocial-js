@@ -7,7 +7,7 @@ import { Props } from '../types';
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Toggle } from '@polkadot/react-components';
+import { Toggle } from '@subsocial/react-components';
 
 import { useTranslation } from '../translate';
 import Param from './index';

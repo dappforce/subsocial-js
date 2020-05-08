@@ -8,8 +8,8 @@ import { ExtraFees } from './types';
 import BN from 'bn.js';
 import React, { useState, useEffect } from 'react';
 import { Compact, UInt } from '@polkadot/types';
-import { Icon } from '@polkadot/react-components';
-import { useApi } from '@polkadot/react-hooks';
+import { Icon } from '@subsocial/react-components';
+import { useApi } from '@subsocial/react-hooks';
 import { formatBalance } from '@polkadot/util';
 
 import { useTranslation } from '../translate';

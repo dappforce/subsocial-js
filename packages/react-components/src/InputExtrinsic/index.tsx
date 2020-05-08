@@ -6,7 +6,7 @@ import { SubmittableExtrinsicFunction } from '@polkadot/api/types';
 import { DropdownOptions } from '../util/types';
 
 import React, { useCallback, useState } from 'react';
-import { useApi } from '@polkadot/react-hooks';
+import { useApi } from '@subsocial/react-hooks';
 
 import LinkedWrapper from './LinkedWrapper';
 import SelectMethod from './SelectMethod';

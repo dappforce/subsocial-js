@@ -4,7 +4,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useDebounce } from '@polkadot/react-hooks';
+import { useDebounce } from '@subsocial/react-hooks';
 
 import { useTranslation } from '../translate';
 import Input from '../Input';

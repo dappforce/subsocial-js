@@ -6,7 +6,7 @@ import { Props as BareProps, RawParam } from '../types';
 
 import React from 'react';
 import styled from 'styled-components';
-import { Static } from '@polkadot/react-components';
+import { Static } from '@subsocial/react-components';
 
 import { useTranslation } from '../translate';
 import Bare from './Bare';

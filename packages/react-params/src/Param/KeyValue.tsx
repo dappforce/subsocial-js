@@ -6,7 +6,7 @@ import { Props } from '../types';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Compact } from '@polkadot/types';
-import { Input } from '@polkadot/react-components';
+import { Input } from '@subsocial/react-components';
 import { hexToU8a, u8aConcat } from '@polkadot/util';
 
 import Bare from './Bare';

@@ -6,7 +6,7 @@ import { Props } from '../types';
 
 import React, { useCallback, useState } from 'react';
 import { Compact } from '@polkadot/types';
-import { Button } from '@polkadot/react-components';
+import { Button } from '@subsocial/react-components';
 
 import BaseBytes from './BaseBytes';
 import File from './File';

@@ -12,7 +12,7 @@ import { formatNumber, isUndefined } from '@polkadot/util';
 
 import Progress, { Colors as ProgressColors } from './Progress';
 import Labelled from './Labelled';
-import { BlockToTime } from '@polkadot/react-query';
+import { BlockToTime } from '@subsocial/react-query';
 
 interface ProgressProps {
   color?: ProgressColors;

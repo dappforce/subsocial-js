@@ -6,7 +6,7 @@ import { DeriveElectionsInfo } from '@polkadot/api-derive/types';
 import { AccountId } from '@polkadot/types/interfaces';
 
 import { useEffect, useState } from 'react';
-import { useAccounts, useApi, useCall } from '@polkadot/react-hooks';
+import { useAccounts, useApi, useCall } from '@subsocial/react-hooks';
 
 interface Result {
   isMember: boolean;

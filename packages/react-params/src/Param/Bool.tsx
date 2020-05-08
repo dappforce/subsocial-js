@@ -5,7 +5,7 @@
 import { Props } from '../types';
 
 import React from 'react';
-import { Dropdown } from '@polkadot/react-components';
+import { Dropdown } from '@subsocial/react-components';
 
 import Bare from './Bare';
 

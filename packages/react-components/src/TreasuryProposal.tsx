@@ -5,10 +5,10 @@
 import { TreasuryProposal as TreasuryProposalType } from '@polkadot/types/interfaces';
 
 import React, { useEffect, useState } from 'react';
-import { InputAddress, Labelled, Static } from '@polkadot/react-components';
-import { useApi } from '@polkadot/react-hooks';
+import { InputAddress, Labelled, Static } from '@subsocial/react-components';
+import { useApi } from '@subsocial/react-hooks';
 import { Option } from '@polkadot/types';
-import { FormatBalance } from '@polkadot/react-query';
+import { FormatBalance } from '@subsocial/react-query';
 
 import Inset, { InsetProps } from './Inset';
 import { useTranslation } from './translate';

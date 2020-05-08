@@ -3,11 +3,11 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { Moment } from '@polkadot/types/interfaces';
-import { BareProps } from '@polkadot/react-api/types';
+import { BareProps } from '@subsocial/react-api/types';
 
 import BN from 'bn.js';
 import React, { useEffect, useState } from 'react';
-import { useApi, useCall } from '@polkadot/react-hooks';
+import { useApi, useCall } from '@subsocial/react-hooks';
 
 import Elapsed from './Elapsed';
 

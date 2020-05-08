@@ -6,8 +6,8 @@ import { Props } from '../types';
 
 import BN from 'bn.js';
 import React from 'react';
-import { registry } from '@polkadot/react-api';
-import { Input } from '@polkadot/react-components';
+import { registry } from '@subsocial/react-api';
+import { Input } from '@subsocial/react-components';
 import { ClassOf } from '@polkadot/types';
 import { bnToBn, formatNumber } from '@polkadot/util';
 

@@ -3,7 +3,7 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import React from 'react';
-import { AddressRow, Button, Modal } from '@polkadot/react-components';
+import { AddressRow, Button, Modal } from '@subsocial/react-components';
 
 import { useTranslation } from './translate';
 

@@ -6,7 +6,7 @@ import { BareProps } from './types';
 
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { useToggle } from '@polkadot/react-hooks';
+import { useToggle } from '@subsocial/react-hooks';
 import { Text } from '@polkadot/types';
 
 import { useTranslation } from './translate';

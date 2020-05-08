@@ -1,27 +1,28 @@
 // Copyright 2017-2020 @polkadot/react-api authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
-
 import { InjectedExtension } from '@polkadot/extension-inject/types';
 import { ChainProperties, ChainType } from '@polkadot/types/interfaces';
 import { ApiProps, ApiState } from './types';
 
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import ApiPromise from '@polkadot/api/promise';
-import { typesChain, typesSpec } from '@polkadot/apps-config/api';
+import { typesChain, typesSpec } from '@subsocial/apps-config/api';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { WsProvider } from '@polkadot/rpc-provider';
-import { StatusContext } from '@polkadot/react-components/Status';
-import { TokenUnit } from '@polkadot/react-components/InputNumber';
+import { StatusContext } from '@subsocial/react-components/Status';
+import { TokenUnit } from '@subsocial/react-components/InputNumber';
 import keyring from '@polkadot/ui-keyring';
 import uiSettings from '@polkadot/ui-settings';
-import ApiSigner from '@polkadot/react-signer/ApiSigner';
+import ApiSigner from '@subsocial/react-signer/ApiSigner';
 import { formatBalance, isTestChain } from '@polkadot/util';
 import { setSS58Format } from '@polkadot/util-crypto';
 import addressDefaults from '@polkadot/util-crypto/address/defaults';
 
 import ApiContext from './ApiContext';
 import registry from './typeRegistry';
+
+const isWindow = typeof window !== 'undefined';
 
 interface Props {
   children: React.ReactNode;
@@ -46,7 +47,7 @@ interface ChainData {
 }
 
 const injectedPromise = new Promise<InjectedExtension[]>((resolve): void => {
-  window.addEventListener('load', (): void => {
+  isWindow && window.addEventListener('load', (): void => {
     resolve(web3Enable('polkadot-js/apps'));
   });
 });

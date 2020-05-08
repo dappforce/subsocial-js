@@ -5,7 +5,7 @@
 import { TypeDef, TypeDefInfo } from '@polkadot/types/types';
 import { Props, ComponentMap } from '../types';
 
-import { registry } from '@polkadot/react-api';
+import { registry } from '@subsocial/react-api';
 import { createType, getTypeDef, SPECIAL_TYPES } from '@polkadot/types';
 import { isBn } from '@polkadot/util';
 

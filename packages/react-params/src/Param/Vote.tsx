@@ -7,7 +7,7 @@ import { Props } from '../types';
 import BN from 'bn.js';
 import React, { useMemo } from 'react';
 import { GenericVote } from '@polkadot/types';
-import { Dropdown } from '@polkadot/react-components';
+import { Dropdown } from '@subsocial/react-components';
 
 import { useTranslation } from '../translate';
 import Bare from './Bare';
