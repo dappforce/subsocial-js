@@ -185,6 +185,11 @@ export class SubsocialIpfsApi {
 
   async saveContentOnServer (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
+      const data = new FormData()
+      for (const key in content) {
+        const k = key as keyof CommonContent;
+        data.append(key, content[k]);
+      }
       const json = Buffer.from(JSON.stringify(content));
       const results = await this.api.add(json);
       return results[results.length - 1].hash as any as IpfsHash;

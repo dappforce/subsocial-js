@@ -1,8 +1,8 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
-import { BlogData, CommentData, CommonData, ExtendedPostData, PostData, ProfileData } from '@subsocial/types';
-import { BlogContent, CommentContent, CommonContent, IpfsApi, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
-import { AnyAccountId, AnyBlogId, AnyCommentId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
-import { AccountId, Blog, Comment, Post, PostId, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { BlogData, CommonData, ExtendedPostData, PostData, ProfileData } from '@subsocial/types';
+import { BlogContent, CommonContent, IpfsApi, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
+import { AnyAccountId, AnyBlogId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
+import { AccountId, Blog, Post, PostId, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined, nonEmptyStr } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
@@ -72,14 +72,6 @@ export class SubsocialApi {
     const findStructs = this.substrate.findPosts.bind(this.substrate)
     const findContents = this.ipfs.findPosts.bind(this.ipfs)
     return this.findDataArray<AnyPostId, Post, PostContent>(
-      ids, findStructs, findContents
-    )
-  }
-
-  async findComments (ids: AnyCommentId[]): Promise<CommentData[]> {
-    const findStructs = this.substrate.findComments.bind(this.substrate)
-    const findContents = this.ipfs.findComments.bind(this.ipfs)
-    return this.findDataArray<AnyCommentId, Comment, CommentContent>(
       ids, findStructs, findContents
     )
   }
@@ -185,10 +177,6 @@ export class SubsocialApi {
 
   async findPostWithExt (id: AnyPostId): Promise<ExtendedPostData | undefined> {
     return getFirstOrUndefined(await this.findPostsWithExt([ id ]))
-  }
-
-  async findComment (id: AnyCommentId): Promise<CommentData | undefined> {
-    return getFirstOrUndefined(await this.findComments([ id ]))
   }
 
   async findProfile (id: AnyAccountId): Promise<ProfileData | undefined> {
