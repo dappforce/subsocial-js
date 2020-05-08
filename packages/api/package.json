@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/api",
-  "version": "0.3.0-beta",
+  "version": "0.2.19",
   "description": "JavaScript API for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -22,7 +22,6 @@
     "@subsocial/types": "^0.1.30",
     "@subsocial/utils": "^0.1.23",
     "@types/axios": "^0.14.0",
-    "@types/request": "^2.48.4",
     "axios": "^0.19.2"
   },
   "scripts": {

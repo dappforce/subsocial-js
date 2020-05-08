@@ -11,7 +11,6 @@ import { getSharedPostId, getUniqueIds, SupportedSubstrateId } from './utils';
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
   ipfsNodeUrl: string,
-  ipfsClusterUrl: string,
   offchainUrl: string
 }
 
@@ -22,9 +21,9 @@ export class SubsocialApi {
   private _ipfs: SubsocialIpfsApi
 
   constructor (props: SubsocialApiProps) {
-    const { substrateApi, ipfsNodeUrl, ipfsClusterUrl, offchainUrl } = props
+    const { substrateApi, ipfsNodeUrl, offchainUrl } = props
     this._substrate = new SubsocialSubstrateApi(substrateApi)
-    this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, ipfsClusterUrl, offchainUrl })
+    this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl })
   }
 
   public get substrate (): SubsocialSubstrateApi {
