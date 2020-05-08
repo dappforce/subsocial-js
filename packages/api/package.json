@@ -19,8 +19,8 @@
   "dependencies": {
     "@babel/runtime": "^7.8.4",
     "@polkadot/api": "1.11.1",
-    "@subsocial/types": "^0.1.29",
-    "@subsocial/utils": "^0.1.21",
+    "@subsocial/types": "^0.1.30",
+    "@subsocial/utils": "^0.1.23",
     "@types/axios": "^0.14.0",
     "@types/request": "^2.48.4",
     "axios": "^0.19.2"
