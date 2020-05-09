@@ -104,7 +104,6 @@ export default {
     },
     SpaceId: 'u64',
     ChangeId: 'u64',
-
     SpaceOwners: {
       created: 'WhoAndWhen',
       space_id: 'SpaceId',
@@ -128,6 +127,7 @@ export default {
         'UpvotePost',
         'DownvotePost',
         'SharePost',
+        'CreateComment',
         'UpvoteComment',
         'DownvoteComment',
         'ShareComment',

@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { IpfsHash, SocialAccount } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, IpfsApi, ProfileContent } from '@subsocial/types/offchain';
+import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds } from './utils';
-
-const ipfsClient = require('ipfs-http-client')
 
 const IPFS_HASH_BINARY_LEN = 47
 
@@ -17,7 +14,7 @@ const asIpfsCid = (cid: IpfsCid): CID => {
   } else if (typeof cid.toU8a === 'function' && cid.toU8a().length === IPFS_HASH_BINARY_LEN) {
     return new CID(cid.toString())
   } else {
-    throw new Error('Wrong type of IPFS CID. Valid types are: string | IpfsHash | CID')
+    throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsHash')
   }
 }
 
@@ -56,36 +53,52 @@ export function getCidsOfStructs (structs: HasIpfsHashSomewhere[]): CID[] {
 }
 
 type IpfsUrl = string
+type IpfsNodeEndpoint = 'cat' | 'version'
 
 export type SubsocialIpfsProps = {
-  connect: IpfsApi | IpfsUrl,
+  ipfsNodeUrl: IpfsUrl,
   offchainUrl: string
 }
 
 export class SubsocialIpfsApi {
 
-  private api!: IpfsApi // IPFS API (connected)
+  private ipfsNodeUrl!: IpfsUrl // IPFS Node ReadOnly Gateway
 
   private offchainUrl!: string
 
   constructor (props: SubsocialIpfsProps) {
-    this.connect(props.connect)
-    this.offchainUrl = `${props.offchainUrl}/v1`
+    const { ipfsNodeUrl, offchainUrl } = props;
+
+    this.ipfsNodeUrl = `${ipfsNodeUrl}/api/v0`
+    this.offchainUrl = `${offchainUrl}/v1`
+
+    this.testConnection()
   }
 
-  private async connect (connection: IpfsApi | IpfsUrl) {
+  private async testConnection () {
     try {
-      this.api = typeof connection === 'string' ? ipfsClient(connection) : connection;
-      // Test IPFS connection by requesting its readme file.
-      await this.api.cat('/ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme')
-      logger.info('Connected to IPFS node')
+      // Test IPFS Node connection by requesting its version
+      const res = await this.ipfsNodeRequest('version')
+      log.info('Connected to IPFS Node with version ', res.data.version)
     } catch (err) {
-      logger.error('Failed to connect to IPFS node:', err)
+      log.error('Failed to connect to IPFS node: %o', err)
     }
   }
 
-  get isConnected () {
-    return typeof this.api !== 'undefined';
+  // ---------------------------------------------------------------------
+  // IPFS Request wrapper
+
+  private async ipfsNodeRequest(endpoint: IpfsNodeEndpoint, cid?: CID): Promise<AxiosResponse<any>> {
+    let config: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${this.ipfsNodeUrl}/${endpoint}`
+    };
+
+    if (typeof cid !== undefined) {
+      config.url += `?arg=${cid}`
+    }
+
+    return axios(config)
   }
 
   // ---------------------------------------------------------------------
@@ -97,17 +110,17 @@ export class SubsocialIpfsApi {
       const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
 
       if (isEmptyArray(ipfsCids)) {
-        logger.debug(`No ${contentName} to load from IPFS: no cids provided`)
+        log.debug(`No ${contentName} to load from IPFS: no cids provided`)
         return []
       }
 
-      const loadContentFns = ipfsCids.map((cid) => this.api.cat(cid));
+      const loadContentFns = ipfsCids.map((cid) => this.ipfsNodeRequest('cat', cid));
       const jsonContents = await Promise.all(loadContentFns);
-      const contents = jsonContents.map((x) => JSON.parse(x.toString())) as T[];
-      logger.debug(`Loaded ${pluralize(contents.length, contentName)}`)
+      const contents = jsonContents.map((x) => x.data) as T[];
+      log.debug(`Loaded ${pluralize(contents.length, contentName)}`)
       return contents
     } catch (err) {
-      logger.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
+      console.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
       return [];
     }
   }
@@ -154,68 +167,54 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Remove
 
-  async removeContent (hash: string) {
-    await this.api.pin.rm(hash);
-    logger.info(`Unpinned content with hash: ${hash}`);
-  }
+  async removeContent (cid: IpfsCid) {
+    try {
+      const res = await axios.delete(`${this.offchainUrl}/ipfs/pins/${cid}`);
 
-  // ---------------------------------------------------------------------
-  // Save
+      if (res.status !== 200) {
+        log.error(`${this.removeContent.name}: offchain server responded with status code ${res.status} and message: ${res.statusText}`)
+        return
+      }
+
+      log.info(`Unpinned content with hash: ${cid}`);
+    } catch (error) {
+      log.error('Failed to unpin content in IPFS from client side via offchain: %o', error)
+    }
+  }
 
   async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
-    return typeof window === 'undefined'
-      ? this.saveContentOnServer(content)
-      : this.saveContentOnClient(content)
-  }
-
-  async saveContentOnClient (content: CommonContent): Promise<IpfsHash | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
 
       if (res.status !== 200) {
-        throw new Error(`Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
+        log.error(`${this.saveContent.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
+        return undefined
       }
 
       return res.data;
     } catch (error) {
-      logger.error('Failed to add content to IPFS from client side:', error)
-      return undefined;
-    }
-  }
-
-  async saveContentOnServer (content: CommonContent): Promise<IpfsHash | undefined> {
-    try {
-      const data = new FormData()
-      for (const key in content) {
-        const k = key as keyof CommonContent;
-        data.append(key, content[k]);
-      }
-      const json = Buffer.from(JSON.stringify(content));
-      const results = await this.api.add(json);
-      return results[results.length - 1].hash as any as IpfsHash;
-    } catch (error) {
-      logger.error('Failed to add content to IPFS from server side:', error)
+      log.error('Failed to add content to IPFS from client side via offchain: %o', error)
       return undefined;
     }
   }
 
   async saveBlog (content: BlogContent): Promise<IpfsHash | undefined> {
     const hash = await this.saveContent(content)
-    logger.debug(`Saved blog with hash: ${hash}`)
+    log.debug(`Saved blog with hash: ${hash}`)
     return hash;
   }
 
   async savePost (content: PostContent): Promise<IpfsHash | undefined> {
     const hash = await this.saveContent(content)
-    logger.debug(`Saved post with hash: ${hash}`)
+    log.debug(`Saved post with hash: ${hash}`)
     return hash;
   }
 
   async saveComment (content: CommentContent): Promise<IpfsHash | undefined> {
     const hash = await this.saveContent(content)
-    logger.debug(`Saved comment with hash: ${hash}`)
+    log.debug(`Saved comment with hash: ${hash}`)
     return hash;
   }
 }
 
-const logger = newLogger(SubsocialIpfsApi.name);
+const log = newLogger(SubsocialIpfsApi.name);

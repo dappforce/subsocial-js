@@ -3,8 +3,8 @@ import { BlogContent, PostContent, CommentContent } from '@subsocial/types/src/o
 import { SubsocialIpfsApi } from '../src/ipfs';
 
 const ipfs = new SubsocialIpfsApi({
-  connect: '/ip4/127.0.0.1/tcp/5001/http',
-  offchainUrl: 'http:localhost:3001'
+  ipfsNodeUrl: 'http://localhost:8080',
+  offchainUrl: 'http://localhost:3001'
 });
 
 const cids = new Map();

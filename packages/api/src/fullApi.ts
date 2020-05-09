@@ -1,6 +1,6 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { BlogData, CommonData, ExtendedPostData, PostData, ProfileData } from '@subsocial/types';
-import { BlogContent, CommonContent, IpfsApi, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
+import { BlogContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
 import { AnyAccountId, AnyBlogId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
 import { AccountId, Blog, Post, PostId, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined, nonEmptyStr } from '@subsocial/utils';
@@ -10,7 +10,7 @@ import { getSharedPostId, getUniqueIds, SupportedSubstrateId } from './utils';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
-  ipfsApi: IpfsApi | string,
+  ipfsNodeUrl: string,
   offchainUrl: string
 }
 
@@ -21,9 +21,9 @@ export class SubsocialApi {
   private _ipfs: SubsocialIpfsApi
 
   constructor (props: SubsocialApiProps) {
-    const { substrateApi, ipfsApi, offchainUrl } = props
+    const { substrateApi, ipfsNodeUrl, offchainUrl } = props
     this._substrate = new SubsocialSubstrateApi(substrateApi)
-    this._ipfs = new SubsocialIpfsApi({ connect: ipfsApi, offchainUrl })
+    this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl })
   }
 
   public get substrate (): SubsocialSubstrateApi {
