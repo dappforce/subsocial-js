@@ -1,6 +1,5 @@
 import BN from 'bn.js';
-import { BlogId, PostId, Blog, Post, AccountId, ReactionId } from '.';
-import { SocialAccount } from './subsocial';
+import { BlogId, PostId, Blog, Post, AccountId, ReactionId, SocialAccount } from '.';
 
 export type SubstrateId = BlogId | PostId | BN;
 export type CommonStruct = Blog | Post | SocialAccount;

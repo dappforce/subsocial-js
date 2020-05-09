@@ -55,7 +55,8 @@
     "stylelint-config-styled-components": "^0.1.1",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-plugin-serve": "^0.12.1"
+    "webpack-plugin-serve": "^0.12.1",
+    "ts-node": "^8.0.0"
   },
   "dependencies": {
     "@polkadot/dev": "^0.32.17",

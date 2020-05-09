@@ -150,6 +150,7 @@ export interface ScoringAction extends Enum {
   readonly isUpvotePost: boolean;
   readonly isDownvotePost: boolean;
   readonly isSharePost: boolean;
+  readonly isCreateComment: boolean;
   readonly isUpvoteComment: boolean;
   readonly isDownvoteComment: boolean;
   readonly isShareComment: boolean;
