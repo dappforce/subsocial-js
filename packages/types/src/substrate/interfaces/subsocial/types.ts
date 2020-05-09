@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
-import { Text, i32, u16, u32, u64 } from '@polkadot/types/primitive';
+import { Text, bool, i32, u16, u32, u64 } from '@polkadot/types/primitive';
 import { AccountId, BlockNumber, Moment } from '@subsocial/types/substrate/interfaces/runtime';
 
 /** @name Blog */
@@ -10,6 +10,7 @@ export interface Blog extends Struct {
   readonly id: BlogId;
   readonly created: WhoAndWhen;
   readonly updated: Option<WhoAndWhen>;
+  readonly hidden: bool;
   readonly writers: Vec<AccountId>;
   readonly handle: Option<Text>;
   readonly ipfs_hash: IpfsHash;
@@ -51,77 +52,43 @@ export interface Change extends Struct {
 /** @name ChangeId */
 export interface ChangeId extends u64 {}
 
-/** @name Comment */
-export interface Comment extends Struct {
-  readonly id: CommentId;
-  readonly parent_id: Option<CommentId>;
-  readonly post_id: PostId;
-  readonly created: WhoAndWhen;
-  readonly updated: Option<WhoAndWhen>;
-  readonly ipfs_hash: IpfsHash;
-  readonly upvotes_count: u16;
-  readonly downvotes_count: u16;
-  readonly shares_count: u16;
-  readonly direct_replies_count: u16;
-  readonly edit_history: Vec<CommentHistoryRecord>;
-  readonly score: i32;
-}
-
-/** @name CommentHistoryRecord */
-export interface CommentHistoryRecord extends Struct {
-  readonly edited: WhoAndWhen;
-  readonly old_data: CommentUpdate;
-}
-
-/** @name CommentId */
-export interface CommentId extends u64 {}
-
-/** @name CommentUpdate */
-export interface CommentUpdate extends Struct {
-  readonly ipfs_hash: IpfsHash;
+/** @name CommentExt */
+export interface CommentExt extends Struct {
+  readonly parent_id: Option<PostId>;
+  readonly root_post_id: PostId;
 }
 
 /** @name IpfsHash */
 export interface IpfsHash extends Text {}
 
-/** @name OptionBlogId */
-export interface OptionBlogId extends Option<BlogId> {}
-
-/** @name OptionChange */
-export interface OptionChange extends Option<Change> {}
-
-/** @name OptionCommentId */
-export interface OptionCommentId extends Option<CommentId> {}
-
-/** @name OptionText */
-export interface OptionText extends Option<Text> {}
-
 /** @name OptionVecAccountId */
-export interface OptionVecAccountId extends Option<VecAccountId> {}
+export interface OptionVecAccountId extends Option<Vec<AccountId>> {}
 
 /** @name Post */
 export interface Post extends Struct {
   readonly id: PostId;
-  readonly blog_id: BlogId;
   readonly created: WhoAndWhen;
   readonly updated: Option<WhoAndWhen>;
+  readonly hidden: bool;
+  readonly blog_id: Option<BlogId>;
   readonly extension: PostExtension;
   readonly ipfs_hash: IpfsHash;
-  readonly comments_count: u16;
+  readonly edit_history: Vec<PostHistoryRecord>;
+  readonly direct_replies_count: u16;
+  readonly total_replies_count: u32;
+  readonly shares_count: u16;
   readonly upvotes_count: u16;
   readonly downvotes_count: u16;
-  readonly shares_count: u16;
-  readonly edit_history: Vec<PostHistoryRecord>;
   readonly score: i32;
 }
 
 /** @name PostExtension */
 export interface PostExtension extends Enum {
   readonly isRegularPost: boolean;
+  readonly isComment: boolean;
+  readonly asComment: CommentExt;
   readonly isSharedPost: boolean;
   readonly asSharedPost: PostId;
-  readonly isSharedComment: boolean;
-  readonly asSharedComment: CommentId;
 }
 
 /** @name PostHistoryRecord */
@@ -137,6 +104,7 @@ export interface PostId extends u64 {}
 export interface PostUpdate extends Struct {
   readonly blog_id: Option<BlogId>;
   readonly ipfs_hash: Option<IpfsHash>;
+  readonly hidden: Option<bool>;
 }
 
 /** @name Profile */
@@ -209,9 +177,6 @@ export interface SpaceOwners extends Struct {
   readonly threshold: u16;
   readonly changes_count: u64;
 }
-
-/** @name VecAccountId */
-export interface VecAccountId extends Vec<AccountId> {}
 
 /** @name WhoAndWhen */
 export interface WhoAndWhen extends Struct {

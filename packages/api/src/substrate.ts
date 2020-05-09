@@ -1,8 +1,8 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
 import { AccountId } from '@polkadot/types/interfaces';
-import { AnyAccountId, AnyBlogId, AnyCommentId, AnyPostId, AnyReactionId, SubstrateId } from '@subsocial/types';
-import { Blog, BlogId, Comment, Post, PostId, Reaction, ReactionId, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { AnyAccountId, AnyBlogId, AnyPostId, AnyReactionId, SubstrateId } from '@subsocial/types';
+import { Blog, BlogId, Post, PostId, Reaction, ReactionId, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
@@ -44,9 +44,9 @@ export class SubsocialSubstrateApi {
     return isBoolean.valueOf()
   }
 
-  private async getReactionIdByAccount (accountId: AnyAccountId, structId: AnyPostId | AnyCommentId, structType: 'post' | 'comment'): Promise<ReactionId> {
+  private async getReactionIdByAccount (accountId: AnyAccountId, structId: AnyPostId): Promise<ReactionId> {
     const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), structId ]);
-    return this.socialQuery(`${structType}ReactionIdByAccount`, queryParams)
+    return this.socialQuery('postReactionIdByAccount', queryParams)
   }
 
   // ---------------------------------------------------------------------
@@ -83,10 +83,6 @@ export class SubsocialSubstrateApi {
     return this.findStructs('postById', ids);
   }
 
-  async findComments (ids: AnyCommentId[]): Promise<Comment[]> {
-    return this.findStructs('commentById', ids);
-  }
-
   async findSocialAccounts (ids: AnyAccountId[]): Promise<SocialAccount[]> {
     const accountIds = ids.map(id => asAccountId(id)).filter(x => typeof x !== 'undefined') as AccountId[]
     return this.findStructs('socialAccountById', accountIds);
@@ -105,10 +101,6 @@ export class SubsocialSubstrateApi {
 
   async findPost (id: AnyPostId): Promise<Post | undefined> {
     return getFirstOrUndefined(await this.findPosts([ id ]))
-  }
-
-  async findComment (id: AnyCommentId): Promise<Comment | undefined> {
-    return getFirstOrUndefined(await this.findComments([ id ]))
   }
 
   async findSocialAccount (id: AnyAccountId): Promise<SocialAccount | undefined> {
@@ -146,6 +138,10 @@ export class SubsocialSubstrateApi {
     return idOpt.unwrapOr(undefined)
   }
 
+  async getReplyIdsByPostId (id: AnyPostId): Promise<PostId[]> {
+    return this.socialQuery('replyIdsByPostId', id);
+  }
+
   async blogIdsByOwner (id: AnyAccountId): Promise<BlogId[]> {
     return this.socialQuery('blogIdsByOwner', asAccountId(id))
   }
@@ -177,17 +173,10 @@ export class SubsocialSubstrateApi {
     return this.isBooleanByAccount('postSharedByAccount', accountId, postId)
   }
 
-  async isCommentSharedByAccount (accountId: AnyAccountId, commentId: AnyCommentId): Promise<boolean> {
-    return this.isBooleanByAccount('commentSharedByAccount', accountId, commentId)
-  }
-
   async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<ReactionId> {
-    return this.getReactionIdByAccount(accountId, postId, 'post')
+    return this.getReactionIdByAccount(accountId, postId)
   }
 
-  async getCommentReactionIdByAccount (accountId: AnyAccountId, commentId: AnyCommentId): Promise<ReactionId> {
-    return this.getReactionIdByAccount(accountId, commentId, 'comment')
-  }
 }
 
 const logger = newLogger(SubsocialSubstrateApi.name);
