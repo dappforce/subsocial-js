@@ -2,22 +2,27 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { TxButtonProps as Props } from './types';
+import { TxButtonProps } from './types';
 
 import React, { useCallback, useContext } from 'react';
 import { SubmittableResult } from '@polkadot/api';
 import { useApi, useToggle } from '@subsocial/react-hooks';
 import { assert, isFunction, isUndefined } from '@polkadot/util';
 
-import Button from './Button';
 import { StatusContext } from './Status';
-import { useTranslation } from './translate';
+import { isPromise } from '@subsocial/utils/promise';
+import Button from './Button';
+
+type ComputedFunc = () => any[] | Promise<any[]>;
+
+type Props = TxButtonProps & {
+  params: any[] | ComputedFunc
+}
 
 function TxButton ({ accountId, className, extrinsic: propsExtrinsic, icon, isBasic, isDisabled, isIcon, isNegative, isPrimary, isUnsigned, label, onClick, onFailed, onSendRef, onStart, onSuccess, onUpdate, params, size, tooltip, tx, withSpinner }: Props): React.ReactElement<Props> {
-  const { t } = useTranslation();
   const { api } = useApi();
   const { queueExtrinsic } = useContext(StatusContext);
-  const [isSending, , setIsSending] = useToggle(false);
+  const [ isSending, , setIsSending ] = useToggle(false);
   const needsAccount = !isUnsigned && !accountId;
 
   const _onFailed = useCallback(
@@ -26,7 +31,7 @@ function TxButton ({ accountId, className, extrinsic: propsExtrinsic, icon, isBa
 
       onFailed && onFailed(result);
     },
-    [onFailed, setIsSending]
+    [ onFailed, setIsSending ]
   );
 
   const _onSuccess = useCallback(
@@ -35,25 +40,31 @@ function TxButton ({ accountId, className, extrinsic: propsExtrinsic, icon, isBa
 
       onSuccess && onSuccess(result);
     },
-    [onSuccess, setIsSending]
+    [ onSuccess, setIsSending ]
   );
 
   const _onSend = useCallback(
-    (): void => {
+    async (): Promise<void> => {
       let extrinsic: any;
 
       if (propsExtrinsic) {
         extrinsic = propsExtrinsic;
       } else {
-        const [section, method] = (tx || '').split('.');
+        const [ section, method ] = (tx || '').split('.');
 
         assert(api.tx[section] && api.tx[section][method], `Unable to find api.tx.${section}.${method}`);
 
-        extrinsic = api.tx[section][method](...(
-          isFunction(params)
-            ? params()
-            : (params || [])
-        ));
+        let resultParams = (params || []) as any[];
+
+        if (isFunction(params)) {
+          if (isPromise()) {
+            resultParams = await params()
+          } else {
+            resultParams = params() as any[]
+          }
+        }
+
+        extrinsic = api.tx[section][method](...(resultParams));
       }
 
       assert(extrinsic, 'Expected generated extrinsic passed to TxButton');
@@ -74,7 +85,7 @@ function TxButton ({ accountId, className, extrinsic: propsExtrinsic, icon, isBa
 
       onClick && onClick();
     },
-    [_onFailed, _onSuccess, accountId, api.tx, isUnsigned, onClick, onFailed, onStart, onSuccess, onUpdate, params, propsExtrinsic, queueExtrinsic, setIsSending, tx, withSpinner]
+    [ _onFailed, _onSuccess, accountId, api.tx, isUnsigned, onClick, onFailed, onStart, onSuccess, onUpdate, params, propsExtrinsic, queueExtrinsic, setIsSending, tx, withSpinner ]
   );
 
   if (onSendRef) {
@@ -95,7 +106,7 @@ function TxButton ({ accountId, className, extrinsic: propsExtrinsic, icon, isBa
           ? (!isNegative && !isBasic)
           : isPrimary
       }
-      label={label || (isIcon ? '' : t('Submit'))}
+      label={label || isIcon}
       onClick={_onSend}
       size={size}
       tooltip={tooltip}

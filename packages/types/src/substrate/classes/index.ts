@@ -1,18 +1,29 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
-import { IpfsHash, BlogId, OptionVecAccountId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces/subsocial';
+import { IpfsHash, BlogId, OptionVecAccountId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces';
 import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
+import BN from 'bn.js';
+import { SubstrateId } from '@subsocial/types';
+
+export class OptionId<T extends Exclude<SubstrateId, BN>> extends Option<u64> {
+  constructor (value?: T) {
+    const textOrNull = value || new Null(registry)
+    super(registry, 'u64', textOrNull)
+  }
+}
+
+type OptionTextType = string | Text | null;
 
 export class OptionText extends Option<Text> {
-  constructor (value?: string | null) {
+  constructor (value?: OptionTextType) {
     const textOrNull = nonEmptyStr(value) ? value : new Null(registry)
     super(registry, 'Text', textOrNull)
   }
 }
 
 export class OptionOptionText extends Option<Option<Text>> {
-  constructor (value?: string | null) {
+  constructor (value?: OptionTextType) {
     super(registry, 'Option<Text>', new OptionText(value))
   }
 }
@@ -50,8 +61,8 @@ export class CommentExt extends Struct implements ICommentExt {
 
 export type PostExtensionEnum =
   RegularPost |
-  SharedPost |
-  ICommentExt;
+  ICommentExt |
+  SharedPost;
 
 type PostExtensionEnumValue =
   { RegularPost: RegularPost } |
@@ -64,29 +75,25 @@ export class PostExtension extends Enum implements IPostExtension {
       registry,
       {
         RegularPost,
-        SharedPost,
-        Comment: CommentExt as any
+        Comment: CommentExt as any,
+        SharedPost
       }, value);
   }
 
+  get isRegularPost (): boolean {
+    return this.type === RegularPost.name
+  }
+
   get isComment (): boolean {
-    return this.type === 'CommentExt'
+    return this.type === CommentExt.name
   }
 
   get asComment (): CommentExt {
     return this.value as CommentExt;
   }
 
-  get isRegularPost (): boolean {
-    return this.type === 'RegularPost'
-  }
-
   get isSharedPost (): boolean {
-    return this.type === 'SharedPost'
-  }
-
-  get isSharedComment (): boolean {
-    return this.type === 'SharedComment'
+    return this.type === SharedPost.name
   }
 
   get asSharedPost (): PostId {
