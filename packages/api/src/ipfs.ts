@@ -88,8 +88,8 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // IPFS Request wrapper
 
-  private async ipfsNodeRequest(endpoint: IpfsNodeEndpoint, cid?: CID): Promise<AxiosResponse<any>> {
-    let config: AxiosRequestConfig = {
+  private async ipfsNodeRequest (endpoint: IpfsNodeEndpoint, cid?: CID): Promise<AxiosResponse<any>> {
+    const config: AxiosRequestConfig = {
       method: 'GET',
       url: `${this.ipfsNodeUrl}/${endpoint}`
     };

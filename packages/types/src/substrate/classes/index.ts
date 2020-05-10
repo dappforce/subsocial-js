@@ -3,10 +3,9 @@ import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
 import { IpfsHash, BlogId, OptionVecAccountId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces';
 import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
-import BN from 'bn.js';
 import { SubstrateId } from '@subsocial/types';
 
-export class OptionId<T extends Exclude<SubstrateId, BN>> extends Option<u64> {
+export class OptionId<T extends SubstrateId> extends Option<u64> {
   constructor (value?: T) {
     const textOrNull = value || new Null(registry)
     super(registry, 'u64', textOrNull)

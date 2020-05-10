@@ -13,7 +13,7 @@ import { StatusContext } from './Status';
 import { isPromise } from '@subsocial/utils/promise';
 import Button from './Button';
 
-type ComputedFunc = () => any[] | Promise<any[]>;
+type ComputedFunc = () => (any[] | Promise<any[]>);
 
 type Props = TxButtonProps & {
   params: any[] | ComputedFunc
