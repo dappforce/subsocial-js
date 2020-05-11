@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/apps-config",
-  "version": "0.41.4",
+  "version": "0.41.16",
   "main": "index.js",
   "repository": "https://github.com/polkadot-js/apps.git",
   "author": "Jaco Greeff <jacogr@gmail.com>",

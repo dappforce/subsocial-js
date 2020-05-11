@@ -42,8 +42,8 @@ export class CommentExt extends Struct implements ICommentExt {
     super(
       registry,
       {
-        parent_id: 'Option<PostId>',
-        root_post_id: 'PostId'
+        parent_id: 'Option<u64>',
+        root_post_id: 'u64'
       },
       value
     );
@@ -79,24 +79,16 @@ export class PostExtension extends Enum implements IPostExtension {
       }, value);
   }
 
-  get isRegularPost (): boolean {
-    return this.type === RegularPost.name
+  get RegularPost (): Null {
+    return this.RegularPost as Null
   }
 
-  get isComment (): boolean {
-    return this.type === CommentExt.name
+  get Comment (): CommentExt {
+    return this.Comment as CommentExt;
   }
 
-  get asComment (): CommentExt {
-    return this.value as CommentExt;
-  }
-
-  get isSharedPost (): boolean {
-    return this.type === SharedPost.name
-  }
-
-  get asSharedPost (): PostId {
-    return this.value as PostId;
+  get SharedPost (): PostId {
+    return this.SharedPost as PostId;
   }
 }
 

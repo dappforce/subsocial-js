@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
-import { Text, bool, i32, u16, u32, u64 } from '@polkadot/types/primitive';
+import { Text, bool, i32, u16, u32, u64, Null } from '@polkadot/types/primitive';
 import { AccountId, BlockNumber, Moment } from '@subsocial/types/substrate/interfaces/runtime';
 
 /** @name Blog */
@@ -84,11 +84,9 @@ export interface Post extends Struct {
 
 /** @name PostExtension */
 export interface PostExtension extends Enum {
-  readonly isRegularPost: boolean;
-  readonly isComment: boolean;
-  readonly asComment: CommentExt;
-  readonly isSharedPost: boolean;
-  readonly asSharedPost: PostId;
+  readonly RegularPost: Null;
+  readonly Comment: CommentExt;
+  readonly SharedPost: PostId;
 }
 
 /** @name PostHistoryRecord */

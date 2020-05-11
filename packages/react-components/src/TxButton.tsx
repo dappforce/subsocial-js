@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { TxButtonProps } from './types';
+import { TxButtonProps as BareTxButtonProps } from './types';
 
 import React, { useCallback, useContext } from 'react';
 import { SubmittableResult } from '@polkadot/api';
@@ -10,16 +10,15 @@ import { useApi, useToggle } from '@subsocial/react-hooks';
 import { assert, isFunction, isUndefined } from '@polkadot/util';
 
 import { StatusContext } from './Status';
-import { isPromise } from '@subsocial/utils/promise';
 import Button from './Button';
 
 type ComputedFunc = () => (any[] | Promise<any[]>);
 
-type Props = TxButtonProps & {
+export type TxButtonProps = BareTxButtonProps & {
   params: any[] | ComputedFunc
 }
 
-function TxButton ({ accountId, className, extrinsic: propsExtrinsic, icon, isBasic, isDisabled, isIcon, isNegative, isPrimary, isUnsigned, label, onClick, onFailed, onSendRef, onStart, onSuccess, onUpdate, params, size, tooltip, tx, withSpinner }: Props): React.ReactElement<Props> {
+function TxButton ({ accountId, className, extrinsic: propsExtrinsic, icon, isBasic, isDisabled, isIcon, isNegative, isPrimary, isUnsigned, label, onClick, onFailed, onSendRef, onStart, onSuccess, onUpdate, params, size, tooltip, tx, withSpinner }: TxButtonProps): React.ReactElement<TxButtonProps> {
   const { api } = useApi();
   const { queueExtrinsic } = useContext(StatusContext);
   const [ isSending, , setIsSending ] = useToggle(false);
@@ -57,11 +56,7 @@ function TxButton ({ accountId, className, extrinsic: propsExtrinsic, icon, isBa
         let resultParams = (params || []) as any[];
 
         if (isFunction(params)) {
-          if (isPromise()) {
             resultParams = await params()
-          } else {
-            resultParams = params() as any[]
-          }
         }
 
         extrinsic = api.tx[section][method](...(resultParams));

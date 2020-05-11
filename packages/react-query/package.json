@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/react-query",
-  "version": "0.41.14",
+  "version": "0.41.16",
   "description": "A collection of RxJs React components the Polkadot JS API",
   "main": "index.js",
   "keywords": [

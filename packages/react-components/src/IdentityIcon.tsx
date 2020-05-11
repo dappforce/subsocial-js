@@ -6,7 +6,6 @@ import { IdentityProps as Props } from '@polkadot/react-identicon/types';
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getSystemIcon } from '@subsocial/apps-config/ui';
 import { useApi } from '@subsocial/react-hooks';
 import BaseIdentityIcon from '@polkadot/react-identicon';
 import uiSettings from '@polkadot/ui-settings';
@@ -15,8 +14,8 @@ import { ValidatorsContext } from '@subsocial/react-query';
 import StatusContext from './Status/Context';
 import { useTranslation } from './translate';
 
-export function getIdentityTheme (systemName: string): 'substrate' {
-  return ((uiSettings.icon === 'default' && getSystemIcon(systemName)) || uiSettings.icon) as 'substrate';
+export function getIdentityTheme (_systemName: string): 'substrate' {
+  return uiSettings.icon as 'substrate';
 }
 
 function IdentityIcon ({ className, onCopy, prefix, size, theme, value }: Props): React.ReactElement<Props> {
