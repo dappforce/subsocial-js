@@ -7,7 +7,6 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
-    "jsx": "react",
     "paths":
     {
       "@subsocial/types": ["packages/types/src"],
@@ -16,20 +15,6 @@
       "@subsocial/utils/*": ["packages/utils/src/*"],
       "@subsocial/api": ["packages/api/src"],
       "@subsocial/api/*": ["packages/api/src/*"],
-      "@subsocial/apps-config": [ "packages/apps-config/src" ],
-      "@subsocial/apps-config/*": [ "packages/apps-config/src/*" ],
-      "@subsocial/react-api": [ "packages/react-api/src" ],
-      "@subsocial/react-api/*": [ "packages/react-api/src/*" ],
-      "@subsocial/react-components": [ "packages/react-components/src" ],
-      "@subsocial/react-components/*": [ "packages/react-components/src/*" ],
-      "@subsocial/react-hooks": [ "packages/react-hooks/src" ],
-      "@subsocial/react-hooks/*": [ "packages/react-hooks/src/*" ],
-      "@subsocial/react-params": [ "packages/react-params/src" ],
-      "@subsocial/react-params/*": [ "packages/react-params/src/*" ],
-      "@subsocial/react-query": [ "packages/react-query/src" ],
-      "@subsocial/react-query/*": [ "packages/react-query/src/*" ],
-      "@subsocial/react-signer": [ "packages/react-signer/src" ],
-      "@subsocial/react-signer/*": [ "packages/react-signer/src/*" ]
     },
     "skipLibCheck": true,
     "typeRoots": [
