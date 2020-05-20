@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/types",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "JavaScript type definitions for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
