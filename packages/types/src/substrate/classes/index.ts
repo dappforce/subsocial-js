@@ -1,18 +1,28 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
-import { IpfsHash, BlogId, OptionVecAccountId, PostId, CommentId, PostExtension as IPostExtension } from '@subsocial/types/substrate/interfaces/subsocial';
+import { IpfsHash, BlogId, OptionVecAccountId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces';
 import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
+import { SubstrateId } from '@subsocial/types';
+
+export class OptionId<T extends SubstrateId> extends Option<u64> {
+  constructor (value?: T) {
+    const textOrNull = value || new Null(registry)
+    super(registry, 'u64', textOrNull)
+  }
+}
+
+type OptionTextType = string | Text | null;
 
 export class OptionText extends Option<Text> {
-  constructor (value?: string | null) {
+  constructor (value?: OptionTextType) {
     const textOrNull = nonEmptyStr(value) ? value : new Null(registry)
     super(registry, 'Text', textOrNull)
   }
 }
 
 export class OptionOptionText extends Option<Option<Text>> {
-  constructor (value?: string | null) {
+  constructor (value?: OptionTextType) {
     super(registry, 'Option<Text>', new OptionText(value))
   }
 }
@@ -21,27 +31,60 @@ export class OptionIpfsHash extends OptionText {}
 
 export class RegularPost extends Null {}
 export class SharedPost extends u64 {}
-export class SharedComment extends u64 {}
+
+type CommentExtType = {
+  parent_id: Option<PostId>,
+  root_post_id: PostId
+}
+
+export class CommentExt extends Struct implements ICommentExt {
+  constructor (value?: CommentExtType) {
+    super(
+      registry,
+      {
+        parent_id: 'Option<u64>',
+        root_post_id: 'u64'
+      },
+      value
+    );
+  }
+
+  get parent_id (): Option<PostId> {
+    return this.get('parent_id') as Option<PostId>;
+  }
+
+  get root_post_id (): PostId {
+    return this.get('root_post_id') as PostId;
+  }
+}
 
 export type PostExtensionEnum =
   RegularPost |
-  SharedPost |
-  SharedComment;
+  ICommentExt |
+  SharedPost;
 
 type PostExtensionEnumValue =
   { RegularPost: RegularPost } |
   { SharedPost: SharedPost } |
-  { SharedComment: SharedComment };
+  { Comment: ICommentExt };
 
 export class PostExtension extends Enum implements IPostExtension {
-  constructor (value?: PostExtensionEnumValue, index?: number) {
+  constructor (value?: PostExtensionEnumValue) {
     super(
       registry,
       {
         RegularPost,
-        SharedPost,
-        SharedComment
-      }, value, index);
+        Comment: CommentExt as any,
+        SharedPost
+      }, value);
+  }
+
+  get isComment (): boolean {
+    return this.type === 'CommentExt'
+  }
+
+  get asComment (): CommentExt {
+    return this.value as CommentExt;
   }
 
   get isRegularPost (): boolean {
@@ -58,10 +101,6 @@ export class PostExtension extends Enum implements IPostExtension {
 
   get asSharedPost (): PostId {
     return this.value as PostId;
-  }
-
-  get asSharedComment (): CommentId {
-    return this.value as CommentId;
   }
 }
 
