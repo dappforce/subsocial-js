@@ -1,15 +1,20 @@
 export default {
   types: {
+    WhoAndWhen: {
+      account: 'AccountId',
+      block: 'BlockNumber',
+      time: 'Moment'
+    },
     IpfsHash: 'Text',
     BlogId: 'u64',
     PostId: 'u64',
-    CommentId: 'u64',
     ReactionId: 'u64',
-
+    OptionVecAccountId: 'Option<Vec<AccountId>>',
     Blog: {
       id: 'BlogId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
+      hidden: 'bool',
       writers: 'Vec<AccountId>',
       handle: 'Option<Text>',
       ipfs_hash: 'IpfsHash',
@@ -27,24 +32,26 @@ export default {
       edited: 'WhoAndWhen',
       old_data: 'BlogUpdate'
     },
-
     Post: {
       id: 'PostId',
-      blog_id: 'BlogId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
+      hidden: 'bool',
+      blog_id: 'Option<BlogId>',
       extension: 'PostExtension',
       ipfs_hash: 'IpfsHash',
-      comments_count: 'u16',
+      edit_history: 'Vec<PostHistoryRecord>',
+      direct_replies_count: 'u16',
+      total_replies_count: 'u32',
+      shares_count: 'u16',
       upvotes_count: 'u16',
       downvotes_count: 'u16',
-      shares_count: 'u16',
-      edit_history: 'Vec<PostHistoryRecord>',
       score: 'i32'
     },
     PostUpdate: {
       blog_id: 'Option<BlogId>',
-      ipfs_hash: 'Option<IpfsHash>'
+      ipfs_hash: 'Option<IpfsHash>',
+      hidden: 'Option<bool>'
     },
     PostHistoryRecord: {
       edited: 'WhoAndWhen',
@@ -53,33 +60,14 @@ export default {
     PostExtension: {
       _enum: {
         RegularPost: 'Null',
-        SharedPost: 'PostId',
-        SharedComment: 'CommentId'
+        Comment: 'CommentExt',
+        SharedPost: 'PostId'
       }
     },
-
-    Comment: {
-      id: 'CommentId',
-      parent_id: 'Option<CommentId>',
-      post_id: 'PostId',
-      created: 'WhoAndWhen',
-      updated: 'Option<WhoAndWhen>',
-      ipfs_hash: 'IpfsHash',
-      upvotes_count: 'u16',
-      downvotes_count: 'u16',
-      shares_count: 'u16',
-      direct_replies_count: 'u16',
-      edit_history: 'Vec<CommentHistoryRecord>',
-      score: 'i32'
+    CommentExt: {
+      parent_id: 'Option<PostId>',
+      root_post_id: 'PostId'
     },
-    CommentUpdate: {
-      ipfs_hash: 'IpfsHash'
-    },
-    CommentHistoryRecord: {
-      edited: 'WhoAndWhen',
-      old_data: 'CommentUpdate'
-    },
-
     ReactionKind: {
       _enum: [
         'Upvote',
@@ -92,7 +80,6 @@ export default {
       updated: 'Option<WhoAndWhen>',
       kind: 'ReactionKind'
     },
-
     SocialAccount: {
       followers_count: 'u32',
       following_accounts_count: 'u16',
@@ -100,7 +87,6 @@ export default {
       reputation: 'u32',
       profile: 'Option<Profile>'
     },
-
     Profile: {
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
@@ -116,29 +102,8 @@ export default {
       edited: 'WhoAndWhen',
       old_data: 'ProfileUpdate'
     },
-    ScoringAction: {
-      _enum: [
-        'UpvotePost',
-        'DownvotePost',
-        'SharePost',
-        'CreateComment',
-        'UpvoteComment',
-        'DownvoteComment',
-        'ShareComment',
-        'FollowBlog',
-        'FollowAccount'
-      ]
-    },
-
-    WhoAndWhen: {
-      account: 'AccountId',
-      block: 'BlockNumber',
-      time: 'Moment'
-    },
-
     SpaceId: 'u64',
     ChangeId: 'u64',
-
     SpaceOwners: {
       created: 'WhoAndWhen',
       space_id: 'SpaceId',
@@ -157,11 +122,18 @@ export default {
       confirmed_by: 'Vec<AccountId>',
       expires_at: 'BlockNumber'
     },
-    VecAccountId: 'Vec<AccountId>',
-    OptionText: 'Option<Text>',
-    OptionChange: 'Option<Change>',
-    OptionBlogId: 'Option<BlogId>',
-    OptionCommentId: 'Option<CommentId>',
-    OptionVecAccountId: 'Option<VecAccountId>'
+    ScoringAction: {
+      _enum: [
+        'UpvotePost',
+        'DownvotePost',
+        'SharePost',
+        'CreateComment',
+        'UpvoteComment',
+        'DownvoteComment',
+        'ShareComment',
+        'FollowBlog',
+        'FollowAccount'
+      ]
+    }
   }
 }
