@@ -18,7 +18,7 @@ export type AnySubsocialData = BlogData | PostData | CommentData | ProfileData;
 
 export type PostWithSomeDetails = {
   post: PostData
-  ext?: PostData
+  ext?: Exclude<PostWithSomeDetails, 'ext'>
   owner?: ProfileData
   blog?: BlogData
 }

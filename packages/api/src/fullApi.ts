@@ -3,20 +3,15 @@ import { BlogData, CommonData, ExtendedPostData, PostData, ProfileData, PostWith
 import { BlogContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
 import { AnyAccountId, AnyBlogId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
 import { AccountId, Blog, Post, PostId, SocialAccount, BlogId } from '@subsocial/types/substrate/interfaces';
-import { getFirstOrUndefined, nonEmptyStr } from '@subsocial/utils';
+import { getFirstOrUndefined, nonEmptyStr, isDefined, notDefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
-import { getSharedPostId, getUniqueIds, SupportedSubstrateId } from './utils';
+import { getUniqueIds, SupportedSubstrateId, getPostIdFromExtension } from './utils';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
   ipfsNodeUrl: string,
   offchainUrl: string
-}
-
-export type PostDetailsOpts = {
-  withOwner?: boolean
-  withBlog?: boolean
 }
 
 export class SubsocialApi {
@@ -25,25 +20,25 @@ export class SubsocialApi {
 
   private _ipfs: SubsocialIpfsApi
 
-  constructor (props: SubsocialApiProps) {
+  constructor(props: SubsocialApiProps) {
     const { substrateApi, ipfsNodeUrl, offchainUrl } = props
     this._substrate = new SubsocialSubstrateApi(substrateApi)
     this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl })
   }
 
-  public get substrate (): SubsocialSubstrateApi {
+  public get substrate(): SubsocialSubstrateApi {
     return this._substrate
   }
 
-  public get ipfs (): SubsocialIpfsApi {
+  public get ipfs(): SubsocialIpfsApi {
     return this._ipfs
   }
 
-  private async findDataArray <
+  private async findDataArray<
     Id extends SupportedSubstrateId,
     Struct extends CommonStruct,
     Content extends CommonContent
-  > (
+  >(
     ids: Id[],
     findStructs: (ids: Id[]) => Promise<Struct[]>,
     findContents: (cids: IpfsCid[]) => Promise<Content[]>
@@ -65,7 +60,7 @@ export class SubsocialApi {
   // ---------------------------------------------------------------------
   // Multiple
 
-  async findBlogs (ids: AnyBlogId[]): Promise<BlogData[]> {
+  async findBlogs(ids: AnyBlogId[]): Promise<BlogData[]> {
     const findStructs = this.substrate.findBlogs.bind(this.substrate);
     const findContents = this.ipfs.findBlogs.bind(this.ipfs);
     return this.findDataArray<AnyBlogId, Blog, BlogContent>(
@@ -73,7 +68,7 @@ export class SubsocialApi {
     )
   }
 
-  async findPosts (ids: AnyPostId[]): Promise<PostData[]> {
+  async findPosts(ids: AnyPostId[]): Promise<PostData[]> {
     const findStructs = this.substrate.findPosts.bind(this.substrate)
     const findContents = this.ipfs.findPosts.bind(this.ipfs)
     return this.findDataArray<AnyPostId, Post, PostContent>(
@@ -82,13 +77,13 @@ export class SubsocialApi {
   }
 
   /** Find posts and load shared posts if for all posts that share. */
-  private async findPostsWithExt (ids: AnyPostId[]): Promise<PostWithSomeDetails[]> {
+  private async findPostsWithExt(ids: AnyPostId[]): Promise<PostWithSomeDetails[]> {
     const posts = await this.findPosts(ids)
-    return this.loadSharedPost(posts)
+    return this.PostDetailsOpts(posts)
   }
 
   /** Find and load posts with their extension and owner's profile (if defined). */
-  async findPostsWithSomeDetails (ids: AnyPostId[], opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
+  async findPostsWithSomeDetails(ids: AnyPostId[], opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
     const { withOwner = false, withBlog = false } = opts || {}
     const posts = await this.findPostsWithExt(ids)
 
@@ -102,54 +97,14 @@ export class SubsocialApi {
     if (withBlog) {
       loadres.push(this.loadPostBlogs(posts));
     }
-    
+
     await Promise.all(loadres)
-  
+
     return posts
   }
 
-  async findPostsWithAllDetails (ids: AnyPostId[]): Promise<ExtendedPostData[]> {
-    return this.findPostsWithSomeDetails(ids, { withOwner: true, withBlog: true }) as Promise<ExtendedPostData[]>
-  }
-
-  /** Load shared posts if for all posts that share. */
-  private async loadSharedPost (posts: PostData[]): Promise<PostWithSomeDetails[]> {
-    const results: PostWithSomeDetails[] = []
-    const extIds: PostId[] = []
-
-    // Key - serialized id of a shared original post.
-    // Value - indices of the posts that share this original post in `results` array.
-    const resultIndicesByExtIdMap = new Map<string, number[]>()
-
-    posts.forEach((post, i) => {
-      results.push({ post })
-      const extId = getSharedPostId(post)
-      if (typeof extId !== 'undefined') {
-        const idStr = extId.toString()
-        let resultIdxs = resultIndicesByExtIdMap.get(idStr)
-        if (typeof resultIdxs === 'undefined') {
-          resultIdxs = []
-          resultIndicesByExtIdMap.set(idStr, resultIdxs)
-          extIds.push(extId)
-        }
-        resultIdxs.push(i)
-      }
-    })
-
-    const extPosts = await this.findPosts(extIds)
-    extPosts.forEach(extPost => {
-      const extId = extPost.struct.id.toString()
-      const idxs = resultIndicesByExtIdMap.get(extId) || []
-      idxs.forEach(idx => {
-        results[idx].ext = extPost
-      })
-    })
-
-    return results
-  }
-
   /** Load posts' owners and set them on posts array. */
-  private async loadPostOwners (posts: PostWithSomeDetails[]): Promise<PostWithSomeDetails[]> {
+  private async loadPostOwners(posts: PostWithSomeDetails[]): Promise<PostWithSomeDetails[]> {
     const ownerIds: AccountId[] = []
 
     // Key - serialized id of a post owner.
@@ -185,7 +140,7 @@ export class SubsocialApi {
   }
 
   /** Load posts' blogs and set them on posts array. */
-  private async loadPostBlogs (posts: PostWithSomeDetails[]): Promise<PostWithSomeDetails[]> {
+  private async loadPostBlogs(posts: PostWithSomeDetails[]): Promise<PostWithSomeDetails[]> {
     const blogIds: BlogId[] = []
 
     // Key - serialized id of a blog.
@@ -221,7 +176,7 @@ export class SubsocialApi {
     return posts
   }
 
-  async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
+  async findProfiles(ids: AnyAccountId[]): Promise<ProfileData[]> {
     const findStructs = this.substrate.findSocialAccounts.bind(this.substrate)
     const findContents = this.ipfs.findProfiles.bind(this.ipfs)
 
@@ -238,23 +193,23 @@ export class SubsocialApi {
   // ---------------------------------------------------------------------
   // Single
 
-  async findBlog (id: AnyBlogId): Promise<BlogData | undefined> {
+  async findBlog(id: AnyBlogId): Promise<BlogData | undefined> {
     return getFirstOrUndefined(await this.findBlogs([ id ]))
   }
 
-  async findPost (id: AnyPostId): Promise<PostData | undefined> {
+  async findPost(id: AnyPostId): Promise<PostData | undefined> {
     return getFirstOrUndefined(await this.findPosts([ id ]))
   }
 
-  async findPostWithSomeDetails (id: AnyPostId, opts?: PostDetailsOpts): Promise<PostWithSomeDetails | undefined> {
+  async findPostWithSomeDetails(id: AnyPostId, opts?: PostDetailsOpts): Promise<PostWithSomeDetails | undefined> {
     return getFirstOrUndefined(await this.findPostsWithSomeDetails([ id ], opts))
   }
 
-  async findPostWithAllDetails (id: AnyPostId): Promise<ExtendedPostData | undefined> {
+  async findPostWithAllDetails(id: AnyPostId): Promise<ExtendedPostData | undefined> {
     return getFirstOrUndefined(await this.findPostsWithAllDetails([ id ]))
   }
 
-  async findProfile (id: AnyAccountId): Promise<ProfileData | undefined> {
+  async findProfile(id: AnyAccountId): Promise<ProfileData | undefined> {
     return getFirstOrUndefined(await this.findProfiles([ id ]))
   }
 }

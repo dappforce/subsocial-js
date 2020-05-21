@@ -32,6 +32,9 @@
   "dependencies": {
     "@polkadot/dev": "^0.32.17",
     "@subsocial/config": "^0.1.4",
-    "typescript": "^3.8.3"
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "ts-jest": "^26.0.0",
+    "typescript": "^3.9.3"
   }
 }
