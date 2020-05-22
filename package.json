@@ -24,16 +24,17 @@
     "@babel/core": "^7.8.4",
     "@babel/register": "^7.8.3",
     "@babel/runtime": "^7.8.4",
-    "@polkadot/ts": "^0.2.1",
-    "@types/jest": "^25.1.4",
-    "jest": "^25.1.0",
-    "ts-node": "^8.6.2"
+    "@polkadot/ts": "^0.2.1"
   },
   "dependencies": {
+    "@babel/preset-typescript": "^7.9.0",
     "@polkadot/dev": "^0.32.17",
     "@subsocial/config": "^0.1.4",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.5",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
+    "jest": "^26.0.1",
     "ts-jest": "^26.0.0",
     "typescript": "^3.9.3"
   }

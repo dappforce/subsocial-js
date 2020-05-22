@@ -22,8 +22,8 @@
     "cids": "^0.7.1"
   },
   "devDependencies": {
-    "@polkadot/typegen": "^1.11.1",
-    "@polkadot/types": "^1.11.1"
+    "@polkadot/typegen": "1.13.1",
+    "@polkadot/types": "1.13.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

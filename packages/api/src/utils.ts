@@ -1,7 +1,8 @@
+import { CommentExt } from '@subsocial/types/src/substrate/classes';
 import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, PostData } from '@subsocial/types';
 import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import { PostId, AccountId, ReactionId, SocialAccount, Reaction } from '@subsocial/types/substrate/interfaces';
-import registry from '@subsocial/types/substrate/registry';
+import registry from '@subsocial/types/src/substrate/registry';
 import { GenericAccountId } from '@polkadot/types'
 
 const log = newLogger('Subsocial Api Utils');
@@ -82,13 +83,13 @@ export const getSharedPostId = (postData: any): PostId | undefined => {
 export const getPostIdFromExtension = (postData?: PostData): PostId | undefined => {
   if (!postData) return undefined;
 
-  const ext = postData?.struct?.extension
+  const ext = postData.struct.extension
 
   if (ext) {
-    const { isComment, isSharedPost } = ext
+    const { isSharedPost } = ext
 
-    if (isComment) {
-       return ext.asComment.root_post_id
+    if (ext.value instanceof CommentExt) {
+      return ext.asComment.root_post_id
     }
 
     if (isSharedPost) {

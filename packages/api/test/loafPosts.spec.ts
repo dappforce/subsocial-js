@@ -1,15 +1,25 @@
-import { SubsocialApi } from "../src/fullApi"
-import { PostData, AnyPostId, AnyAccountId, ProfileData } from '@subsocial/types/src'
+import { regularPostId, commentIdOnRegularPost, commentIdOnSharedPost, sharedCommentId, sharedPostId } from './mocks/PostMocks'
+import { findBlogs, findPosts, findProfiles  } from './mocks/MocksDB'
+import { loadPostsStruct } from '../src/loadPostsStruct'
 
-const mockPosts = new Map<string, PostData>()
-
-class MockSubsocialApi extends SubsocialApi {
-
-  async findPosts (ids: AnyPostId[]): Promise<PostData[]> {
-    return [] as any
-  }
-
-  async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
-    return [] as any
-  }
+const methods = {
+  findBlogs,
+  findPosts,
+  findProfiles
 }
+
+test('Load regular and shared post', async () => {
+  const ids = [ regularPostId, sharedPostId ]
+  const posts = await findPosts(ids);
+  const results = await loadPostsStruct(posts, methods)
+  console.log('Regular and shared post: ', results)
+  expect(posts.length).toBe(2)
+})
+
+test('Load comment on regular and shared post, also shared comment post', async () => {
+  const ids = [ commentIdOnRegularPost, commentIdOnSharedPost, sharedCommentId ]
+  const posts = await findPosts(ids);
+  const results = await loadPostsStruct(posts, methods)
+  console.log('Comment and shared comment post: ', results)
+  expect(results.length).toBe(posts.length)
+})

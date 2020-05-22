@@ -41,7 +41,6 @@ async function loadRequireData (posts: PostData[], methods: FindMethods, opts?: 
   // Key - serialized id of a blog.
   // Value - indices of the posts that have the same blog (as key) in `posts` array.
   const postIndicesByBlogIdMap = new Map<string, number[]>()
-
   posts.forEach((post, i) => {
     results.push({ post })
 
@@ -53,7 +52,6 @@ async function loadRequireData (posts: PostData[], methods: FindMethods, opts?: 
         postIdxs = []
         resultIndicesByExtIdMap.set(idStr, postIdxs)
         const extPost = postByIdMap.get(idStr)
-
         if (extPost) {
           resultsExt.push({ post: extPost })
         } else {
@@ -97,12 +95,15 @@ async function loadRequireData (posts: PostData[], methods: FindMethods, opts?: 
   const resultIndicesByRootIdMap = new Map<string, number[]>()
 
   const extPosts = await findPosts(getUniqueIds(extIds))
-  resultsExt.concat(extPosts.map(post => ({ post })))
-  extPosts.forEach((post, i) => {
-    resultsExt.push({ post })
+
+  resultsExt.push(...extPosts.map(post => ({ post })))
+
+
+  resultsExt.forEach(({ post }, i) => {
     const extId = post.struct.id.toString()
     postByIdMap.set(extId, post)
     const idxs = resultIndicesByExtIdMap.get(extId) || []
+
     idxs.forEach(idx => {
       results[idx].ext = resultsExt[i]
     })
@@ -138,15 +139,27 @@ async function loadRequireData (posts: PostData[], methods: FindMethods, opts?: 
   })
 
   const loadedRootPosts = await findPosts(getUniqueIds(rootIds))
-  rootPosts.concat(loadedRootPosts)
+  rootPosts.push(...loadedRootPosts)
 
-  rootPosts.forEach((post) => {
+  rootPosts.forEach((post, i) => {
     const rootId = post.struct.id.toString()
     postByIdMap.set(rootId, post)
     const idxs = resultIndicesByRootIdMap.get(rootId) || []
     idxs.forEach(idx => {
       resultsExt[idx].ext = { post }
     })
+
+    const blogId = post.struct.blog_id.unwrapOr(undefined)
+    if (isDefined(blogId)) {
+      const idStr = blogId.toString()
+      let postIdxs = postIndicesByBlogIdMap.get(idStr)
+      if (notDefined(postIdxs)) {
+        postIdxs = []
+        postIndicesByBlogIdMap.set(idStr, postIdxs)
+        blogIds.push(blogId)
+      }
+      postIdxs.push(i)
+    }
   })
 
   // Load owners
@@ -215,7 +228,6 @@ export async function loadPostsStruct (posts: PostData[], methods: FindMethods, 
   results.forEach(post => {
     const { post: { struct: { blog_id } }, ext } = post
     let blogId = blog_id.unwrapOr(undefined)
-
     if (blogId) {
       const blog = blogIndicesByBlogIdMap.get(blogId.toString())
       post.blog = blog
@@ -224,17 +236,20 @@ export async function loadPostsStruct (posts: PostData[], methods: FindMethods, 
     blogId = ext?.post.struct.blog_id.unwrapOr(undefined)
     if (blogId) {
       const blog = blogIndicesByBlogIdMap.get(blogId.toString())
-      post.blog = blog
+      if (!post.blog) {
+        post.blog = blog
+      }
       post.ext!.blog = blog
     } else {
       blogId = ext?.ext?.post.struct.blog_id.unwrapOr(undefined)
       if (blogId) {
         const blog = blogIndicesByBlogIdMap.get(blogId.toString())
-        post.blog = blog
+        if (!post.blog) {
+          post.blog = blog
+        }
         post.ext!.blog = blog
       }
     }
   })
-
   return results
 }
