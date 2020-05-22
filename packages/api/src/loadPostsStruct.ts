@@ -4,7 +4,7 @@ import { PostId, AccountId, BlogId } from "@subsocial/types/substrate/interfaces
 import { getPostIdFromExtension, getUniqueIds } from "./utils"
 import { nonEmptyStr, notDefined, isDefined } from "@subsocial/utils"
 
-type FindMethods = {
+export type FindMethods = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
   findBlogs: (ids: AnyBlogId[]) => Promise<BlogData[]>
   findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
