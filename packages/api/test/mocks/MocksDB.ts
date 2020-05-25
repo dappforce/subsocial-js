@@ -7,8 +7,6 @@ import { isDefined } from '@subsocial/utils'
 const mockPosts = new Map<string, PostData>()
 mockPostsData.forEach(x => mockPosts.set(x.struct.id.toString(), x))
 
-console.log(mockPostsData)
-
 const mockBlogs = new Map<string, BlogData>()
 mockBlogsData.forEach(x => mockBlogs.set(x.struct.id.toString(), x))
 
@@ -20,15 +18,15 @@ profilesData.forEach(x => {
 
 export async function findPosts (ids: AnyPostId[]): Promise<PostData[]> {
   const posts = ids.map(id => mockPosts.get(id.toString()) as PostData)
-  return posts.filter(x => isDefined(x)) as PostData[]
+  return posts.filter(isDefined) as PostData[]
 }
 
 export async function findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
   const profiles = ids.map(id => mockProfiles.get(id.toString()))
-  return profiles.filter(x => isDefined(x)) as ProfileData[]
+  return profiles.filter(isDefined) as ProfileData[]
 }
 
 export async function findBlogs (ids: AnyBlogId[]): Promise<BlogData[]> {
   const blogs = ids.map(id => mockBlogs.get(id.toString()))
-  return blogs.filter(x => isDefined(x)) as BlogData[]
+  return blogs.filter(isDefined) as BlogData[]
 }

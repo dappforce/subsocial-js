@@ -1,4 +1,3 @@
-import { mockNavTabs } from './NavTabsMocks'
 import U32 from '@polkadot/types/primitive/U32'
 import { registry } from '@subsocial/types/src/substrate/registry';
 import BN from 'bn.js'
@@ -80,7 +79,7 @@ export const mockBlogJson: BlogContent = {
   desc: 'Alice in Chains is an American rock band from Seattle, Washington, formed in 1987 by guitarist and vocalist Jerry Cantrell and drummer Sean Kinney, who later recruited bassist Mike Starr and lead vocalist Layne Staley. Starr was replaced by Mike Inez in 1993.',
   image: 'https://i.pinimg.com/originals/d1/dd/32/d1dd322177b1edf654be68644d427e74.jpg',
   tags: [ 'bitcoin', 'ethereum', 'polkadot' ],
-  navTabs: mockNavTabs
+  navTabs: []
 }
 
 export const mockBlogJsonBob: BlogContent = {
@@ -88,7 +87,7 @@ export const mockBlogJsonBob: BlogContent = {
   desc: 'In 2000 I set up a dot com web site called "the very best site ever" and on it carried pictures and descriptions of our worldwide holidays and our lives closer to home. However, I have learned that the webhosts have "lost" it. Time has moved on and it is being replaced by this blog!',
   image: '',
   tags: [],
-  navTabs: mockNavTabs
+  navTabs: []
 }
 
 export const mockBlogValidation = {

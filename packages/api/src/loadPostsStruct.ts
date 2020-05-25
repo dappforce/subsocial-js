@@ -4,7 +4,7 @@ import { PostId, AccountId, BlogId } from "@subsocial/types/substrate/interfaces
 import { getPostIdFromExtension, getUniqueIds } from "./utils"
 import { nonEmptyStr, notDefined, isDefined } from "@subsocial/utils"
 
-export type FindMethods = {
+export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
   findBlogs: (ids: AnyBlogId[]) => Promise<BlogData[]>
   findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
@@ -15,124 +15,118 @@ export type PostDetailsOpts = {
   withBlog?: boolean
 }
 
-async function loadRequireData (posts: PostData[], methods: FindMethods, opts?: PostDetailsOpts) {
-  const { findBlogs, findPosts, findProfiles } = methods
+async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts) {
+  const { withBlog, withOwner } = opts || {}
+  const { findBlogs, findPosts, findProfiles } = finders
 
-  const results: PostWithSomeDetails[] = []
-  const resultsExt: PostWithSomeDetails[] = []
-  const rootPosts: PostData[] = []
-  const extIds: PostId[] = []
-
+  const ownerByIdMap = new Map<string, ProfileData>()
+  const blogByIdMap = new Map<string, BlogData>()
   const postByIdMap = new Map<string, PostData>()
   posts.forEach(x => postByIdMap.set(x.struct.id.toString(), x))
 
-  // Key - serialized id of a shared original post.
-  // Value - indices of the posts that share this original post in `results` array.
-  const resultIndicesByExtIdMap = new Map<string, number[]>()
+  const postStructs: PostWithSomeDetails[] = []
+  const extPostStructs: PostWithSomeDetails[] = []
 
+  const rootPosts: PostData[] = []
+  const extPosts: PostData[] = []
+
+  const extIds: PostId[] = []
+  const rootIds: PostId[] = []
   const ownerIds: AccountId[] = []
+  const blogIds: BlogId[] = []
 
+  // Key - serialized id of a shared original post.
+  // Value - indices of the posts that share this original post in `postStructs` array.
+  const resultIndicesByExtIdMap = new Map<string, number[]>()
   // Key - serialized id of a post owner.
   // Value - indices of the posts that have the same owner (as key) in `posts` array.
   const postIndicesByOwnerIdMap = new Map<string, number[]>()
-
-  const blogIds: BlogId[] = []
-
   // Key - serialized id of a blog.
   // Value - indices of the posts that have the same blog (as key) in `posts` array.
   const postIndicesByBlogIdMap = new Map<string, number[]>()
-  posts.forEach((post, i) => {
-    results.push({ post })
+  // Key - serialized id of a shared original post.
+  // Value - indices of the posts that share this original post in `postStructs` array.
+  const resultIndicesByRootIdMap = new Map<string, number[]>()
 
+  
+  const fillPostId = (post: PostData, index: number, resultIndicesByPostIdMap: Map<string, number[]>, posts: PostData[], postIds: PostId[]) => {
     const extId = getPostIdFromExtension(post)
     const idStr = extId?.toString()
     if (extId && nonEmptyStr(idStr)) {
-      let postIdxs = resultIndicesByExtIdMap.get(idStr)
+      let postIdxs = resultIndicesByPostIdMap.get(idStr)
       if (notDefined(postIdxs)) {
         postIdxs = []
-        resultIndicesByExtIdMap.set(idStr, postIdxs)
-        const extPost = postByIdMap.get(idStr)
-        if (extPost) {
-          resultsExt.push({ post: extPost })
+        resultIndicesByPostIdMap.set(idStr, postIdxs)
+        const currentPost = postByIdMap.get(idStr)
+        if (currentPost) {
+          posts.push(currentPost)
         } else {
-          extIds.push(extId)
+          postIds.push(extId)
         }
-          
-          
       }
-      postIdxs.push(i)
+      postIdxs.push(index)
     }
+  }
 
-    const ownerId = post.struct.created.account
-    if (isDefined(ownerId)) {
-      const idStr = ownerId.toString()
-      let postIdxs = postIndicesByOwnerIdMap.get(idStr)
+  function fillRelatedId<T extends BlogId | AccountId> (relatedId: T, index: number, postIndicesByRelatedIdMap: Map<string, number[]>, relatedIds: T[]) {
+    if (isDefined(relatedId)) {
+      const idStr = relatedId.toString()
+      let postIdxs = postIndicesByRelatedIdMap.get(idStr)
       if (notDefined(postIdxs)) {
         postIdxs = []
         postIndicesByOwnerIdMap.set(idStr, postIdxs)
-        ownerIds.push(ownerId)
+        relatedIds.push(relatedId)
       }
-      postIdxs.push(i)
+      postIdxs.push(index)
+    }
+  }
+
+  function setExtOnPost (postStruct: PostWithSomeDetails, resultIndicesByPostIdMap: Map<string, number[]>, postStructs: PostWithSomeDetails[]) {
+    const postId = postStruct.post.struct.id.toString()
+    postByIdMap.set(postId, postStruct.post)
+    const idxs = resultIndicesByPostIdMap.get(postId) || []
+    idxs.forEach(idx => {
+      postStructs[idx].ext = postStruct
+    })
+  }
+
+  posts.forEach((post, i) => {
+    postStructs.push({ post })
+
+    fillPostId(post, i, resultIndicesByExtIdMap, extPosts, extIds)
+
+    if (withOwner) {
+      const ownerId = post.struct.created.account
+      fillRelatedId(ownerId, i, postIndicesByOwnerIdMap, ownerIds)
     }
 
-    const blogId = post.struct.blog_id.unwrapOr(undefined)
-    if (isDefined(blogId)) {
-      const idStr = blogId.toString()
-      let postIdxs = postIndicesByBlogIdMap.get(idStr)
-      if (notDefined(postIdxs)) {
-        postIdxs = []
-        postIndicesByBlogIdMap.set(idStr, postIdxs)
-        blogIds.push(blogId)
-      }
-      postIdxs.push(i)
+    if (withBlog) {
+      const blogId = post.struct.blog_id.unwrapOr(undefined)
+      blogId && fillRelatedId(blogId, i, postIndicesByBlogIdMap, blogIds)
     }
+
   })
 
-  const rootIds: PostId[] = []
+  const loadedExtPosts = await findPosts(getUniqueIds(extIds))
+  extPosts.push(...loadedExtPosts)
 
-  // Key - serialized id of a shared original post.
-  // Value - indices of the posts that share this original post in `results` array.
-  const resultIndicesByRootIdMap = new Map<string, number[]>()
+  extPosts.forEach((post, i) => {
+    extPostStructs.push({ post })
+    setExtOnPost(extPostStructs[i], resultIndicesByExtIdMap, postStructs)
 
-  const extPosts = await findPosts(getUniqueIds(extIds))
-
-  resultsExt.push(...extPosts.map(post => ({ post })))
-
-
-  resultsExt.forEach(({ post }, i) => {
-    const extId = post.struct.id.toString()
-    postByIdMap.set(extId, post)
-    const idxs = resultIndicesByExtIdMap.get(extId) || []
-
-    idxs.forEach(idx => {
-      results[idx].ext = resultsExt[i]
-    })
-
-    const ownerId = post.struct.created.account
-    if (isDefined(ownerId)) {
-      ownerIds.push(ownerId)
+    if (withOwner) {
+      const ownerId = post.struct.created.account
+      if (isDefined(ownerId)) {
+        ownerIds.push(ownerId)
+      }
     }
 
-    const blogId = post.struct.blog_id.unwrapOr(undefined)
-    if (isDefined(blogId)) {
-      blogIds.push(blogId)
-    } else {
-      const rootId = getPostIdFromExtension(post)
-      const idStr = rootId && rootId.toString()
-      if (rootId && nonEmptyStr(idStr)) {
-        let resultIdxs = resultIndicesByRootIdMap.get(idStr)
-        if (notDefined(resultIdxs)) {
-          resultIdxs = []
-          resultIndicesByRootIdMap.set(idStr, resultIdxs)
-    
-          const rootPost = postByIdMap.get(idStr)
-          if (rootPost) {
-            rootPosts.push(rootPost)
-          } else {
-            rootIds.push(rootId)
-          }
-        }
-        resultIdxs.push(i)
+    if (withBlog) {
+      const blogId = post.struct.blog_id.unwrapOr(undefined)
+      if (isDefined(blogId)) {
+        blogIds.push(blogId)
+      } else {
+        fillPostId(post, i, resultIndicesByRootIdMap, rootPosts, rootIds) 
       }
     }
 
@@ -142,114 +136,95 @@ async function loadRequireData (posts: PostData[], methods: FindMethods, opts?: 
   rootPosts.push(...loadedRootPosts)
 
   rootPosts.forEach((post, i) => {
-    const rootId = post.struct.id.toString()
-    postByIdMap.set(rootId, post)
-    const idxs = resultIndicesByRootIdMap.get(rootId) || []
-    idxs.forEach(idx => {
-      resultsExt[idx].ext = { post }
-    })
+    setExtOnPost({ post }, resultIndicesByRootIdMap, extPostStructs)
 
-    const blogId = post.struct.blog_id.unwrapOr(undefined)
-    if (isDefined(blogId)) {
-      const idStr = blogId.toString()
-      let postIdxs = postIndicesByBlogIdMap.get(idStr)
-      if (notDefined(postIdxs)) {
-        postIdxs = []
-        postIndicesByBlogIdMap.set(idStr, postIdxs)
-        blogIds.push(blogId)
-      }
-      postIdxs.push(i)
+    if (withBlog) {
+      const blogId = post.struct.blog_id.unwrapOr(undefined)
+      blogId && fillRelatedId(blogId, i, postIndicesByBlogIdMap, blogIds)
     }
+
   })
 
   // Load owners
-  const uniqueOwnerIds = getUniqueIds(ownerIds)
-  const postOwners = await findProfiles(uniqueOwnerIds)
+  if (withOwner) {
+    const postOwners = await findProfiles(ownerIds)
 
-  const ownerIndicesByOwnerIdMap = new Map<string, ProfileData>()
-
-  postOwners.forEach(owner => {
-    const ownerId = owner.profile?.created.account.toString()
-    ownerId && ownerIndicesByOwnerIdMap.set(ownerId, owner)
-  })
+    postOwners.forEach(owner => {
+      const ownerId = owner.profile?.created.account.toString()
+      ownerId && ownerByIdMap.set(ownerId, owner)
+    })
+  }
 
   // Load blogs
+  if (withBlog) {
+    const postBlogs = await findBlogs(blogIds)
 
-  const uniqueBlogIds = getUniqueIds(blogIds)
-  const postBlogs = await findBlogs(uniqueBlogIds)
-  
-  const blogIndicesByBlogIdMap = new Map<string, BlogData>()
+    postBlogs.forEach(blog => {
+      const blogId = blog.struct.id.toString()
+      blogId && blogByIdMap.set(blogId, blog)
+    })
+  }
 
   return {
-    uniqueOwnerIds,
-    postBlogs,
-    blogIndicesByBlogIdMap,
-    postIndicesByOwnerIdMap,
-    ownerIndicesByOwnerIdMap,
-    results
+    postStructs,
+    blogByIdMap,
+    ownerByIdMap
   }
 }
 
-/** Load shared posts if for all posts that share. */
-export async function loadPostsStruct (posts: PostData[], methods: FindMethods, opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
-  
+/** Load post structs and related structs like owner profile, blog, root post if required. */
+export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
+  const { withBlog, withOwner } = opts || {}
   const {
-    uniqueOwnerIds,
-    postBlogs,
-    blogIndicesByBlogIdMap,
-    postIndicesByOwnerIdMap,
-    ownerIndicesByOwnerIdMap,
-    results
-  } = await loadRequireData(posts, methods, opts)
+    blogByIdMap,
+    ownerByIdMap,
+    postStructs
+  } = await loadRelatedStructs(posts, finders, opts)
 
-  uniqueOwnerIds.forEach(ownerId => {
-    const ownerIdStr = ownerId.toString()
-    const idxs = postIndicesByOwnerIdMap.get(ownerIdStr) || []
-    const owner = ownerIndicesByOwnerIdMap.get(ownerIdStr)
-    idxs.forEach(idx => {
-      results[idx].owner = owner
-      const ext = results[idx].ext
+  const setOwnerOnPost = (postStruct: PostWithSomeDetails) => {
+    if (withOwner) {
+      const { post, ext } = postStruct
+      const ownerId = post.struct.created.account.toString()
+      const owner = ownerByIdMap.get(ownerId)
+      postStruct.owner = owner
+
       if (ext) {
-        const extOwnerIdStr = ext.post.struct.created.account.toString()
-
-        if (extOwnerIdStr) {
-          const extOwner = extOwnerIdStr === ownerIdStr ? owner : ownerIndicesByOwnerIdMap.get(extOwnerIdStr)
-          results[idx].ext!.owner = extOwner
-        }
+        const extOwnerId = ext.post.struct.created.account.toString()
+        ext.owner = extOwnerId === ownerId
+          ? owner
+          : ownerByIdMap.get(extOwnerId)
       }
-    })
-  })
-
-  postBlogs.forEach(blog => {
-    const blogId = blog.struct.id.toString()
-    blogId && blogIndicesByBlogIdMap.set(blogId, blog)
-  })
-
-  results.forEach(post => {
-    const { post: { struct: { blog_id } }, ext } = post
-    let blogId = blog_id.unwrapOr(undefined)
-    if (blogId) {
-      const blog = blogIndicesByBlogIdMap.get(blogId.toString())
-      post.blog = blog
     }
+  }
 
-    blogId = ext?.post.struct.blog_id.unwrapOr(undefined)
-    if (blogId) {
-      const blog = blogIndicesByBlogIdMap.get(blogId.toString())
-      if (!post.blog) {
-        post.blog = blog
-      }
-      post.ext!.blog = blog
-    } else {
-      blogId = ext?.ext?.post.struct.blog_id.unwrapOr(undefined)
-      if (blogId) {
-        const blog = blogIndicesByBlogIdMap.get(blogId.toString())
+  const setBlogOnPost = (post: PostWithSomeDetails, blogId?: BlogId, ext?: PostWithSomeDetails) => {
+    if (withBlog && blogId) {
+      const blog = blogByIdMap.get(blogId.toString())
+      if (ext) {
         if (!post.blog) {
           post.blog = blog
         }
-        post.ext!.blog = blog
+        ext.blog = blog
+      } else {
+        post.blog = blog
       }
     }
+  }
+
+  postStructs.forEach(post => {
+    const { post: { struct: { blog_id } }, ext } = post
+    setOwnerOnPost(post)
+
+    setBlogOnPost(post, blog_id.unwrapOr(undefined))
+    
+    const blogId = ext?.post.struct.blog_id.unwrapOr(undefined)
+    setBlogOnPost(post, blogId, post.ext)
+    
+    if (!blogId) {
+      const blogId = ext?.ext?.post.struct.blog_id.unwrapOr(undefined)
+      setBlogOnPost(post, blogId, post.ext)
+    }
   })
-  return results
+
+  return postStructs
 }

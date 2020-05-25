@@ -7,7 +7,7 @@ import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
 import { getUniqueIds, SupportedSubstrateId } from './utils';
-import { PostDetailsOpts, loadPostsStruct, FindMethods } from './loadPostsStruct';
+import { PostDetailsOpts, loadAndSetPostRelatedStructs, FindStructsFns } from './loadPostsStruct';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
@@ -77,7 +77,7 @@ export class SubsocialApi {
     )
   }
 
-  private findMethods: FindMethods = {
+  private structFinders: FindStructsFns = {
     findBlogs: this.findBlogs,
     findPosts: this.findPosts,
     findProfiles: this.findProfiles
@@ -86,14 +86,11 @@ export class SubsocialApi {
   /** Find and load posts with their extension and owner's profile (if defined). */
   async findPostsWithSomeDetails(ids: AnyPostId[], opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
     const posts = await this.findPosts(ids)
-
-    return loadPostsStruct(posts, this.findMethods, opts)
+    return loadAndSetPostRelatedStructs(posts, this.structFinders, opts)
   }
 
   async findPostsWithAllDetails(ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
-    const posts = await this.findPosts(ids)
-
-    return loadPostsStruct(posts, this.findMethods, { withBlog: true, withOwner: true}) as Promise<PostWithAllDetails[]>
+    return this.findPostsWithSomeDetails(ids, { withBlog: true, withOwner: true }) as Promise<PostWithAllDetails[]>
   }
 
   async findProfiles(ids: AnyAccountId[]): Promise<ProfileData[]> {
