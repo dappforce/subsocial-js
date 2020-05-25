@@ -21,17 +21,17 @@ export class SubsocialApi {
 
   private _ipfs: SubsocialIpfsApi
 
-  constructor(props: SubsocialApiProps) {
+  constructor (props: SubsocialApiProps) {
     const { substrateApi, ipfsNodeUrl, offchainUrl } = props
     this._substrate = new SubsocialSubstrateApi(substrateApi)
     this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl })
   }
 
-  public get substrate(): SubsocialSubstrateApi {
+  public get substrate (): SubsocialSubstrateApi {
     return this._substrate
   }
 
-  public get ipfs(): SubsocialIpfsApi {
+  public get ipfs (): SubsocialIpfsApi {
     return this._ipfs
   }
 
@@ -39,7 +39,7 @@ export class SubsocialApi {
     Id extends SupportedSubstrateId,
     Struct extends CommonStruct,
     Content extends CommonContent
-  >(
+  > (
     ids: Id[],
     findStructs: (ids: Id[]) => Promise<Struct[]>,
     findContents: (cids: IpfsCid[]) => Promise<Content[]>
@@ -61,7 +61,7 @@ export class SubsocialApi {
   // ---------------------------------------------------------------------
   // Multiple
 
-  async findBlogs(ids: AnyBlogId[]): Promise<BlogData[]> {
+  async findBlogs (ids: AnyBlogId[]): Promise<BlogData[]> {
     const findStructs = this.substrate.findBlogs.bind(this.substrate);
     const findContents = this.ipfs.findBlogs.bind(this.ipfs);
     return this.findDataArray<AnyBlogId, Blog, BlogContent>(
@@ -69,7 +69,7 @@ export class SubsocialApi {
     )
   }
 
-  async findPosts(ids: AnyPostId[]): Promise<PostData[]> {
+  async findPosts (ids: AnyPostId[]): Promise<PostData[]> {
     const findStructs = this.substrate.findPosts.bind(this.substrate)
     const findContents = this.ipfs.findPosts.bind(this.ipfs)
     return this.findDataArray<AnyPostId, Post, PostContent>(
@@ -78,22 +78,22 @@ export class SubsocialApi {
   }
 
   private structFinders: FindStructsFns = {
-    findBlogs: this.findBlogs,
-    findPosts: this.findPosts,
-    findProfiles: this.findProfiles
+    findBlogs: this.findBlogs.bind(this),
+    findPosts: this.findPosts.bind(this),
+    findProfiles: this.findProfiles.bind(this)
   }
 
   /** Find and load posts with their extension and owner's profile (if defined). */
-  async findPostsWithSomeDetails(ids: AnyPostId[], opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
+  async findPostsWithSomeDetails (ids: AnyPostId[], opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
     const posts = await this.findPosts(ids)
     return loadAndSetPostRelatedStructs(posts, this.structFinders, opts)
   }
 
-  async findPostsWithAllDetails(ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
+  async findPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
     return this.findPostsWithSomeDetails(ids, { withBlog: true, withOwner: true }) as Promise<PostWithAllDetails[]>
   }
 
-  async findProfiles(ids: AnyAccountId[]): Promise<ProfileData[]> {
+  async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
     const findStructs = this.substrate.findSocialAccounts.bind(this.substrate)
     const findContents = this.ipfs.findProfiles.bind(this.ipfs)
 
@@ -110,23 +110,23 @@ export class SubsocialApi {
   // ---------------------------------------------------------------------
   // Single
 
-  async findBlog(id: AnyBlogId): Promise<BlogData | undefined> {
+  async findBlog (id: AnyBlogId): Promise<BlogData | undefined> {
     return getFirstOrUndefined(await this.findBlogs([ id ]))
   }
 
-  async findPost(id: AnyPostId): Promise<PostData | undefined> {
+  async findPost (id: AnyPostId): Promise<PostData | undefined> {
     return getFirstOrUndefined(await this.findPosts([ id ]))
   }
 
-  async findPostWithSomeDetails(id: AnyPostId, opts?: PostDetailsOpts): Promise<PostWithSomeDetails | undefined> {
+  async findPostWithSomeDetails (id: AnyPostId, opts?: PostDetailsOpts): Promise<PostWithSomeDetails | undefined> {
     return getFirstOrUndefined(await this.findPostsWithSomeDetails([ id ], opts))
   }
 
-  async findPostWithAllDetails(id: AnyPostId): Promise<PostWithAllDetails | undefined> {
+  async findPostWithAllDetails (id: AnyPostId): Promise<PostWithAllDetails | undefined> {
     return getFirstOrUndefined(await this.findPostsWithAllDetails([ id ]))
   }
 
-  async findProfile(id: AnyAccountId): Promise<ProfileData | undefined> {
+  async findProfile (id: AnyAccountId): Promise<ProfileData | undefined> {
     return getFirstOrUndefined(await this.findProfiles([ id ]))
   }
 }

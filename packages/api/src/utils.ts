@@ -52,33 +52,6 @@ export const getSharedPostId = (postData: any): PostId | undefined => {
   return sharedPostId
 }
 
-/**
-
-1 // root post <-- has BLOG
-
-2 // sharING post <-- has BLOG
---1 // original / sharED post
-
-3 // comment
-  --1 // original: root post <-- has BLOG
-
-4 // comment
---2 // root post: sharING post <-- has BLOG
-  --1 // original: root post
-
-// >>> MOST COMPLEXT CASE:
-5 // sharING post <-- has BLOG
---3 // original post: sharED comment
-  --2 // root post: sharING post <-- has BLOG 2 <<< MAX DEPTH = 3
-    --1 // original: root post
-
-6 // comment
-  5 // root post: sharING comment <-- has BLOG 3
-  --3 // sharED comment
-    --2 // root post: sharING post <-- has BLOG 2
-      --1 // original: root post <-- has BLOG 1
-*/
-
 /** Return original post id from shared post or root post id if this post is a comment. */
 export const getPostIdFromExtension = (postData?: PostData): PostId | undefined => {
   if (!postData) return undefined;

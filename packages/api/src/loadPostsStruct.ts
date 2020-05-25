@@ -1,8 +1,8 @@
 import { AnyBlogId, AnyAccountId } from '@subsocial/types/substrate/interfaces/utils';
-import { PostData, PostWithSomeDetails, ProfileData, BlogData, AnyPostId } from "@subsocial/types"
-import { PostId, AccountId, BlogId } from "@subsocial/types/substrate/interfaces"
-import { getPostIdFromExtension, getUniqueIds } from "./utils"
-import { nonEmptyStr, notDefined, isDefined } from "@subsocial/utils"
+import { PostData, PostWithSomeDetails, ProfileData, BlogData, AnyPostId } from '@subsocial/types'
+import { PostId, AccountId, BlogId } from '@subsocial/types/substrate/interfaces'
+import { getPostIdFromExtension, getUniqueIds } from './utils'
+import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
 
 export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
@@ -48,7 +48,6 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   // Value - indices of the posts that share this original post in `postStructs` array.
   const resultIndicesByRootIdMap = new Map<string, number[]>()
 
-  
   const fillPostId = (post: PostData, index: number, resultIndicesByPostIdMap: Map<string, number[]>, posts: PostData[], postIds: PostId[]) => {
     const extId = getPostIdFromExtension(post)
     const idStr = extId?.toString()
@@ -126,7 +125,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
       if (isDefined(blogId)) {
         blogIds.push(blogId)
       } else {
-        fillPostId(post, i, resultIndicesByRootIdMap, rootPosts, rootIds) 
+        fillPostId(post, i, resultIndicesByRootIdMap, rootPosts, rootIds)
       }
     }
 
@@ -216,10 +215,10 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     setOwnerOnPost(post)
 
     setBlogOnPost(post, blog_id.unwrapOr(undefined))
-    
+
     const blogId = ext?.post.struct.blog_id.unwrapOr(undefined)
     setBlogOnPost(post, blogId, post.ext)
-    
+
     if (!blogId) {
       const blogId = ext?.ext?.post.struct.blog_id.unwrapOr(undefined)
       setBlogOnPost(post, blogId, post.ext)
