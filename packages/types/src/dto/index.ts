@@ -32,11 +32,3 @@ export type PostWithBlog = Exclude<PostWithSomeDetails, 'blog'> & {
 }
 
 export type PostWithAllDetails = PostWithOwner & PostWithBlog
-
-// TODO replace this type with 'PostWithAllDetails' everywhere
-export type ExtendedPostData = {
-  post: PostData
-  ext?: PostData
-  owner: ProfileData
-  blog: BlogData
-}
