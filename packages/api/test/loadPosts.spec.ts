@@ -21,7 +21,7 @@ test('Load regular and shared post', async () => {
 test('Load comment on regular and shared post, also shared comment post', async () => {
   const ids = [ commentIdOnRegularPost, commentIdOnSharedPost, sharedCommentId ]
   const posts = await findPosts(ids);
-  const results = await loadAndSetPostRelatedStructs(posts, methods)
+  const results = await loadAndSetPostRelatedStructs(posts, methods, opts)
   console.log('Comment and shared comment post: ', results)
   expect(results.length).toBe(posts.length)
 })
