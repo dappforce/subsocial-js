@@ -7,7 +7,7 @@ import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
 import { getUniqueIds, SupportedSubstrateId } from './utils';
-import { PostDetailsOpts, loadAndSetPostRelatedStructs, FindStructsFns } from './loadPostsStruct';
+import { PostDetailsOpts, loadAndSetPostRelatedStructs, FindStructsFns } from './loadPostStructs';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,

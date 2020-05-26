@@ -1,6 +1,6 @@
 import { regularPostId, commentIdOnRegularPost, commentIdOnSharedPost, sharedCommentId, sharedPostId } from './mocks/PostMocks'
 import { findBlogs, findPosts, findProfiles  } from './mocks/MocksDB'
-import { loadAndSetPostRelatedStructs } from '../src/loadPostsStruct'
+import { loadAndSetPostRelatedStructs } from '../src/loadPostStructs'
 
 const methods = {
   findBlogs,

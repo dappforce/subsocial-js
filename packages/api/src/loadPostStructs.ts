@@ -1,7 +1,7 @@
 import { AnyBlogId, AnyAccountId } from '@subsocial/types/substrate/interfaces/utils';
 import { PostData, PostWithSomeDetails, ProfileData, BlogData, AnyPostId } from '@subsocial/types'
 import { PostId, AccountId, BlogId } from '@subsocial/types/substrate/interfaces'
-import { getPostIdFromExtension, getUniqueIds } from './utils'
+import { getPostIdFromExtension } from './utils'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
 
 export type FindStructsFns = {
@@ -30,11 +30,14 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   const rootPosts: PostData[] = []
   const extPosts: PostData[] = []
 
-  const extIds: PostId[] = []
   const rootIds: PostId[] = []
+  const extIds: PostId[] = []
   const ownerIds: AccountId[] = []
   const blogIds: BlogId[] = []
 
+  // Key - serialized id of a shared original post.
+  // Value - indices of the posts that share this original post in `postStructs` array.
+  const resultIndicesByRootIdMap = new Map<string, number[]>()
   // Key - serialized id of a shared original post.
   // Value - indices of the posts that share this original post in `postStructs` array.
   const resultIndicesByExtIdMap = new Map<string, number[]>()
@@ -44,30 +47,29 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   // Key - serialized id of a blog.
   // Value - indices of the posts that have the same blog (as key) in `posts` array.
   const postIndicesByBlogIdMap = new Map<string, number[]>()
-  // Key - serialized id of a shared original post.
-  // Value - indices of the posts that share this original post in `postStructs` array.
-  const resultIndicesByRootIdMap = new Map<string, number[]>()
 
-  const fillPostId = (post: PostData, index: number, resultIndicesByPostIdMap: Map<string, number[]>, posts: PostData[], postIds: PostId[]) => {
+  // Post id can be either extension or root post
+  const rememberPostIdAndMapToPostIndices = (post: PostData, postIndex: number, resultIndicesByPostIdMap: Map<string, number[]>, posts: PostData[], postIds: PostId[]) => {
     const extId = getPostIdFromExtension(post)
-    const idStr = extId?.toString()
-    if (extId && nonEmptyStr(idStr)) {
-      let postIdxs = resultIndicesByPostIdMap.get(idStr)
+    const extIdStr = extId?.toString()
+    if (extId && nonEmptyStr(extIdStr)) {
+      let postIdxs = resultIndicesByPostIdMap.get(extIdStr)
       if (notDefined(postIdxs)) {
         postIdxs = []
-        resultIndicesByPostIdMap.set(idStr, postIdxs)
-        const currentPost = postByIdMap.get(idStr)
+        resultIndicesByPostIdMap.set(extIdStr, postIdxs)
+        const currentPost = postByIdMap.get(extIdStr)
         if (currentPost) {
           posts.push(currentPost)
         } else {
           postIds.push(extId)
         }
       }
-      postIdxs.push(index)
+      postIdxs.push(postIndex)
     }
   }
 
-  function fillRelatedId<T extends BlogId | AccountId> (relatedId: T, index: number, postIndicesByRelatedIdMap: Map<string, number[]>, relatedIds: T[]) {
+  // Related id can be either blog id or owner id
+  function rememberRelatedIdAndMapToPostIndices<T extends BlogId | AccountId> (relatedId: T, postIndex: number, postIndicesByRelatedIdMap: Map<string, number[]>, relatedIds: T[]) {
     if (isDefined(relatedId)) {
       const idStr = relatedId.toString()
       let postIdxs = postIndicesByRelatedIdMap.get(idStr)
@@ -76,7 +78,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
         postIndicesByOwnerIdMap.set(idStr, postIdxs)
         relatedIds.push(relatedId)
       }
-      postIdxs.push(index)
+      postIdxs.push(postIndex)
     }
   }
 
@@ -92,21 +94,20 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   posts.forEach((post, i) => {
     postStructs.push({ post })
 
-    fillPostId(post, i, resultIndicesByExtIdMap, extPosts, extIds)
+    rememberPostIdAndMapToPostIndices(post, i, resultIndicesByExtIdMap, extPosts, extIds)
 
     if (withOwner) {
       const ownerId = post.struct.created.account
-      fillRelatedId(ownerId, i, postIndicesByOwnerIdMap, ownerIds)
+      rememberRelatedIdAndMapToPostIndices(ownerId, i, postIndicesByOwnerIdMap, ownerIds)
     }
 
     if (withBlog) {
       const blogId = post.struct.blog_id.unwrapOr(undefined)
-      blogId && fillRelatedId(blogId, i, postIndicesByBlogIdMap, blogIds)
+      blogId && rememberRelatedIdAndMapToPostIndices(blogId, i, postIndicesByBlogIdMap, blogIds)
     }
-
   })
 
-  const loadedExtPosts = await findPosts(getUniqueIds(extIds))
+  const loadedExtPosts = await findPosts(extIds)
   extPosts.push(...loadedExtPosts)
 
   extPosts.forEach((post, i) => {
@@ -115,9 +116,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
 
     if (withOwner) {
       const ownerId = post.struct.created.account
-      if (isDefined(ownerId)) {
-        ownerIds.push(ownerId)
-      }
+      ownerIds.push(ownerId)
     }
 
     if (withBlog) {
@@ -125,13 +124,12 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
       if (isDefined(blogId)) {
         blogIds.push(blogId)
       } else {
-        fillPostId(post, i, resultIndicesByRootIdMap, rootPosts, rootIds)
+        rememberPostIdAndMapToPostIndices(post, i, resultIndicesByRootIdMap, rootPosts, rootIds)
       }
     }
-
   })
 
-  const loadedRootPosts = await findPosts(getUniqueIds(rootIds))
+  const loadedRootPosts = await findPosts(rootIds)
   rootPosts.push(...loadedRootPosts)
 
   rootPosts.forEach((post, i) => {
@@ -139,26 +137,25 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
 
     if (withBlog) {
       const blogId = post.struct.blog_id.unwrapOr(undefined)
-      blogId && fillRelatedId(blogId, i, postIndicesByBlogIdMap, blogIds)
+      blogId && rememberRelatedIdAndMapToPostIndices(blogId, i, postIndicesByBlogIdMap, blogIds)
     }
-
   })
 
-  // Load owners
+  // Load related owners
   if (withOwner) {
-    const postOwners = await findProfiles(ownerIds)
+    const owners = await findProfiles(ownerIds)
 
-    postOwners.forEach(owner => {
+    owners.forEach(owner => {
       const ownerId = owner.profile?.created.account.toString()
       ownerId && ownerByIdMap.set(ownerId, owner)
     })
   }
 
-  // Load blogs
+  // Load related blogs
   if (withBlog) {
-    const postBlogs = await findBlogs(blogIds)
+    const blogs = await findBlogs(blogIds)
 
-    postBlogs.forEach(blog => {
+    blogs.forEach(blog => {
       const blogId = blog.struct.id.toString()
       blogId && blogByIdMap.set(blogId, blog)
     })
@@ -181,32 +178,32 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
   } = await loadRelatedStructs(posts, finders, opts)
 
   const setOwnerOnPost = (postStruct: PostWithSomeDetails) => {
-    if (withOwner) {
-      const { post, ext } = postStruct
-      const ownerId = post.struct.created.account.toString()
-      const owner = ownerByIdMap.get(ownerId)
-      postStruct.owner = owner
+    if (!withOwner) return
 
-      if (ext) {
-        const extOwnerId = ext.post.struct.created.account.toString()
-        ext.owner = extOwnerId === ownerId
-          ? owner
-          : ownerByIdMap.get(extOwnerId)
-      }
-    }
+    const { post, ext } = postStruct
+    const ownerId = post.struct.created.account.toString()
+    const owner = ownerByIdMap.get(ownerId)
+    postStruct.owner = owner
+
+    if (!ext) return
+
+    const extOwnerId = ext.post.struct.created.account.toString()
+    ext.owner = extOwnerId === ownerId
+      ? owner
+      : ownerByIdMap.get(extOwnerId)
   }
 
   const setBlogOnPost = (post: PostWithSomeDetails, blogId?: BlogId, ext?: PostWithSomeDetails) => {
-    if (withBlog && blogId) {
-      const blog = blogByIdMap.get(blogId.toString())
-      if (ext) {
-        if (!post.blog) {
-          post.blog = blog
-        }
-        ext.blog = blog
-      } else {
+    if (!withBlog || !blogId) return
+
+    const blog = blogByIdMap.get(blogId.toString())
+    if (ext) {
+      if (!post.blog) {
         post.blog = blog
       }
+      ext.blog = blog
+    } else {
+      post.blog = blog
     }
   }
 
@@ -214,14 +211,17 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     const { post: { struct: { blog_id } }, ext } = post
     setOwnerOnPost(post)
 
+    // Set a blog if the post has blog id:
     setBlogOnPost(post, blog_id.unwrapOr(undefined))
 
+    // Set a blog (from extension) on post and its extension if extension has blog id:
     const blogId = ext?.post.struct.blog_id.unwrapOr(undefined)
-    setBlogOnPost(post, blogId, post.ext)
+    setBlogOnPost(post, blogId, ext)
 
     if (!blogId) {
+      // Set a blog (from root post) on post and its extension if extension does NOT have blog id:
       const blogId = ext?.ext?.post.struct.blog_id.unwrapOr(undefined)
-      setBlogOnPost(post, blogId, post.ext)
+      setBlogOnPost(post, blogId, ext)
     }
   })
 
