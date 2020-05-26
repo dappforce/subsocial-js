@@ -5,17 +5,17 @@ export default {
       block: 'BlockNumber',
       time: 'Moment'
     },
+    OptionVecAccountId: 'Option<Vec<AccountId>>',
     IpfsHash: 'Text',
     BlogId: 'u64',
     PostId: 'u64',
     ReactionId: 'u64',
-    OptionVecAccountId: 'Option<Vec<AccountId>>',
     Blog: {
       id: 'BlogId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
       hidden: 'bool',
-      writers: 'Vec<AccountId>',
+      owner: 'AccountId',
       handle: 'Option<Text>',
       ipfs_hash: 'IpfsHash',
       posts_count: 'u16',
@@ -24,9 +24,9 @@ export default {
       score: 'i32'
     },
     BlogUpdate: {
-      writers: 'Option<Vec<AccountId>>',
       handle: 'Option<Option<Text>>',
-      ipfs_hash: 'Option<IpfsHash>'
+      ipfs_hash: 'Option<IpfsHash>',
+      hidden: 'Option<bool>'
     },
     BlogHistoryRecord: {
       edited: 'WhoAndWhen',
@@ -101,26 +101,6 @@ export default {
     ProfileHistoryRecord: {
       edited: 'WhoAndWhen',
       old_data: 'ProfileUpdate'
-    },
-    SpaceId: 'u64',
-    ChangeId: 'u64',
-    SpaceOwners: {
-      created: 'WhoAndWhen',
-      space_id: 'SpaceId',
-      owners: 'Vec<AccountId>',
-      threshold: 'u16',
-      changes_count: 'u64'
-    },
-    Change: {
-      created: 'WhoAndWhen',
-      id: 'ChangeId',
-      space_id: 'SpaceId',
-      add_owners: 'Vec<AccountId>',
-      remove_owners: 'Vec<AccountId>',
-      new_threshold: 'Option<u16>',
-      notes: 'Text',
-      confirmed_by: 'Vec<AccountId>',
-      expires_at: 'BlockNumber'
     },
     ScoringAction: {
       _enum: [
