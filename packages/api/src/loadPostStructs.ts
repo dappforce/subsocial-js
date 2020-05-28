@@ -35,12 +35,12 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   const ownerIds: AccountId[] = []
   const blogIds: BlogId[] = []
 
-  // Key - serialized id of a shared original post.
-  // Value - indices of the posts that share this original post in `postStructs` array.
-  const postIndicesByRootIdMap = new Map<string, number[]>()
-  // Key - serialized id of a shared original post.
-  // Value - indices of the posts that share this original post in `postStructs` array.
-  const postIndicesByExtIdMap = new Map<string, number[]>()
+  // Key - serialized id of root post of comment.
+  // Value - indices of the posts that have this root post in `extPostStructs` array.
+  const resultIndicesByRootIdMap = new Map<string, number[]>()
+  // Key - serialized id of a shared original post or root post of a comment.
+  // Value - indices of the posts that share this original post or related to root post that in `postStructs` array.
+  const resultIndicesByExtIdMap = new Map<string, number[]>()
   // Key - serialized id of a post owner.
   // Value - indices of the posts that have the same owner (as key) in `posts` array.
   const postIndicesByOwnerIdMap = new Map<string, number[]>()
