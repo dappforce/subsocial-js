@@ -1,12 +1,13 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
-import { BlogData, CommonData, ExtendedPostData, PostData, ProfileData } from '@subsocial/types';
+import { BlogData, CommonData, PostData, ProfileData, PostWithSomeDetails, PostWithAllDetails } from '@subsocial/types';
 import { BlogContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
 import { AnyAccountId, AnyBlogId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
-import { AccountId, Blog, Post, PostId, SocialAccount } from '@subsocial/types/substrate/interfaces';
-import { getFirstOrUndefined, nonEmptyStr } from '@subsocial/utils';
+import { Blog, Post, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
-import { getSharedPostId, getUniqueIds, SupportedSubstrateId } from './utils';
+import { getUniqueIds, SupportedSubstrateId } from './utils';
+import { PostDetailsOpts, loadAndSetPostRelatedStructs, FindStructsFns } from './loadPostStructs';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
@@ -34,7 +35,7 @@ export class SubsocialApi {
     return this._ipfs
   }
 
-  private async findDataArray <
+  private async findDataArray<
     Id extends SupportedSubstrateId,
     Struct extends CommonStruct,
     Content extends CommonContent
@@ -76,78 +77,20 @@ export class SubsocialApi {
     )
   }
 
-  /** Find and load posts with their extension. */
-  async findPostsWithExt (ids: AnyPostId[]): Promise<ExtendedPostData[]> {
-    const posts = await this.findPosts(ids)
-    const results: ExtendedPostData[] = []
-    const extIds: PostId[] = []
-
-    // Key - serialized id of a shared original post.
-    // Value - indices of the posts that share this original post in `results` array.
-    const resultIndicesByExtIdMap = new Map<string, number[]>()
-
-    posts.forEach((post, i) => {
-      results.push({ post })
-      const extId = getSharedPostId(post)
-      if (typeof extId !== 'undefined') {
-        const idStr = extId.toString()
-        let resultIdxs = resultIndicesByExtIdMap.get(idStr)
-        if (typeof resultIdxs === 'undefined') {
-          resultIdxs = []
-          resultIndicesByExtIdMap.set(idStr, resultIdxs)
-          extIds.push(extId)
-        }
-        resultIdxs.push(i)
-      }
-    })
-
-    const extPosts = await this.findPosts(extIds)
-    extPosts.forEach(extPost => {
-      const extId = extPost.struct.id.toString()
-      const idxs = resultIndicesByExtIdMap.get(extId) || []
-      idxs.forEach(idx => {
-        results[idx].ext = extPost
-      })
-    })
-
-    return results
+  private structFinders: FindStructsFns = {
+    findBlogs: this.findBlogs.bind(this),
+    findPosts: this.findPosts.bind(this),
+    findProfiles: this.findProfiles.bind(this)
   }
 
   /** Find and load posts with their extension and owner's profile (if defined). */
-  async findPostsWithDetails (ids: AnyPostId[]): Promise<ExtendedPostData[]> {
-    const posts = await this.findPostsWithExt(ids);
-    const ownerIds: AccountId[] = []
+  async findPostsWithSomeDetails (ids: AnyPostId[], opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
+    const posts = await this.findPosts(ids)
+    return loadAndSetPostRelatedStructs(posts, this.structFinders, opts)
+  }
 
-    // Key - serialized id of a post owner.
-    // Value - indices of the posts that have the same owner (as key) in `posts` array.
-    const postIndicesByOwnerIdMap = new Map<string, number[]>()
-
-    posts.forEach(({ post }, i) => {
-      const ownerId = post.struct.created.account
-      if (typeof ownerId !== 'undefined') {
-        const idStr = ownerId.toString()
-        let postIdxs = postIndicesByOwnerIdMap.get(idStr)
-        if (typeof postIdxs === 'undefined') {
-          postIdxs = []
-          postIndicesByOwnerIdMap.set(idStr, postIdxs)
-          ownerIds.push(ownerId)
-        }
-        postIdxs.push(i)
-      }
-    })
-
-    const postOwners = await this.findProfiles(ownerIds)
-    postOwners.forEach(postOwner => {
-      const ownerId = postOwner.profile?.created.account.toString()
-      if (nonEmptyStr(ownerId)) {
-        const idxs = postIndicesByOwnerIdMap.get(ownerId) || []
-        idxs.forEach(idx => {
-          posts[idx].owner = postOwner
-        })
-      }
-    })
-
-    return posts;
+  async findPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
+    return this.findPostsWithSomeDetails(ids, { withBlog: true, withOwner: true }) as Promise<PostWithAllDetails[]>
   }
 
   async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
@@ -175,8 +118,12 @@ export class SubsocialApi {
     return getFirstOrUndefined(await this.findPosts([ id ]))
   }
 
-  async findPostWithExt (id: AnyPostId): Promise<ExtendedPostData | undefined> {
-    return getFirstOrUndefined(await this.findPostsWithExt([ id ]))
+  async findPostWithSomeDetails (id: AnyPostId, opts?: PostDetailsOpts): Promise<PostWithSomeDetails | undefined> {
+    return getFirstOrUndefined(await this.findPostsWithSomeDetails([ id ], opts))
+  }
+
+  async findPostWithAllDetails (id: AnyPostId): Promise<PostWithAllDetails | undefined> {
+    return getFirstOrUndefined(await this.findPostsWithAllDetails([ id ]))
   }
 
   async findProfile (id: AnyAccountId): Promise<ProfileData | undefined> {

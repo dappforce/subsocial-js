@@ -21,7 +21,7 @@ test('Find a shared post in Substrate and IPFS', async () => {
   const substrateApi = await getApi();
   const postId = new BN(2);
   const api = new SubsocialApi({ substrateApi, ipfsNodeUrl, offchainUrl });
-  const extPostData = await api.findPostWithExt(postId)
+  const extPostData = await api.findPostWithAllDetails(postId)
   console.log('Found a PostData of extension:', { ...extPostData })
   expect(extPostData.post.struct.id.toString()).toBe(postId.toString());
 })

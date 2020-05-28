@@ -3,7 +3,7 @@ import { CommonContent, BlogContent, PostContent, CommentContent, ProfileContent
 import { CommonStruct } from '../substrate';
 
 export type CommonData<S extends CommonStruct, C extends CommonContent> = {
-  struct: S,
+  struct: S
   content?: C
 }
 
@@ -11,18 +11,24 @@ export type BlogData = CommonData<Blog, BlogContent>
 export type PostData = CommonData<Post, PostContent>
 export type CommentData = CommonData<Post, CommentContent>
 export type ProfileData = CommonData<SocialAccount, ProfileContent> & {
-  profile?: Profile,
+  profile?: Profile
 }
 
 export type AnySubsocialData = BlogData | PostData | CommentData | ProfileData;
 
-export type ExtendedPostData = {
-  post: PostData,
-  ext?: PostData,
+export type PostWithSomeDetails = {
+  post: PostData
+  ext?: Exclude<PostWithSomeDetails, 'ext'>
   owner?: ProfileData
+  blog?: BlogData
 }
 
-export type ExtendedCommentData = {
-  comment: CommentData,
-  owner?: ProfileData
+export type PostWithOwner = Exclude<PostWithSomeDetails, 'owner'> & {
+  owner: ProfileData
 }
+
+export type PostWithBlog = Exclude<PostWithSomeDetails, 'blog'> & {
+  blog: BlogData
+}
+
+export type PostWithAllDetails = PostWithOwner & PostWithBlog
