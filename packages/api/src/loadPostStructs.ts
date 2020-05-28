@@ -37,10 +37,10 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
 
   // Key - serialized id of a shared original post.
   // Value - indices of the posts that share this original post in `postStructs` array.
-  const resultIndicesByRootIdMap = new Map<string, number[]>()
+  const postIndicesByRootIdMap = new Map<string, number[]>()
   // Key - serialized id of a shared original post.
   // Value - indices of the posts that share this original post in `postStructs` array.
-  const resultIndicesByExtIdMap = new Map<string, number[]>()
+  const postIndicesByExtIdMap = new Map<string, number[]>()
   // Key - serialized id of a post owner.
   // Value - indices of the posts that have the same owner (as key) in `posts` array.
   const postIndicesByOwnerIdMap = new Map<string, number[]>()
@@ -82,12 +82,12 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
   }
 
-  function setExtOnPost (postStruct: PostWithSomeDetails, resultIndicesByPostIdMap: Map<string, number[]>, postStructs: PostWithSomeDetails[]) {
-    const postId = postStruct.post.struct.id.toString()
-    postByIdMap.set(postId, postStruct.post)
-    const idxs = resultIndicesByPostIdMap.get(postId) || []
+  function setExtOnPost (ext: PostWithSomeDetails, resultIndicesByPostIdMap: Map<string, number[]>, postStructs: PostWithSomeDetails[]) {
+    const extId = ext.post.struct.id.toString()
+    postByIdMap.set(extId, ext.post)
+    const idxs = resultIndicesByPostIdMap.get(extId) || []
     idxs.forEach(idx => {
-      postStructs[idx].ext = postStruct
+      postStructs[idx].ext = ext
     })
   }
 
@@ -197,13 +197,12 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     if (!withBlog || !blogId) return
 
     const blog = blogByIdMap.get(blogId.toString())
-    if (ext) {
-      if (!post.blog) {
-        post.blog = blog
-      }
-      ext.blog = blog
-    } else {
+    if (!post.blog) {
       post.blog = blog
+    }
+
+    if (ext) {
+      ext.blog = blog
     }
   }
 

@@ -13,7 +13,7 @@ import { BlogData } from '@subsocial/types/src/dto'
 type NewBlogProps = {
   id?: number | BN,
   account?: AccountId,
-  writers?: AccountId[],
+  owner?: AccountId,
   handle?: string,
   ipfs_hash?: string,
   posts_count?: number,
@@ -28,7 +28,6 @@ const nextId = (): BlogId => new BN(_id++) as BlogId
 function newBlogStructMock ({
   id = nextId(),
   account = mockAccountAlice,
-  writers = [],
   handle,
   ipfs_hash = '',
   posts_count = 12,
@@ -44,7 +43,7 @@ function newBlogStructMock ({
       time: new BN(1586523823996) as Moment
     } as WhoAndWhen,
     updated: new Option(registry, 'Null', null),
-    writers: writers as unknown as Vec<AccountId>,
+    owner: account,
     handle: new Option(registry, 'Text', handle),
     ipfs_hash: ipfs_hash as unknown as IpfsHash,
     posts_count: new BN(posts_count) as u16,

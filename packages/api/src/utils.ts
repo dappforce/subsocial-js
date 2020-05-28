@@ -63,9 +63,7 @@ export const getPostIdFromExtension = (postData?: PostData): PostId | undefined 
 
     if (isComment || ext.value instanceof CommentExt) {
       return ext.asComment.root_post_id
-    }
-
-    if (isSharedPost) {
+    } else if (isSharedPost) {
       return ext.asSharedPost
     }
   }

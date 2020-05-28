@@ -48,8 +48,8 @@ export const sharedCommentId = createPostId(4)
 export const commentIdOnSharedPost = createPostId(5)
 
 export const mockRegularPostStruct = newPostStructMock({
-  id: regularPostId,
   account: mockAccountAlice,
+  id: regularPostId,
   blog_id: new OptionId(new BN(1)),
   extension: new PostExtension({ RegularPost: new Null(registry) })
 })
