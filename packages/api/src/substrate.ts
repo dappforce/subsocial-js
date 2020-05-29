@@ -1,8 +1,8 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
 import { AccountId } from '@polkadot/types/interfaces';
-import { AnyAccountId, AnyBlogId, AnyPostId, AnyReactionId, SubstrateId } from '@subsocial/types';
-import { Blog, BlogId, Post, PostId, Reaction, ReactionId, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { AnyAccountId, AnySpaceId, AnyPostId, AnyReactionId, SubstrateId } from '@subsocial/types';
+import { Space, SpaceId, Post, PostId, Reaction, ReactionId, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
@@ -75,8 +75,8 @@ export class SubsocialSubstrateApi {
     }
   }
 
-  async findBlogs (ids: AnyBlogId[]): Promise<Blog[]> {
-    return this.findStructs('blogById', ids);
+  async findSpaces (ids: AnySpaceId[]): Promise<Space[]> {
+    return this.findStructs('spaceById', ids);
   }
 
   async findPosts (ids: AnyPostId[]): Promise<Post[]> {
@@ -95,8 +95,8 @@ export class SubsocialSubstrateApi {
   // ---------------------------------------------------------------------
   // Single
 
-  async findBlog (id: AnyBlogId): Promise<Blog | undefined> {
-    return getFirstOrUndefined(await this.findBlogs([ id ]))
+  async findSpace (id: AnySpaceId): Promise<Space | undefined> {
+    return getFirstOrUndefined(await this.findSpaces([ id ]))
   }
 
   async findPost (id: AnyPostId): Promise<Post | undefined> {
@@ -114,19 +114,19 @@ export class SubsocialSubstrateApi {
   // ---------------------------------------------------------------------
   // Get id
 
-  async nextBlogId (): Promise<BlogId> {
-    return this.socialQuery('nextBlogId')
+  async nextSpaceId (): Promise<SpaceId> {
+    return this.socialQuery('nextSpaceId')
   }
 
   async nextPostId (): Promise<PostId> {
     return this.socialQuery('nextPostId')
   }
 
-  async getBlogIdByHandle (handle: string): Promise<BlogId | undefined> {
+  async getSpaceIdByHandle (handle: string): Promise<SpaceId | undefined> {
     if (isEmptyStr(handle)) {
       return undefined
     }
-    const idOpt = await this.socialQuery('blogIdByHandle', handle) as Option<BlogId>
+    const idOpt = await this.socialQuery('spaceIdByHandle', handle) as Option<SpaceId>
     return idOpt.unwrapOr(undefined)
   }
 
@@ -142,16 +142,16 @@ export class SubsocialSubstrateApi {
     return this.socialQuery('replyIdsByPostId', id);
   }
 
-  async blogIdsByOwner (id: AnyAccountId): Promise<BlogId[]> {
-    return this.socialQuery('blogIdsByOwner', asAccountId(id))
+  async spaceIdsByOwner (id: AnyAccountId): Promise<SpaceId[]> {
+    return this.socialQuery('spaceIdsByOwner', asAccountId(id))
   }
 
-  async blogIdsFollowedByAccount (id: AnyAccountId): Promise<BlogId[]> {
-    return this.socialQuery('blogsFollowedByAccount', asAccountId(id))
+  async spaceIdsFollowedByAccount (id: AnyAccountId): Promise<SpaceId[]> {
+    return this.socialQuery('spacesFollowedByAccount', asAccountId(id))
   }
 
-  async postIdsByBlogId (id: AnyBlogId): Promise<PostId[]> {
-    return this.socialQuery('postIdsByBlogId', id)
+  async postIdsBySpaceId (id: AnySpaceId): Promise<PostId[]> {
+    return this.socialQuery('postIdsBySpaceId', id)
   }
 
   // ---------------------------------------------------------------------
@@ -165,8 +165,8 @@ export class SubsocialSubstrateApi {
     return isFollow.valueOf()
   }
 
-  async isBlogFollower (myAddress: AnyAccountId, blogId: AnyBlogId): Promise<boolean> {
-    return this.isBooleanByAccount('blogFollowedByAccount', myAddress, blogId)
+  async isSpaceFollower (myAddress: AnyAccountId, spaceId: AnySpaceId): Promise<boolean> {
+    return this.isBooleanByAccount('spaceFollowedByAccount', myAddress, spaceId)
   }
 
   async isPostSharedByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<boolean> {

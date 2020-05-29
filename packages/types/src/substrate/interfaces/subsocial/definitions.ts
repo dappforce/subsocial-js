@@ -7,11 +7,11 @@ export default {
     },
     OptionVecAccountId: 'Option<Vec<AccountId>>',
     IpfsHash: 'Text',
-    BlogId: 'u64',
+    SpaceId: 'u64',
     PostId: 'u64',
     ReactionId: 'u64',
-    Blog: {
-      id: 'BlogId',
+    Space: {
+      id: 'SpaceId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
       hidden: 'bool',
@@ -20,24 +20,24 @@ export default {
       ipfs_hash: 'IpfsHash',
       posts_count: 'u16',
       followers_count: 'u32',
-      edit_history: 'Vec<BlogHistoryRecord>',
+      edit_history: 'Vec<SpaceHistoryRecord>',
       score: 'i32'
     },
-    BlogUpdate: {
+    SpaceUpdate: {
       handle: 'Option<Option<Text>>',
       ipfs_hash: 'Option<IpfsHash>',
       hidden: 'Option<bool>'
     },
-    BlogHistoryRecord: {
+    SpaceHistoryRecord: {
       edited: 'WhoAndWhen',
-      old_data: 'BlogUpdate'
+      old_data: 'SpaceUpdate'
     },
     Post: {
       id: 'PostId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
       hidden: 'bool',
-      blog_id: 'Option<BlogId>',
+      space_id: 'Option<SpaceId>',
       extension: 'PostExtension',
       ipfs_hash: 'IpfsHash',
       edit_history: 'Vec<PostHistoryRecord>',
@@ -49,7 +49,7 @@ export default {
       score: 'i32'
     },
     PostUpdate: {
-      blog_id: 'Option<BlogId>',
+      space_id: 'Option<SpaceId>',
       ipfs_hash: 'Option<IpfsHash>',
       hidden: 'Option<bool>'
     },
@@ -83,7 +83,7 @@ export default {
     SocialAccount: {
       followers_count: 'u32',
       following_accounts_count: 'u16',
-      following_blogs_count: 'u16',
+      following_spaces_count: 'u16',
       reputation: 'u32',
       profile: 'Option<Profile>'
     },
@@ -111,7 +111,7 @@ export default {
         'UpvoteComment',
         'DownvoteComment',
         'ShareComment',
-        'FollowBlog',
+        'FollowSpace',
         'FollowAccount'
       ]
     }

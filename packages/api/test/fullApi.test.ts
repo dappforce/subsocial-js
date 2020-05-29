@@ -8,13 +8,13 @@ import BN from 'bn.js';
 const ipfsNodeUrl = 'http://localhost:8080'
 const offchainUrl = 'http://localhost:3001'
 
-test('Find a blog in Substrate and IPFS', async () => {
+test('Find a space in Substrate and IPFS', async () => {
   const substrateApi = await getApi();
-  const blogId = new BN(1);
+  const spaceId = new BN(1);
   const api = new SubsocialApi({ substrateApi, ipfsNodeUrl, offchainUrl });
-  const blog = await api.findBlog(blogId);
-  console.log('Found blog:', { ...blog });
-  expect(blog.struct.id.toString()).toBe(blogId.toString());
+  const space = await api.findSpace(spaceId);
+  console.log('Found space:', { ...space });
+  expect(space.struct.id.toString()).toBe(spaceId.toString());
 })
 
 test('Find a shared post in Substrate and IPFS', async () => {

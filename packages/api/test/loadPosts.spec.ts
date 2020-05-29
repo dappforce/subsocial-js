@@ -1,14 +1,14 @@
 import { regularPostId, commentIdOnRegularPost, commentIdOnSharedPost, sharedCommentId, sharedPostId } from './mocks/PostMocks'
-import { findBlogs, findPosts, findProfiles  } from './mocks/MocksDB'
+import { findSpaces, findPosts, findProfiles  } from './mocks/MocksDB'
 import { loadAndSetPostRelatedStructs } from '../src/loadPostStructs'
 
 const methods = {
-  findBlogs,
+  findSpaces,
   findPosts,
   findProfiles
 }
 
-const opts = { withOwner: true, withBlog: true }
+const opts = { withOwner: true, withSpace: true }
 
 test('Load regular and shared post', async () => {
   const ids = [ regularPostId, sharedPostId ]

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { BlogContent, PostContent, CommentContent } from '@subsocial/types/src/offchain';
+import { SpaceContent, PostContent, CommentContent } from '@subsocial/types/src/offchain';
 import { SubsocialIpfsApi } from '../src/ipfs';
 
 const ipfs = new SubsocialIpfsApi({
@@ -9,11 +9,11 @@ const ipfs = new SubsocialIpfsApi({
 
 const cids = new Map();
 
-const blogContent: BlogContent = {
-  name: 'Test Blog',
-  desc: 'Blog desc',
-  image: 'https://www.jisc.ac.uk/sites/default/files/blogging.jpg',
-  tags: [ 'blog_tag_1', 'blog_tag_2' ]
+const spaceContent: SpaceContent = {
+  name: 'Test Space',
+  desc: 'Space desc',
+  image: 'https://www.jisc.ac.uk/sites/default/files/spaceging.jpg',
+  tags: [ 'space_tag_1', 'space_tag_2' ]
 }
 
 const postContent: PostContent = {
@@ -28,9 +28,9 @@ const commentContent: CommentContent = {
   body: 'Cool Comment'
 }
 
-test('Save a blog to IPFS', async () => {
-  const hash = await ipfs.saveBlog(blogContent);
-  cids.set('Blog', hash);
+test('Save a space to IPFS', async () => {
+  const hash = await ipfs.saveSpace(spaceContent);
+  cids.set('Space', hash);
   expect(typeof hash).toBe('string');
 })
 
@@ -46,9 +46,9 @@ test('Save a comment to IPFS', async () => {
   expect(typeof hash).toBe('string');
 })
 
-test('Load a blog from IPFS', async () => {
-  const struct = await ipfs.findBlog(cids.get('Blog'));
-  expect(struct).toEqual(blogContent);
+test('Load a space from IPFS', async () => {
+  const struct = await ipfs.findSpace(cids.get('Space'));
+  expect(struct).toEqual(spaceContent);
 })
 
 test('Load a post from IPFS', async () => {

@@ -2,15 +2,15 @@ import U32 from '@polkadot/types/primitive/U32'
 import { registry } from '@subsocial/types/src/substrate/registry';
 import BN from 'bn.js'
 import { i32, Option, u16, u32 } from '@polkadot/types'
-import { BlogContent } from '@subsocial/types/src/offchain'
+import { SpaceContent } from '@subsocial/types/src/offchain'
 import { AccountId, BlockNumber, Moment } from '@subsocial/types/src/substrate/interfaces/runtime'
-import { Blog, BlogId, IpfsHash, WhoAndWhen } from '@subsocial/types/src/substrate/interfaces'
+import { Space, SpaceId, IpfsHash, WhoAndWhen } from '@subsocial/types/src/substrate/interfaces'
 import { mockAccountAlice, mockAccountBob } from './AccountMocks'
 import { Vec } from '@polkadot/types/codec';
-import { BlogHistoryRecord } from '@subsocial/types/src/substrate/interfaces/subsocial/types';
-import { BlogData } from '@subsocial/types/src/dto'
+import { SpaceHistoryRecord } from '@subsocial/types/src/substrate/interfaces/subsocial/types';
+import { SpaceData } from '@subsocial/types/src/dto'
 
-type NewBlogProps = {
+type NewSpaceProps = {
   id?: number | BN,
   account?: AccountId,
   owner?: AccountId,
@@ -18,14 +18,14 @@ type NewBlogProps = {
   ipfs_hash?: string,
   posts_count?: number,
   followers_count?: number,
-  edit_history?: BlogHistoryRecord[],
+  edit_history?: SpaceHistoryRecord[],
   score?: number
 }
 
 let _id = 0
-const nextId = (): BlogId => new BN(_id++) as BlogId
+const nextId = (): SpaceId => new BN(_id++) as SpaceId
 
-function newBlogStructMock ({
+function newSpaceStructMock ({
   id = nextId(),
   account = mockAccountAlice,
   handle,
@@ -34,9 +34,9 @@ function newBlogStructMock ({
   followers_count = 3456,
   edit_history = [],
   score = 678
-}: NewBlogProps): Blog {
+}: NewSpaceProps): Space {
   return {
-    id: new BN(id) as BlogId,
+    id: new BN(id) as SpaceId,
     created: {
       account,
       block: new BN(12345) as BlockNumber,
@@ -48,14 +48,14 @@ function newBlogStructMock ({
     ipfs_hash: ipfs_hash as unknown as IpfsHash,
     posts_count: new BN(posts_count) as u16,
     followers_count: new BN(followers_count) as u32,
-    edit_history: edit_history as unknown as Vec<BlogHistoryRecord>,
+    edit_history: edit_history as unknown as Vec<SpaceHistoryRecord>,
     score: new BN(score) as i32
-  } as Blog
+  } as Space
 }
 
-export const mockBlogId = nextId()
+export const mockSpaceId = nextId()
 
-export const mockBlogStruct = newBlogStructMock({
+export const mockSpaceStruct = newSpaceStructMock({
   id: nextId(),
   account: mockAccountAlice,
   handle: 'alice_in_chains',
@@ -64,7 +64,7 @@ export const mockBlogStruct = newBlogStructMock({
   score: 654
 })
 
-export const mockBlogStructBob = newBlogStructMock({
+export const mockSpaceStructBob = newSpaceStructMock({
   id: nextId(),
   account: mockAccountBob,
   handle: 'bobster',
@@ -73,7 +73,7 @@ export const mockBlogStructBob = newBlogStructMock({
   score: 1
 })
 
-export const mockBlogJson: BlogContent = {
+export const mockSpaceJson: SpaceContent = {
   name: 'Alice in Chains',
   desc: 'Alice in Chains is an American rock band from Seattle, Washington, formed in 1987 by guitarist and vocalist Jerry Cantrell and drummer Sean Kinney, who later recruited bassist Mike Starr and lead vocalist Layne Staley. Starr was replaced by Mike Inez in 1993.',
   image: 'https://i.pinimg.com/originals/d1/dd/32/d1dd322177b1edf654be68644d427e74.jpg',
@@ -81,31 +81,31 @@ export const mockBlogJson: BlogContent = {
   navTabs: []
 }
 
-export const mockBlogJsonBob: BlogContent = {
-  name: 'The Best Blog You Can Ever Find on the Internet',
-  desc: 'In 2000 I set up a dot com web site called "the very best site ever" and on it carried pictures and descriptions of our worldwide holidays and our lives closer to home. However, I have learned that the webhosts have "lost" it. Time has moved on and it is being replaced by this blog!',
+export const mockSpaceJsonBob: SpaceContent = {
+  name: 'The Best Space You Can Ever Find on the Internet',
+  desc: 'In 2000 I set up a dot com web site called "the very best site ever" and on it carried pictures and descriptions of our worldwide holidays and our lives closer to home. However, I have learned that the webhosts have "lost" it. Time has moved on and it is being replaced by this space!',
   image: '',
   tags: [],
   navTabs: []
 }
 
-export const mockBlogValidation = {
+export const mockSpaceValidation = {
   handleMinLen: new U32(registry, 5),
   handleMaxLen: new U32(registry, 50),
-  blogMaxLen: 500
+  spaceMaxLen: 500
 }
 
-export const mockBlogDataAlice = {
-  struct: mockBlogStruct,
-  content: mockBlogJson
+export const mockSpaceDataAlice = {
+  struct: mockSpaceStruct,
+  content: mockSpaceJson
 }
 
-export const mockBlogDataBob = {
-  struct: mockBlogStructBob,
-  content: mockBlogJsonBob
+export const mockSpaceDataBob = {
+  struct: mockSpaceStructBob,
+  content: mockSpaceJsonBob
 }
 
-export const mockBlogsData: BlogData[] = [
-  mockBlogDataAlice,
-  mockBlogDataBob
+export const mockSpacesData: SpaceData[] = [
+  mockSpaceDataAlice,
+  mockSpaceDataBob
 ]

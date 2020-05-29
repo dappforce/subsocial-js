@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct, Text, bool } from '@polkadot/types';
-import { IpfsHash, BlogId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces';
+import { IpfsHash, SpaceId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces';
 import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
 import { SubstrateId } from '@subsocial/types';
@@ -111,14 +111,14 @@ export class PostExtension extends Enum implements IPostExtension {
   }
 }
 
-export type BlogUpdateType = {
+export type SpaceUpdateType = {
   handle: OptionOptionText;
   ipfs_hash: OptionIpfsHash;
   hidden: Option<bool>
 };
 
-export class BlogUpdate extends Struct {
-  constructor (value?: BlogUpdateType) {
+export class SpaceUpdate extends Struct {
+  constructor (value?: SpaceUpdateType) {
     super(
       registry,
       {
@@ -152,7 +152,7 @@ export class BlogUpdate extends Struct {
 }
 
 export type PostUpdateType = {
-  blog_id: Option<BlogId>;
+  space_id: Option<SpaceId>;
   ipfs_hash: Option<IpfsHash>;
   hidden: Option<bool>
 };
@@ -162,7 +162,7 @@ export class PostUpdate extends Struct {
     super(
       registry,
       {
-        blog_id: 'Option<u64>',
+        space_id: 'Option<u64>',
         ipfs_hash: 'Option<Text>',
         hidden: 'Option<bool>'
       },

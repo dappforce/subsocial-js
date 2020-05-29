@@ -42,7 +42,7 @@ import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { CallHash, Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import { AccountId, AccountIdOf, AccountIndex, Address, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, Consensus, ConsensusEngineId, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, Fixed128, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, RuntimeDbWeight, Seal, SealV0, SignedBlock, StorageData, ValidatorId, Weight, WeightMultiplier } from '@subsocial/types/substrate/interfaces/runtime';
-import { Blog, BlogHistoryRecord, BlogId, BlogUpdate, CommentExt, IpfsHash, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, ScoringAction, SocialAccount, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
+import { CommentExt, IpfsHash, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, ScoringAction, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceUpdate, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -1754,10 +1754,10 @@ declare module '@polkadot/types/types/registry' {
     IpfsHash: IpfsHash;
     'Option<IpfsHash>': Option<IpfsHash>;
     'Vec<IpfsHash>': Vec<IpfsHash>;
-    BlogId: BlogId;
-    'Compact<BlogId>': Compact<BlogId>;
-    'Option<BlogId>': Option<BlogId>;
-    'Vec<BlogId>': Vec<BlogId>;
+    SpaceId: SpaceId;
+    'Compact<SpaceId>': Compact<SpaceId>;
+    'Option<SpaceId>': Option<SpaceId>;
+    'Vec<SpaceId>': Vec<SpaceId>;
     PostId: PostId;
     'Compact<PostId>': Compact<PostId>;
     'Option<PostId>': Option<PostId>;
@@ -1766,15 +1766,15 @@ declare module '@polkadot/types/types/registry' {
     'Compact<ReactionId>': Compact<ReactionId>;
     'Option<ReactionId>': Option<ReactionId>;
     'Vec<ReactionId>': Vec<ReactionId>;
-    Blog: Blog;
-    'Option<Blog>': Option<Blog>;
-    'Vec<Blog>': Vec<Blog>;
-    BlogUpdate: BlogUpdate;
-    'Option<BlogUpdate>': Option<BlogUpdate>;
-    'Vec<BlogUpdate>': Vec<BlogUpdate>;
-    BlogHistoryRecord: BlogHistoryRecord;
-    'Option<BlogHistoryRecord>': Option<BlogHistoryRecord>;
-    'Vec<BlogHistoryRecord>': Vec<BlogHistoryRecord>;
+    Space: Space;
+    'Option<Space>': Option<Space>;
+    'Vec<Space>': Vec<Space>;
+    SpaceUpdate: SpaceUpdate;
+    'Option<SpaceUpdate>': Option<SpaceUpdate>;
+    'Vec<SpaceUpdate>': Vec<SpaceUpdate>;
+    SpaceHistoryRecord: SpaceHistoryRecord;
+    'Option<SpaceHistoryRecord>': Option<SpaceHistoryRecord>;
+    'Vec<SpaceHistoryRecord>': Vec<SpaceHistoryRecord>;
     Post: Post;
     'Option<Post>': Option<Post>;
     'Vec<Post>': Vec<Post>;
