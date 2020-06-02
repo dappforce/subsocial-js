@@ -42,7 +42,7 @@ import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { CallHash, Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import { AccountId, AccountIdOf, AccountIndex, Address, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, Consensus, ConsensusEngineId, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, Fixed128, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, RuntimeDbWeight, Seal, SealV0, SignedBlock, StorageData, ValidatorId, Weight, WeightMultiplier } from '@subsocial/types/substrate/interfaces/runtime';
-import { Blog, BlogHistoryRecord, BlogId, BlogUpdate, Change, ChangeId, CommentExt, IpfsHash, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, ScoringAction, SocialAccount, SpaceId, SpaceOwners, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
+import { Blog, BlogHistoryRecord, BlogId, BlogUpdate, CommentExt, IpfsHash, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, ScoringAction, SocialAccount, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -1748,6 +1748,9 @@ declare module '@polkadot/types/types/registry' {
     WhoAndWhen: WhoAndWhen;
     'Option<WhoAndWhen>': Option<WhoAndWhen>;
     'Vec<WhoAndWhen>': Vec<WhoAndWhen>;
+    OptionVecAccountId: OptionVecAccountId;
+    'Option<OptionVecAccountId>': Option<OptionVecAccountId>;
+    'Vec<OptionVecAccountId>': Vec<OptionVecAccountId>;
     IpfsHash: IpfsHash;
     'Option<IpfsHash>': Option<IpfsHash>;
     'Vec<IpfsHash>': Vec<IpfsHash>;
@@ -1763,9 +1766,6 @@ declare module '@polkadot/types/types/registry' {
     'Compact<ReactionId>': Compact<ReactionId>;
     'Option<ReactionId>': Option<ReactionId>;
     'Vec<ReactionId>': Vec<ReactionId>;
-    OptionVecAccountId: OptionVecAccountId;
-    'Option<OptionVecAccountId>': Option<OptionVecAccountId>;
-    'Vec<OptionVecAccountId>': Vec<OptionVecAccountId>;
     Blog: Blog;
     'Option<Blog>': Option<Blog>;
     'Vec<Blog>': Vec<Blog>;
@@ -1808,20 +1808,6 @@ declare module '@polkadot/types/types/registry' {
     ProfileHistoryRecord: ProfileHistoryRecord;
     'Option<ProfileHistoryRecord>': Option<ProfileHistoryRecord>;
     'Vec<ProfileHistoryRecord>': Vec<ProfileHistoryRecord>;
-    SpaceId: SpaceId;
-    'Compact<SpaceId>': Compact<SpaceId>;
-    'Option<SpaceId>': Option<SpaceId>;
-    'Vec<SpaceId>': Vec<SpaceId>;
-    ChangeId: ChangeId;
-    'Compact<ChangeId>': Compact<ChangeId>;
-    'Option<ChangeId>': Option<ChangeId>;
-    'Vec<ChangeId>': Vec<ChangeId>;
-    SpaceOwners: SpaceOwners;
-    'Option<SpaceOwners>': Option<SpaceOwners>;
-    'Vec<SpaceOwners>': Vec<SpaceOwners>;
-    Change: Change;
-    'Option<Change>': Option<Change>;
-    'Vec<Change>': Vec<Change>;
     ScoringAction: ScoringAction;
     'Option<ScoringAction>': Option<ScoringAction>;
     'Vec<ScoringAction>': Vec<ScoringAction>;

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-import { u64, Null, Enum, Option, Struct, Text } from '@polkadot/types';
-import { IpfsHash, BlogId, OptionVecAccountId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces';
+import { u64, Null, Enum, Option, Struct, Text, bool } from '@polkadot/types';
+import { IpfsHash, BlogId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces';
 import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
 import { SubstrateId } from '@subsocial/types';
@@ -9,6 +9,13 @@ export class OptionId<T extends SubstrateId> extends Option<u64> {
   constructor (value?: T) {
     const textOrNull = value || new Null(registry)
     super(registry, 'u64', textOrNull)
+  }
+}
+
+export class OptionBool<T extends boolean> extends Option<bool> {
+  constructor (value?: T) {
+    const boolOrNull = value || new Null(registry)
+    super(registry, 'bool', boolOrNull)
   }
 }
 
@@ -105,9 +112,9 @@ export class PostExtension extends Enum implements IPostExtension {
 }
 
 export type BlogUpdateType = {
-  writers: OptionVecAccountId;
   handle: OptionOptionText;
   ipfs_hash: OptionIpfsHash;
+  hidden: Option<bool>
 };
 
 export class BlogUpdate extends Struct {
@@ -115,16 +122,16 @@ export class BlogUpdate extends Struct {
     super(
       registry,
       {
-        writers: 'Option<BitVec>',
         handle: 'Option<Option<Text>>' as any,
-        ipfs_hash: 'Option<Text>'
+        ipfs_hash: 'Option<Text>',
+        hidden: 'Option<bool>'
       },
       value
     );
   }
 
-  get writers (): OptionVecAccountId {
-    return this.get('writers') as OptionVecAccountId;
+  get hidden (): bool {
+    return this.get('hidden') as bool;
   }
 
   get handle (): OptionOptionText {
@@ -147,6 +154,7 @@ export class BlogUpdate extends Struct {
 export type PostUpdateType = {
   blog_id: Option<BlogId>;
   ipfs_hash: Option<IpfsHash>;
+  hidden: Option<bool>
 };
 
 export class PostUpdate extends Struct {
@@ -155,7 +163,8 @@ export class PostUpdate extends Struct {
       registry,
       {
         blog_id: 'Option<u64>',
-        ipfs_hash: 'Option<Text>'
+        ipfs_hash: 'Option<Text>',
+        hidden: 'Option<bool>'
       },
       value
     );

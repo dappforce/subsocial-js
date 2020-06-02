@@ -11,7 +11,7 @@ export interface Blog extends Struct {
   readonly created: WhoAndWhen;
   readonly updated: Option<WhoAndWhen>;
   readonly hidden: bool;
-  readonly writers: Vec<AccountId>;
+  readonly owner: AccountId;
   readonly handle: Option<Text>;
   readonly ipfs_hash: IpfsHash;
   readonly posts_count: u16;
@@ -31,26 +31,10 @@ export interface BlogId extends u64 {}
 
 /** @name BlogUpdate */
 export interface BlogUpdate extends Struct {
-  readonly writers: Option<Vec<AccountId>>;
   readonly handle: Option<Option<Text>>;
   readonly ipfs_hash: Option<IpfsHash>;
+  readonly hidden: Option<bool>;
 }
-
-/** @name Change */
-export interface Change extends Struct {
-  readonly created: WhoAndWhen;
-  readonly id: ChangeId;
-  readonly space_id: SpaceId;
-  readonly add_owners: Vec<AccountId>;
-  readonly remove_owners: Vec<AccountId>;
-  readonly new_threshold: Option<u16>;
-  readonly notes: Text;
-  readonly confirmed_by: Vec<AccountId>;
-  readonly expires_at: BlockNumber;
-}
-
-/** @name ChangeId */
-export interface ChangeId extends u64 {}
 
 /** @name CommentExt */
 export interface CommentExt extends Struct {
@@ -165,18 +149,6 @@ export interface SocialAccount extends Struct {
   readonly following_blogs_count: u16;
   readonly reputation: u32;
   readonly profile: Option<Profile>;
-}
-
-/** @name SpaceId */
-export interface SpaceId extends u64 {}
-
-/** @name SpaceOwners */
-export interface SpaceOwners extends Struct {
-  readonly created: WhoAndWhen;
-  readonly space_id: SpaceId;
-  readonly owners: Vec<AccountId>;
-  readonly threshold: u16;
-  readonly changes_count: u64;
 }
 
 /** @name WhoAndWhen */
