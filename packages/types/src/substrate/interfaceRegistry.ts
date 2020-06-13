@@ -42,7 +42,7 @@ import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { CallHash, Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import { AccountId, AccountIdOf, AccountIndex, Address, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, Consensus, ConsensusEngineId, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, Fixed128, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, RuntimeDbWeight, Seal, SealV0, SignedBlock, StorageData, ValidatorId, Weight, WeightMultiplier } from '@subsocial/types/substrate/interfaces/runtime';
-import { CommentExt, IpfsHash, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, ScoringAction, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceUpdate, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
+import { CommentExt, IpfsHash, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Role, RoleId, RoleUpdate, ScoringAction, SocialAccount, Space, SpaceForRoles, SpaceHistoryRecord, SpaceId, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -1745,19 +1745,9 @@ declare module '@polkadot/types/types/registry' {
     Consensus: Consensus;
     'Option<Consensus>': Option<Consensus>;
     'Vec<Consensus>': Vec<Consensus>;
-    WhoAndWhen: WhoAndWhen;
-    'Option<WhoAndWhen>': Option<WhoAndWhen>;
-    'Vec<WhoAndWhen>': Vec<WhoAndWhen>;
-    OptionVecAccountId: OptionVecAccountId;
-    'Option<OptionVecAccountId>': Option<OptionVecAccountId>;
-    'Vec<OptionVecAccountId>': Vec<OptionVecAccountId>;
     IpfsHash: IpfsHash;
     'Option<IpfsHash>': Option<IpfsHash>;
     'Vec<IpfsHash>': Vec<IpfsHash>;
-    SpaceId: SpaceId;
-    'Compact<SpaceId>': Compact<SpaceId>;
-    'Option<SpaceId>': Option<SpaceId>;
-    'Vec<SpaceId>': Vec<SpaceId>;
     PostId: PostId;
     'Compact<PostId>': Compact<PostId>;
     'Option<PostId>': Option<PostId>;
@@ -1766,6 +1756,9 @@ declare module '@polkadot/types/types/registry' {
     'Compact<ReactionId>': Compact<ReactionId>;
     'Option<ReactionId>': Option<ReactionId>;
     'Vec<ReactionId>': Vec<ReactionId>;
+    OptionVecAccountId: OptionVecAccountId;
+    'Option<OptionVecAccountId>': Option<OptionVecAccountId>;
+    'Vec<OptionVecAccountId>': Vec<OptionVecAccountId>;
     Space: Space;
     'Option<Space>': Option<Space>;
     'Vec<Space>': Vec<Space>;
@@ -1811,5 +1804,40 @@ declare module '@polkadot/types/types/registry' {
     ScoringAction: ScoringAction;
     'Option<ScoringAction>': Option<ScoringAction>;
     'Vec<ScoringAction>': Vec<ScoringAction>;
+    SpaceForRoles: SpaceForRoles;
+    'Option<SpaceForRoles>': Option<SpaceForRoles>;
+    'Vec<SpaceForRoles>': Vec<SpaceForRoles>;
+    SpaceId: SpaceId;
+    'Compact<SpaceId>': Compact<SpaceId>;
+    'Option<SpaceId>': Option<SpaceId>;
+    'Vec<SpaceId>': Vec<SpaceId>;
+    WhoAndWhen: WhoAndWhen;
+    'Option<WhoAndWhen>': Option<WhoAndWhen>;
+    'Vec<WhoAndWhen>': Vec<WhoAndWhen>;
+    User: User;
+    'Option<User>': Option<User>;
+    'Vec<User>': Vec<User>;
+    SpacePermissionSet: SpacePermissionSet;
+    'Option<SpacePermissionSet>': Option<SpacePermissionSet>;
+    'Vec<SpacePermissionSet>': Vec<SpacePermissionSet>;
+    SpacePermission: SpacePermission;
+    'Option<SpacePermission>': Option<SpacePermission>;
+    'Vec<SpacePermission>': Vec<SpacePermission>;
+    SpacePermissions: SpacePermissions;
+    'Option<SpacePermissions>': Option<SpacePermissions>;
+    'Vec<SpacePermissions>': Vec<SpacePermissions>;
+    SpacePermissionsContext: SpacePermissionsContext;
+    'Option<SpacePermissionsContext>': Option<SpacePermissionsContext>;
+    'Vec<SpacePermissionsContext>': Vec<SpacePermissionsContext>;
+    RoleId: RoleId;
+    'Compact<RoleId>': Compact<RoleId>;
+    'Option<RoleId>': Option<RoleId>;
+    'Vec<RoleId>': Vec<RoleId>;
+    Role: Role;
+    'Option<Role>': Option<Role>;
+    'Vec<Role>': Vec<Role>;
+    RoleUpdate: RoleUpdate;
+    'Option<RoleUpdate>': Option<RoleUpdate>;
+    'Vec<RoleUpdate>': Vec<RoleUpdate>;
   }
 }
