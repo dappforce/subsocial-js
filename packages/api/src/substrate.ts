@@ -166,7 +166,7 @@ export class SubsocialSubstrateApi {
   }
 
   async spaceIdsFollowedByAccount (id: AnyAccountId): Promise<SpaceId[]> {
-    return this.queryPallet({ pallet: 'space-follows', storage: 'spacesFollowedByAccount' }, asAccountId(id))
+    return this.queryPallet({ pallet: 'spaceFollows', storage: 'spacesFollowedByAccount' }, asAccountId(id))
   }
 
   async postIdsBySpaceId (id: AnySpaceId): Promise<PostId[]> {
@@ -180,12 +180,12 @@ export class SubsocialSubstrateApi {
     const followedAccountId = asAccountId(followedAddress)
     const myAccountId = asAccountId(myAddress)
     const queryParams = new Tuple(registry, [ GenericAccountId, GenericAccountId ], [ myAccountId, followedAccountId ]);
-    const isFollow = await this.queryProfiles('accountFollowedByAccount', queryParams) as bool
+    const isFollow = await this.queryPallet({ pallet: 'profileFollows', storage: 'accountFollowedByAccount' }, queryParams) as bool
     return isFollow.valueOf()
   }
 
   async isSpaceFollower (myAddress: AnyAccountId, spaceId: AnySpaceId): Promise<boolean> {
-    return this.isBooleanByAccount({ pallet: 'space-follows', storage: 'spaceFollowedByAccount' }, myAddress, spaceId)
+    return this.isBooleanByAccount({ pallet: 'spaceFollows', storage: 'spaceFollowedByAccount' }, myAddress, spaceId)
   }
 
   async isPostSharedByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<boolean> {
