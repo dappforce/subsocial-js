@@ -7,7 +7,7 @@ import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
 
-type StorageAndPallet = {
+type StorageItem = {
   pallet: PalletName,
   storage: string
 }
@@ -21,7 +21,7 @@ export class SubsocialSubstrateApi {
     logger.info('Initialized')
   }
 
-  getQueryFromPallet = async (pallet: PalletName) => {
+  getPalletQuery = async (pallet: PalletName) => {
     const api = await this.api
     return api.query[pallet]
   };
@@ -33,46 +33,46 @@ export class SubsocialSubstrateApi {
   // ---------------------------------------------------------------------
   // Private utils
 
-  private async queryFromPallet ({ storage, pallet }: StorageAndPallet, value?: any): Promise<any> {
-    const queryFromPallet = await this.getQueryFromPallet(pallet)
-    return queryFromPallet[storage](value)
+  private async queryPallet ({ storage, pallet }: StorageItem, value?: any): Promise<any> {
+    const query = await this.getPalletQuery(pallet)
+    return query[storage](value)
   }
 
-  private async postsPalletQuery (storage: string, value?: any): Promise<any> {
-    return this.queryFromPallet({ pallet: 'posts', storage }, value)
+  private async queryPosts (storage: string, value?: any): Promise<any> {
+    return this.queryPallet({ pallet: 'posts', storage }, value)
   }
 
-  private async spacesPalletQuery (storage: string, value?: any): Promise<any> {
-    return this.queryFromPallet({ pallet: 'spaces', storage }, value)
+  private async querySpaces (storage: string, value?: any): Promise<any> {
+    return this.queryPallet({ pallet: 'spaces', storage }, value)
   }
 
-  private async profilesPalletQuery (storage: string, value?: any): Promise<any> {
-    return this.queryFromPallet({ pallet: 'profiles', storage }, value)
+  private async queryProfiles (storage: string, value?: any): Promise<any> {
+    return this.queryPallet({ pallet: 'profiles', storage }, value)
   }
 
-  private async queryFromPalletMulti ({ storage, pallet }: StorageAndPallet, value: any[]): Promise<any[]> {
-    const queryFromPallet = await this.getQueryFromPallet(pallet)
-    return queryFromPallet[storage].multi(value)
+  private async queryPalletMulti ({ storage, pallet }: StorageItem, value: any[]): Promise<any[]> {
+    const query = await this.getPalletQuery(pallet)
+    return query[storage].multi(value)
   }
 
   // TODO maybe pallet: 'posts' | 'spaces
-  private async isBooleanByAccount ({ storage, pallet }: StorageAndPallet, accountId: AnyAccountId, subjectId: SubstrateId): Promise<boolean> {
+  private async isBooleanByAccount ({ storage, pallet }: StorageItem, accountId: AnyAccountId, subjectId: SubstrateId): Promise<boolean> {
     const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), subjectId ]);
-    const isBoolean = await this.queryFromPallet({ pallet, storage }, queryParams) as bool
+    const isBoolean = await this.queryPallet({ pallet, storage }, queryParams) as bool
     return isBoolean.valueOf()
   }
 
   private async getReactionIdByAccount (accountId: AnyAccountId, structId: AnyPostId): Promise<ReactionId> {
     const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), structId ]);
-    return this.queryFromPallet({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
+    return this.queryPallet({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
   }
 
   // ---------------------------------------------------------------------
   // Multiple
 
   async findStructs<T extends SupportedSubstrateResult>
-    (storageAndPallet: StorageAndPallet, ids: SupportedSubstrateId[]): Promise<T[]> {
-    const storage = storageAndPallet.storage
+    (storageItem: StorageItem, ids: SupportedSubstrateId[]): Promise<T[]> {
+    const storage = storageItem.storage
 
     try {
       ids = getUniqueIds(ids)
@@ -82,7 +82,7 @@ export class SubsocialSubstrateApi {
         return []
       }
 
-      const structs = (await this.queryFromPalletMulti(storageAndPallet, ids))
+      const structs = (await this.queryPalletMulti(storageItem, ids))
         .filter(x => x.isSome)
         .map(x => x.unwrap())
 
@@ -134,18 +134,18 @@ export class SubsocialSubstrateApi {
   // Get id
 
   async nextSpaceId (): Promise<SpaceId> {
-    return this.spacesPalletQuery('nextSpaceId')
+    return this.querySpaces('nextSpaceId')
   }
 
   async nextPostId (): Promise<PostId> {
-    return this.postsPalletQuery('nextPostId')
+    return this.queryPosts('nextPostId')
   }
 
   async getSpaceIdByHandle (handle: string): Promise<SpaceId | undefined> {
     if (isEmptyStr(handle)) {
       return undefined
     }
-    const idOpt = await this.spacesPalletQuery('spaceIdByHandle', handle) as Option<SpaceId>
+    const idOpt = await this.querySpaces('spaceIdByHandle', handle) as Option<SpaceId>
     return idOpt.unwrapOr(undefined)
   }
 
@@ -153,24 +153,24 @@ export class SubsocialSubstrateApi {
     if (isEmptyStr(handle)) {
       return undefined
     }
-    const idOpt = await this.profilesPalletQuery('accountByProfileUsername', handle) as Option<AccountId>
+    const idOpt = await this.queryProfiles('accountByProfileUsername', handle) as Option<AccountId>
     return idOpt.unwrapOr(undefined)
   }
 
   async getReplyIdsByPostId (id: AnyPostId): Promise<PostId[]> {
-    return this.postsPalletQuery('replyIdsByPostId', id);
+    return this.queryPosts('replyIdsByPostId', id);
   }
 
   async spaceIdsByOwner (id: AnyAccountId): Promise<SpaceId[]> {
-    return this.spacesPalletQuery('spaceIdsByOwner', asAccountId(id))
+    return this.querySpaces('spaceIdsByOwner', asAccountId(id))
   }
 
   async spaceIdsFollowedByAccount (id: AnyAccountId): Promise<SpaceId[]> {
-    return this.queryFromPallet({ pallet: 'space-follows', storage: 'spacesFollowedByAccount' }, asAccountId(id))
+    return this.queryPallet({ pallet: 'space-follows', storage: 'spacesFollowedByAccount' }, asAccountId(id))
   }
 
   async postIdsBySpaceId (id: AnySpaceId): Promise<PostId[]> {
-    return this.postsPalletQuery('postIdsBySpaceId', id)
+    return this.queryPosts('postIdsBySpaceId', id)
   }
 
   // ---------------------------------------------------------------------
@@ -180,7 +180,7 @@ export class SubsocialSubstrateApi {
     const followedAccountId = asAccountId(followedAddress)
     const myAccountId = asAccountId(myAddress)
     const queryParams = new Tuple(registry, [ GenericAccountId, GenericAccountId ], [ myAccountId, followedAccountId ]);
-    const isFollow = await this.profilesPalletQuery('accountFollowedByAccount', queryParams) as bool
+    const isFollow = await this.queryProfiles('accountFollowedByAccount', queryParams) as bool
     return isFollow.valueOf()
   }
 
