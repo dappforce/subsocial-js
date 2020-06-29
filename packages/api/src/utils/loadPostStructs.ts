@@ -3,6 +3,7 @@ import { PostData, PostWithSomeDetails, ProfileData, SpaceData, AnyPostId } from
 import { PostId, AccountId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from './utils'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
+import { VisibilityFilter } from './visibility-filter';
 
 export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
@@ -13,6 +14,11 @@ export type FindStructsFns = {
 export type PostDetailsOpts = {
   withOwner?: boolean
   withSpace?: boolean
+  visibilityFilter?: VisibilityFilter
+}
+
+export type PostDetailsOptsWithVisibilityFilter = PostDetailsOpts & {
+  visibilityFilter?: VisibilityFilter
 }
 
 async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts) {

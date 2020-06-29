@@ -2,7 +2,7 @@ import { IpfsHash, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, SpaceContent, PostContent, CommentContent, IpfsCid, CID, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { getUniqueIds } from './utils';
+import { getUniqueIds } from './utils/utils';
 
 const IPFS_HASH_BINARY_LEN = 47
 

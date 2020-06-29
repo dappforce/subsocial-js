@@ -7,6 +7,7 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
+    "target": "es5",
     "paths":
     {
       "@subsocial/types": ["packages/types/src"],
