@@ -4,8 +4,8 @@ export type VisibilityFilter = 'onlyVisible' | 'onlyHidden' | undefined
 
 type VisibilityFilterStruct = Space | Post
 
-const isVisible = (struct: VisibilityFilterStruct) => struct.hidden.valueOf()
-const isHidden = (struct: VisibilityFilterStruct) => !isVisible(struct)
+const isHidden = (struct: VisibilityFilterStruct) => struct.hidden.valueOf()
+const isVisible = (struct: VisibilityFilterStruct) => !isHidden(struct)
 
 export function visibilityFilter<T extends Space | Post> (structs: T[], filter: VisibilityFilter): T[] {
 
