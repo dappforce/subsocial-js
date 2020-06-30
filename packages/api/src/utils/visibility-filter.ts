@@ -1,13 +1,12 @@
 import { Space, Post } from '@subsocial/types/substrate/interfaces'
+import { Visibility } from './types'
 
-export type VisibilityFilter = 'onlyVisible' | 'onlyHidden' | undefined
+type VisibilityStruct = Space | Post
 
-type VisibilityFilterStruct = Space | Post
+const isHidden = (struct: VisibilityStruct) => struct.hidden.valueOf()
+const isVisible = (struct: VisibilityStruct) => !isHidden(struct)
 
-const isHidden = (struct: VisibilityFilterStruct) => struct.hidden.valueOf()
-const isVisible = (struct: VisibilityFilterStruct) => !isHidden(struct)
-
-export function visibilityFilter<T extends Space | Post> (structs: T[], filter: VisibilityFilter): T[] {
+export function filterByVisibility<T extends Space | Post> (structs: T[], filter: Visibility): T[] {
 
   switch (filter) {
     case 'onlyVisible': return structs.filter(isVisible)

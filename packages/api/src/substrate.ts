@@ -6,7 +6,8 @@ import { Space, SpaceId, Post, PostId, Reaction, ReactionId, SocialAccount } fro
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils/utils';
-import { VisibilityFilter, visibilityFilter } from './utils/visibility-filter';
+import { filterByVisibility } from './utils/visibility-filter';
+import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from './utils/types';
 
 type StorageItem = {
   pallet: PalletName,
@@ -95,14 +96,14 @@ export class SubsocialSubstrateApi {
     }
   }
 
-  async findSpaces (ids: AnySpaceId[], opts?: VisibilityFilter): Promise<Space[]> {
+  async findSpaces ({ ids, visibility }: FindSpacesQuery): Promise<Space[]> {
     const spaces: Space[] = await this.findStructs({ pallet: 'spaces', storage: 'spaceById' }, ids);
-    return visibilityFilter<Space>(spaces, opts)
+    return filterByVisibility<Space>(spaces, visibility)
   }
 
-  async findPosts (ids: AnyPostId[], opts?: VisibilityFilter): Promise<Post[]> {
+  async findPosts ({ ids, visibility }: FindPostsQuery): Promise<Post[]> {
     const posts: Post[] = await this.findStructs({ pallet: 'posts', storage: 'postById' }, ids);
-    return visibilityFilter<Post>(posts, opts)
+    return filterByVisibility<Post>(posts, visibility)
   }
 
   async findSocialAccounts (ids: AnyAccountId[]): Promise<SocialAccount[]> {
@@ -117,12 +118,12 @@ export class SubsocialSubstrateApi {
   // ---------------------------------------------------------------------
   // Single
 
-  async findSpace (id: AnySpaceId, opts?: VisibilityFilter): Promise<Space | undefined> {
-    return getFirstOrUndefined(await this.findSpaces([ id ], opts))
+  async findSpace ({ id, visibility }: FindSpaceQuery): Promise<Space | undefined> {
+    return getFirstOrUndefined(await this.findSpaces({ ids: [ id ], visibility }))
   }
 
-  async findPost (id: AnyPostId, opts?: VisibilityFilter): Promise<Post | undefined> {
-    return getFirstOrUndefined(await this.findPosts([ id ], opts))
+  async findPost ({ id, visibility }: FindPostQuery): Promise<Post | undefined> {
+    return getFirstOrUndefined(await this.findPosts({ ids: [ id ], visibility }))
   }
 
   async findSocialAccount (id: AnyAccountId): Promise<SocialAccount | undefined> {

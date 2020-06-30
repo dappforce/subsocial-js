@@ -3,6 +3,7 @@ import { mockPostsData } from './PostMocks'
 import { mockSpacesData } from './SpaceMocks'
 import { profilesData } from './SocialProfileMocks'
 import { isDefined } from '@subsocial/utils'
+import { FindPostsQuery, FindSpacesQuery } from '../../src/utils/types'
 
 const mockPosts = new Map<string, PostData>()
 mockPostsData.forEach(x => mockPosts.set(x.struct.id.toString(), x))
@@ -16,7 +17,7 @@ profilesData.forEach(x => {
   idStr && mockProfiles.set(idStr, x)
 }) 
 
-export async function findPosts (ids: AnyPostId[]): Promise<PostData[]> {
+export async function findPosts ({ ids }: FindPostsQuery): Promise<PostData[]> {
   const posts = ids.map(id => mockPosts.get(id.toString()) as PostData)
   return posts.filter(isDefined) as PostData[]
 }
@@ -26,7 +27,7 @@ export async function findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]>
   return profiles.filter(isDefined) as ProfileData[]
 }
 
-export async function findSpaces (ids: AnySpaceId[]): Promise<SpaceData[]> {
+export async function findSpaces ({ ids }: FindSpacesQuery): Promise<SpaceData[]> {
   const spaces = ids.map(id => mockSpaces.get(id.toString()))
   return spaces.filter(isDefined) as SpaceData[]
 }

@@ -1,24 +1,14 @@
-import { AnySpaceId, AnyAccountId } from '@subsocial/types/substrate/interfaces/utils';
-import { PostData, PostWithSomeDetails, ProfileData, SpaceData, AnyPostId } from '@subsocial/types'
+import { AnyAccountId } from '@subsocial/types/substrate/interfaces/utils';
+import { PostData, PostWithSomeDetails, ProfileData, SpaceData } from '@subsocial/types'
 import { PostId, AccountId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from './utils'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
-import { VisibilityFilter } from './visibility-filter';
+import { PostDetailsOpts, FindPostsQuery, FindSpacesQuery } from './types';
 
 export type FindStructsFns = {
-  findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
-  findSpaces: (ids: AnySpaceId[]) => Promise<SpaceData[]>
+  findPosts: (filter: FindPostsQuery) => Promise<PostData[]>,
+  findSpaces: (filter: FindSpacesQuery) => Promise<SpaceData[]>
   findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
-}
-
-export type PostDetailsOpts = {
-  withOwner?: boolean
-  withSpace?: boolean
-  visibilityFilter?: VisibilityFilter
-}
-
-export type PostDetailsOptsWithVisibilityFilter = PostDetailsOpts & {
-  visibilityFilter?: VisibilityFilter
 }
 
 async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts) {
@@ -113,7 +103,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
   })
 
-  const loadedExtPosts = await findPosts(extIds)
+  const loadedExtPosts = await findPosts({ ids: extIds })
   extPosts.push(...loadedExtPosts)
 
   extPosts.forEach((post, i) => {
@@ -135,7 +125,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
   })
 
-  const loadedRootPosts = await findPosts(rootIds)
+  const loadedRootPosts = await findPosts({ ids: rootIds })
   rootPosts.push(...loadedRootPosts)
 
   rootPosts.forEach((post, i) => {
@@ -159,7 +149,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
 
   // Load related spaces
   if (withSpace) {
-    const spaces = await findSpaces(spaceIds)
+    const spaces = await findSpaces({ ids: spaceIds })
 
     spaces.forEach(space => {
       const spaceId = space.struct.id.toString()
