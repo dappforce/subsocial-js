@@ -1,9 +1,9 @@
 import BN from 'bn.js';
-import { BlogId, PostId, Blog, Post, AccountId, ReactionId, SocialAccount } from '.';
+import { SpaceId, PostId, Space, Post, AccountId, ReactionId, SocialAccount } from '.';
 
-export type SubstrateId = BlogId | PostId | BN;
-export type CommonStruct = Blog | Post | SocialAccount;
+export type SubstrateId = SpaceId | PostId | BN;
+export type CommonStruct = Space | Post | SocialAccount;
 export type AnyAccountId = AccountId | string;
-export type AnyBlogId = BlogId | BN;
+export type AnySpaceId = SpaceId | BN;
 export type AnyPostId = PostId | BN;
 export type AnyReactionId = ReactionId | BN;

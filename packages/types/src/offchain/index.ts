@@ -4,14 +4,14 @@ import { IpfsHash } from '../substrate/interfaces';
 
 export { CID };
 
-export type CommonContent = CommentContent | PostContent | BlogContent | ProfileContent | SharedPostContent;
+export type CommonContent = CommentContent | PostContent | SpaceContent | ProfileContent | SharedPostContent;
 
 export type Activity = {
   id: number,
   account: string,
   event: string,
   following_id: string,
-  blog_id: string,
+  space_id: string,
   post_id: string,
   comment_id: string,
   date: Date,
@@ -39,7 +39,7 @@ export type NavTab = {
   hidden: boolean
 }
 
-export type BlogContent = {
+export type SpaceContent = {
   name: string;
   desc: string;
   image: string;

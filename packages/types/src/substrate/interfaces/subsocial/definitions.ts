@@ -1,17 +1,11 @@
 export default {
   types: {
-    WhoAndWhen: {
-      account: 'AccountId',
-      block: 'BlockNumber',
-      time: 'Moment'
-    },
-    OptionVecAccountId: 'Option<Vec<AccountId>>',
     IpfsHash: 'Text',
-    BlogId: 'u64',
     PostId: 'u64',
     ReactionId: 'u64',
-    Blog: {
-      id: 'BlogId',
+    OptionVecAccountId: 'Option<Vec<AccountId>>',
+    Space: {
+      id: 'SpaceId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
       hidden: 'bool',
@@ -20,24 +14,25 @@ export default {
       ipfs_hash: 'IpfsHash',
       posts_count: 'u16',
       followers_count: 'u32',
-      edit_history: 'Vec<BlogHistoryRecord>',
-      score: 'i32'
+      edit_history: 'Vec<SpaceHistoryRecord>',
+      score: 'i32',
+      permissions: 'Option<SpacePermissions>'
     },
-    BlogUpdate: {
+    SpaceUpdate: {
       handle: 'Option<Option<Text>>',
       ipfs_hash: 'Option<IpfsHash>',
       hidden: 'Option<bool>'
     },
-    BlogHistoryRecord: {
+    SpaceHistoryRecord: {
       edited: 'WhoAndWhen',
-      old_data: 'BlogUpdate'
+      old_data: 'SpaceUpdate'
     },
     Post: {
       id: 'PostId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
       hidden: 'bool',
-      blog_id: 'Option<BlogId>',
+      space_id: 'Option<SpaceId>',
       extension: 'PostExtension',
       ipfs_hash: 'IpfsHash',
       edit_history: 'Vec<PostHistoryRecord>',
@@ -49,7 +44,7 @@ export default {
       score: 'i32'
     },
     PostUpdate: {
-      blog_id: 'Option<BlogId>',
+      space_id: 'Option<SpaceId>',
       ipfs_hash: 'Option<IpfsHash>',
       hidden: 'Option<bool>'
     },
@@ -83,7 +78,7 @@ export default {
     SocialAccount: {
       followers_count: 'u32',
       following_accounts_count: 'u16',
-      following_blogs_count: 'u16',
+      following_spaces_count: 'u16',
       reputation: 'u32',
       profile: 'Option<Profile>'
     },
@@ -111,9 +106,81 @@ export default {
         'UpvoteComment',
         'DownvoteComment',
         'ShareComment',
-        'FollowBlog',
+        'FollowSpace',
         'FollowAccount'
       ]
+    },
+    SpaceForRoles: {
+      owner: 'AccountId',
+      permissions: 'Option<SpacePermissions>'
+    },
+    SpaceId: 'u64',
+    WhoAndWhen: {
+      account: 'AccountId',
+      block: 'BlockNumber',
+      time: 'Moment'
+    },
+    User: {
+      _enum: {
+        Account: 'AccountId',
+        Space: 'SpaceId'
+      }
+    },
+    SpacePermissionSet: 'BTreeSet<SpacePermission>',
+    SpacePermission: {
+      _enum: [
+        'ManageRoles',
+        'RepresentSpaceInternally',
+        'RepresentSpaceExternally',
+        'UpdateSpace',
+        'BlockUsers',
+        'CreateSubspaces',
+        'UpdateOwnSubspaces',
+        'UpdateAnySubspaces',
+        'DeleteOwnSubspaces',
+        'BlockSubspaces',
+        'CreatePosts',
+        'UpdateOwnPosts',
+        'UpdateAnyPosts',
+        'DeleteOwnPosts',
+        'BlockPosts',
+        'CreateComments',
+        'UpdateOwnComments',
+        'DeleteOwnComments',
+        'BlockComments',
+        'Upvote',
+        'Downvote',
+        'Share',
+        'OverridePostPermissions'
+      ]
+    },
+    SpacePermissions: {
+      none: 'Option<SpacePermissionSet>',
+      everyone: 'Option<SpacePermissionSet>',
+      follower: 'Option<SpacePermissionSet>',
+      space_owner: 'Option<SpacePermissionSet>'
+    },
+    SpacePermissionsContext: {
+      space_id: 'SpaceId',
+      is_space_owner: 'bool',
+      is_space_follower: 'bool',
+      space_perms: 'Option<SpacePermissionSet>'
+    },
+    RoleId: 'u64',
+    Role: {
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      id: 'RoleId',
+      space_id: 'SpaceId',
+      disabled: 'bool',
+      expires_at: 'Option<BlockNumber>',
+      ipfs_hash: 'Option<IpfsHash>',
+      permissions: 'SpacePermissionSet'
+    },
+    RoleUpdate: {
+      disabled: 'Option<bool>',
+      ipfs_hash: 'Option<Option<IpfsHash>>',
+      permissions: 'Option<SpacePermissionSet>'
     }
   }
 }

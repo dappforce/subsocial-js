@@ -1,5 +1,5 @@
 import { IpfsHash, SocialAccount } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, BlogContent, PostContent, CommentContent, IpfsCid, CID, ProfileContent } from '@subsocial/types/offchain';
+import { CommonContent, SpaceContent, PostContent, CommentContent, IpfsCid, CID, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds } from './utils';
@@ -125,8 +125,8 @@ export class SubsocialIpfsApi {
     }
   }
 
-  async findBlogs (cids: IpfsCid[]): Promise<BlogContent[]> {
-    return this.getContentArray(cids, 'blog')
+  async findSpaces (cids: IpfsCid[]): Promise<SpaceContent[]> {
+    return this.getContentArray(cids, 'space')
   }
 
   async findPosts (cids: IpfsCid[]): Promise<PostContent[]> {
@@ -148,8 +148,8 @@ export class SubsocialIpfsApi {
     return getFirstOrUndefined(await this.getContentArray<T>([ cid ], contentName))
   }
 
-  async findBlog (cid: IpfsCid): Promise<BlogContent | undefined> {
-    return this.getContent<BlogContent>(cid, 'blog')
+  async findSpace (cid: IpfsCid): Promise<SpaceContent | undefined> {
+    return this.getContent<SpaceContent>(cid, 'space')
   }
 
   async findPost (cid: IpfsCid): Promise<PostContent | undefined> {
@@ -198,9 +198,9 @@ export class SubsocialIpfsApi {
     }
   }
 
-  async saveBlog (content: BlogContent): Promise<IpfsHash | undefined> {
+  async saveSpace (content: SpaceContent): Promise<IpfsHash | undefined> {
     const hash = await this.saveContent(content)
-    log.debug(`Saved blog with hash: ${hash}`)
+    log.debug(`Saved space with hash: ${hash}`)
     return hash;
   }
 

@@ -1,14 +1,14 @@
-import { PostData, BlogData, AnyPostId, AnyAccountId, ProfileData, AnyBlogId } from '@subsocial/types/src'
+import { PostData, SpaceData, AnyPostId, AnyAccountId, ProfileData, AnySpaceId } from '@subsocial/types/src'
 import { mockPostsData } from './PostMocks'
-import { mockBlogsData } from './BlogMocks'
+import { mockSpacesData } from './SpaceMocks'
 import { profilesData } from './SocialProfileMocks'
 import { isDefined } from '@subsocial/utils'
 
 const mockPosts = new Map<string, PostData>()
 mockPostsData.forEach(x => mockPosts.set(x.struct.id.toString(), x))
 
-const mockBlogs = new Map<string, BlogData>()
-mockBlogsData.forEach(x => mockBlogs.set(x.struct.id.toString(), x))
+const mockSpaces = new Map<string, SpaceData>()
+mockSpacesData.forEach(x => mockSpaces.set(x.struct.id.toString(), x))
 
 const mockProfiles = new Map<string, ProfileData>()
 profilesData.forEach(x => {
@@ -26,7 +26,7 @@ export async function findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]>
   return profiles.filter(isDefined) as ProfileData[]
 }
 
-export async function findBlogs (ids: AnyBlogId[]): Promise<BlogData[]> {
-  const blogs = ids.map(id => mockBlogs.get(id.toString()))
-  return blogs.filter(isDefined) as BlogData[]
+export async function findSpaces (ids: AnySpaceId[]): Promise<SpaceData[]> {
+  const spaces = ids.map(id => mockSpaces.get(id.toString()))
+  return spaces.filter(isDefined) as SpaceData[]
 }

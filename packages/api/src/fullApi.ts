@@ -1,8 +1,8 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
-import { BlogData, CommonData, PostData, ProfileData, PostWithSomeDetails, PostWithAllDetails } from '@subsocial/types';
-import { BlogContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
-import { AnyAccountId, AnyBlogId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
-import { Blog, Post, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { SpaceData, CommonData, PostData, ProfileData, PostWithSomeDetails, PostWithAllDetails } from '@subsocial/types';
+import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
+import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
+import { Space, Post, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
@@ -61,10 +61,10 @@ export class SubsocialApi {
   // ---------------------------------------------------------------------
   // Multiple
 
-  async findBlogs (ids: AnyBlogId[]): Promise<BlogData[]> {
-    const findStructs = this.substrate.findBlogs.bind(this.substrate);
-    const findContents = this.ipfs.findBlogs.bind(this.ipfs);
-    return this.findDataArray<AnyBlogId, Blog, BlogContent>(
+  async findSpaces (ids: AnySpaceId[]): Promise<SpaceData[]> {
+    const findStructs = this.substrate.findSpaces.bind(this.substrate);
+    const findContents = this.ipfs.findSpaces.bind(this.ipfs);
+    return this.findDataArray<AnySpaceId, Space, SpaceContent>(
       ids, findStructs, findContents
     )
   }
@@ -78,7 +78,7 @@ export class SubsocialApi {
   }
 
   private structFinders: FindStructsFns = {
-    findBlogs: this.findBlogs.bind(this),
+    findSpaces: this.findSpaces.bind(this),
     findPosts: this.findPosts.bind(this),
     findProfiles: this.findProfiles.bind(this)
   }
@@ -90,7 +90,7 @@ export class SubsocialApi {
   }
 
   async findPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithSomeDetails(ids, { withBlog: true, withOwner: true }) as Promise<PostWithAllDetails[]>
+    return this.findPostsWithSomeDetails(ids, { withSpace: true, withOwner: true }) as Promise<PostWithAllDetails[]>
   }
 
   async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
@@ -110,8 +110,8 @@ export class SubsocialApi {
   // ---------------------------------------------------------------------
   // Single
 
-  async findBlog (id: AnyBlogId): Promise<BlogData | undefined> {
-    return getFirstOrUndefined(await this.findBlogs([ id ]))
+  async findSpace (id: AnySpaceId): Promise<SpaceData | undefined> {
+    return getFirstOrUndefined(await this.findSpaces([ id ]))
   }
 
   async findPost (id: AnyPostId): Promise<PostData | undefined> {

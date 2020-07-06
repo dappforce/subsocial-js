@@ -1,6 +1,6 @@
 import { Null } from '@polkadot/types';
 import { registry } from '@subsocial/types/src/substrate/registry';
-import { BlogId, Post, PostId, AccountId, BlockNumber, Moment, WhoAndWhen, IpfsHash } from '@subsocial/types/src/substrate/interfaces';
+import { SpaceId, Post, PostId, AccountId, BlockNumber, Moment, WhoAndWhen, IpfsHash } from '@subsocial/types/src/substrate/interfaces';
 import { PostContent } from '@subsocial/types/src/offchain';
 import BN from 'bn.js'
 import { mockAccountAlice, mockAccountBob } from './AccountMocks';
@@ -15,7 +15,7 @@ export const mockPostId = nextId()
 
 type NewPostProps = {
   id?: number | BN | PostId,
-  blog_id: OptionId<BlogId>
+  space_id: OptionId<SpaceId>
   account?: AccountId,
   extension?: PostExtension,
   ipfs_hash?: string,
@@ -25,7 +25,7 @@ function newPostStructMock ({
   id = nextId(),
   account = mockAccountAlice,
   ipfs_hash = '',
-  blog_id = new OptionId(),
+  space_id = new OptionId(),
   extension = new PostExtension({ RegularPost: new Null(registry) })
 }: NewPostProps): Post {
   return {
@@ -36,7 +36,7 @@ function newPostStructMock ({
       time: new BN(1586523823996) as Moment
     } as WhoAndWhen,
     ipfs_hash: ipfs_hash as unknown as IpfsHash,
-    blog_id: blog_id,
+    space_id: space_id,
     extension: extension
   } as unknown as Post
 }
@@ -50,35 +50,35 @@ export const commentIdOnSharedPost = createPostId(5)
 export const mockRegularPostStruct = newPostStructMock({
   account: mockAccountAlice,
   id: regularPostId,
-  blog_id: new OptionId(new BN(1)),
+  space_id: new OptionId(new BN(1)),
   extension: new PostExtension({ RegularPost: new Null(registry) })
 })
 
 export const mockSharedPostStruct = newPostStructMock({
   account: mockAccountBob,
   id: sharedPostId,
-  blog_id: new OptionId(new BN(2)),
+  space_id: new OptionId(new BN(2)),
   extension: new PostExtension({ SharedPost: regularPostId })
 })
 
 export const mockCommentOnRegularPostStruct = newPostStructMock({
   account: mockAccountAlice,
   id: commentIdOnRegularPost,
-  blog_id: new OptionId(),
+  space_id: new OptionId(),
   extension: new PostExtension({ Comment: new CommentExt({ parent_id: new OptionId(), root_post_id: regularPostId})})
 })
 
 export const mockSharedCommentStruct = newPostStructMock({
   account: mockAccountBob,
   id: sharedCommentId,
-  blog_id: new OptionId(new BN(1)),
+  space_id: new OptionId(new BN(1)),
   extension: new PostExtension({ SharedPost: commentIdOnRegularPost })
 })
 
 export const mockCommentOnSharedPostStruct = newPostStructMock({
   account: mockAccountAlice,
   id: commentIdOnSharedPost,
-  blog_id: new OptionId(),
+  space_id: new OptionId(),
   extension: new PostExtension({ Comment: new CommentExt({ parent_id: new OptionId(), root_post_id: sharedPostId})})
 })
 

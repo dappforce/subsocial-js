@@ -9,7 +9,7 @@ import bobAvatar from './avatars/bob';
 export const mockSocialAccountAlice = {
   reputation: new BN(100) as u32,
   followers_count: new BN(23) as u32,
-  following_blogs_count: new BN(15) as u32,
+  following_spaces_count: new BN(15) as u32,
   following_accounts_count: new BN(122) as u32
 } as SocialAccount
 
@@ -37,7 +37,7 @@ export const mockProfileDataAlice = {
 export const mockSocialAccountBob = {
   reputation: new BN(100) as u32,
   followers_count: new BN(23) as u32,
-  following_blogs_count: new BN(15) as u32,
+  following_spaces_count: new BN(15) as u32,
   following_accounts_count: new BN(122) as u32
 } as SocialAccount
 
