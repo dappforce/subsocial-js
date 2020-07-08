@@ -1,11 +1,5 @@
 export default {
   types: {
-    WhoAndWhen: {
-      account: 'AccountId',
-      block: 'BlockNumber',
-      time: 'Moment'
-    },
-    OptionVecAccountId: 'Option<Vec<AccountId>>',
     IpfsHash: 'Text',
     SpaceId: 'u64',
 
@@ -20,7 +14,6 @@ export default {
       owner: 'AccountId',
       permissions: 'Option<SpacePermissions>'
     },
-
     Space: {
       id: 'SpaceId',
       created: 'WhoAndWhen',
@@ -33,11 +26,10 @@ export default {
 
       posts_count: 'u16',
       followers_count: 'u32',
-
+      
       edit_history: 'Vec<SpaceHistoryRecord>',
-
+      
       score: 'i32',
-
       permissions: 'Option<SpacePermissions>'
     },
 
@@ -213,7 +205,6 @@ export default {
         'OverridePostPermissions'
       ]
     },
-
     SpacePermissions: {
       none: 'Option<SpacePermissionSet>',
       everyone: 'Option<SpacePermissionSet>',
@@ -240,7 +231,7 @@ export default {
       ipfs_hash: 'Option<IpfsHash>',
       permissions: 'SpacePermissionSet'
     },
-
+  
     RoleUpdate: {
       disabled: 'Option<bool>',
       ipfs_hash: 'Option<Option<IpfsHash>>',
