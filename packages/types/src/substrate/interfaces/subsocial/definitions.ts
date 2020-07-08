@@ -1,11 +1,5 @@
 export default {
   types: {
-    WhoAndWhen: {
-      account: 'AccountId',
-      block: 'BlockNumber',
-      time: 'Moment'
-    },
-    OptionVecAccountId: 'Option<Vec<AccountId>>',
     IpfsHash: 'Text',
     SpaceId: 'u64',
 
@@ -213,7 +207,6 @@ export default {
         'OverridePostPermissions'
       ]
     },
-
     SpacePermissions: {
       none: 'Option<SpacePermissionSet>',
       everyone: 'Option<SpacePermissionSet>',

@@ -1745,12 +1745,6 @@ declare module '@polkadot/types/types/registry' {
     Consensus: Consensus;
     'Option<Consensus>': Option<Consensus>;
     'Vec<Consensus>': Vec<Consensus>;
-    WhoAndWhen: WhoAndWhen;
-    'Option<WhoAndWhen>': Option<WhoAndWhen>;
-    'Vec<WhoAndWhen>': Vec<WhoAndWhen>;
-    OptionVecAccountId: OptionVecAccountId;
-    'Option<OptionVecAccountId>': Option<OptionVecAccountId>;
-    'Vec<OptionVecAccountId>': Vec<OptionVecAccountId>;
     IpfsHash: IpfsHash;
     'Option<IpfsHash>': Option<IpfsHash>;
     'Vec<IpfsHash>': Vec<IpfsHash>;
