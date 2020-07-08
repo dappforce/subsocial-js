@@ -3,8 +3,8 @@ import { Visibility } from './types'
 
 type VisibilityStruct = Space | Post
 
-const isHidden = (struct: VisibilityStruct) => struct.hidden.valueOf()
-const isVisible = (struct: VisibilityStruct) => !isHidden(struct)
+const isHidden = (struct?: VisibilityStruct) => !struct || struct.hidden.valueOf()
+export const isVisible = (struct?: VisibilityStruct) => !isHidden(struct)
 
 export function filterByVisibility<T extends Space | Post> (structs: T[], filter: Visibility): T[] {
 

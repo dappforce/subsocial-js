@@ -1,13 +1,14 @@
-import { AnyAccountId } from '@subsocial/types/substrate/interfaces/utils';
+import { AnyAccountId, AnyPostId, AnySpaceId } from '@subsocial/types/substrate/interfaces/utils';
 import { PostData, PostWithSomeDetails, ProfileData, SpaceData } from '@subsocial/types'
 import { PostId, AccountId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from './utils'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
-import { PostDetailsOpts, FindPostsQuery, FindSpacesQuery } from './types';
+import { PostDetailsOpts } from './types';
+import { isVisible } from './visibility-filter';
 
 export type FindStructsFns = {
-  findPosts: (filter: FindPostsQuery) => Promise<PostData[]>,
-  findSpaces: (filter: FindSpacesQuery) => Promise<SpaceData[]>
+  findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
+  findSpaces: (ids: AnySpaceId[]) => Promise<SpaceData[]>
   findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
 }
 
@@ -103,7 +104,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
   })
 
-  const loadedExtPosts = await findPosts({ ids: extIds })
+  const loadedExtPosts = await findPosts(extIds)
   extPosts.push(...loadedExtPosts)
 
   extPosts.forEach((post, i) => {
@@ -125,7 +126,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
   })
 
-  const loadedRootPosts = await findPosts({ ids: rootIds })
+  const loadedRootPosts = await findPosts(rootIds)
   rootPosts.push(...loadedRootPosts)
 
   rootPosts.forEach((post, i) => {
@@ -149,7 +150,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
 
   // Load related spaces
   if (withSpace) {
-    const spaces = await findSpaces({ ids: spaceIds })
+    const spaces = await findSpaces(spaceIds)
 
     spaces.forEach(space => {
       const spaceId = space.struct.id.toString()
@@ -220,5 +221,5 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     }
   })
 
-  return postStructs
+  return postStructs.filter(({ space }) => isVisible(space?.struct))
 }

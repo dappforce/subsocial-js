@@ -7,9 +7,13 @@ import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } f
 export class SubsocialApi extends BasicSubsocialApi {
 
   private structFinders: FindStructsFns = {
-    findSpaces: this.findSpaces.bind(this),
-    findPosts: this.findPosts.bind(this),
+    findSpaces: this.findVisibleSpaces.bind(this),
+    findPosts: this.findVisiblePosts.bind(this),
     findProfiles: this.findProfiles.bind(this)
+  }
+
+  async findAllSpaces (ids: AnySpaceId[]) {
+    return this.findSpaces({ ids })
   }
 
   /** Find and load spaces with hidden = true */
@@ -20,6 +24,10 @@ export class SubsocialApi extends BasicSubsocialApi {
   /** Find and load spaces with hidden = false */
   async findHiddenSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids, visibility: 'onlyHidden' })
+  }
+
+  async findAllPosts (ids: AnySpaceId[]) {
+    return this.findPosts({ ids })
   }
 
   /** Find and load posts with hidden = true */
