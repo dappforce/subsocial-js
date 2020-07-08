@@ -180,23 +180,36 @@ export interface SpacePermission extends Enum {
   readonly isRepresentSpaceExternally: boolean;
   readonly isUpdateSpace: boolean;
   readonly isBlockUsers: boolean;
+  readonly isReportUsers: boolean;
   readonly isCreateSubspaces: boolean;
   readonly isUpdateOwnSubspaces: boolean;
-  readonly isUpdateAnySubspaces: boolean;
   readonly isDeleteOwnSubspaces: boolean;
+  readonly isHideOwnSubspaces: boolean;
+  readonly isUpdateAnySubspace: boolean;
+  readonly isDeleteAnySubspace: boolean;
+  readonly isHideAnySubspace: boolean;
   readonly isBlockSubspaces: boolean;
+  readonly isReportSubspaces: boolean;
   readonly isCreatePosts: boolean;
   readonly isUpdateOwnPosts: boolean;
-  readonly isUpdateAnyPosts: boolean;
   readonly isDeleteOwnPosts: boolean;
+  readonly isHideOwnPosts: boolean;
+  readonly isUpdateAnyPost: boolean;
+  readonly isDeleteAnyPost: boolean;
+  readonly isHideAnyPost: boolean;
   readonly isBlockPosts: boolean;
+  readonly isReportPosts: boolean;
   readonly isCreateComments: boolean;
   readonly isUpdateOwnComments: boolean;
   readonly isDeleteOwnComments: boolean;
+  readonly isHideOwnComments: boolean;
+  readonly isHideAnyComment: boolean;
   readonly isBlockComments: boolean;
+  readonly isReportComments: boolean;
   readonly isUpvote: boolean;
   readonly isDownvote: boolean;
   readonly isShare: boolean;
+  readonly isOverrideSubspacePermissions: boolean;
   readonly isOverridePostPermissions: boolean;
 }
 
@@ -213,7 +226,7 @@ export interface SpacePermissionsContext extends Struct {
   readonly space_id: SpaceId;
   readonly is_space_owner: bool;
   readonly is_space_follower: bool;
-  readonly space_perms: Option<SpacePermissionSet>;
+  readonly space_perms: Option<SpacePermissions>;
 }
 
 /** @name SpacePermissionSet */
