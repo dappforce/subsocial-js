@@ -1,8 +1,8 @@
 import { AnyPostId, AnySpaceId } from '@subsocial/types'
 
-export type Visibility = 'onlyVisible' | 'onlyHidden' | undefined
+export type Visibility = 'onlyVisible' | 'onlyHidden'
 
-export type FilterByVisibility = {
+export type VisibilityFilter = {
   visibility?: Visibility
 }
 
@@ -19,8 +19,8 @@ type IdFilter<Id> = {
   id: Id
 }
 
-export type FindDataByIds<Id> = IdsFilter<Id> & FilterByVisibility
-export type FindDataById<Id> = IdFilter<Id> & FilterByVisibility
+export type FindStructs<Id> = IdsFilter<Id> & FilterByVisibility
+export type FindStruct<Id> = IdFilter<Id> & FilterByVisibility
 
 export type FindPostsQuery = FindDataByIds<AnyPostId>
 export type FindSpacesQuery = FindDataByIds<AnySpaceId>

@@ -16,12 +16,12 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findSpaces({ ids })
   }
 
-  /** Find and load spaces with hidden = true */
+  /** Find and load spaces with hidden = false */
   async findVisibleSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids, visibility: 'onlyVisible' })
   }
 
-  /** Find and load spaces with hidden = false */
+  /** Find and load spaces with hidden = true */
   async findHiddenSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids, visibility: 'onlyHidden' })
   }
@@ -30,12 +30,12 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findPosts({ ids })
   }
 
-  /** Find and load posts with hidden = true */
+  /** Find and load posts with hidden = false */
   async findVisiblePosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids, visibility: 'onlyVisible' })
   }
 
-  /** Find and load posts with hidden = false */
+  /** Find and load posts with hidden = true */
   async findHiddenPosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids, visibility: 'onlyHidden' })
   }
@@ -68,23 +68,24 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<PostWithAllDetails[]>
   }
 
-  // Single
-  /** Find and load space with hidden = true */
+  // Functions that return a single element
+
+  /** Find and load space with hidden = false */
   async findVisibleSpace (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findVisibleSpaces([ id ]))
   }
 
-  /** Find and load space with hidden = false */
+  /** Find and load space with hidden = true */
   async findHiddenSpace (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findHiddenSpaces([ id ]))
   }
 
-  /** Find and load post with hidden = true */
+  /** Find and load post with hidden = false */
   async findVisiblePost (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findVisiblePosts([ id ]))
   }
 
-  /** Find and load post with hidden = false */
+  /** Find and load post with hidden = true */
   async findHiddenPost (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findHiddenPosts([ id ]))
   }
