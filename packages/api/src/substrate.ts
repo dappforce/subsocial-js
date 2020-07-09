@@ -6,13 +6,8 @@ import { Space, SpaceId, Post, PostId, Reaction, ReactionId, SocialAccount } fro
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
-import { filterByVisibility } from './utils/visibility-filter';
+import { VisibilityFilter } from './utils/visibility-filter';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from './utils/types';
-
-type StorageItem = {
-  pallet: PalletName,
-  storage: string
-}
 
 type StorageItem = {
   pallet: PalletName,
@@ -103,12 +98,12 @@ export class SubsocialSubstrateApi {
 
   async findSpaces ({ ids, visibility }: FindSpacesQuery): Promise<Space[]> {
     const spaces: Space[] = await this.findStructs({ pallet: 'spaces', storage: 'spaceById' }, ids);
-    return filterByVisibility<Space>(spaces, visibility)
+    return VisibilityFilter<Space>(spaces, visibility)
   }
 
   async findPosts ({ ids, visibility }: FindPostsQuery): Promise<Post[]> {
     const posts: Post[] = await this.findStructs({ pallet: 'posts', storage: 'postById' }, ids);
-    return filterByVisibility<Post>(posts, visibility)
+    return VisibilityFilter<Post>(posts, visibility)
   }
 
   async findSocialAccounts (ids: AnyAccountId[]): Promise<SocialAccount[]> {

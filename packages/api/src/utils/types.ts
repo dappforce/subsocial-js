@@ -6,7 +6,7 @@ export type VisibilityFilter = {
   visibility?: Visibility
 }
 
-export type PostDetailsOpts = FilterByVisibility & {
+export type PostDetailsOpts = VisibilityFilter & {
   withSpace?: boolean
   withOwner?: boolean
 }
@@ -19,13 +19,13 @@ type IdFilter<Id> = {
   id: Id
 }
 
-export type FindStructs<Id> = IdsFilter<Id> & FilterByVisibility
-export type FindStruct<Id> = IdFilter<Id> & FilterByVisibility
+export type FindStructs<Id> = IdsFilter<Id> & VisibilityFilter
+export type FindStruct<Id> = IdFilter<Id> & VisibilityFilter
 
-export type FindPostsQuery = FindDataByIds<AnyPostId>
-export type FindSpacesQuery = FindDataByIds<AnySpaceId>
-export type FindPostQuery = FindDataById<AnyPostId>
-export type FindSpaceQuery = FindDataById<AnySpaceId>
+export type FindPostsQuery = FindStructs<AnyPostId>
+export type FindSpacesQuery = FindStructs<AnySpaceId>
+export type FindPostQuery = FindStruct<AnyPostId>
+export type FindSpaceQuery = FindStruct<AnySpaceId>
 
 export type FindPostsWithDetailsQuery = FindPostsQuery & PostDetailsOpts
 export type FindPostWithDetailsQuery = FindPostQuery & PostDetailsOpts

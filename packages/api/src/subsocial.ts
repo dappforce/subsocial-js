@@ -1,6 +1,6 @@
 import { BasicSubsocialApi } from './basic-subsocial';
 import { FindStructsFns, loadAndSetPostRelatedStructs } from './utils/loadPostStructs';
-import { PostWithSomeDetails, PostWithAllDetails, AnySpaceId } from '@subsocial/types';
+import { PostWithSomeDetails, PostWithAllDetails, AnySpaceId, AnyPostId } from '@subsocial/types';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } from './utils/types';
 
@@ -47,25 +47,23 @@ export class SubsocialApi extends BasicSubsocialApi {
   }
 
   async findVisiblePostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
-    const posts = await this.findPosts({ ids: filter.ids, visibility: 'onlyVisible' })
-    return loadAndSetPostRelatedStructs(posts, this.structFinders, filter)
+    return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyVisible' })
   }
 
   async findHiddenPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
-    const posts = await this.findPosts({ ids: filter.ids, visibility: 'onlyHidden' })
-    return loadAndSetPostRelatedStructs(posts, this.structFinders, filter)
+    return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyHidden' })
   }
 
   async findPostsWithAllDetails ({ ids, visibility }: FindPostsQuery): Promise<PostWithAllDetails[]> {
     return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<PostWithAllDetails[]>
   }
 
-  async findVisiblePostsWithAllDetails ({ ids, visibility }: FindPostsQuery): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<PostWithAllDetails[]>
+  async findVisiblePostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
+    return this.findPostsWithAllDetails({ ids, visibility: 'onlyVisible' })
   }
 
-  async findHiddenPostsWithAllDetails ({ ids, visibility }: FindPostsQuery): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<PostWithAllDetails[]>
+  async findHiddenPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
+    return this.findPostsWithAllDetails({ ids, visibility: 'onlyHidden' })
   }
 
   // Functions that return a single element
@@ -94,10 +92,6 @@ export class SubsocialApi extends BasicSubsocialApi {
     return getFirstOrUndefined(await this.findPostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
 
-  async findPostWithAllDetails ({ id }: FindPostWithDetailsQuery) {
-    return getFirstOrUndefined(await this.findPostsWithAllDetails({ ids: [ id ] }))
-  }
-
   async findVisiblePostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
     return getFirstOrUndefined(await this.findVisiblePostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
@@ -106,11 +100,15 @@ export class SubsocialApi extends BasicSubsocialApi {
     return getFirstOrUndefined(await this.findHiddenPostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
 
-  async findVisiblePostWithAllDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
-    return getFirstOrUndefined(await this.findVisiblePostsWithAllDetails({ ids: [ id ], ...opts }))
+  async findPostWithAllDetails (id: AnyPostId) {
+    return getFirstOrUndefined(await this.findPostsWithAllDetails({ ids: [ id ] }))
   }
 
-  async findHiddenPostWithAllDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
-    return getFirstOrUndefined(await this.findHiddenPostsWithAllDetails({ ids: [ id ], ...opts }))
+  async findVisiblePostWithAllDetails (id: AnyPostId) {
+    return getFirstOrUndefined(await this.findVisiblePostsWithAllDetails([ id ]))
+  }
+
+  async findHiddenPostWithAllDetails (id: AnyPostId) {
+    return getFirstOrUndefined(await this.findHiddenPostsWithAllDetails([ id ]))
   }
 }
