@@ -6,7 +6,7 @@ import { Space, Post, SocialAccount } from '@subsocial/types/substrate/interface
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
-import { getUniqueIds, SupportedSubstrateId } from './utils/utils';
+import { getUniqueIds, SupportedSubstrateId } from './utils';
 import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery } from './utils/types';
 
 export type SubsocialApiProps = {

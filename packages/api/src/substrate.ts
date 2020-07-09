@@ -5,7 +5,7 @@ import { AnyAccountId, AnySpaceId, AnyPostId, AnyReactionId, SubstrateId, Pallet
 import { Space, SpaceId, Post, PostId, Reaction, ReactionId, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
-import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils/utils';
+import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
 import { filterByVisibility } from './utils/visibility-filter';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from './utils/types';
 

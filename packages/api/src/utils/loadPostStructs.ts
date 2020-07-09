@@ -1,7 +1,7 @@
 import { AnyAccountId, AnyPostId, AnySpaceId } from '@subsocial/types/substrate/interfaces/utils';
 import { PostData, PostWithSomeDetails, ProfileData, SpaceData } from '@subsocial/types'
 import { PostId, AccountId, SpaceId } from '@subsocial/types/substrate/interfaces'
-import { getPostIdFromExtension } from './utils'
+import { getPostIdFromExtension } from '.'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
 import { PostDetailsOpts } from './types';
 import { isVisible } from './visibility-filter';
