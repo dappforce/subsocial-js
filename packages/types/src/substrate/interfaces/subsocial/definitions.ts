@@ -3,6 +3,12 @@ export default {
     IpfsHash: 'Text',
     SpaceId: 'u64',
 
+    WhoAndWhen: {
+      account: 'AccountId',
+      block: 'BlockNumber',
+      time: 'Moment'
+    },
+
     User: {
       _enum: {
         Account: 'AccountId',
@@ -27,9 +33,9 @@ export default {
 
       posts_count: 'u16',
       followers_count: 'u32',
-      
+
       edit_history: 'Vec<SpaceHistoryRecord>',
-      
+
       score: 'i32',
 
       permissions: 'Option<SpacePermissions>'

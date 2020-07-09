@@ -42,7 +42,7 @@ import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { CallHash, Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import { AccountId, AccountIdOf, AccountIndex, Address, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, Consensus, ConsensusEngineId, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, Fixed128, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, RuntimeDbWeight, Seal, SealV0, SignedBlock, StorageData, ValidatorId, Weight, WeightMultiplier } from '@subsocial/types/substrate/interfaces/runtime';
-import { CommentExt, IpfsHash, OptionVecAccountId, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Role, RoleId, RoleUpdate, ScoringAction, SocialAccount, Space, SpaceForRoles, SpaceHistoryRecord, SpaceId, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
+import { CommentExt, IpfsHash, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Role, RoleId, RoleUpdate, ScoringAction, SocialAccount, Space, SpaceForRoles, SpaceHistoryRecord, SpaceId, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -1752,6 +1752,9 @@ declare module '@polkadot/types/types/registry' {
     'Compact<SpaceId>': Compact<SpaceId>;
     'Option<SpaceId>': Option<SpaceId>;
     'Vec<SpaceId>': Vec<SpaceId>;
+    WhoAndWhen: WhoAndWhen;
+    'Option<WhoAndWhen>': Option<WhoAndWhen>;
+    'Vec<WhoAndWhen>': Vec<WhoAndWhen>;
     User: User;
     'Option<User>': Option<User>;
     'Vec<User>': Vec<User>;

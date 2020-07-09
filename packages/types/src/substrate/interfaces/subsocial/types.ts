@@ -14,9 +14,6 @@ export interface CommentExt extends Struct {
 /** @name IpfsHash */
 export interface IpfsHash extends Text {}
 
-/** @name OptionVecAccountId */
-export interface OptionVecAccountId extends Option<Vec<AccountId>> {}
-
 /** @name Post */
 export interface Post extends Struct {
   readonly id: PostId;
