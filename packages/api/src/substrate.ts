@@ -6,6 +6,8 @@ import { Space, SpaceId, Post, PostId, Reaction, ReactionId, SocialAccount } fro
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
+import { VisibilityFilter } from './utils/visibility-filter';
+import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from './utils/types';
 
 type StorageItem = {
   pallet: PalletName,
@@ -71,7 +73,7 @@ export class SubsocialSubstrateApi {
   // Multiple
 
   async findStructs<T extends SupportedSubstrateResult>
-    (storageItem: StorageItem, ids: SupportedSubstrateId[]): Promise<T[]> {
+  (storageItem: StorageItem, ids: SupportedSubstrateId[]): Promise<T[]> {
     const storage = storageItem.storage
 
     try {
@@ -94,12 +96,14 @@ export class SubsocialSubstrateApi {
     }
   }
 
-  async findSpaces (ids: AnySpaceId[]): Promise<Space[]> {
-    return this.findStructs({ pallet: 'spaces', storage: 'spaceById' }, ids);
+  async findSpaces ({ ids, visibility }: FindSpacesQuery): Promise<Space[]> {
+    const spaces: Space[] = await this.findStructs({ pallet: 'spaces', storage: 'spaceById' }, ids);
+    return VisibilityFilter<Space>(spaces, visibility)
   }
 
-  async findPosts (ids: AnyPostId[]): Promise<Post[]> {
-    return this.findStructs({ pallet: 'posts', storage: 'postById' }, ids);
+  async findPosts ({ ids, visibility }: FindPostsQuery): Promise<Post[]> {
+    const posts: Post[] = await this.findStructs({ pallet: 'posts', storage: 'postById' }, ids);
+    return VisibilityFilter<Post>(posts, visibility)
   }
 
   async findSocialAccounts (ids: AnyAccountId[]): Promise<SocialAccount[]> {
@@ -114,12 +118,12 @@ export class SubsocialSubstrateApi {
   // ---------------------------------------------------------------------
   // Single
 
-  async findSpace (id: AnySpaceId): Promise<Space | undefined> {
-    return getFirstOrUndefined(await this.findSpaces([ id ]))
+  async findSpace ({ id, visibility }: FindSpaceQuery): Promise<Space | undefined> {
+    return getFirstOrUndefined(await this.findSpaces({ ids: [ id ], visibility }))
   }
 
-  async findPost (id: AnyPostId): Promise<Post | undefined> {
-    return getFirstOrUndefined(await this.findPosts([ id ]))
+  async findPost ({ id, visibility }: FindPostQuery): Promise<Post | undefined> {
+    return getFirstOrUndefined(await this.findPosts({ ids: [ id ], visibility }))
   }
 
   async findSocialAccount (id: AnyAccountId): Promise<SocialAccount | undefined> {

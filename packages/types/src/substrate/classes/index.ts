@@ -14,7 +14,7 @@ export class OptionId<T extends SubstrateId> extends Option<u64> {
 
 export class OptionBool<T extends boolean> extends Option<bool> {
   constructor (value?: T) {
-    const boolOrNull = value || new Null(registry)
+    const boolOrNull = typeof value === 'boolean' ? value : new Null(registry)
     super(registry, 'bool', boolOrNull)
   }
 }

@@ -1,18 +1,15 @@
-import { AnySpaceId, AnyAccountId } from '@subsocial/types/substrate/interfaces/utils';
-import { PostData, PostWithSomeDetails, ProfileData, SpaceData, AnyPostId } from '@subsocial/types'
+import { AnyAccountId, AnyPostId, AnySpaceId } from '@subsocial/types/substrate/interfaces/utils';
+import { PostData, PostWithSomeDetails, ProfileData, SpaceData } from '@subsocial/types'
 import { PostId, AccountId, SpaceId } from '@subsocial/types/substrate/interfaces'
-import { getPostIdFromExtension } from './utils'
+import { getPostIdFromExtension } from '.'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
+import { PostDetailsOpts } from './types';
+import { isVisible } from './visibility-filter';
 
 export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
   findSpaces: (ids: AnySpaceId[]) => Promise<SpaceData[]>
   findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
-}
-
-export type PostDetailsOpts = {
-  withOwner?: boolean
-  withSpace?: boolean
 }
 
 async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts) {
@@ -224,5 +221,5 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     }
   })
 
-  return postStructs
+  return postStructs.filter(({ space }) => isVisible(space?.struct))
 }

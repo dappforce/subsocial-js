@@ -27,9 +27,9 @@ export default {
 
       posts_count: 'u16',
       followers_count: 'u32',
-
+      
       edit_history: 'Vec<SpaceHistoryRecord>',
-
+      
       score: 'i32',
 
       permissions: 'Option<SpacePermissions>'
