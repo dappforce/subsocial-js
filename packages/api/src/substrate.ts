@@ -14,6 +14,11 @@ type StorageItem = {
   storage: string
 }
 
+type StorageItem = {
+  pallet: PalletName,
+  storage: string
+}
+
 export class SubsocialSubstrateApi {
 
   private _api: SubstrateApi // Polkadot API (connected)

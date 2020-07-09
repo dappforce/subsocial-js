@@ -14,6 +14,7 @@ export default {
       owner: 'AccountId',
       permissions: 'Option<SpacePermissions>'
     },
+
     Space: {
       id: 'SpaceId',
       created: 'WhoAndWhen',
@@ -30,6 +31,7 @@ export default {
       edit_history: 'Vec<SpaceHistoryRecord>',
       
       score: 'i32',
+
       permissions: 'Option<SpacePermissions>'
     },
 
@@ -231,7 +233,7 @@ export default {
       ipfs_hash: 'Option<IpfsHash>',
       permissions: 'SpacePermissionSet'
     },
-  
+
     RoleUpdate: {
       disabled: 'Option<bool>',
       ipfs_hash: 'Option<Option<IpfsHash>>',
