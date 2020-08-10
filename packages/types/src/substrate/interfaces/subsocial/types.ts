@@ -159,8 +159,8 @@ export interface Space extends Struct {
   readonly handle: Option<Text>;
   readonly content: Content;
   readonly hidden: bool;
-  readonly posts_count: u32;
-  readonly hidden_posts_count: u32;
+  readonly posts_count: u16;
+  readonly hidden_posts_count: u16;
   readonly followers_count: u32;
   readonly score: i32;
   readonly permissions: Option<SpacePermissions>;

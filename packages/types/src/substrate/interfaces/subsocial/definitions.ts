@@ -43,8 +43,8 @@ export default {
       content: 'Content',
       hidden: 'bool',
 
-      posts_count: 'u32',
-      hidden_posts_count: 'u32',
+      posts_count: 'u16',
+      hidden_posts_count: 'u16',
       followers_count: 'u32',
 
       score: 'i32',
