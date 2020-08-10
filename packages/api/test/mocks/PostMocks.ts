@@ -6,7 +6,7 @@ import BN from 'bn.js'
 import { mockAccountAlice, mockAccountBob } from './AccountMocks';
 import { PostData } from '@subsocial/types/src';
 
-import { PostExtension, OptionId, CommentExt } from '@subsocial/types/src/substrate/classes';
+import { PostExtension, OptionId, Comment } from '@subsocial/types/src/substrate/classes';
 
 let _id = 0
 const nextId = (): PostId => new BN(++_id) as PostId
@@ -65,7 +65,7 @@ export const mockCommentOnRegularPostStruct = newPostStructMock({
   account: mockAccountAlice,
   id: commentIdOnRegularPost,
   space_id: new OptionId(),
-  extension: new PostExtension({ Comment: new CommentExt({ parent_id: new OptionId(), root_post_id: regularPostId})})
+  extension: new PostExtension({ Comment: new Comment({ parent_id: new OptionId(), root_post_id: regularPostId})})
 })
 
 export const mockSharedCommentStruct = newPostStructMock({
@@ -79,7 +79,7 @@ export const mockCommentOnSharedPostStruct = newPostStructMock({
   account: mockAccountAlice,
   id: commentIdOnSharedPost,
   space_id: new OptionId(),
-  extension: new PostExtension({ Comment: new CommentExt({ parent_id: new OptionId(), root_post_id: sharedPostId})})
+  extension: new PostExtension({ Comment: new Comment({ parent_id: new OptionId(), root_post_id: sharedPostId})})
 })
 
 export const mockRegularPostJson: PostContent = {

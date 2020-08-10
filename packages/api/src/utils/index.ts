@@ -1,4 +1,4 @@
-import { CommentExt } from '@subsocial/types/substrate/classes';
+import { Comment } from '@subsocial/types/substrate/classes';
 import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct } from '@subsocial/types';
 import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import { PostId, AccountId, ReactionId, SocialAccount, Reaction, Post } from '@subsocial/types/substrate/interfaces';
@@ -65,7 +65,7 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
   if (ext) {
     const { isSharedPost, isComment } = ext
 
-    if (isComment || ext.value instanceof CommentExt) {
+    if (isComment || ext.value instanceof Comment) {
       return ext.asComment.root_post_id
     } else if (isSharedPost) {
       return ext.asSharedPost
