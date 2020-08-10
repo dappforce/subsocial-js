@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct, Text, bool } from '@polkadot/types';
-import { IpfsHash, SpaceId, PostId, PostExtension as IPostExtension, CommentExt as ICommentExt } from '@subsocial/types/substrate/interfaces';
+import { SpaceId, PostId, PostExtension as IPostExtension, Comment as IComment, Content as IContent } from '@subsocial/types/substrate/interfaces';
 import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
-import { SubstrateId } from '@subsocial/types';
+import { SubstrateId, IpfsCid } from '@subsocial/types';
 
 export class OptionId<T extends SubstrateId> extends Option<u64> {
   constructor (value?: T) {
@@ -34,18 +34,18 @@ export class OptionOptionText extends Option<Option<Text>> {
   }
 }
 
-export class OptionIpfsHash extends OptionText {}
+export class OptionIpfsCid extends OptionText {}
 
 export class RegularPost extends Null {}
 export class SharedPost extends u64 {}
 
-type CommentExtType = {
+type CommentType = {
   parent_id: Option<PostId>,
   root_post_id: PostId
 }
 
-export class CommentExt extends Struct implements ICommentExt {
-  constructor (value?: CommentExtType) {
+export class Comment extends Struct implements IComment {
+  constructor (value?: CommentType) {
     super(
       registry,
       {
@@ -65,15 +65,100 @@ export class CommentExt extends Struct implements ICommentExt {
   }
 }
 
+export class None extends Null {}
+export class Raw extends Text {}
+export class IPFS extends Text {}
+export class Hyper extends Text {}
+
+export type ContentEnum =
+  None |
+  Raw |
+  IPFS |
+  Hyper
+
+type ContentEnumValue =
+  { None: None } |
+  { Raw: Raw } |
+  { IPFS: IPFS } |
+  { Hyper: Hyper};
+
+export class Content extends Enum implements IContent {
+  constructor (value?: ContentEnumValue) {
+    super(
+      registry,
+      {
+        RegularPost,
+        Comment: Comment as any,
+        SharedPost
+      }, value);
+  }
+
+  get isNone (): boolean {
+    return this.type === 'None'
+  }
+
+  get isRaw (): boolean {
+    return this.type === 'Raw'
+  }
+
+  get isIpfs (): boolean {
+    return this.type === 'IPFS'
+  }
+
+  get isHyper (): boolean {
+    return this.type === 'Hyper'
+  }
+
+  get asHyper (): Hyper {
+    return this.value as Hyper;
+  }
+
+  get asRaw (): Raw {
+    return this.value as Raw;
+  }
+
+  get asIpfs (): IPFS {
+    return this.value as IPFS
+  }
+}
+
+export class OptionContent extends Option<Content> {
+  constructor (value: IpfsCid) {
+    const text = new Text(registry, value)
+    super(registry, 'Option<Content>', { IPFS: text })
+  }
+}
+
+export class ContentAsIpfs extends Content {
+  constructor (value: IpfsCid) {
+    const text = new Text(registry, value)
+    super({ IPFS: text })
+  }
+}
+
+export class ContentAsNull extends Content {
+  constructor () {
+    super({ None: new Null(registry) })
+  }
+}
+
+export class ContentAsIpfsOrNull {
+  constructor (value?: IpfsCid | null) {
+    nonEmptyStr(value)
+      ? new ContentAsIpfs(value)
+      : new Null(registry)
+  }
+}
+
 export type PostExtensionEnum =
   RegularPost |
-  ICommentExt |
+  IComment |
   SharedPost;
 
 type PostExtensionEnumValue =
   { RegularPost: RegularPost } |
   { SharedPost: SharedPost } |
-  { Comment: ICommentExt };
+  { Comment: IComment };
 
 export class PostExtension extends Enum implements IPostExtension {
   constructor (value?: PostExtensionEnumValue) {
@@ -81,17 +166,17 @@ export class PostExtension extends Enum implements IPostExtension {
       registry,
       {
         RegularPost,
-        Comment: CommentExt as any,
+        Comment: Comment as any,
         SharedPost
       }, value);
   }
 
   get isComment (): boolean {
-    return this.type === 'CommentExt'
+    return this.type === 'Comment'
   }
 
-  get asComment (): CommentExt {
-    return this.value as CommentExt;
+  get asComment (): Comment {
+    return this.value as Comment;
   }
 
   get isRegularPost (): boolean {
@@ -113,7 +198,7 @@ export class PostExtension extends Enum implements IPostExtension {
 
 export type SpaceUpdateType = {
   handle: OptionOptionText;
-  ipfs_hash: OptionIpfsHash;
+  content: OptionIpfsCid;
   hidden: Option<bool>
 };
 
@@ -123,7 +208,7 @@ export class SpaceUpdate extends Struct {
       registry,
       {
         handle: 'Option<Option<Text>>' as any,
-        ipfs_hash: 'Option<Text>',
+        content: 'Option<Content>',
         hidden: 'Option<bool>'
       },
       value
@@ -138,12 +223,12 @@ export class SpaceUpdate extends Struct {
     return this.get('handle') as OptionOptionText;
   }
 
-  get ipfs_hash (): OptionIpfsHash {
-    return this.get('ipfs_hash') as OptionIpfsHash;
+  get content (): OptionContent {
+    return this.get('content') as OptionContent;
   }
 
-  set ipfs_hash (value: OptionIpfsHash) {
-    this.set('ipfs_hash', value);
+  set content (value: OptionContent) {
+    this.set('content', value);
   }
 
   set handle (value: OptionOptionText) {
@@ -153,7 +238,7 @@ export class SpaceUpdate extends Struct {
 
 export type PostUpdateType = {
   space_id: Option<SpaceId>;
-  ipfs_hash: Option<IpfsHash>;
+  content: OptionContent;
   hidden: Option<bool>
 };
 
@@ -163,43 +248,21 @@ export class PostUpdate extends Struct {
       registry,
       {
         space_id: 'Option<u64>',
-        ipfs_hash: 'Option<Text>',
+        content: 'Option<Content>',
         hidden: 'Option<bool>'
       },
       value
     );
   }
 
-  get ipfs_hash (): OptionIpfsHash {
-    return this.get('ipfs_hash') as OptionIpfsHash;
+  get content (): OptionContent {
+    return this.get('content') as OptionContent;
   }
 
-  set ipfs_hash (value: OptionIpfsHash) {
-    this.set('ipfs_hash', value);
-  }
-}
-
-export type CommentUpdateType = {
-  ipfs_hash: IpfsHash;
-};
-
-export class CommentUpdate extends Struct {
-  constructor (value?: CommentUpdateType) {
-    super(
-      registry,
-      {
-        ipfs_hash: 'Text'
-      },
-      value
-    );
-  }
-
-  get ipfs_hash (): IpfsHash {
-    return this.get('ipfs_hash') as IpfsHash;
+  set content (value: OptionContent) {
+    this.set('content', value);
   }
 }
-
-// export class OptionComment extends Option.with(Comment) {}
 
 export const ReactionKinds: { [key: string]: string } = {
   Upvote: 'Upvote',
@@ -214,7 +277,7 @@ export class ReactionKind extends Enum {
 
 export type ProfileUpdateType = {
   username: OptionText;
-  ipfs_hash: OptionIpfsHash;
+  content: OptionContent;
 };
 
 export class ProfileUpdate extends Struct {
@@ -223,22 +286,22 @@ export class ProfileUpdate extends Struct {
       registry,
       {
         username: 'Option<Text>',
-        ipfs_hash: 'Option<Text>'
+        content: 'Option<Content>'
       },
       value
     );
   }
 
-  get ipfs_hash (): OptionIpfsHash {
-    return this.get('ipfs_hash') as OptionIpfsHash;
+  get content (): OptionContent {
+    return this.get('content') as OptionContent;
   }
 
   get username (): OptionText {
     return this.get('username') as OptionText;
   }
 
-  set ipfs_hash (value: OptionIpfsHash) {
-    this.set('ipfs_hash', value);
+  set content (value: OptionContent) {
+    this.set('content', value);
   }
 
   set username (value: OptionText) {

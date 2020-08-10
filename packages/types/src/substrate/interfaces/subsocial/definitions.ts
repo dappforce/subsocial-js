@@ -1,6 +1,7 @@
 export default {
   types: {
-    IpfsHash: 'Text',
+    IpfsCid: 'Text',
+
     SpaceId: 'u64',
 
     WhoAndWhen: {
@@ -16,6 +17,15 @@ export default {
       }
     },
 
+    Content: {
+      _enum: {
+        None: 'Null',
+        Raw: 'Text',
+        IPFS: 'IpfsCid',
+        Hyper: 'Text'
+      }
+    },
+
     SpaceForRoles: {
       owner: 'AccountId',
       permissions: 'Option<SpacePermissions>'
@@ -25,16 +35,17 @@ export default {
       id: 'SpaceId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
-      hidden: 'bool',
 
       owner: 'AccountId',
+
+      parent_id: 'Option<SpaceId>',
       handle: 'Option<Text>',
-      ipfs_hash: 'IpfsHash',
+      content: 'Content',
+      hidden: 'bool',
 
-      posts_count: 'u16',
+      posts_count: 'u32',
+      hidden_posts_count: 'u32',
       followers_count: 'u32',
-
-      edit_history: 'Vec<SpaceHistoryRecord>',
 
       score: 'i32',
 
@@ -42,9 +53,11 @@ export default {
     },
 
     SpaceUpdate: {
+      parent_id: 'Option<Option<SpaceId>>',
       handle: 'Option<Option<Text>>',
-      ipfs_hash: 'Option<IpfsHash>',
-      hidden: 'Option<bool>'
+      content: 'Option<Content>',
+      hidden: 'Option<bool>',
+      permissions: 'Option<Option<SpacePermissions>>'
     },
 
     SpaceHistoryRecord: {
@@ -58,16 +71,17 @@ export default {
       id: 'PostId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
-      hidden: 'bool',
 
-      space_id: 'Option<SpaceId>',
+      owner: 'AccountId',
+
       extension: 'PostExtension',
 
-      ipfs_hash: 'IpfsHash',
-      edit_history: 'Vec<PostHistoryRecord>',
+      space_id: 'Option<SpaceId>',
+      content: 'Content',
+      hidden: 'bool',
 
-      direct_replies_count: 'u16',
-      total_replies_count: 'u32',
+      replies_count: 'u16',
+      hidden_replies_count: 'u16',
 
       shares_count: 'u16',
       upvotes_count: 'u16',
@@ -78,26 +92,26 @@ export default {
 
     PostUpdate: {
       space_id: 'Option<SpaceId>',
-      ipfs_hash: 'Option<IpfsHash>',
+      content: 'Option<Content>',
       hidden: 'Option<bool>'
-    },
-
-    PostHistoryRecord: {
-      edited: 'WhoAndWhen',
-      old_data: 'PostUpdate'
     },
 
     PostExtension: {
       _enum: {
         RegularPost: 'Null',
-        Comment: 'CommentExt',
+        Comment: 'Comment',
         SharedPost: 'PostId'
       }
     },
 
-    CommentExt: {
+    Comment: {
       parent_id: 'Option<PostId>',
       root_post_id: 'PostId'
+    },
+
+    PostHistoryRecord: {
+      edited: 'WhoAndWhen',
+      old_data: 'PostUpdate'
     },
 
     SocialAccount: {
@@ -112,15 +126,13 @@ export default {
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
 
-      username: 'Text',
-      ipfs_hash: 'IpfsHash',
-
-      edit_history: 'Vec<ProfileHistoryRecord>'
+      handle: 'Text',
+      content: 'Content'
     },
 
     ProfileUpdate: {
-      username: 'Option<Text>',
-      ipfs_hash: 'Option<IpfsHash>'
+      handle: 'Option<Text>',
+      content: 'Option<Content>'
     },
 
     ProfileHistoryRecord: {
@@ -169,9 +181,6 @@ export default {
 
         'UpdateSpace',
 
-        'BlockUsers',
-        'ReportUsers',
-
         'CreateSubspaces',
         'UpdateOwnSubspaces',
         'DeleteOwnSubspaces',
@@ -180,9 +189,6 @@ export default {
         'UpdateAnySubspace',
         'DeleteAnySubspace',
         'HideAnySubspace',
-
-        'BlockSubspaces',
-        'ReportSubspaces',
 
         'CreatePosts',
         'UpdateOwnPosts',
@@ -193,26 +199,27 @@ export default {
         'DeleteAnyPost',
         'HideAnyPost',
 
-        'BlockPosts',
-        'ReportPosts',
-
         'CreateComments',
         'UpdateOwnComments',
         'DeleteOwnComments',
         'HideOwnComments',
 
         'HideAnyComment',
-        'BlockComments',
-        'ReportComments',
 
         'Upvote',
         'Downvote',
         'Share',
 
         'OverrideSubspacePermissions',
-        'OverridePostPermissions'
+        'OverridePostPermissions',
+
+        'SuggestEntityStatus',
+        'UpdateEntityStatus',
+
+        'UpdateSpaceSettings'
       ]
     },
+
     SpacePermissions: {
       none: 'Option<SpacePermissionSet>',
       everyone: 'Option<SpacePermissionSet>',
@@ -236,13 +243,13 @@ export default {
       space_id: 'SpaceId',
       disabled: 'bool',
       expires_at: 'Option<BlockNumber>',
-      ipfs_hash: 'Option<IpfsHash>',
+      content: 'Content',
       permissions: 'SpacePermissionSet'
     },
 
     RoleUpdate: {
       disabled: 'Option<bool>',
-      ipfs_hash: 'Option<Option<IpfsHash>>',
+      content: 'Option<Content>',
       permissions: 'Option<SpacePermissionSet>'
     }
   }

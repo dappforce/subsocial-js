@@ -1,8 +1,9 @@
-import { IpfsHash, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, SpaceContent, PostContent, CommentContent, IpfsCid, CID, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds } from './utils';
+import { Content } from '@subsocial/types/substrate/classes';
 
 const IPFS_HASH_BINARY_LEN = 47
 
@@ -14,39 +15,39 @@ const asIpfsCid = (cid: IpfsCid): CID => {
   } else if (typeof cid.toU8a === 'function' && cid.toU8a().length === IPFS_HASH_BINARY_LEN) {
     return new CID(cid.toString())
   } else {
-    throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsHash')
+    throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsCid')
   }
 }
 
-export function getIpfsHashOfSocialAccount (struct: SocialAccount): string | undefined {
+export function getIpfsCidOfSocialAccount (struct: SocialAccount): string | undefined {
   const profile = struct?.profile
   if (profile && profile.isSome) {
-    return getIpfsHashOfStruct(profile.unwrap())
+    return getIpfsCidOfStruct(profile.unwrap())
   }
   return undefined
 }
 
-type HasIpfsHashDirectly = {
-  ipfs_hash: IpfsHash
+type HasContentDirectly = {
+  content: Content
 }
 
-type HasIpfsHashSomewhere = HasIpfsHashDirectly | SocialAccount
+type HasIpfsCidSomewhere = HasContentDirectly | SocialAccount
 
-export function getIpfsHashOfStruct<S extends HasIpfsHashSomewhere> (struct: S): string | undefined {
-  if ((struct as HasIpfsHashDirectly).ipfs_hash) {
-    return (struct as HasIpfsHashDirectly).ipfs_hash.toString()
+export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
+  if ((struct as HasContentDirectly).content.isIpfs) {
+    return (struct as HasContentDirectly).content.asIpfs.toString()
   } else if ((struct as SocialAccount).profile) {
-    return getIpfsHashOfSocialAccount(struct as SocialAccount)
+    return getIpfsCidOfSocialAccount(struct as SocialAccount)
   }
   return undefined
 }
 
-export function getCidOfStruct (struct: HasIpfsHashSomewhere): CID | undefined {
-  const hash = getIpfsHashOfStruct(struct)
+export function getCidOfStruct (struct: HasIpfsCidSomewhere): CID | undefined {
+  const hash = getIpfsCidOfStruct(struct)
   return hash ? new CID(hash) : undefined
 }
 
-export function getCidsOfStructs (structs: HasIpfsHashSomewhere[]): CID[] {
+export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): CID[] {
   return structs
     .map(getCidOfStruct)
     .filter(cid => typeof cid !== 'undefined') as CID[]
@@ -182,7 +183,7 @@ export class SubsocialIpfsApi {
     }
   }
 
-  async saveContent (content: CommonContent): Promise<IpfsHash | undefined> {
+  async saveContent (content: CommonContent): Promise<IpfsCid | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
 
@@ -198,19 +199,19 @@ export class SubsocialIpfsApi {
     }
   }
 
-  async saveSpace (content: SpaceContent): Promise<IpfsHash | undefined> {
+  async saveSpace (content: SpaceContent): Promise<IpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved space with hash: ${hash}`)
     return hash;
   }
 
-  async savePost (content: PostContent): Promise<IpfsHash | undefined> {
+  async savePost (content: PostContent): Promise<IpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved post with hash: ${hash}`)
     return hash;
   }
 
-  async saveComment (content: CommentContent): Promise<IpfsHash | undefined> {
+  async saveComment (content: CommentContent): Promise<IpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved comment with hash: ${hash}`)
     return hash;

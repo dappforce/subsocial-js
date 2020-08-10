@@ -4,7 +4,7 @@ import BN from 'bn.js'
 import { i32, Option, u16, u32 } from '@polkadot/types'
 import { SpaceContent } from '@subsocial/types/src/offchain'
 import { AccountId, BlockNumber, Moment } from '@subsocial/types/src/substrate/interfaces/runtime'
-import { Space, SpaceId, IpfsHash, WhoAndWhen } from '@subsocial/types/src/substrate/interfaces'
+import { Space, SpaceId, IpfsCid, WhoAndWhen } from '@subsocial/types/src/substrate/interfaces'
 import { mockAccountAlice, mockAccountBob } from './AccountMocks'
 import { Vec } from '@polkadot/types/codec';
 import { SpaceHistoryRecord } from '@subsocial/types/src/substrate/interfaces/subsocial/types';
@@ -45,7 +45,7 @@ function newSpaceStructMock ({
     updated: new Option(registry, 'Null', null),
     owner: account,
     handle: new Option(registry, 'Text', handle),
-    ipfs_hash: ipfs_hash as unknown as IpfsHash,
+    ipfs_hash: ipfs_hash as unknown as IpfsCid,
     posts_count: new BN(posts_count) as u16,
     followers_count: new BN(followers_count) as u32,
     edit_history: edit_history as unknown as Vec<SpaceHistoryRecord>,

@@ -1,6 +1,6 @@
 import CID from 'cids';
 import * as IPFS from './ipfs.types';
-import { IpfsHash } from '../substrate/interfaces';
+import { IpfsCid as RuntimeIpfsCid } from '../substrate/interfaces';
 
 export { CID };
 
@@ -76,7 +76,7 @@ export type ProfileContent = {
   instagram: string;
 };
 
-export type IpfsCid = string | CID | IpfsHash;
+export type IpfsCid = string | CID | RuntimeIpfsCid;
 
 export type IpfsApi = IPFS.FilesAPI & {
   pin: {

@@ -1,6 +1,6 @@
 import { Null } from '@polkadot/types';
 import { registry } from '@subsocial/types/src/substrate/registry';
-import { SpaceId, Post, PostId, AccountId, BlockNumber, Moment, WhoAndWhen, IpfsHash } from '@subsocial/types/src/substrate/interfaces';
+import { SpaceId, Post, PostId, AccountId, BlockNumber, Moment, WhoAndWhen, IpfsCid } from '@subsocial/types/src/substrate/interfaces';
 import { PostContent } from '@subsocial/types/src/offchain';
 import BN from 'bn.js'
 import { mockAccountAlice, mockAccountBob } from './AccountMocks';
@@ -35,7 +35,7 @@ function newPostStructMock ({
       block: new BN(12345) as BlockNumber,
       time: new BN(1586523823996) as Moment
     } as WhoAndWhen,
-    ipfs_hash: ipfs_hash as unknown as IpfsHash,
+    ipfs_hash: ipfs_hash as unknown as IpfsCid,
     space_id: space_id,
     extension: extension
   } as unknown as Post

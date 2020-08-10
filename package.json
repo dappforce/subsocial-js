@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@babel/preset-typescript": "^7.9.0",
-    "@polkadot/dev": "^0.32.17",
+    "@polkadot/dev": "0.32.17",
     "@subsocial/config": "^0.1.4",
     "@types/jest": "^25.2.3",
     "@types/node": "^14.0.5",

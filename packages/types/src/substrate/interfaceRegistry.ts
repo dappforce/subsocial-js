@@ -42,7 +42,7 @@ import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { CallHash, Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import { AccountId, AccountIdOf, AccountIndex, Address, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, Consensus, ConsensusEngineId, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, Fixed128, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, RuntimeDbWeight, Seal, SealV0, SignedBlock, StorageData, ValidatorId, Weight, WeightMultiplier } from '@subsocial/types/substrate/interfaces/runtime';
-import { CommentExt, IpfsHash, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Role, RoleId, RoleUpdate, ScoringAction, SocialAccount, Space, SpaceForRoles, SpaceHistoryRecord, SpaceId, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
+import { Comment, Content, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Role, RoleId, RoleUpdate, ScoringAction, SocialAccount, Space, SpaceForRoles, SpaceHistoryRecord, SpaceId, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -1745,9 +1745,9 @@ declare module '@polkadot/types/types/registry' {
     Consensus: Consensus;
     'Option<Consensus>': Option<Consensus>;
     'Vec<Consensus>': Vec<Consensus>;
-    IpfsHash: IpfsHash;
-    'Option<IpfsHash>': Option<IpfsHash>;
-    'Vec<IpfsHash>': Vec<IpfsHash>;
+    IpfsCid: IpfsCid;
+    'Option<IpfsCid>': Option<IpfsCid>;
+    'Vec<IpfsCid>': Vec<IpfsCid>;
     SpaceId: SpaceId;
     'Compact<SpaceId>': Compact<SpaceId>;
     'Option<SpaceId>': Option<SpaceId>;
@@ -1758,6 +1758,9 @@ declare module '@polkadot/types/types/registry' {
     User: User;
     'Option<User>': Option<User>;
     'Vec<User>': Vec<User>;
+    Content: Content;
+    'Option<Content>': Option<Content>;
+    'Vec<Content>': Vec<Content>;
     SpaceForRoles: SpaceForRoles;
     'Option<SpaceForRoles>': Option<SpaceForRoles>;
     'Vec<SpaceForRoles>': Vec<SpaceForRoles>;
@@ -1780,15 +1783,15 @@ declare module '@polkadot/types/types/registry' {
     PostUpdate: PostUpdate;
     'Option<PostUpdate>': Option<PostUpdate>;
     'Vec<PostUpdate>': Vec<PostUpdate>;
-    PostHistoryRecord: PostHistoryRecord;
-    'Option<PostHistoryRecord>': Option<PostHistoryRecord>;
-    'Vec<PostHistoryRecord>': Vec<PostHistoryRecord>;
     PostExtension: PostExtension;
     'Option<PostExtension>': Option<PostExtension>;
     'Vec<PostExtension>': Vec<PostExtension>;
-    CommentExt: CommentExt;
-    'Option<CommentExt>': Option<CommentExt>;
-    'Vec<CommentExt>': Vec<CommentExt>;
+    Comment: Comment;
+    'Option<Comment>': Option<Comment>;
+    'Vec<Comment>': Vec<Comment>;
+    PostHistoryRecord: PostHistoryRecord;
+    'Option<PostHistoryRecord>': Option<PostHistoryRecord>;
+    'Vec<PostHistoryRecord>': Vec<PostHistoryRecord>;
     SocialAccount: SocialAccount;
     'Option<SocialAccount>': Option<SocialAccount>;
     'Vec<SocialAccount>': Vec<SocialAccount>;

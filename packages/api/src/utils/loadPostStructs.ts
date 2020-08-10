@@ -167,7 +167,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
 
 /** Load post structs and related structs like owner profile, space, root post if required. */
 export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
-  const { withSpace, withOwner } = opts || {}
+  const { withSpace, withOwner, visibility } = opts || {}
   const {
     spaceByIdMap,
     ownerByIdMap,
@@ -221,5 +221,5 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     }
   })
 
-  return postStructs.filter(({ space }) => isVisible(space?.struct))
+  return withSpace && visibility === 'onlyVisible' ? postStructs.filter(({ space }) => isVisible(space?.struct)) : postStructs
 }

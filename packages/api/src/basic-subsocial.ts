@@ -4,7 +4,7 @@ import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } fro
 import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
 import { Space, Post, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
-import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
+import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
 import { getUniqueIds, SupportedSubstrateId } from './utils';
 import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery } from './utils/types';
@@ -52,7 +52,7 @@ export class BasicSubsocialApi {
     cids.forEach((cid, i) => contentByHashMap.set(cid.toString(), contents[i]))
 
     return structs.map(struct => {
-      const hash = getIpfsHashOfStruct(struct)
+      const hash = getIpfsCidOfStruct(struct)
       const content = hash ? contentByHashMap.get(hash) : undefined
       return { struct, content }
     })
