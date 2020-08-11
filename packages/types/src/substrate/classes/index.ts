@@ -87,9 +87,10 @@ export class Content extends Enum implements IContent {
     super(
       registry,
       {
-        RegularPost,
-        Comment: Comment as any,
-        SharedPost
+        None,
+        Raw,
+        IPFS,
+        Hyper
       }, value);
   }
 
@@ -122,31 +123,28 @@ export class Content extends Enum implements IContent {
   }
 }
 
+const createIpfsContent = (value: IpfsCid) => ({ IPFS: new Text(registry, value) })
+const createNoneContent = () => ({ None: new Null(registry) })
+const createContent = (value?: IpfsContentValue) => nonEmptyStr(value)
+  ? createIpfsContent(value)
+  : createNoneContent()
+
+type IpfsContentValue = IpfsCid | null
+
 export class OptionContent extends Option<Content> {
-  constructor (value: IpfsCid) {
-    const text = new Text(registry, value)
-    super(registry, 'Option<Content>', { IPFS: text })
+  constructor (value: ContentEnumValue) {
+    super(registry, 'Option<Content>', value)
   }
 }
 
-export class ContentAsIpfs extends Content {
-  constructor (value: IpfsCid) {
-    const text = new Text(registry, value)
-    super({ IPFS: text })
+export class OptionIpfsContent extends OptionContent {
+  constructor (value?: IpfsContentValue) {
+    super(createContent(value))
   }
 }
-
-export class ContentAsNull extends Content {
-  constructor () {
-    super({ None: new Null(registry) })
-  }
-}
-
-export class ContentAsIpfsOrNull {
-  constructor (value?: IpfsCid | null) {
-    nonEmptyStr(value)
-      ? new ContentAsIpfs(value)
-      : new Null(registry)
+export class IpfsContent extends Content {
+  constructor (value?: IpfsContentValue) {
+    super(createContent(value))
   }
 }
 
@@ -198,7 +196,7 @@ export class PostExtension extends Enum implements IPostExtension {
 
 export type SpaceUpdateType = {
   handle: OptionOptionText;
-  content: OptionIpfsCid;
+  content: OptionContent;
   hidden: Option<bool>
 };
 
@@ -276,7 +274,7 @@ export class ReactionKind extends Enum {
 }
 
 export type ProfileUpdateType = {
-  username: OptionText;
+  handle: OptionText;
   content: OptionContent;
 };
 
@@ -285,7 +283,7 @@ export class ProfileUpdate extends Struct {
     super(
       registry,
       {
-        username: 'Option<Text>',
+        handle: 'Option<Text>',
         content: 'Option<Content>'
       },
       value
@@ -296,15 +294,15 @@ export class ProfileUpdate extends Struct {
     return this.get('content') as OptionContent;
   }
 
-  get username (): OptionText {
-    return this.get('username') as OptionText;
+  get handle (): OptionText {
+    return this.get('handle') as OptionText;
   }
 
   set content (value: OptionContent) {
     this.set('content', value);
   }
 
-  set username (value: OptionText) {
-    this.set('username', value);
+  set handle (value: OptionText) {
+    this.set('handle', value);
   }
 }
