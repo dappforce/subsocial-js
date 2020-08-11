@@ -1,5 +1,5 @@
-import { SocialAccount } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, SpaceContent, PostContent, CommentContent, IpfsCid, CID, ProfileContent } from '@subsocial/types/offchain';
+import { IpfsCid as RuntimeIpfsCid, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds } from './utils';
@@ -183,7 +183,7 @@ export class SubsocialIpfsApi {
     }
   }
 
-  async saveContent (content: CommonContent): Promise<IpfsCid | undefined> {
+  async saveContent (content: CommonContent): Promise<RuntimeIpfsCid | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
 
@@ -199,19 +199,19 @@ export class SubsocialIpfsApi {
     }
   }
 
-  async saveSpace (content: SpaceContent): Promise<IpfsCid | undefined> {
+  async saveSpace (content: SpaceContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved space with hash: ${hash}`)
     return hash;
   }
 
-  async savePost (content: PostContent): Promise<IpfsCid | undefined> {
+  async savePost (content: PostContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved post with hash: ${hash}`)
     return hash;
   }
 
-  async saveComment (content: CommentContent): Promise<IpfsCid | undefined> {
+  async saveComment (content: CommentContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved comment with hash: ${hash}`)
     return hash;

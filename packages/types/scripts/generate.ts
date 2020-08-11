@@ -12,5 +12,5 @@ const definitions = {
   '@subsocial/types/substrate/interfaces': DfDefinitions
 };
 
-generateTsDef(definitions, 'packages/types/src/substrate/interfaces', '@subsocial/types/substrate/interfaces');
-generateInterfaceTypes(definitions, 'packages/types/src/substrate/interfaceRegistry.ts');
+generateTsDef(definitions as any, 'packages/types/src/substrate/interfaces', '@subsocial/types/substrate/interfaces');
+generateInterfaceTypes(definitions as any, 'packages/types/src/substrate/interfaceRegistry.ts');
