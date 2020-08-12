@@ -1,7 +1,7 @@
 import { Comment } from '@subsocial/types/substrate/classes';
 import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct } from '@subsocial/types';
 import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
-import { PostId, AccountId, ReactionId, SocialAccount, Reaction, Post } from '@subsocial/types/substrate/interfaces';
+import { PostId, ReactionId, SocialAccount, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { GenericAccountId } from '@polkadot/types'
 
@@ -32,7 +32,7 @@ export const getUniqueIds = <ID extends AnyId> (ids: (ID | undefined)[]): ID[] =
   return uniqueIds
 }
 
-export function asAccountId (id: AnyAccountId): AccountId | undefined {
+export function asAccountId (id: AnyAccountId): GenericAccountId | undefined {
   if (id instanceof GenericAccountId) {
     return id
   } else if (nonEmptyStr(id) && id.length === 48) {
@@ -74,3 +74,5 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
 
   return undefined
 }
+
+export const isIpfs = (content?: Content) => content && (content.isIpfs || (content as any).IPFS)

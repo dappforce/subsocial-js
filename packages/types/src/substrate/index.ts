@@ -8,5 +8,4 @@ export { registerSubsocialTypes } from './register'
 export type PalletName = 'permissions' | 'posts' | 'profileFollows' | 'profiles' | 'reactions' | 'roles' | 'scores' | 'spaceFollows' | 'spaceOwnership' | 'spaces' | 'utils'
 
 export * from './interfaces/utils'
-export * from './interfaces'
 export * as classes from './classes'

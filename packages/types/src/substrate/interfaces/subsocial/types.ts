@@ -3,7 +3,10 @@
 
 import { BTreeSet, Enum, Option, Struct } from '@polkadot/types/codec';
 import { Text, bool, i32, u16, u32, u64 } from '@polkadot/types/primitive';
-import { AccountId, BlockNumber, Moment } from '@subsocial/types/substrate/interfaces/runtime';
+import { AccountId, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
+
+/** @name Address */
+export interface Address extends AccountId {}
 
 /** @name Comment */
 export interface Comment extends Struct {
@@ -24,6 +27,9 @@ export interface Content extends Enum {
 
 /** @name IpfsCid */
 export interface IpfsCid extends Text {}
+
+/** @name LookupSource */
+export interface LookupSource extends AccountId {}
 
 /** @name Post */
 export interface Post extends Struct {

@@ -1,7 +1,9 @@
 export default {
   types: {
-    IpfsCid: 'Text',
+    Address: 'AccountId',
+    LookupSource: 'AccountId',
 
+    IpfsCid: 'Text',
     SpaceId: 'u64',
 
     WhoAndWhen: {

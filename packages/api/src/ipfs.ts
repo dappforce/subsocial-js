@@ -2,7 +2,7 @@ import { IpfsCid as RuntimeIpfsCid, SocialAccount } from '@subsocial/types/subst
 import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { getUniqueIds } from './utils';
+import { getUniqueIds, isIpfs } from './utils';
 import { Content } from '@subsocial/types/substrate/classes';
 
 const IPFS_HASH_BINARY_LEN = 47
@@ -34,7 +34,7 @@ type HasContentDirectly = {
 type HasIpfsCidSomewhere = HasContentDirectly | SocialAccount
 
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
-  if ((struct as HasContentDirectly).content.isIpfs) {
+  if (isIpfs((struct as HasContentDirectly).content)) {
     return (struct as HasContentDirectly).content.asIpfs.toString()
   } else if ((struct as SocialAccount).profile) {
     return getIpfsCidOfSocialAccount(struct as SocialAccount)

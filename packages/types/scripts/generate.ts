@@ -5,10 +5,8 @@ import * as defaultDefinitions from '@polkadot/types/interfaces/definitions';
 import * as DfDefinitions from '../src/substrate/interfaces/definitions';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { runtime, ...substrateDefinations } = defaultDefinitions;
-
 const definitions = {
-  '@polkadot/types/interfaces': substrateDefinations,
+  '@polkadot/types/interfaces': defaultDefinitions,
   '@subsocial/types/substrate/interfaces': DfDefinitions
 };
 
