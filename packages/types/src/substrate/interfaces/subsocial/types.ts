@@ -3,10 +3,13 @@
 
 import { BTreeSet, Enum, Option, Struct } from '@polkadot/types/codec';
 import { Text, bool, i32, u16, u32, u64 } from '@polkadot/types/primitive';
-import { AccountId, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
+import { AccountId, Moment } from '@polkadot/types/interfaces/runtime';
 
 /** @name Address */
 export interface Address extends AccountId {}
+
+/** @name BlockNumber */
+export interface BlockNumber extends u32 {}
 
 /** @name Comment */
 export interface Comment extends Struct {
@@ -165,8 +168,8 @@ export interface Space extends Struct {
   readonly handle: Option<Text>;
   readonly content: Content;
   readonly hidden: bool;
-  readonly posts_count: u16;
-  readonly hidden_posts_count: u16;
+  readonly posts_count: u32;
+  readonly hidden_posts_count: u32;
   readonly followers_count: u32;
   readonly score: i32;
   readonly permissions: Option<SpacePermissions>;

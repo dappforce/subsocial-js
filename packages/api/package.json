@@ -18,9 +18,9 @@
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@polkadot/api": "1.13.1",
-    "@subsocial/types": "^0.4.0",
+    "@polkadot/api": "^1.28.1",
     "@subsocial/utils": "^0.1.23",
+    "@subsocial/types": "latest",
     "@types/axios": "^0.14.0",
     "axios": "^0.19.2"
   },

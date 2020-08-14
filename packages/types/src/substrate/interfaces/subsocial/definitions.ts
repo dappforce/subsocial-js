@@ -2,8 +2,10 @@ export default {
   types: {
     Address: 'AccountId',
     LookupSource: 'AccountId',
+    BlockNumber: 'u32',
 
     IpfsCid: 'Text',
+
     SpaceId: 'u64',
 
     WhoAndWhen: {
@@ -45,8 +47,8 @@ export default {
       content: 'Content',
       hidden: 'bool',
 
-      posts_count: 'u16',
-      hidden_posts_count: 'u16',
+      posts_count: 'u32',
+      hidden_posts_count: 'u32',
       followers_count: 'u32',
 
       score: 'i32',

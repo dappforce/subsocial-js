@@ -1,6 +1,11 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { types } from '@subsocial/types/substrate/preparedTypes';
 import { newLogger } from '@subsocial/utils';
+import registry from '@subsocial/types/substrate/registry';
+import { formatBalance } from '@polkadot/util';
+
+const DEFAULT_DECIMALS = registry.createType('u32', 12);
+const DEFAULT_TOKEN = registry.createType('Text', 'SMN')
 
 const logger = newLogger('SubstrateConnection');
 
@@ -24,6 +29,18 @@ export class DfApi {
     DfApi.api = api
     DfApi.connected = true
     DfApi.logChainInfo()
+
+    const properties = await api.rpc.system.properties()
+
+    const tokenSymbol = properties.tokenSymbol.unwrapOr(DEFAULT_TOKEN).toString();
+    const tokenDecimals = properties.tokenDecimals.unwrapOr(DEFAULT_DECIMALS).toNumber();
+
+    registry.setChainProperties(properties)
+
+    formatBalance.setDefaults({
+      decimals: tokenDecimals,
+      unit: tokenSymbol
+    });
 
     return api
   }
