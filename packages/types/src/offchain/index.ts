@@ -41,7 +41,7 @@ export type NavTab = {
 
 export type SpaceContent = {
   name: string;
-  desc: string;
+  about: string;
   image: string;
   tags: string[];
   navTabs?: NavTab[];
@@ -63,7 +63,7 @@ export type CommentContent = {
 };
 
 export type ProfileContent = {
-  fullname: string;
+  name: string;
   avatar: string;
   email: string;
   personalSite: string;

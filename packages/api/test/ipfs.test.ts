@@ -11,7 +11,7 @@ const cids = new Map();
 
 const spaceContent: SpaceContent = {
   name: 'Test Space',
-  desc: 'Space desc',
+  about: 'Space about',
   image: 'https://www.jisc.ac.uk/sites/default/files/spaceging.jpg',
   tags: [ 'space_tag_1', 'space_tag_2' ]
 }

@@ -24,7 +24,7 @@ export const mockProfileAlice = {
 
 export const mockContentAlice = {
   about: 'About of Alice',
-  fullname: 'Alice Allison',
+  name: 'Alice Allison',
   avatar: aliceAvatar
 } as ProfileContent
 
@@ -52,7 +52,7 @@ export const mockProfileBob = {
 
 export const mockContentBob = {
   about: 'About of Bob',
-  fullname: 'Bob Bobster',
+  name: 'Bob Bobster',
   avatar: bobAvatar
 } as ProfileContent
 

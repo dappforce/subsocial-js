@@ -3,13 +3,10 @@
 
 import { BTreeSet, Enum, Option, Struct } from '@polkadot/types/codec';
 import { Text, bool, i32, u16, u32, u64 } from '@polkadot/types/primitive';
-import { AccountId, Moment } from '@polkadot/types/interfaces/runtime';
+import { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
 
 /** @name Address */
 export interface Address extends AccountId {}
-
-/** @name BlockNumber */
-export interface BlockNumber extends u32 {}
 
 /** @name Comment */
 export interface Comment extends Struct {
@@ -23,9 +20,64 @@ export interface Content extends Enum {
   readonly isRaw: boolean;
   readonly asRaw: Text;
   readonly isIpfs: boolean;
-  readonly asIpfs: IpfsCid;
+  readonly asIpfs: Text;
   readonly isHyper: boolean;
   readonly asHyper: Text;
+}
+
+/** @name Donation */
+export interface Donation extends Struct {
+  readonly id: DonationId;
+  readonly created: WhoAndWhen;
+  readonly recipient: DonationRecipient;
+  readonly donation_wallet: AccountId;
+  readonly amount: Balance;
+  readonly comment_id: Option<PostId>;
+}
+
+/** @name DonationId */
+export interface DonationId extends u64 {}
+
+/** @name DonationRecipient */
+export interface DonationRecipient extends Enum {
+  readonly isAccount: boolean;
+  readonly asAccount: AccountId;
+  readonly isSpace: boolean;
+  readonly asSpace: SpaceId;
+  readonly isPost: boolean;
+  readonly asPost: PostId;
+}
+
+/** @name DonationSettings */
+export interface DonationSettings extends Struct {
+  readonly donations_allowed: bool;
+  readonly min_amount: Option<Balance>;
+  readonly max_amount: Option<Balance>;
+}
+
+/** @name DonationSettingsUpdate */
+export interface DonationSettingsUpdate extends Struct {
+  readonly donations_allowed: Option<bool>;
+  readonly min_amount: Option<Option<Balance>>;
+  readonly max_amount: Option<Option<Balance>>;
+}
+
+/** @name EntityId */
+export interface EntityId extends Enum {
+  readonly isContent: boolean;
+  readonly asContent: Content;
+  readonly isAccount: boolean;
+  readonly asAccount: AccountId;
+  readonly isSpace: boolean;
+  readonly asSpace: SpaceId;
+  readonly isPost: boolean;
+  readonly asPost: PostId;
+}
+
+/** @name EntityStatus */
+export interface EntityStatus extends Enum {
+  readonly isAllowed: boolean;
+  readonly isBlocked: boolean;
 }
 
 /** @name IpfsCid */
@@ -81,7 +133,6 @@ export interface PostUpdate extends Struct {
 export interface Profile extends Struct {
   readonly created: WhoAndWhen;
   readonly updated: Option<WhoAndWhen>;
-  readonly handle: Text;
   readonly content: Content;
 }
 
@@ -93,7 +144,6 @@ export interface ProfileHistoryRecord extends Struct {
 
 /** @name ProfileUpdate */
 export interface ProfileUpdate extends Struct {
-  readonly handle: Option<Text>;
   readonly content: Option<Content>;
 }
 
@@ -113,6 +163,18 @@ export interface ReactionKind extends Enum {
   readonly isUpvote: boolean;
   readonly isDownvote: boolean;
 }
+
+/** @name Report */
+export interface Report extends Struct {
+  readonly id: ReportId;
+  readonly created: WhoAndWhen;
+  readonly reported_entity: EntityId;
+  readonly reported_within: SpaceId;
+  readonly reason: Content;
+}
+
+/** @name ReportId */
+export interface ReportId extends u64 {}
 
 /** @name Role */
 export interface Role extends Struct {
@@ -149,6 +211,15 @@ export interface ScoringAction extends Enum {
   readonly isFollowAccount: boolean;
 }
 
+/** @name SessionKey */
+export interface SessionKey extends Struct {
+  readonly created: WhoAndWhen;
+  readonly updated: Option<WhoAndWhen>;
+  readonly expires_at: BlockNumber;
+  readonly limit: Option<Balance>;
+  readonly spent: Balance;
+}
+
 /** @name SocialAccount */
 export interface SocialAccount extends Struct {
   readonly followers_count: u32;
@@ -175,12 +246,6 @@ export interface Space extends Struct {
   readonly permissions: Option<SpacePermissions>;
 }
 
-/** @name SpaceForRoles */
-export interface SpaceForRoles extends Struct {
-  readonly owner: AccountId;
-  readonly permissions: Option<SpacePermissions>;
-}
-
 /** @name SpaceHistoryRecord */
 export interface SpaceHistoryRecord extends Struct {
   readonly edited: WhoAndWhen;
@@ -189,6 +254,16 @@ export interface SpaceHistoryRecord extends Struct {
 
 /** @name SpaceId */
 export interface SpaceId extends u64 {}
+
+/** @name SpaceModerationSettings */
+export interface SpaceModerationSettings extends Struct {
+  readonly autoblock_threshold: Option<u16>;
+}
+
+/** @name SpaceModerationSettingsUpdate */
+export interface SpaceModerationSettingsUpdate extends Struct {
+  readonly autoblock_threshold: Option<Option<u16>>;
+}
 
 /** @name SpacePermission */
 export interface SpacePermission extends Enum {
@@ -223,6 +298,7 @@ export interface SpacePermission extends Enum {
   readonly isSuggestEntityStatus: boolean;
   readonly isUpdateEntityStatus: boolean;
   readonly isUpdateSpaceSettings: boolean;
+  readonly isManageSubscriptionPlans: boolean;
 }
 
 /** @name SpacePermissions */
@@ -251,6 +327,52 @@ export interface SpaceUpdate extends Struct {
   readonly content: Option<Content>;
   readonly hidden: Option<bool>;
   readonly permissions: Option<Option<SpacePermissions>>;
+}
+
+/** @name Subscription */
+export interface Subscription extends Struct {
+  readonly id: SubscriptionPlanId;
+  readonly created: WhoAndWhen;
+  readonly updated: Option<WhoAndWhen>;
+  readonly is_active: bool;
+  readonly wallet: Option<AccountId>;
+  readonly plan_id: SubscriptionPlanId;
+}
+
+/** @name SubscriptionId */
+export interface SubscriptionId extends u64 {}
+
+/** @name SubscriptionPeriod */
+export interface SubscriptionPeriod extends Enum {
+  readonly isDaily: boolean;
+  readonly isWeekly: boolean;
+  readonly isQuarterly: boolean;
+  readonly isYearly: boolean;
+  readonly isCustom: boolean;
+  readonly asCustom: BlockNumber;
+}
+
+/** @name SubscriptionPlan */
+export interface SubscriptionPlan extends Struct {
+  readonly id: SubscriptionPlanId;
+  readonly created: WhoAndWhen;
+  readonly updated: Option<WhoAndWhen>;
+  readonly is_active: bool;
+  readonly content: Content;
+  readonly space_id: SpaceId;
+  readonly wallet: Option<AccountId>;
+  readonly price: Balance;
+  readonly period: SubscriptionPeriod;
+}
+
+/** @name SubscriptionPlanId */
+export interface SubscriptionPlanId extends u64 {}
+
+/** @name SuggestedStatus */
+export interface SuggestedStatus extends Struct {
+  readonly suggested: WhoAndWhen;
+  readonly status: Option<EntityStatus>;
+  readonly report_id: Option<ReportId>;
 }
 
 /** @name User */
