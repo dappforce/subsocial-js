@@ -39,11 +39,18 @@ export type NavTab = {
   hidden: boolean
 }
 
+export type NamedLinks = {
+  name: string,
+  url?: string
+}
+
 export type SpaceContent = {
   name: string;
   about: string;
   image: string;
+  email: string;
   tags: string[];
+  links: NamedLinks[] | string[];
   navTabs?: NavTab[];
 };
 
