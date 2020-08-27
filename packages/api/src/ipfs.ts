@@ -199,6 +199,32 @@ export class SubsocialIpfsApi {
     }
   }
 
+  async saveFile (file: File | Blob) {
+    if (typeof window === 'undefined') {
+      throw new Error('This function works only in a browser')
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await axios.post(`${this.offchainUrl}/ipfs/addFile`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      if (res.status !== 200) {
+        log.error(`${this.saveFile.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
+        return undefined
+      }
+
+      return res.data;
+    } catch (error) {
+      log.error('Failed to add file to IPFS from client side via offchain: %o', error)
+      return undefined;
+    }
+  }
+
   async saveSpace (content: SpaceContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved space with hash: ${hash}`)
