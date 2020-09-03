@@ -1,5 +1,5 @@
 import { Comment } from '@subsocial/types/substrate/classes';
-import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct } from '@subsocial/types';
+import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, CID } from '@subsocial/types';
 import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import { PostId, ReactionId, SocialAccount, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
@@ -76,3 +76,25 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
 }
 
 export const isIpfs = (content?: Content) => content && (content.isIpfs || (content as any).IPFS)
+
+const IPFS_HASH_BINARY_LEN = 47
+
+export const asIpfsCid = (cid: IpfsCid): CID => {
+  if (cid instanceof CID) {
+    return cid
+  } else if (typeof cid === 'string') {
+    return new CID(cid)
+  } else if (typeof cid.toU8a === 'function' && cid.toU8a().length === IPFS_HASH_BINARY_LEN) {
+    return new CID(cid.toString())
+  } else {
+    throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsCid')
+  }
+}
+
+export const isValidIpfsCid = (cid: IpfsCid) => {
+  try {
+    return !!asIpfsCid(cid)
+  } catch {
+    return false
+  }
+}

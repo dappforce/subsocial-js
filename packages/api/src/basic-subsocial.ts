@@ -8,6 +8,7 @@ import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
 import { getUniqueIds, SupportedSubstrateId } from './utils';
 import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery } from './utils/types';
+import { contentFilter } from './utils/content-filter';
 
 export type SubsocialApiProps = {
   substrateApi: SubstrateApi,
@@ -64,17 +65,26 @@ export class BasicSubsocialApi {
   async findSpaces (filter: FindSpacesQuery): Promise<SpaceData[]> {
     const findStructs = this.substrate.findSpaces.bind(this.substrate, filter);
     const findContents = this.ipfs.findSpaces.bind(this.ipfs);
-    return this.findDataArray<AnySpaceId, Space, SpaceContent>(
+    const spaces = await this.findDataArray<AnySpaceId, Space, SpaceContent>(
       filter.ids, findStructs, findContents
     )
+    return contentFilter({
+      structs: spaces,
+      withContentOnly: filter.withContentOnly || true
+    })
   }
 
   async findPosts (filter: FindPostsQuery): Promise<PostData[]> {
     const findStructs = this.substrate.findPosts.bind(this.substrate, filter)
     const findContents = this.ipfs.findPosts.bind(this.ipfs)
-    return this.findDataArray<AnyPostId, Post, PostContent>(
+    const posts = await this.findDataArray<AnyPostId, Post, PostContent>(
       filter.ids, findStructs, findContents
     )
+
+    return contentFilter({
+      structs: posts,
+      withContentOnly: filter.withContentOnly || true
+    })
   }
 
   async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {

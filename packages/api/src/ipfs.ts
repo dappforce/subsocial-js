@@ -2,22 +2,8 @@ import { IpfsCid as RuntimeIpfsCid, SocialAccount } from '@subsocial/types/subst
 import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { getUniqueIds, isIpfs } from './utils';
+import { getUniqueIds, isIpfs, asIpfsCid } from './utils';
 import { Content } from '@subsocial/types/substrate/classes';
-
-const IPFS_HASH_BINARY_LEN = 47
-
-const asIpfsCid = (cid: IpfsCid): CID => {
-  if (cid instanceof CID) {
-    return cid
-  } else if (typeof cid === 'string') {
-    return new CID(cid)
-  } else if (typeof cid.toU8a === 'function' && cid.toU8a().length === IPFS_HASH_BINARY_LEN) {
-    return new CID(cid.toString())
-  } else {
-    throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsCid')
-  }
-}
 
 export function getIpfsCidOfSocialAccount (struct: SocialAccount): string | undefined {
   const profile = struct?.profile
