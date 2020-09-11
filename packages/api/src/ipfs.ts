@@ -40,7 +40,7 @@ export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): CID[] {
 }
 
 type IpfsUrl = string
-type IpfsNodeEndpoint = 'cat' | 'version'
+type IpfsNodeEndpoint = 'cat' | 'version' | 'dag/get'
 
 export type SubsocialIpfsProps = {
   ipfsNodeUrl: IpfsUrl,
@@ -101,7 +101,7 @@ export class SubsocialIpfsApi {
         return []
       }
 
-      const loadContentFns = ipfsCids.map((cid) => this.ipfsNodeRequest('cat', cid));
+      const loadContentFns = ipfsCids.map((cid) => this.ipfsNodeRequest('dag/get', cid));
       const jsonContents = await Promise.all(loadContentFns);
       const contents = jsonContents.map((x) => x.data) as T[];
       log.debug(`Loaded ${pluralize(contents.length, contentName)}`)
