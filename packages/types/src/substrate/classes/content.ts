@@ -72,16 +72,17 @@ const createContent = (value?: IpfsContentValue) => nonEmptyStr(value)
 type IpfsContentValue = IpfsCid | null
 
 export class OptionContent extends Option<Content> {
-  constructor (value: ContentEnumValue) {
+  constructor (value: ContentEnumValue | Null) {
     super(registry, 'Option<Content>', value)
   }
 }
 
 export class OptionIpfsContent extends OptionContent {
   constructor (value?: IpfsContentValue) {
-    super(createContent(value))
+    super(value ? createIpfsContent(value) : new Null(registry))
   }
 }
+
 export class IpfsContent extends Content {
   constructor (value?: IpfsContentValue) {
     super(createContent(value))
