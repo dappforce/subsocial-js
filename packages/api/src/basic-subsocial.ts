@@ -70,7 +70,7 @@ export class BasicSubsocialApi {
     )
     return contentFilter({
       structs: spaces,
-      withContentOnly: filter.withContentOnly || true
+      withContentOnly: filter.withContentOnly
     })
   }
 
@@ -83,7 +83,7 @@ export class BasicSubsocialApi {
 
     return contentFilter({
       structs: posts,
-      withContentOnly: filter.withContentOnly || true
+      withContentOnly: filter.withContentOnly
     })
   }
 

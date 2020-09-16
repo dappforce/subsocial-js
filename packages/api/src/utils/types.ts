@@ -1,6 +1,6 @@
 import { AnyPostId, AnySpaceId } from '@subsocial/types'
 
-export type Visibility = 'onlyVisible' | 'onlyHidden'
+export type Visibility = 'onlyVisible' | 'onlyHidden' | 'onlyPublic' | 'onlyUnlisted'
 
 export type VisibilityFilter = {
   visibility?: Visibility
