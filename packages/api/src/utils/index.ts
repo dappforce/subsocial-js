@@ -1,6 +1,6 @@
 import { Comment } from '@subsocial/types/substrate/classes';
 import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, CID } from '@subsocial/types';
-import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
+import { newLogger, isEmptyArray, nonEmptyStr, isDef } from '@subsocial/utils';
 import { PostId, ReactionId, SocialAccount, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { GenericAccountId } from '@polkadot/types'
@@ -96,3 +96,8 @@ export const isValidIpfsCid = (cid: IpfsCid) => {
     return false
   }
 }
+
+export const resolveCidOfContent = (content?: Content) =>
+  (isDef(content) && content.isIpfs)
+    ? content.asIpfs.toString()
+    : undefined
