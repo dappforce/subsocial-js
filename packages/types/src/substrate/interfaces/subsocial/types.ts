@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 import { BTreeSet, Enum, Option, Struct } from '@polkadot/types/codec';
-import { Text, bool, i32, u16, u32, u64 } from '@polkadot/types/primitive';
+import { Text, bool, i32, u16, u32, u64, u8 } from '@polkadot/types/primitive';
 import { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
 
 /** @name Address */
@@ -62,6 +62,16 @@ export interface DonationSettingsUpdate extends Struct {
   readonly max_amount: Option<Option<Balance>>;
 }
 
+/** @name Drop */
+export interface Drop extends Struct {
+  readonly id: DropId;
+  readonly first_drop_at: BlockNumber;
+  readonly total_dropped: Balance;
+}
+
+/** @name DropId */
+export interface DropId extends u64 {}
+
 /** @name EntityId */
 export interface EntityId extends Enum {
   readonly isContent: boolean;
@@ -78,6 +88,18 @@ export interface EntityId extends Enum {
 export interface EntityStatus extends Enum {
   readonly isAllowed: boolean;
   readonly isBlocked: boolean;
+}
+
+/** @name FaucetSettings */
+export interface FaucetSettings extends Struct {
+  readonly period: Option<BlockNumber>;
+  readonly period_limit: Balance;
+}
+
+/** @name FaucetSettingsUpdate */
+export interface FaucetSettingsUpdate extends Struct {
+  readonly period: Option<Option<BlockNumber>>;
+  readonly period_limit: Option<Balance>;
 }
 
 /** @name IpfsCid */
@@ -163,6 +185,9 @@ export interface ReactionKind extends Enum {
   readonly isUpvote: boolean;
   readonly isDownvote: boolean;
 }
+
+/** @name RefCount */
+export interface RefCount extends u8 {}
 
 /** @name Report */
 export interface Report extends Struct {
@@ -298,7 +323,6 @@ export interface SpacePermission extends Enum {
   readonly isSuggestEntityStatus: boolean;
   readonly isUpdateEntityStatus: boolean;
   readonly isUpdateSpaceSettings: boolean;
-  readonly isManageSubscriptionPlans: boolean;
 }
 
 /** @name SpacePermissions */
@@ -346,6 +370,7 @@ export interface SubscriptionId extends u64 {}
 export interface SubscriptionPeriod extends Enum {
   readonly isDaily: boolean;
   readonly isWeekly: boolean;
+  readonly isMonthly: boolean;
   readonly isQuarterly: boolean;
   readonly isYearly: boolean;
   readonly isCustom: boolean;

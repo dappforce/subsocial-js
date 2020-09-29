@@ -2,6 +2,7 @@ export default {
   types: {
     Address: 'AccountId',
     LookupSource: 'AccountId',
+    RefCount: 'u8',
     IpfsCid: 'Text',
     DonationId: 'u64',
     DonationRecipient: {
@@ -28,6 +29,20 @@ export default {
       donations_allowed: 'Option<bool>',
       min_amount: 'Option<Option<Balance>>',
       max_amount: 'Option<Option<Balance>>'
+    },
+    DropId: 'u64',
+    Drop: {
+      id: 'DropId',
+      first_drop_at: 'BlockNumber',
+      total_dropped: 'Balance'
+    },
+    FaucetSettings: {
+      period: 'Option<BlockNumber>',
+      period_limit: 'Balance'
+    },
+    FaucetSettingsUpdate: {
+      period: 'Option<Option<BlockNumber>>',
+      period_limit: 'Option<Balance>'
     },
     ReportId: 'u64',
     EntityId: {
@@ -95,8 +110,7 @@ export default {
         'OverridePostPermissions',
         'SuggestEntityStatus',
         'UpdateEntityStatus',
-        'UpdateSpaceSettings',
-        'ManageSubscriptionPlans'
+        'UpdateSpaceSettings'
       ]
     },
     SpacePermissions: {
@@ -248,6 +262,7 @@ export default {
       _enum: {
         Daily: 'Null',
         Weekly: 'Null',
+        Monthly: 'Null',
         Quarterly: 'Null',
         Yearly: 'Null',
         Custom: 'BlockNumber'

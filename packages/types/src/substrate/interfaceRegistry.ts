@@ -46,7 +46,7 @@ import { OpenTip, OpenTipFinderTo225, OpenTipTip, OpenTipTo225, TreasuryProposal
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
-import { Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, EntityId, EntityStatus, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
+import { Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, FaucetSettings, FaucetSettingsUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -1888,6 +1888,19 @@ declare module '@polkadot/types/types/registry' {
     DonationSettingsUpdate: DonationSettingsUpdate;
     'Option<DonationSettingsUpdate>': Option<DonationSettingsUpdate>;
     'Vec<DonationSettingsUpdate>': Vec<DonationSettingsUpdate>;
+    DropId: DropId;
+    'Compact<DropId>': Compact<DropId>;
+    'Option<DropId>': Option<DropId>;
+    'Vec<DropId>': Vec<DropId>;
+    Drop: Drop;
+    'Option<Drop>': Option<Drop>;
+    'Vec<Drop>': Vec<Drop>;
+    FaucetSettings: FaucetSettings;
+    'Option<FaucetSettings>': Option<FaucetSettings>;
+    'Vec<FaucetSettings>': Vec<FaucetSettings>;
+    FaucetSettingsUpdate: FaucetSettingsUpdate;
+    'Option<FaucetSettingsUpdate>': Option<FaucetSettingsUpdate>;
+    'Vec<FaucetSettingsUpdate>': Vec<FaucetSettingsUpdate>;
     ReportId: ReportId;
     'Compact<ReportId>': Compact<ReportId>;
     'Option<ReportId>': Option<ReportId>;
