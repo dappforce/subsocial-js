@@ -92,3 +92,24 @@ export type IpfsApi = IPFS.FilesAPI & {
   },
   repo: IPFS.RepoAPI
 };
+
+export type EventsName =
+  'AccountFollowed' |
+  'SpaceFollowed' |
+  'SpaceCreated' |
+  'CommentCreated' |
+  'CommentReplyCreated' |
+  'PostCreated' |
+  'PostShared' |
+  'CommentShared' |
+  'PostReactionCreated' |
+  'CommentReactionCreated'
+
+export type Counts = {
+  postsCount: number,
+  commentsCount: number,
+  reactionsCount: number,
+  followsCount: number,
+  spacesCount: number,
+  activitiesCount: number
+}

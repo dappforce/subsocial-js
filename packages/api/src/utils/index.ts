@@ -33,11 +33,14 @@ export const getUniqueIds = <ID extends AnyId> (ids: (ID | undefined)[]): ID[] =
 }
 
 export function asAccountId (id: AnyAccountId): GenericAccountId | undefined {
-  if (id instanceof GenericAccountId) {
-    return id
-  } else if (nonEmptyStr(id) && id.length === 48) {
-    return new GenericAccountId(registry, id)
-  } else {
+  try {
+    if (id instanceof GenericAccountId) {
+      return id
+    } else if (nonEmptyStr(id)) {
+      return new GenericAccountId(registry, id)
+    }
+    return undefined
+  } catch {
     return undefined
   }
 }
