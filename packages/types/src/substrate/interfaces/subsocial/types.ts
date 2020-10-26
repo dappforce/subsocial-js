@@ -8,6 +8,9 @@ import { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfa
 /** @name Address */
 export interface Address extends AccountId {}
 
+/** @name BountyIndex */
+export interface BountyIndex extends u32 {}
+
 /** @name Comment */
 export interface Comment extends Struct {
   readonly parent_id: Option<PostId>;

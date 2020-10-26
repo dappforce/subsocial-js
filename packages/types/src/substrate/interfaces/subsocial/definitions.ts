@@ -5,6 +5,7 @@ export default {
     RefCount: 'u8',
     IpfsCid: 'Text',
     DonationId: 'u64',
+    BountyIndex: 'u32',
     DonationRecipient: {
       _enum: {
         Account: 'AccountId',

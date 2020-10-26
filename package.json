@@ -21,6 +21,7 @@
     "test": "jest --testPathIgnorePatterns e2e"
   },
   "devDependencies": {
+    "@polkadot/dev": "0.32.17",
     "@babel/core": "^7.8.4",
     "@babel/register": "^7.8.3",
     "@babel/runtime": "^7.8.4",
@@ -28,7 +29,6 @@
   },
   "dependencies": {
     "@babel/preset-typescript": "^7.9.0",
-    "@polkadot/dev": "0.32.17",
     "@subsocial/config": "^0.1.4",
     "@types/jest": "^25.2.3",
     "@types/node": "^14.0.5",

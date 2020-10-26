@@ -46,7 +46,7 @@ import { OpenTip, OpenTipFinderTo225, OpenTipTip, OpenTipTo225, TreasuryProposal
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
-import { Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, FaucetSettings, FaucetSettingsUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
+import { BountyIndex, Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, FaucetSettings, FaucetSettingsUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from '@subsocial/types/substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -1876,6 +1876,10 @@ declare module '@polkadot/types/types/registry' {
     'Compact<DonationId>': Compact<DonationId>;
     'Option<DonationId>': Option<DonationId>;
     'Vec<DonationId>': Vec<DonationId>;
+    BountyIndex: BountyIndex;
+    'Compact<BountyIndex>': Compact<BountyIndex>;
+    'Option<BountyIndex>': Option<BountyIndex>;
+    'Vec<BountyIndex>': Vec<BountyIndex>;
     DonationRecipient: DonationRecipient;
     'Option<DonationRecipient>': Option<DonationRecipient>;
     'Vec<DonationRecipient>': Vec<DonationRecipient>;
