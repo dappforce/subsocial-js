@@ -1,9 +1,10 @@
 import { IpfsCid as RuntimeIpfsCid, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid, ProfileContent } from '@subsocial/types/offchain';
-import { newLogger, getFirstOrUndefined, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
+import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from './utils';
 import { Content } from '@subsocial/types/substrate/classes';
+import { SubsocialContext, SubsocialContextProps, ContentResult } from './utils/types';
 
 export function getIpfsCidOfSocialAccount (struct: SocialAccount): string | undefined {
   const profile = struct?.profile
@@ -28,21 +29,16 @@ export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): s
   return undefined
 }
 
-export function getCidOfStruct (struct: HasIpfsCidSomewhere): CID | undefined {
-  const hash = getIpfsCidOfStruct(struct)
-  return hash ? new CID(hash) : undefined
-}
-
-export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): CID[] {
+export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): string[] {
   return structs
-    .map(getCidOfStruct)
-    .filter(cid => typeof cid !== 'undefined') as CID[]
+    .map(getIpfsCidOfStruct)
+    .filter(cid => typeof cid !== 'undefined') as string[]
 }
 
 type IpfsUrl = string
 type IpfsNodeEndpoint = 'cat' | 'version' | 'dag/get'
 
-export type SubsocialIpfsProps = {
+export type SubsocialIpfsProps = SubsocialContext & {
   ipfsNodeUrl: IpfsUrl,
   offchainUrl: string
 }
@@ -52,12 +48,14 @@ export class SubsocialIpfsApi {
   private ipfsNodeUrl!: IpfsUrl // IPFS Node ReadOnly Gateway
 
   private offchainUrl!: string
+  private context?: SubsocialContextProps
 
   constructor (props: SubsocialIpfsProps) {
-    const { ipfsNodeUrl, offchainUrl } = props;
+    const { ipfsNodeUrl, offchainUrl, context } = props;
 
     this.ipfsNodeUrl = `${ipfsNodeUrl}/api/v0`
     this.offchainUrl = `${offchainUrl}/v1`
+    this.context = context
 
     this.testConnection()
   }
@@ -91,40 +89,77 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Find multiple
 
-  async getContentArray<T extends CommonContent> (cids: IpfsCid[], contentName?: string): Promise<T[]> {
-    try {
-      contentName = nonEmptyStr(contentName) ? contentName + ' content' : 'content'
-      const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
+  getUniqueCids (cids: IpfsCid[], contentName?: string) {
+    contentName = nonEmptyStr(contentName) ? contentName + ' content' : 'content'
+    const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
 
-      if (isEmptyArray(ipfsCids)) {
-        log.debug(`No ${contentName} to load from IPFS: no cids provided`)
-        return []
+    if (isEmptyArray(ipfsCids)) {
+      log.debug(`No ${contentName} to load from IPFS: no cids provided`)
+      return []
+    }
+
+    return ipfsCids
+  }
+
+  async getContentArrayFromIpfs<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+    try {
+      const ipfsCids = this.getUniqueCids(cids, contentName)
+
+      const content: ContentResult<T> = {}
+
+      const getFormatedContent = async (cid: CID) => {
+        const res = await this.ipfsNodeRequest('dag/get', cid)
+        const cidStr = cid.toString()
+        content[cidStr] = res.data
       }
 
-      const loadContentFns = ipfsCids.map((cid) => this.ipfsNodeRequest('dag/get', cid));
-      const jsonContents = await Promise.all(loadContentFns);
-      const contents = jsonContents.map((x) => x.data) as T[];
-      log.debug(`Loaded ${pluralize(contents.length, contentName)}`)
-      return contents
+      const loadContentFns = ipfsCids.map(getFormatedContent);
+      await Promise.all(loadContentFns);
+      log.debug(`Loaded ${pluralize(cids.length, contentName)}`)
+      return content
     } catch (err) {
       console.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
-      return [];
+      return {};
     }
   }
 
-  async findSpaces (cids: IpfsCid[]): Promise<SpaceContent[]> {
+  async getContentArrayFromOffchain<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+    try {
+      const res = await axios.post(`${this.offchainUrl}/ipfs/get`, { cids });
+
+      if (res.status !== 200) {
+        log.error(`${this.getContentArrayFromIpfs.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
+        return {}
+      }
+
+      const contents = res.data;
+      log.debug(`Loaded ${pluralize(contents.length, contentName)}`)
+      return contents;
+    } catch (error) {
+      log.error('Failed to get content to IPFS from client side via offchain: %o', error)
+      return {};
+    }
+  }
+
+  async getContentArray<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+    return this.context?.useServer
+      ? this.getContentArrayFromOffchain(cids, contentName)
+      : this.getContentArrayFromIpfs(cids, contentName)
+  }
+
+  async findSpaces (cids: IpfsCid[]): Promise<ContentResult<SpaceContent>> {
     return this.getContentArray(cids, 'space')
   }
 
-  async findPosts (cids: IpfsCid[]): Promise<PostContent[]> {
+  async findPosts (cids: IpfsCid[]): Promise<ContentResult<PostContent>> {
     return this.getContentArray(cids, 'post')
   }
 
-  async findComments (cids: IpfsCid[]): Promise<CommentContent[]> {
+  async findComments (cids: IpfsCid[]): Promise<ContentResult<CommentContent>> {
     return this.getContentArray(cids, 'comment')
   }
 
-  async findProfiles (cids: IpfsCid[]): Promise<ProfileContent[]> {
+  async findProfiles (cids: IpfsCid[]): Promise<ContentResult<ProfileContent>> {
     return this.getContentArray(cids, 'account')
   }
 
@@ -132,7 +167,8 @@ export class SubsocialIpfsApi {
   // Find single
 
   async getContent<T extends CommonContent> (cid: IpfsCid, contentName?: string): Promise<T | undefined> {
-    return getFirstOrUndefined(await this.getContentArray<T>([ cid ], contentName))
+    const content = await this.getContentArray<T>([ cid ], contentName)
+    return content[cid.toString()]
   }
 
   async findSpace (cid: IpfsCid): Promise<SpaceContent | undefined> {
