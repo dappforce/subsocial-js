@@ -58,11 +58,21 @@ export type SharedPostContent = {
   body: string
 };
 
+export type ProposalContent = {
+  network: 'kusama' | 'polkadot',
+  proposalIndex: number
+}
+
+export type PostExt = {
+  proposal?: ProposalContent
+}
+
 export type PostContent = SharedPostContent & {
   title: string;
   image: string;
   tags: string[];
   canonical: string;
+  ext?: PostExt
 };
 
 export type CommentContent = {
