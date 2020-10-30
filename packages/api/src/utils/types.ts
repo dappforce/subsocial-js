@@ -1,5 +1,13 @@
 import { AnyPostId, AnySpaceId } from '@subsocial/types'
 
+export type SubsocialContextProps = {
+  useServer?: boolean
+}
+
+export type SubsocialContext = {
+  context?: SubsocialContextProps
+}
+
 export type Visibility = 'onlyVisible' | 'onlyHidden' | 'onlyPublic' | 'onlyUnlisted'
 
 export type VisibilityFilter = {
@@ -35,3 +43,5 @@ export type FindSpaceQuery = FindStruct<AnySpaceId>
 
 export type FindPostsWithDetailsQuery = FindPostsQuery & PostDetailsOpts
 export type FindPostWithDetailsQuery = FindPostQuery & PostDetailsOpts
+
+export type ContentResult<T> = Record<string, T>

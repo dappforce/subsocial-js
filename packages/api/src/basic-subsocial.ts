@@ -7,10 +7,10 @@ import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
 import { getUniqueIds, SupportedSubstrateId } from './utils';
-import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery } from './utils/types';
+import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery, SubsocialContext, ContentResult } from './utils/types';
 import { contentFilter } from './utils/content-filter';
 
-export type SubsocialApiProps = {
+export type SubsocialApiProps = SubsocialContext & {
   substrateApi: SubstrateApi,
   ipfsNodeUrl: string,
   offchainUrl: string
@@ -23,9 +23,9 @@ export class BasicSubsocialApi {
   private _ipfs: SubsocialIpfsApi
 
   constructor (props: SubsocialApiProps) {
-    const { substrateApi, ipfsNodeUrl, offchainUrl } = props
-    this._substrate = new SubsocialSubstrateApi(substrateApi)
-    this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl })
+    const { substrateApi, ipfsNodeUrl, offchainUrl, context } = props
+    this._substrate = new SubsocialSubstrateApi({ api: substrateApi, context })
+    this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl, context })
   }
 
   public get substrate (): SubsocialSubstrateApi {
@@ -43,18 +43,16 @@ export class BasicSubsocialApi {
   > (
     ids: Id[],
     findStructs: (ids: Id[]) => Promise<Struct[]>,
-    findContents: (cids: IpfsCid[]) => Promise<Content[]>
+    findContents: (cids: IpfsCid[]) => Promise<ContentResult<Content>>
   ): Promise<CommonData<Struct, Content>[]> {
 
     const structs = await findStructs(ids)
     const cids = getUniqueIds(getCidsOfStructs(structs))
     const contents = await findContents(cids)
-    const contentByHashMap = new Map<string, Content>()
-    cids.forEach((cid, i) => contentByHashMap.set(cid.toString(), contents[i]))
 
     return structs.map(struct => {
       const hash = getIpfsCidOfStruct(struct)
-      const content = hash ? contentByHashMap.get(hash) : undefined
+      const content = hash ? contents[hash] : undefined
       return { struct, content }
     })
   }
