@@ -28,3 +28,11 @@ export const ElasticFields = {
     about: 'about',
   },
 }
+
+export type EsQueryParams = {
+  q?: string
+  limit?: number
+  offset?: number
+  indexes?: ElasticIndexTypes[]
+  tagsFilter?: string[]
+}
