@@ -23,7 +23,7 @@ export class SubsocialSubstrateApi {
   private _api: SubstrateApi // Polkadot API (connected)
   // private context?: SubsocialContextProps TODO use when need
 
-  constructor ({ api, context }: SubstrateApiProps) {
+  constructor ({ api }: SubstrateApiProps) {
     this._api = api
     // this.context = context
     logger.info('Initialized')
