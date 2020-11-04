@@ -21,9 +21,11 @@ prefix.reg(log);
 log.enableAll();
 
 prefix.apply(log, {
-  format(level, name, timestamp) {
-    return `${chalk.gray(`[${timestamp.toLocaleTimeString()}]`)} ${colors[level.toUpperCase() as Levels](level.length < 5 ? level + ' ' : level)} ${chalk.green(`${name}:`)}`;
-  },
+  format(level, name) {
+    const date = new Date()
+    const drawDate = (date: string) => chalk.gray(`[${date}]`)
+    return `${drawDate(date.toDateString())} ${drawDate(date.toTimeString())} ${colors[level.toUpperCase() as Levels](level.length < 5 ? level + ' ' : level)} ${chalk.green(`${name}:`)}`;
+  }
 });
 
 export const newLogger = (name: string = 'anonymous') => log.getLogger(name)
