@@ -1,8 +1,9 @@
 {
   "name": "@subsocial/types",
-  "version": "0.4.7-beta3",
+  "version": "0.4.11-beta3",
   "description": "JavaScript type definitions for Subsocial blockchain.",
   "author": "DappForce contributors",
+  "main": "build/index.js",
   "license": "GPL-3.0-only",
   "publishConfig": {
     "access": "public",
@@ -17,8 +18,7 @@
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
-    "@babel/runtime": "^7.8.4",
-    "@subsocial/utils": "^0.1.23",
+    "@subsocial/utils": "latest",
     "cids": "^0.7.1"
   },
   "devDependencies": {
@@ -26,7 +26,8 @@
     "@polkadot/types": "^1.28.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "build:watch": "tsc --watch"
   },
   "keywords": [
     "dappforce",
