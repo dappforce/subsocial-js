@@ -1,5 +1,4 @@
 import CID from 'cids';
-import * as IPFS from './ipfs.types';
 import { IpfsCid as RuntimeIpfsCid } from '../substrate/interfaces';
 
 export { CID };
@@ -94,14 +93,6 @@ export type ProfileContent = {
 };
 
 export type IpfsCid = string | CID | RuntimeIpfsCid;
-
-export type IpfsApi = IPFS.FilesAPI & {
-  pin: {
-    rm: (hash?: string) => any,
-    ls: (hash?: string) => any
-  },
-  repo: IPFS.RepoAPI
-};
 
 export type EventsName =
   'AccountFollowed' |
