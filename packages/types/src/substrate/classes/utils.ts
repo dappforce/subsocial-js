@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Option, Text, bool } from '@polkadot/types';
-import { nonEmptyStr } from '@subsocial/utils/src/string'
+import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
 import { SubstrateId } from '../..';
 

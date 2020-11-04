@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { Null, Enum, Option, Text } from '@polkadot/types';
 import { Content as IContent } from '../interfaces';
-import { nonEmptyStr } from '@subsocial/utils/src/string'
+import { nonEmptyStr } from '@subsocial/utils/string'
 import registry from '../registry';
 import { IpfsCid } from '../..';
 
