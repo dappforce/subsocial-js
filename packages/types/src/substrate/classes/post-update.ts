@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { Option, Struct, bool } from '@polkadot/types';
-import { SpaceId } from '@subsocial/types/substrate/interfaces';
+import { SpaceId } from '../interfaces';
 import registry from '../registry';
 import { OptionContent } from './content';
 // TODO add permissions

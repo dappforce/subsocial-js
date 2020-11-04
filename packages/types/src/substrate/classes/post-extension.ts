@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct } from '@polkadot/types';
-import { PostId, PostExtension as IPostExtension, Comment as IComment } from '@subsocial/types/substrate/interfaces';
+import { PostId, PostExtension as IPostExtension, Comment as IComment } from '../interfaces';
 import registry from '../registry';
 
 export class RegularPost extends Null {}
