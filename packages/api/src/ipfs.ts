@@ -4,7 +4,7 @@ import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/util
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from './utils';
 import { Content } from '@subsocial/types/substrate/classes';
-import { SubsocialContext, SubsocialContextProps, ContentResult } from './utils/types';
+import { SubsocialContext, ContentResult } from './utils/types';
 
 export function getIpfsCidOfSocialAccount (struct: SocialAccount): string | undefined {
   const profile = struct?.profile
@@ -48,14 +48,14 @@ export class SubsocialIpfsApi {
   private ipfsNodeUrl!: IpfsUrl // IPFS Node ReadOnly Gateway
 
   private offchainUrl!: string
-  private context?: SubsocialContextProps
+  private useServer?: boolean
 
   constructor (props: SubsocialIpfsProps) {
-    const { ipfsNodeUrl, offchainUrl, context } = props;
+    const { ipfsNodeUrl, offchainUrl, useServer } = props;
 
     this.ipfsNodeUrl = `${ipfsNodeUrl}/api/v0`
     this.offchainUrl = `${offchainUrl}/v1`
-    this.context = context
+    this.useServer = useServer
 
     this.testConnection()
   }
@@ -142,7 +142,7 @@ export class SubsocialIpfsApi {
   }
 
   async getContentArray<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
-    return this.context?.useServer
+    return this.useServer
       ? this.getContentArrayFromOffchain(cids, contentName)
       : this.getContentArrayFromIpfs(cids, contentName)
   }

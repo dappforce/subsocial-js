@@ -1,11 +1,7 @@
 import { AnyPostId, AnySpaceId } from '@subsocial/types'
 
-export type SubsocialContextProps = {
-  useServer?: boolean
-}
-
 export type SubsocialContext = {
-  context?: SubsocialContextProps
+  useServer?: boolean
 }
 
 export type Visibility = 'onlyVisible' | 'onlyHidden' | 'onlyPublic' | 'onlyUnlisted'
