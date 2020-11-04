@@ -1,8 +1,9 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.1.24",
+  "version": "0.4.11-beta4",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
+  "main": "build/index.js",
   "license": "GPL-3.0-only",
   "publishConfig": {
     "access": "public",
@@ -18,20 +19,24 @@
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "@types/circular-json": "^0.4.0",
-    "@types/lodash.isempty": "^4.4.6",
-    "@types/lodash.truncate": "^4.4.6",
-    "@types/winston": "^2.4.4",
     "bn.js": "^5.1.1",
     "chalk": "^3.0.0",
     "circular-json": "^0.5.9",
     "dotenv": "^8.0.0",
     "lodash.isempty": "^4.4.0",
     "lodash.truncate": "^4.4.2",
-    "winston": "^3.2.0"
+    "loglevel": "^1.7.0",
+    "loglevel-plugin-prefix": "^0.8.4"
+  },
+  "devDependencies": {
+    "@types/circular-json": "^0.4.0",
+    "@types/lodash.isempty": "^4.4.6",
+    "@types/lodash.truncate": "^4.4.6",
+    "@types/loglevel": "^1.6.3"
   },
   "scripts": {
-    "test": "jest"
+    "build": "tsc",
+    "build:watch": "tsc --watch"
   },
   "keywords": [
     "dappforce",
