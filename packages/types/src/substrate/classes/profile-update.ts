@@ -23,7 +23,4 @@ export class ProfileUpdate extends Struct {
     this.set('content', value);
   }
 
-  set handle (value: OptionText) {
-    this.set('handle', value);
-  }
 }
