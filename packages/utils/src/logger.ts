@@ -21,10 +21,10 @@ prefix.reg(log);
 log.enableAll();
 
 prefix.apply(log, {
-  format(level, name) {
+  format(level, name, time) {
     const date = new Date()
     const drawDate = (date: string) => chalk.gray(`[${date}]`)
-    return `${drawDate(date.toDateString())} ${drawDate(date.toTimeString())} ${colors[level.toUpperCase() as Levels](level.length < 5 ? level + ' ' : level)} ${chalk.green(`${name}:`)}`;
+    return `${drawDate(`${date.getDay()}.${date.getMonth()}`)} ${drawDate(time.toString())} ${colors[level.toUpperCase() as Levels](level.length < 5 ? level + ' ' : level)} ${chalk.green(`${name}:`)}`;
   }
 });
 
