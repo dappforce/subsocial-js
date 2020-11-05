@@ -2,9 +2,11 @@ import chalk, { Chalk } from 'chalk'
 import log, { LogLevel, setDefaultLevel } from 'loglevel'
 import prefix from 'loglevel-plugin-prefix'
 
-type Levels = keyof LogLevel
+require('dotenv').config()
 
-const defaultLevel: Levels = process.env.LOG_LEVEL || 'INFO' as any
+type Levels = keyof LogLevel;
+
+const defaultLevel: Levels = (process.env.LOG_LEVEL || 'INFO').toUpperCase() as any
 
 setDefaultLevel(defaultLevel)
 
@@ -40,4 +42,8 @@ prefix.apply(log, {
   }
 })
 
-export const newLogger = (name: string = 'Subsocial') => log.getLogger(name)
+export const newLogger = (name: string = 'Subsocial', level?: Levels) => { 
+  const logger = log.getLogger(name)
+  logger.setLevel(level || defaultLevel)
+  return logger
+}
