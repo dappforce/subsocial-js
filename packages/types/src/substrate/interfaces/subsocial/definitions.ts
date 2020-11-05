@@ -1,85 +1,188 @@
 export default {
   types: {
-    IpfsHash: 'Text',
-    BlogId: 'u64',
-    PostId: 'u64',
-    CommentId: 'u64',
-    ReactionId: 'u64',
-
-    Blog: {
-      id: 'BlogId',
+    Address: 'AccountId',
+    LookupSource: 'AccountId',
+    RefCount: 'u8',
+    IpfsCid: 'Text',
+    DonationId: 'u64',
+    BountyIndex: 'u32',
+    DonationRecipient: {
+      _enum: {
+        Account: 'AccountId',
+        Space: 'SpaceId',
+        Post: 'PostId'
+      }
+    },
+    Donation: {
+      id: 'DonationId',
       created: 'WhoAndWhen',
-      updated: 'Option<WhoAndWhen>',
-      writers: 'Vec<AccountId>',
-      handle: 'Option<Text>',
-      ipfs_hash: 'IpfsHash',
-      posts_count: 'u16',
-      followers_count: 'u32',
-      edit_history: 'Vec<BlogHistoryRecord>',
-      score: 'i32'
+      recipient: 'DonationRecipient',
+      donation_wallet: 'AccountId',
+      amount: 'Balance',
+      comment_id: 'Option<PostId>'
     },
-    BlogUpdate: {
-      writers: 'Option<Vec<AccountId>>',
-      handle: 'Option<Option<Text>>',
-      ipfs_hash: 'Option<IpfsHash>'
+    DonationSettings: {
+      donations_allowed: 'bool',
+      min_amount: 'Option<Balance>',
+      max_amount: 'Option<Balance>'
     },
-    BlogHistoryRecord: {
-      edited: 'WhoAndWhen',
-      old_data: 'BlogUpdate'
+    DonationSettingsUpdate: {
+      donations_allowed: 'Option<bool>',
+      min_amount: 'Option<Option<Balance>>',
+      max_amount: 'Option<Option<Balance>>'
     },
-
-    Post: {
-      id: 'PostId',
-      blog_id: 'BlogId',
+    DropId: 'u64',
+    Drop: {
+      id: 'DropId',
+      first_drop_at: 'BlockNumber',
+      total_dropped: 'Balance'
+    },
+    FaucetSettings: {
+      period: 'Option<BlockNumber>',
+      period_limit: 'Balance'
+    },
+    FaucetSettingsUpdate: {
+      period: 'Option<Option<BlockNumber>>',
+      period_limit: 'Option<Balance>'
+    },
+    ReportId: 'u64',
+    EntityId: {
+      _enum: {
+        Content: 'Content',
+        Account: 'AccountId',
+        Space: 'SpaceId',
+        Post: 'PostId'
+      }
+    },
+    EntityStatus: {
+      _enum: [
+        'Allowed',
+        'Blocked'
+      ]
+    },
+    Report: {
+      id: 'ReportId',
       created: 'WhoAndWhen',
-      updated: 'Option<WhoAndWhen>',
-      extension: 'PostExtension',
-      ipfs_hash: 'IpfsHash',
-      comments_count: 'u16',
-      upvotes_count: 'u16',
-      downvotes_count: 'u16',
-      shares_count: 'u16',
-      edit_history: 'Vec<PostHistoryRecord>',
-      score: 'i32'
+      reported_entity: 'EntityId',
+      reported_within: 'SpaceId',
+      reason: 'Content'
     },
-    PostUpdate: {
-      blog_id: 'Option<BlogId>',
-      ipfs_hash: 'Option<IpfsHash>'
+    SuggestedStatus: {
+      suggested: 'WhoAndWhen',
+      status: 'Option<EntityStatus>',
+      report_id: 'Option<ReportId>'
+    },
+    SpaceModerationSettings: {
+      autoblock_threshold: 'Option<u16>'
+    },
+    SpaceModerationSettingsUpdate: {
+      autoblock_threshold: 'Option<Option<u16>>'
+    },
+    SpacePermissionSet: 'BTreeSet<SpacePermission>',
+    SpacePermission: {
+      _enum: [
+        'ManageRoles',
+        'RepresentSpaceInternally',
+        'RepresentSpaceExternally',
+        'UpdateSpace',
+        'CreateSubspaces',
+        'UpdateOwnSubspaces',
+        'DeleteOwnSubspaces',
+        'HideOwnSubspaces',
+        'UpdateAnySubspace',
+        'DeleteAnySubspace',
+        'HideAnySubspace',
+        'CreatePosts',
+        'UpdateOwnPosts',
+        'DeleteOwnPosts',
+        'HideOwnPosts',
+        'UpdateAnyPost',
+        'DeleteAnyPost',
+        'HideAnyPost',
+        'CreateComments',
+        'UpdateOwnComments',
+        'DeleteOwnComments',
+        'HideOwnComments',
+        'HideAnyComment',
+        'Upvote',
+        'Downvote',
+        'Share',
+        'OverrideSubspacePermissions',
+        'OverridePostPermissions',
+        'SuggestEntityStatus',
+        'UpdateEntityStatus',
+        'UpdateSpaceSettings'
+      ]
+    },
+    SpacePermissions: {
+      none: 'Option<SpacePermissionSet>',
+      everyone: 'Option<SpacePermissionSet>',
+      follower: 'Option<SpacePermissionSet>',
+      space_owner: 'Option<SpacePermissionSet>'
+    },
+    SpacePermissionsContext: {
+      space_id: 'SpaceId',
+      is_space_owner: 'bool',
+      is_space_follower: 'bool',
+      space_perms: 'Option<SpacePermissions>'
     },
     PostHistoryRecord: {
       edited: 'WhoAndWhen',
       old_data: 'PostUpdate'
     },
+    PostId: 'u64',
+    Post: {
+      id: 'PostId',
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      owner: 'AccountId',
+      extension: 'PostExtension',
+      space_id: 'Option<SpaceId>',
+      content: 'Content',
+      hidden: 'bool',
+      replies_count: 'u16',
+      hidden_replies_count: 'u16',
+      shares_count: 'u16',
+      upvotes_count: 'u16',
+      downvotes_count: 'u16',
+      score: 'i32'
+    },
+    PostUpdate: {
+      space_id: 'Option<SpaceId>',
+      content: 'Option<Content>',
+      hidden: 'Option<bool>'
+    },
     PostExtension: {
       _enum: {
         RegularPost: 'Null',
-        SharedPost: 'PostId',
-        SharedComment: 'CommentId'
+        Comment: 'Comment',
+        SharedPost: 'PostId'
       }
     },
-
     Comment: {
-      id: 'CommentId',
-      parent_id: 'Option<CommentId>',
-      post_id: 'PostId',
+      parent_id: 'Option<PostId>',
+      root_post_id: 'PostId'
+    },
+    ProfileHistoryRecord: {
+      edited: 'WhoAndWhen',
+      old_data: 'ProfileUpdate'
+    },
+    SocialAccount: {
+      followers_count: 'u32',
+      following_accounts_count: 'u16',
+      following_spaces_count: 'u16',
+      reputation: 'u32',
+      profile: 'Option<Profile>'
+    },
+    Profile: {
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
-      ipfs_hash: 'IpfsHash',
-      upvotes_count: 'u16',
-      downvotes_count: 'u16',
-      shares_count: 'u16',
-      direct_replies_count: 'u16',
-      edit_history: 'Vec<CommentHistoryRecord>',
-      score: 'i32'
+      content: 'Content'
     },
-    CommentUpdate: {
-      ipfs_hash: 'IpfsHash'
+    ProfileUpdate: {
+      content: 'Option<Content>'
     },
-    CommentHistoryRecord: {
-      edited: 'WhoAndWhen',
-      old_data: 'CommentUpdate'
-    },
-
+    ReactionId: 'u64',
     ReactionKind: {
       _enum: [
         'Upvote',
@@ -92,29 +195,21 @@ export default {
       updated: 'Option<WhoAndWhen>',
       kind: 'ReactionKind'
     },
-
-    SocialAccount: {
-      followers_count: 'u32',
-      following_accounts_count: 'u16',
-      following_blogs_count: 'u16',
-      reputation: 'u32',
-      profile: 'Option<Profile>'
-    },
-
-    Profile: {
+    RoleId: 'u64',
+    Role: {
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
-      username: 'Text',
-      ipfs_hash: 'IpfsHash',
-      edit_history: 'Vec<ProfileHistoryRecord>'
+      id: 'RoleId',
+      space_id: 'SpaceId',
+      disabled: 'bool',
+      expires_at: 'Option<BlockNumber>',
+      content: 'Content',
+      permissions: 'SpacePermissionSet'
     },
-    ProfileUpdate: {
-      username: 'Option<Text>',
-      ipfs_hash: 'Option<IpfsHash>'
-    },
-    ProfileHistoryRecord: {
-      edited: 'WhoAndWhen',
-      old_data: 'ProfileUpdate'
+    RoleUpdate: {
+      disabled: 'Option<bool>',
+      content: 'Option<Content>',
+      permissions: 'Option<SpacePermissionSet>'
     },
     ScoringAction: {
       _enum: [
@@ -125,43 +220,93 @@ export default {
         'UpvoteComment',
         'DownvoteComment',
         'ShareComment',
-        'FollowBlog',
+        'FollowSpace',
         'FollowAccount'
       ]
     },
-
+    SessionKey: {
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      expires_at: 'BlockNumber',
+      limit: 'Option<Balance>',
+      spent: 'Balance'
+    },
+    SpaceHistoryRecord: {
+      edited: 'WhoAndWhen',
+      old_data: 'SpaceUpdate'
+    },
+    Space: {
+      id: 'SpaceId',
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      owner: 'AccountId',
+      parent_id: 'Option<SpaceId>',
+      handle: 'Option<Text>',
+      content: 'Content',
+      hidden: 'bool',
+      posts_count: 'u32',
+      hidden_posts_count: 'u32',
+      followers_count: 'u32',
+      score: 'i32',
+      permissions: 'Option<SpacePermissions>'
+    },
+    SpaceUpdate: {
+      parent_id: 'Option<Option<SpaceId>>',
+      handle: 'Option<Option<Text>>',
+      content: 'Option<Content>',
+      hidden: 'Option<bool>',
+      permissions: 'Option<Option<SpacePermissions>>'
+    },
+    SubscriptionPlanId: 'u64',
+    SubscriptionId: 'u64',
+    SubscriptionPeriod: {
+      _enum: {
+        Daily: 'Null',
+        Weekly: 'Null',
+        Monthly: 'Null',
+        Quarterly: 'Null',
+        Yearly: 'Null',
+        Custom: 'BlockNumber'
+      }
+    },
+    SubscriptionPlan: {
+      id: 'SubscriptionPlanId',
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      is_active: 'bool',
+      content: 'Content',
+      space_id: 'SpaceId',
+      wallet: 'Option<AccountId>',
+      price: 'Balance',
+      period: 'SubscriptionPeriod'
+    },
+    Subscription: {
+      id: 'SubscriptionPlanId',
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      is_active: 'bool',
+      wallet: 'Option<AccountId>',
+      plan_id: 'SubscriptionPlanId'
+    },
+    SpaceId: 'u64',
     WhoAndWhen: {
       account: 'AccountId',
       block: 'BlockNumber',
       time: 'Moment'
     },
-
-    SpaceId: 'u64',
-    ChangeId: 'u64',
-
-    SpaceOwners: {
-      created: 'WhoAndWhen',
-      space_id: 'SpaceId',
-      owners: 'Vec<AccountId>',
-      threshold: 'u16',
-      changes_count: 'u64'
+    User: {
+      _enum: {
+        Account: 'AccountId',
+        Space: 'SpaceId'
+      }
     },
-    Change: {
-      created: 'WhoAndWhen',
-      id: 'ChangeId',
-      space_id: 'SpaceId',
-      add_owners: 'Vec<AccountId>',
-      remove_owners: 'Vec<AccountId>',
-      new_threshold: 'Option<u16>',
-      notes: 'Text',
-      confirmed_by: 'Vec<AccountId>',
-      expires_at: 'BlockNumber'
-    },
-    VecAccountId: 'Vec<AccountId>',
-    OptionText: 'Option<Text>',
-    OptionChange: 'Option<Change>',
-    OptionBlogId: 'Option<BlogId>',
-    OptionCommentId: 'Option<CommentId>',
-    OptionVecAccountId: 'Option<VecAccountId>'
+    Content: {
+      _enum: {
+        None: 'Null',
+        Raw: 'Text',
+        IPFS: 'Text',
+        Hyper: 'Text'
+      }
+    }
   }
 }

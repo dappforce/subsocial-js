@@ -1,11 +1,10 @@
 import BN from 'bn.js';
-import { BlogId, PostId, CommentId, Blog, Post, Comment, AccountId, ReactionId } from '.';
-import { SocialAccount } from './subsocial';
+import { SpaceId, PostId, Space, Post, ReactionId, SocialAccount } from '.';
+import AccountId from '@polkadot/types/generic/AccountId';
 
-export type SubstrateId = BlogId | PostId | CommentId | BN;
-export type CommonStruct = Blog | Post | Comment | SocialAccount;
+export type SubstrateId = SpaceId | PostId | BN;
+export type CommonStruct = Space | Post | SocialAccount;
 export type AnyAccountId = AccountId | string;
-export type AnyBlogId = BlogId | BN;
+export type AnySpaceId = SpaceId | BN;
 export type AnyPostId = PostId | BN;
-export type AnyCommentId = CommentId | BN;
 export type AnyReactionId = ReactionId | BN;

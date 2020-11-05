@@ -1,5 +1,5 @@
 #!/bin/bash
 
-yarn build
 cd ./packages/api/build
+cp ../package.json .
 npm publish --access public

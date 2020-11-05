@@ -1,7 +1,7 @@
-import * as dfDefinations from './interfaces/definitions';
+import * as dfDefinitions from './interfaces/definitions';
 
 export const allDefinitions = {
-  ...dfDefinations
+  ...dfDefinitions
 };
 
 export const types = Object.values(allDefinitions).map(({ types }) => types).reduce((all, types) => Object.assign(all, types), {});

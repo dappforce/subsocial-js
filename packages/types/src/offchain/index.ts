@@ -1,17 +1,16 @@
 import CID from 'cids';
-import * as IPFS from './ipfs.types';
-import { IpfsHash } from '../substrate/interfaces';
+import { IpfsCid as RuntimeIpfsCid } from '../substrate/interfaces';
 
 export { CID };
 
-export type CommonContent = CommentContent | PostContent | BlogContent | ProfileContent | SharedPostContent;
+export type CommonContent = CommentContent | PostContent | SpaceContent | ProfileContent | SharedPostContent;
 
 export type Activity = {
   id: number,
   account: string,
   event: string,
   following_id: string,
-  blog_id: string,
+  space_id: string,
   post_id: string,
   comment_id: string,
   date: Date,
@@ -39,11 +38,18 @@ export type NavTab = {
   hidden: boolean
 }
 
-export type BlogContent = {
+export type NamedLinks = {
+  name: string,
+  url?: string
+}
+
+export type SpaceContent = {
   name: string;
-  desc: string;
+  about: string;
   image: string;
+  email: string;
   tags: string[];
+  links: NamedLinks[] | string[];
   navTabs?: NavTab[];
 };
 
@@ -51,11 +57,21 @@ export type SharedPostContent = {
   body: string
 };
 
+export type ProposalContent = {
+  network: 'kusama' | 'polkadot',
+  proposalIndex: number
+}
+
+export type PostExt = {
+  proposal?: ProposalContent
+}
+
 export type PostContent = SharedPostContent & {
   title: string;
   image: string;
   tags: string[];
   canonical: string;
+  ext?: PostExt
 };
 
 export type CommentContent = {
@@ -63,25 +79,30 @@ export type CommentContent = {
 };
 
 export type ProfileContent = {
-  fullname: string;
+  name: string;
   avatar: string;
-  email: string;
-  personalSite: string;
   about: string;
-  facebook: string;
-  twitter: string;
-  medium: string;
-  linkedIn: string;
-  github: string;
-  instagram: string;
 };
 
-export type IpfsCid = string | CID | IpfsHash;
+export type IpfsCid = string | CID | RuntimeIpfsCid;
 
-export type IpfsApi = IPFS.FilesAPI & {
-  pin: {
-    rm: (hash?: string) => any,
-    ls: (hash?: string) => any
-  },
-  repo: IPFS.RepoAPI
-};
+export type EventsName =
+  'AccountFollowed' |
+  'SpaceFollowed' |
+  'SpaceCreated' |
+  'CommentCreated' |
+  'CommentReplyCreated' |
+  'PostCreated' |
+  'PostShared' |
+  'CommentShared' |
+  'PostReactionCreated' |
+  'CommentReactionCreated'
+
+export type Counts = {
+  postsCount: number,
+  commentsCount: number,
+  reactionsCount: number,
+  followsCount: number,
+  spacesCount: number,
+  activitiesCount: number
+}
