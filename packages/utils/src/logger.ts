@@ -1,12 +1,12 @@
-import chalk, { Chalk } from 'chalk';
+import chalk, { Chalk } from 'chalk'
 import log, { LogLevel, setDefaultLevel } from 'loglevel'
 import prefix from 'loglevel-plugin-prefix'
 
-type Levels = keyof LogLevel;
+type Levels = keyof LogLevel
 
 const defaultLevel: Levels = process.env.LOG_LEVEL || 'INFO' as any
 
-setDefaultLevel(defaultLevel);
+setDefaultLevel(defaultLevel)
 
 const colors: Record<Levels, Chalk> = {
   TRACE: chalk.magenta,
@@ -15,17 +15,29 @@ const colors: Record<Levels, Chalk> = {
   WARN: chalk.yellow,
   ERROR: chalk.red,
   SILENT: chalk.gray
-};
+}
 
-prefix.reg(log);
-log.enableAll();
+prefix.reg(log)
+
+log.enableAll()
 
 prefix.apply(log, {
-  format(level, name, time) {
-    const date = new Date()
-    const drawDate = (date: string) => chalk.gray(`[${date}]`)
-    return `${drawDate(`${date.getDay()}.${date.getMonth()}`)} ${drawDate(time.toString())} ${colors[level.toUpperCase() as Levels](level.length < 5 ? level + ' ' : level)} ${chalk.green(`${name}:`)}`;
-  }
-});
+  format(_level, _name, _time) {
+    const now = new Date()
 
-export const newLogger = (name: string = 'anonymous') => log.getLogger(name)
+    const date = now.getMonth() + '-' + now.getDay()
+
+    const time = _time.toString()
+
+    const level =
+      colors[_level.toUpperCase() as Levels](_level) +
+      // Add an extra space if level == INFO or WARN
+      (_level.length < 5 ? ' ' : '')
+
+    const name = chalk.green(_name)
+
+    return `${date} ${time} ${level} ${name}:`
+  }
+})
+
+export const newLogger = (name: string = 'Subsocial') => log.getLogger(name)

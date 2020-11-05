@@ -40,4 +40,6 @@ export type FindSpaceQuery = FindStruct<AnySpaceId>
 export type FindPostsWithDetailsQuery = FindPostsQuery & PostDetailsOpts
 export type FindPostWithDetailsQuery = FindPostQuery & PostDetailsOpts
 
-export type ContentResult<T> = Record<string, T>
+type CidAsStr = string
+
+export type ContentResult<T> = Record<CidAsStr, T>

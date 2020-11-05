@@ -14,15 +14,15 @@ export function getIpfsCidOfSocialAccount (struct: SocialAccount): string | unde
   return undefined
 }
 
-type HasContentDirectly = {
+type HasContentField = {
   content: Content
 }
 
-type HasIpfsCidSomewhere = HasContentDirectly | SocialAccount
+type HasIpfsCidSomewhere = HasContentField | SocialAccount
 
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
-  if (isIpfs((struct as HasContentDirectly).content)) {
-    return (struct as HasContentDirectly).content.asIpfs.toString()
+  if (isIpfs((struct as HasContentField).content)) {
+    return (struct as HasContentField).content.asIpfs.toString()
   } else if ((struct as SocialAccount).profile) {
     return getIpfsCidOfSocialAccount(struct as SocialAccount)
   }

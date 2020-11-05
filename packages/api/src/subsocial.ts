@@ -16,12 +16,12 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findSpaces({ ids })
   }
 
-  /** Find and load spaces with hidden = false */
+  /** Find and load public spaces that have `hidden == false` field in Substrate struct and their IPFS content is not empty. */
   async findPublicSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids, visibility: 'onlyPublic', withContentOnly: true })
   }
 
-  /** Find and load spaces with hidden = true */
+  /** Find and load unlisted spaces that have either `hidden == true` field in Substrate struct or their IPFS content is empty. */
   async findUnlistedSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids, visibility: 'onlyUnlisted' })
   }
@@ -30,12 +30,12 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findPosts({ ids })
   }
 
-  /** Find and load posts with hidden = false */
+  /** Find and load public posts that have `hidden == false` field in Substrate struct and their IPFS content is not empty. */
   async findPublicPosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids, visibility: 'onlyPublic', withContentOnly: true })
   }
 
-  /** Find and load posts with hidden = true */
+  /** Find and load unlisted posts that have either `hidden == true` field in Substrate struct or their IPFS content is empty. */
   async findUnlistedPosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids, visibility: 'onlyUnlisted' })
   }
@@ -68,22 +68,22 @@ export class SubsocialApi extends BasicSubsocialApi {
 
   // Functions that return a single element
 
-  /** Find and load space with hidden = false */
+  /** Find and load a public space that has `hidden == false` field in Substrate struct and its IPFS content is not empty. */
   async findPublicSpace (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findPublicSpaces([ id ]))
   }
 
-  /** Find and load space with hidden = true */
+  /** Find and load an unlisted space that has either `hidden == true` field in Substrate struct or its IPFS content is empty. */
   async findUnlistedSpace (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findUnlistedSpaces([ id ]))
   }
 
-  /** Find and load post with hidden = false */
+  /** Find and load a public post that has `hidden == false` field in Substrate struct and its IPFS content is not empty. */
   async findPublicPost (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findPublicPosts([ id ]))
   }
 
-  /** Find and load post with hidden = true */
+  /** Find and load an unlisted space that has either `hidden == true` field in Substrate struct or its IPFS content is empty. */
   async findUnlistedPost (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findUnlistedPosts([ id ]))
   }
