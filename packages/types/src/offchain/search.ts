@@ -29,7 +29,7 @@ export const ElasticFields = {
   },
 }
 
-export type EsQueryParams = {
+export type ElasticQueryParams = {
   q?: string
   limit?: number
   offset?: number
