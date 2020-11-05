@@ -15,6 +15,7 @@
     "publish:all": "yarn build && ./scripts/publish-all.sh",
     "publish:types": "yarn build:types && ./scripts/publish-types.sh",
     "publish:utils": "yarn build:api && ./scripts/publish-utils.sh",
+    "publish:config": "./scripts/publish-config.sh",
     "publish:api": "yarn build:utils && ./scripts/publish-api.sh"
   },
   "devDependencies": {
