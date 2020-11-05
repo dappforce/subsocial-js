@@ -7,19 +7,25 @@ import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
 import { VisibilityFilter } from './utils/visibility-filter';
-import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from './utils/types';
+import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery, SubsocialContext } from './utils/types';
 
 type StorageItem = {
   pallet: PalletName,
   storage: string
 }
 
+type SubstrateApiProps = SubsocialContext & {
+  api: SubstrateApi
+}
+
 export class SubsocialSubstrateApi {
 
   private _api: SubstrateApi // Polkadot API (connected)
+  // private context?: SubsocialContextProps TODO use when need
 
-  constructor (api: SubstrateApi) {
+  constructor ({ api }: SubstrateApiProps) {
     this._api = api
+    // this.context = context
     logger.info('Initialized')
   }
 

@@ -7,8 +7,8 @@ import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } f
 export class SubsocialApi extends BasicSubsocialApi {
 
   private structFinders: FindStructsFns = {
-    findSpaces: this.findVisibleSpaces.bind(this),
-    findPosts: this.findVisiblePosts.bind(this),
+    findSpaces: this.findPublicSpaces.bind(this),
+    findPosts: this.findPublicPosts.bind(this),
     findProfiles: this.findProfiles.bind(this)
   }
 
@@ -16,28 +16,28 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findSpaces({ ids })
   }
 
-  /** Find and load spaces with hidden = false */
-  async findVisibleSpaces (ids: AnySpaceId[]) {
-    return this.findSpaces({ ids, visibility: 'onlyVisible' })
+  /** Find and load public spaces that have `hidden == false` field in Substrate struct and their IPFS content is not empty. */
+  async findPublicSpaces (ids: AnySpaceId[]) {
+    return this.findSpaces({ ids, visibility: 'onlyPublic', withContentOnly: true })
   }
 
-  /** Find and load spaces with hidden = true */
-  async findHiddenSpaces (ids: AnySpaceId[]) {
-    return this.findSpaces({ ids, visibility: 'onlyHidden' })
+  /** Find and load unlisted spaces that have either `hidden == true` field in Substrate struct or their IPFS content is empty. */
+  async findUnlistedSpaces (ids: AnySpaceId[]) {
+    return this.findSpaces({ ids, visibility: 'onlyUnlisted' })
   }
 
   async findAllPosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids })
   }
 
-  /** Find and load posts with hidden = false */
-  async findVisiblePosts (ids: AnySpaceId[]) {
-    return this.findPosts({ ids, visibility: 'onlyVisible' })
+  /** Find and load public posts that have `hidden == false` field in Substrate struct and their IPFS content is not empty. */
+  async findPublicPosts (ids: AnySpaceId[]) {
+    return this.findPosts({ ids, visibility: 'onlyPublic', withContentOnly: true })
   }
 
-  /** Find and load posts with hidden = true */
-  async findHiddenPosts (ids: AnySpaceId[]) {
-    return this.findPosts({ ids, visibility: 'onlyHidden' })
+  /** Find and load unlisted posts that have either `hidden == true` field in Substrate struct or their IPFS content is empty. */
+  async findUnlistedPosts (ids: AnySpaceId[]) {
+    return this.findPosts({ ids, visibility: 'onlyUnlisted' })
   }
 
   /** Find and load posts with their extension and owner's profile (if defined). */
@@ -46,69 +46,69 @@ export class SubsocialApi extends BasicSubsocialApi {
     return loadAndSetPostRelatedStructs(posts, this.structFinders, filter)
   }
 
-  async findVisiblePostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
-    return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyVisible' })
+  async findPublicPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
+    return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyPublic' })
   }
 
-  async findHiddenPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
-    return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyHidden' })
+  async findUnlistedPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
+    return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyUnlisted' })
   }
 
   async findPostsWithAllDetails ({ ids, visibility }: FindPostsQuery): Promise<PostWithAllDetails[]> {
     return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<PostWithAllDetails[]>
   }
 
-  async findVisiblePostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithAllDetails({ ids, visibility: 'onlyVisible' })
+  async findPublicPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
+    return this.findPostsWithAllDetails({ ids, visibility: 'onlyPublic' })
   }
 
-  async findHiddenPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithAllDetails({ ids, visibility: 'onlyHidden' })
+  async findUnlistedPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
+    return this.findPostsWithAllDetails({ ids, visibility: 'onlyUnlisted' })
   }
 
   // Functions that return a single element
 
-  /** Find and load space with hidden = false */
-  async findVisibleSpace (id: AnySpaceId) {
-    return getFirstOrUndefined(await this.findVisibleSpaces([ id ]))
+  /** Find and load a public space that has `hidden == false` field in Substrate struct and its IPFS content is not empty. */
+  async findPublicSpace (id: AnySpaceId) {
+    return getFirstOrUndefined(await this.findPublicSpaces([ id ]))
   }
 
-  /** Find and load space with hidden = true */
-  async findHiddenSpace (id: AnySpaceId) {
-    return getFirstOrUndefined(await this.findHiddenSpaces([ id ]))
+  /** Find and load an unlisted space that has either `hidden == true` field in Substrate struct or its IPFS content is empty. */
+  async findUnlistedSpace (id: AnySpaceId) {
+    return getFirstOrUndefined(await this.findUnlistedSpaces([ id ]))
   }
 
-  /** Find and load post with hidden = false */
-  async findVisiblePost (id: AnySpaceId) {
-    return getFirstOrUndefined(await this.findVisiblePosts([ id ]))
+  /** Find and load a public post that has `hidden == false` field in Substrate struct and its IPFS content is not empty. */
+  async findPublicPost (id: AnySpaceId) {
+    return getFirstOrUndefined(await this.findPublicPosts([ id ]))
   }
 
-  /** Find and load post with hidden = true */
-  async findHiddenPost (id: AnySpaceId) {
-    return getFirstOrUndefined(await this.findHiddenPosts([ id ]))
+  /** Find and load an unlisted space that has either `hidden == true` field in Substrate struct or its IPFS content is empty. */
+  async findUnlistedPost (id: AnySpaceId) {
+    return getFirstOrUndefined(await this.findUnlistedPosts([ id ]))
   }
 
   async findPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
     return getFirstOrUndefined(await this.findPostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
 
-  async findVisiblePostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
-    return getFirstOrUndefined(await this.findVisiblePostsWithSomeDetails({ ids: [ id ], ...opts }))
+  async findPublicPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
+    return getFirstOrUndefined(await this.findPublicPostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
 
-  async findHiddenPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
-    return getFirstOrUndefined(await this.findHiddenPostsWithSomeDetails({ ids: [ id ], ...opts }))
+  async findUnlistedPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
+    return getFirstOrUndefined(await this.findUnlistedPostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
 
   async findPostWithAllDetails (id: AnyPostId) {
     return getFirstOrUndefined(await this.findPostsWithAllDetails({ ids: [ id ] }))
   }
 
-  async findVisiblePostWithAllDetails (id: AnyPostId) {
-    return getFirstOrUndefined(await this.findVisiblePostsWithAllDetails([ id ]))
+  async findPublicPostWithAllDetails (id: AnyPostId) {
+    return getFirstOrUndefined(await this.findPublicPostsWithAllDetails([ id ]))
   }
 
-  async findHiddenPostWithAllDetails (id: AnyPostId) {
-    return getFirstOrUndefined(await this.findHiddenPostsWithAllDetails([ id ]))
+  async findUnlistedPostWithAllDetails (id: AnyPostId) {
+    return getFirstOrUndefined(await this.findUnlistedPostsWithAllDetails([ id ]))
   }
 }

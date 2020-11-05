@@ -1,7 +1,7 @@
-import { CommentExt } from '@subsocial/types/substrate/classes';
-import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct } from '@subsocial/types';
-import { newLogger, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
-import { PostId, AccountId, ReactionId, SocialAccount, Reaction, Post } from '@subsocial/types/substrate/interfaces';
+import { Comment } from '@subsocial/types/substrate/classes';
+import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, CID } from '@subsocial/types';
+import { newLogger, isEmptyArray, nonEmptyStr, isDef } from '@subsocial/utils';
+import { PostId, ReactionId, SocialAccount, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { GenericAccountId } from '@polkadot/types'
 
@@ -32,12 +32,15 @@ export const getUniqueIds = <ID extends AnyId> (ids: (ID | undefined)[]): ID[] =
   return uniqueIds
 }
 
-export function asAccountId (id: AnyAccountId): AccountId | undefined {
-  if (id instanceof GenericAccountId) {
-    return id
-  } else if (nonEmptyStr(id) && id.length === 48) {
-    return new GenericAccountId(registry, id)
-  } else {
+export function asAccountId (id: AnyAccountId): GenericAccountId | undefined {
+  try {
+    if (id instanceof GenericAccountId) {
+      return id
+    } else if (nonEmptyStr(id)) {
+      return new GenericAccountId(registry, id)
+    }
+    return undefined
+  } catch {
     return undefined
   }
 }
@@ -65,7 +68,7 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
   if (ext) {
     const { isSharedPost, isComment } = ext
 
-    if (isComment || ext.value instanceof CommentExt) {
+    if (isComment || ext.value instanceof Comment) {
       return ext.asComment.root_post_id
     } else if (isSharedPost) {
       return ext.asSharedPost
@@ -74,3 +77,30 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
 
   return undefined
 }
+
+export const isIpfs = (content?: Content) => content && (content.isIpfs || (content as any).IPFS)
+
+export const asIpfsCid = (cid: IpfsCid): CID => {
+  if (cid instanceof CID) {
+    return cid
+  } else if (typeof cid === 'string') {
+    return new CID(cid)
+  } else if (typeof cid.toU8a === 'function') {
+    return new CID(cid.toString())
+  } else {
+    throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsCid')
+  }
+}
+
+export const isValidIpfsCid = (cid: IpfsCid) => {
+  try {
+    return !!asIpfsCid(cid)
+  } catch {
+    return false
+  }
+}
+
+export const resolveCidOfContent = (content?: Content) =>
+  (isDef(content) && content.isIpfs)
+    ? content.asIpfs.toString()
+    : undefined

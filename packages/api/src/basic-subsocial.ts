@@ -4,12 +4,13 @@ import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } fro
 import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
 import { Space, Post, SocialAccount } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
-import { getCidsOfStructs, getIpfsHashOfStruct, SubsocialIpfsApi } from './ipfs';
+import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
 import { getUniqueIds, SupportedSubstrateId } from './utils';
-import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery } from './utils/types';
+import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery, SubsocialContext, ContentResult } from './utils/types';
+import { contentFilter } from './utils/content-filter';
 
-export type SubsocialApiProps = {
+export type SubsocialApiProps = SubsocialContext & {
   substrateApi: SubstrateApi,
   ipfsNodeUrl: string,
   offchainUrl: string
@@ -22,9 +23,9 @@ export class BasicSubsocialApi {
   private _ipfs: SubsocialIpfsApi
 
   constructor (props: SubsocialApiProps) {
-    const { substrateApi, ipfsNodeUrl, offchainUrl } = props
-    this._substrate = new SubsocialSubstrateApi(substrateApi)
-    this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl })
+    const { substrateApi, ipfsNodeUrl, offchainUrl, ...context } = props
+    this._substrate = new SubsocialSubstrateApi({ api: substrateApi, ...context })
+    this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl, ...context })
   }
 
   public get substrate (): SubsocialSubstrateApi {
@@ -42,18 +43,16 @@ export class BasicSubsocialApi {
   > (
     ids: Id[],
     findStructs: (ids: Id[]) => Promise<Struct[]>,
-    findContents: (cids: IpfsCid[]) => Promise<Content[]>
+    findContents: (cids: IpfsCid[]) => Promise<ContentResult<Content>>
   ): Promise<CommonData<Struct, Content>[]> {
 
     const structs = await findStructs(ids)
     const cids = getUniqueIds(getCidsOfStructs(structs))
     const contents = await findContents(cids)
-    const contentByHashMap = new Map<string, Content>()
-    cids.forEach((cid, i) => contentByHashMap.set(cid.toString(), contents[i]))
 
     return structs.map(struct => {
-      const hash = getIpfsHashOfStruct(struct)
-      const content = hash ? contentByHashMap.get(hash) : undefined
+      const hash = getIpfsCidOfStruct(struct)
+      const content = hash ? contents[hash] : undefined
       return { struct, content }
     })
   }
@@ -64,17 +63,26 @@ export class BasicSubsocialApi {
   async findSpaces (filter: FindSpacesQuery): Promise<SpaceData[]> {
     const findStructs = this.substrate.findSpaces.bind(this.substrate, filter);
     const findContents = this.ipfs.findSpaces.bind(this.ipfs);
-    return this.findDataArray<AnySpaceId, Space, SpaceContent>(
+    const spaces = await this.findDataArray<AnySpaceId, Space, SpaceContent>(
       filter.ids, findStructs, findContents
     )
+    return contentFilter({
+      structs: spaces,
+      withContentOnly: filter.withContentOnly
+    })
   }
 
   async findPosts (filter: FindPostsQuery): Promise<PostData[]> {
     const findStructs = this.substrate.findPosts.bind(this.substrate, filter)
     const findContents = this.ipfs.findPosts.bind(this.ipfs)
-    return this.findDataArray<AnyPostId, Post, PostContent>(
+    const posts = await this.findDataArray<AnyPostId, Post, PostContent>(
       filter.ids, findStructs, findContents
     )
+
+    return contentFilter({
+      structs: posts,
+      withContentOnly: filter.withContentOnly
+    })
   }
 
   async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {

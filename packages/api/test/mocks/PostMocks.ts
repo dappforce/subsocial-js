@@ -1,12 +1,12 @@
 import { Null } from '@polkadot/types';
 import { registry } from '@subsocial/types/src/substrate/registry';
-import { SpaceId, Post, PostId, AccountId, BlockNumber, Moment, WhoAndWhen, IpfsHash } from '@subsocial/types/src/substrate/interfaces';
+import { SpaceId, Post, PostId, AccountId, BlockNumber, Moment, WhoAndWhen, IpfsCid } from '@subsocial/types/src/substrate/interfaces';
 import { PostContent } from '@subsocial/types/src/offchain';
 import BN from 'bn.js'
 import { mockAccountAlice, mockAccountBob } from './AccountMocks';
 import { PostData } from '@subsocial/types/src';
 
-import { PostExtension, OptionId, CommentExt } from '@subsocial/types/src/substrate/classes';
+import { PostExtension, OptionId, Comment } from '@subsocial/types/src/substrate/classes';
 
 let _id = 0
 const nextId = (): PostId => new BN(++_id) as PostId
@@ -35,7 +35,7 @@ function newPostStructMock ({
       block: new BN(12345) as BlockNumber,
       time: new BN(1586523823996) as Moment
     } as WhoAndWhen,
-    ipfs_hash: ipfs_hash as unknown as IpfsHash,
+    ipfs_hash: ipfs_hash as unknown as IpfsCid,
     space_id: space_id,
     extension: extension
   } as unknown as Post
@@ -65,7 +65,7 @@ export const mockCommentOnRegularPostStruct = newPostStructMock({
   account: mockAccountAlice,
   id: commentIdOnRegularPost,
   space_id: new OptionId(),
-  extension: new PostExtension({ Comment: new CommentExt({ parent_id: new OptionId(), root_post_id: regularPostId})})
+  extension: new PostExtension({ Comment: new Comment({ parent_id: new OptionId(), root_post_id: regularPostId})})
 })
 
 export const mockSharedCommentStruct = newPostStructMock({
@@ -79,7 +79,7 @@ export const mockCommentOnSharedPostStruct = newPostStructMock({
   account: mockAccountAlice,
   id: commentIdOnSharedPost,
   space_id: new OptionId(),
-  extension: new PostExtension({ Comment: new CommentExt({ parent_id: new OptionId(), root_post_id: sharedPostId})})
+  extension: new PostExtension({ Comment: new Comment({ parent_id: new OptionId(), root_post_id: sharedPostId})})
 })
 
 export const mockRegularPostJson: PostContent = {

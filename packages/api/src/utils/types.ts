@@ -1,10 +1,20 @@
 import { AnyPostId, AnySpaceId } from '@subsocial/types'
 
-export type Visibility = 'onlyVisible' | 'onlyHidden'
+export type SubsocialContext = {
+  useServer?: boolean
+}
+
+export type Visibility = 'onlyVisible' | 'onlyHidden' | 'onlyPublic' | 'onlyUnlisted'
 
 export type VisibilityFilter = {
   visibility?: Visibility
 }
+
+export type ContentFilter = {
+  withContentOnly?: boolean
+}
+
+export type Filters = VisibilityFilter & ContentFilter
 
 export type PostDetailsOpts = VisibilityFilter & {
   withSpace?: boolean
@@ -19,8 +29,8 @@ type IdFilter<Id> = {
   id: Id
 }
 
-export type FindStructs<Id> = IdsFilter<Id> & VisibilityFilter
-export type FindStruct<Id> = IdFilter<Id> & VisibilityFilter
+export type FindStructs<Id> = IdsFilter<Id> & Filters
+export type FindStruct<Id> = IdFilter<Id> & Filters
 
 export type FindPostsQuery = FindStructs<AnyPostId>
 export type FindSpacesQuery = FindStructs<AnySpaceId>
@@ -29,3 +39,7 @@ export type FindSpaceQuery = FindStruct<AnySpaceId>
 
 export type FindPostsWithDetailsQuery = FindPostsQuery & PostDetailsOpts
 export type FindPostWithDetailsQuery = FindPostQuery & PostDetailsOpts
+
+type CidAsStr = string
+
+export type ContentResult<T> = Record<CidAsStr, T>

@@ -4,7 +4,7 @@ import BN from 'bn.js'
 import { i32, Option, u16, u32 } from '@polkadot/types'
 import { SpaceContent } from '@subsocial/types/src/offchain'
 import { AccountId, BlockNumber, Moment } from '@subsocial/types/src/substrate/interfaces/runtime'
-import { Space, SpaceId, IpfsHash, WhoAndWhen } from '@subsocial/types/src/substrate/interfaces'
+import { Space, SpaceId, IpfsCid, WhoAndWhen } from '@subsocial/types/src/substrate/interfaces'
 import { mockAccountAlice, mockAccountBob } from './AccountMocks'
 import { Vec } from '@polkadot/types/codec';
 import { SpaceHistoryRecord } from '@subsocial/types/src/substrate/interfaces/subsocial/types';
@@ -45,7 +45,7 @@ function newSpaceStructMock ({
     updated: new Option(registry, 'Null', null),
     owner: account,
     handle: new Option(registry, 'Text', handle),
-    ipfs_hash: ipfs_hash as unknown as IpfsHash,
+    ipfs_hash: ipfs_hash as unknown as IpfsCid,
     posts_count: new BN(posts_count) as u16,
     followers_count: new BN(followers_count) as u32,
     edit_history: edit_history as unknown as Vec<SpaceHistoryRecord>,
@@ -75,7 +75,7 @@ export const mockSpaceStructBob = newSpaceStructMock({
 
 export const mockSpaceJson: SpaceContent = {
   name: 'Alice in Chains',
-  desc: 'Alice in Chains is an American rock band from Seattle, Washington, formed in 1987 by guitarist and vocalist Jerry Cantrell and drummer Sean Kinney, who later recruited bassist Mike Starr and lead vocalist Layne Staley. Starr was replaced by Mike Inez in 1993.',
+  about: 'Alice in Chains is an American rock band from Seattle, Washington, formed in 1987 by guitarist and vocalist Jerry Cantrell and drummer Sean Kinney, who later recruited bassist Mike Starr and lead vocalist Layne Staley. Starr was replaced by Mike Inez in 1993.',
   image: 'https://i.pinimg.com/originals/d1/dd/32/d1dd322177b1edf654be68644d427e74.jpg',
   tags: [ 'bitcoin', 'ethereum', 'polkadot' ],
   navTabs: []
@@ -83,7 +83,7 @@ export const mockSpaceJson: SpaceContent = {
 
 export const mockSpaceJsonBob: SpaceContent = {
   name: 'The Best Space You Can Ever Find on the Internet',
-  desc: 'In 2000 I set up a dot com web site called "the very best site ever" and on it carried pictures and descriptions of our worldwide holidays and our lives closer to home. However, I have learned that the webhosts have "lost" it. Time has moved on and it is being replaced by this space!',
+  about: 'In 2000 I set up a dot com web site called "the very best site ever" and on it carried pictures and descriptions of our worldwide holidays and our lives closer to home. However, I have learned that the webhosts have "lost" it. Time has moved on and it is being replaced by this space!',
   image: '',
   tags: [],
   navTabs: []

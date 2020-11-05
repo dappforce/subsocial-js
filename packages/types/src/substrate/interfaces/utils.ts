@@ -1,5 +1,6 @@
 import BN from 'bn.js';
-import { SpaceId, PostId, Space, Post, AccountId, ReactionId, SocialAccount } from '.';
+import { SpaceId, PostId, Space, Post, ReactionId, SocialAccount } from '.';
+import AccountId from '@polkadot/types/generic/AccountId';
 
 export type SubstrateId = SpaceId | PostId | BN;
 export type CommonStruct = Space | Post | SocialAccount;

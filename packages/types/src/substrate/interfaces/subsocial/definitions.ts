@@ -1,105 +1,172 @@
 export default {
   types: {
-    IpfsHash: 'Text',
-    SpaceId: 'u64',
-
-    WhoAndWhen: {
-      account: 'AccountId',
-      block: 'BlockNumber',
-      time: 'Moment'
-    },
-
-    User: {
+    Address: 'AccountId',
+    LookupSource: 'AccountId',
+    RefCount: 'u8',
+    IpfsCid: 'Text',
+    DonationId: 'u64',
+    BountyIndex: 'u32',
+    DonationRecipient: {
       _enum: {
         Account: 'AccountId',
-        Space: 'SpaceId'
+        Space: 'SpaceId',
+        Post: 'PostId'
       }
     },
-
-    SpaceForRoles: {
-      owner: 'AccountId',
-      permissions: 'Option<SpacePermissions>'
-    },
-
-    Space: {
-      id: 'SpaceId',
+    Donation: {
+      id: 'DonationId',
       created: 'WhoAndWhen',
-      updated: 'Option<WhoAndWhen>',
-      hidden: 'bool',
-
-      owner: 'AccountId',
-      handle: 'Option<Text>',
-      ipfs_hash: 'IpfsHash',
-
-      posts_count: 'u16',
-      followers_count: 'u32',
-
-      edit_history: 'Vec<SpaceHistoryRecord>',
-
-      score: 'i32',
-
-      permissions: 'Option<SpacePermissions>'
+      recipient: 'DonationRecipient',
+      donation_wallet: 'AccountId',
+      amount: 'Balance',
+      comment_id: 'Option<PostId>'
     },
-
-    SpaceUpdate: {
-      handle: 'Option<Option<Text>>',
-      ipfs_hash: 'Option<IpfsHash>',
-      hidden: 'Option<bool>'
+    DonationSettings: {
+      donations_allowed: 'bool',
+      min_amount: 'Option<Balance>',
+      max_amount: 'Option<Balance>'
     },
-
-    SpaceHistoryRecord: {
-      edited: 'WhoAndWhen',
-      old_data: 'SpaceUpdate'
+    DonationSettingsUpdate: {
+      donations_allowed: 'Option<bool>',
+      min_amount: 'Option<Option<Balance>>',
+      max_amount: 'Option<Option<Balance>>'
     },
-
-    PostId: 'u64',
-
-    Post: {
-      id: 'PostId',
+    DropId: 'u64',
+    Drop: {
+      id: 'DropId',
+      first_drop_at: 'BlockNumber',
+      total_dropped: 'Balance'
+    },
+    FaucetSettings: {
+      period: 'Option<BlockNumber>',
+      period_limit: 'Balance'
+    },
+    FaucetSettingsUpdate: {
+      period: 'Option<Option<BlockNumber>>',
+      period_limit: 'Option<Balance>'
+    },
+    ReportId: 'u64',
+    EntityId: {
+      _enum: {
+        Content: 'Content',
+        Account: 'AccountId',
+        Space: 'SpaceId',
+        Post: 'PostId'
+      }
+    },
+    EntityStatus: {
+      _enum: [
+        'Allowed',
+        'Blocked'
+      ]
+    },
+    Report: {
+      id: 'ReportId',
       created: 'WhoAndWhen',
-      updated: 'Option<WhoAndWhen>',
-      hidden: 'bool',
-
-      space_id: 'Option<SpaceId>',
-      extension: 'PostExtension',
-
-      ipfs_hash: 'IpfsHash',
-      edit_history: 'Vec<PostHistoryRecord>',
-
-      direct_replies_count: 'u16',
-      total_replies_count: 'u32',
-
-      shares_count: 'u16',
-      upvotes_count: 'u16',
-      downvotes_count: 'u16',
-
-      score: 'i32'
+      reported_entity: 'EntityId',
+      reported_within: 'SpaceId',
+      reason: 'Content'
     },
-
-    PostUpdate: {
-      space_id: 'Option<SpaceId>',
-      ipfs_hash: 'Option<IpfsHash>',
-      hidden: 'Option<bool>'
+    SuggestedStatus: {
+      suggested: 'WhoAndWhen',
+      status: 'Option<EntityStatus>',
+      report_id: 'Option<ReportId>'
     },
-
+    SpaceModerationSettings: {
+      autoblock_threshold: 'Option<u16>'
+    },
+    SpaceModerationSettingsUpdate: {
+      autoblock_threshold: 'Option<Option<u16>>'
+    },
+    SpacePermissionSet: 'BTreeSet<SpacePermission>',
+    SpacePermission: {
+      _enum: [
+        'ManageRoles',
+        'RepresentSpaceInternally',
+        'RepresentSpaceExternally',
+        'UpdateSpace',
+        'CreateSubspaces',
+        'UpdateOwnSubspaces',
+        'DeleteOwnSubspaces',
+        'HideOwnSubspaces',
+        'UpdateAnySubspace',
+        'DeleteAnySubspace',
+        'HideAnySubspace',
+        'CreatePosts',
+        'UpdateOwnPosts',
+        'DeleteOwnPosts',
+        'HideOwnPosts',
+        'UpdateAnyPost',
+        'DeleteAnyPost',
+        'HideAnyPost',
+        'CreateComments',
+        'UpdateOwnComments',
+        'DeleteOwnComments',
+        'HideOwnComments',
+        'HideAnyComment',
+        'Upvote',
+        'Downvote',
+        'Share',
+        'OverrideSubspacePermissions',
+        'OverridePostPermissions',
+        'SuggestEntityStatus',
+        'UpdateEntityStatus',
+        'UpdateSpaceSettings'
+      ]
+    },
+    SpacePermissions: {
+      none: 'Option<SpacePermissionSet>',
+      everyone: 'Option<SpacePermissionSet>',
+      follower: 'Option<SpacePermissionSet>',
+      space_owner: 'Option<SpacePermissionSet>'
+    },
+    SpacePermissionsContext: {
+      space_id: 'SpaceId',
+      is_space_owner: 'bool',
+      is_space_follower: 'bool',
+      space_perms: 'Option<SpacePermissions>'
+    },
     PostHistoryRecord: {
       edited: 'WhoAndWhen',
       old_data: 'PostUpdate'
     },
-
+    PostId: 'u64',
+    Post: {
+      id: 'PostId',
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      owner: 'AccountId',
+      extension: 'PostExtension',
+      space_id: 'Option<SpaceId>',
+      content: 'Content',
+      hidden: 'bool',
+      replies_count: 'u16',
+      hidden_replies_count: 'u16',
+      shares_count: 'u16',
+      upvotes_count: 'u16',
+      downvotes_count: 'u16',
+      score: 'i32'
+    },
+    PostUpdate: {
+      space_id: 'Option<SpaceId>',
+      content: 'Option<Content>',
+      hidden: 'Option<bool>'
+    },
     PostExtension: {
       _enum: {
         RegularPost: 'Null',
-        Comment: 'CommentExt',
+        Comment: 'Comment',
         SharedPost: 'PostId'
       }
     },
-
-    CommentExt: {
+    Comment: {
       parent_id: 'Option<PostId>',
       root_post_id: 'PostId'
     },
-
+    ProfileHistoryRecord: {
+      edited: 'WhoAndWhen',
+      old_data: 'ProfileUpdate'
+    },
     SocialAccount: {
       followers_count: 'u32',
       following_accounts_count: 'u16',
@@ -107,43 +174,43 @@ export default {
       reputation: 'u32',
       profile: 'Option<Profile>'
     },
-
     Profile: {
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
-
-      username: 'Text',
-      ipfs_hash: 'IpfsHash',
-
-      edit_history: 'Vec<ProfileHistoryRecord>'
+      content: 'Content'
     },
-
     ProfileUpdate: {
-      username: 'Option<Text>',
-      ipfs_hash: 'Option<IpfsHash>'
+      content: 'Option<Content>'
     },
-
-    ProfileHistoryRecord: {
-      edited: 'WhoAndWhen',
-      old_data: 'ProfileUpdate'
-    },
-
     ReactionId: 'u64',
-
     ReactionKind: {
       _enum: [
         'Upvote',
         'Downvote'
       ]
     },
-
     Reaction: {
       id: 'ReactionId',
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
       kind: 'ReactionKind'
     },
-
+    RoleId: 'u64',
+    Role: {
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      id: 'RoleId',
+      space_id: 'SpaceId',
+      disabled: 'bool',
+      expires_at: 'Option<BlockNumber>',
+      content: 'Content',
+      permissions: 'SpacePermissionSet'
+    },
+    RoleUpdate: {
+      disabled: 'Option<bool>',
+      content: 'Option<Content>',
+      permissions: 'Option<SpacePermissionSet>'
+    },
     ScoringAction: {
       _enum: [
         'UpvotePost',
@@ -157,93 +224,89 @@ export default {
         'FollowAccount'
       ]
     },
-
-    SpacePermissionSet: 'BTreeSet<SpacePermission>',
-
-    SpacePermission: {
-      _enum: [
-        'ManageRoles',
-
-        'RepresentSpaceInternally',
-        'RepresentSpaceExternally',
-
-        'UpdateSpace',
-
-        'BlockUsers',
-        'ReportUsers',
-
-        'CreateSubspaces',
-        'UpdateOwnSubspaces',
-        'DeleteOwnSubspaces',
-        'HideOwnSubspaces',
-
-        'UpdateAnySubspace',
-        'DeleteAnySubspace',
-        'HideAnySubspace',
-
-        'BlockSubspaces',
-        'ReportSubspaces',
-
-        'CreatePosts',
-        'UpdateOwnPosts',
-        'DeleteOwnPosts',
-        'HideOwnPosts',
-
-        'UpdateAnyPost',
-        'DeleteAnyPost',
-        'HideAnyPost',
-
-        'BlockPosts',
-        'ReportPosts',
-
-        'CreateComments',
-        'UpdateOwnComments',
-        'DeleteOwnComments',
-        'HideOwnComments',
-
-        'HideAnyComment',
-        'BlockComments',
-        'ReportComments',
-
-        'Upvote',
-        'Downvote',
-        'Share',
-
-        'OverrideSubspacePermissions',
-        'OverridePostPermissions'
-      ]
-    },
-    SpacePermissions: {
-      none: 'Option<SpacePermissionSet>',
-      everyone: 'Option<SpacePermissionSet>',
-      follower: 'Option<SpacePermissionSet>',
-      space_owner: 'Option<SpacePermissionSet>'
-    },
-
-    SpacePermissionsContext: {
-      space_id: 'SpaceId',
-      is_space_owner: 'bool',
-      is_space_follower: 'bool',
-      space_perms: 'Option<SpacePermissions>'
-    },
-
-    RoleId: 'u64',
-
-    Role: {
+    SessionKey: {
       created: 'WhoAndWhen',
       updated: 'Option<WhoAndWhen>',
-      id: 'RoleId',
-      space_id: 'SpaceId',
-      disabled: 'bool',
-      expires_at: 'Option<BlockNumber>',
-      ipfs_hash: 'Option<IpfsHash>',
-      permissions: 'SpacePermissionSet'
+      expires_at: 'BlockNumber',
+      limit: 'Option<Balance>',
+      spent: 'Balance'
     },
-
-    RoleUpdate: {
-      disabled: 'Option<bool>',
-      ipfs_hash: 'Option<Option<IpfsHash>>',
-      permissions: 'Option<SpacePermissionSet>'
+    SpaceHistoryRecord: {
+      edited: 'WhoAndWhen',
+      old_data: 'SpaceUpdate'
+    },
+    Space: {
+      id: 'SpaceId',
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      owner: 'AccountId',
+      parent_id: 'Option<SpaceId>',
+      handle: 'Option<Text>',
+      content: 'Content',
+      hidden: 'bool',
+      posts_count: 'u32',
+      hidden_posts_count: 'u32',
+      followers_count: 'u32',
+      score: 'i32',
+      permissions: 'Option<SpacePermissions>'
+    },
+    SpaceUpdate: {
+      parent_id: 'Option<Option<SpaceId>>',
+      handle: 'Option<Option<Text>>',
+      content: 'Option<Content>',
+      hidden: 'Option<bool>',
+      permissions: 'Option<Option<SpacePermissions>>'
+    },
+    SubscriptionPlanId: 'u64',
+    SubscriptionId: 'u64',
+    SubscriptionPeriod: {
+      _enum: {
+        Daily: 'Null',
+        Weekly: 'Null',
+        Monthly: 'Null',
+        Quarterly: 'Null',
+        Yearly: 'Null',
+        Custom: 'BlockNumber'
+      }
+    },
+    SubscriptionPlan: {
+      id: 'SubscriptionPlanId',
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      is_active: 'bool',
+      content: 'Content',
+      space_id: 'SpaceId',
+      wallet: 'Option<AccountId>',
+      price: 'Balance',
+      period: 'SubscriptionPeriod'
+    },
+    Subscription: {
+      id: 'SubscriptionPlanId',
+      created: 'WhoAndWhen',
+      updated: 'Option<WhoAndWhen>',
+      is_active: 'bool',
+      wallet: 'Option<AccountId>',
+      plan_id: 'SubscriptionPlanId'
+    },
+    SpaceId: 'u64',
+    WhoAndWhen: {
+      account: 'AccountId',
+      block: 'BlockNumber',
+      time: 'Moment'
+    },
+    User: {
+      _enum: {
+        Account: 'AccountId',
+        Space: 'SpaceId'
+      }
+    },
+    Content: {
+      _enum: {
+        None: 'Null',
+        Raw: 'Text',
+        IPFS: 'Text',
+        Hyper: 'Text'
+      }
     }
   }
 }

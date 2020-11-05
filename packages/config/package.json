@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/config",
-  "version": "0.1.5",
+  "version": "0.4.12",
   "description": "JavaScript config files for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -16,11 +16,13 @@
     "url": "https://github.com/dappforce/dappforce-subsocial-js/issues"
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
-  "dependencies": {
-    "@babel/runtime": "^7.8.4"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "eslint": "^7.12.1"
   },
   "keywords": [
     "dappforce",

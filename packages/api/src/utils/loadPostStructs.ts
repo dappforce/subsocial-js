@@ -1,10 +1,11 @@
 import { AnyAccountId, AnyPostId, AnySpaceId } from '@subsocial/types/substrate/interfaces/utils';
 import { PostData, PostWithSomeDetails, ProfileData, SpaceData } from '@subsocial/types'
-import { PostId, AccountId, SpaceId } from '@subsocial/types/substrate/interfaces'
+import { PostId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from '.'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
 import { PostDetailsOpts } from './types';
 import { isVisible } from './visibility-filter';
+import { AccountId } from '@polkadot/types/interfaces'
 
 export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
@@ -167,7 +168,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
 
 /** Load post structs and related structs like owner profile, space, root post if required. */
 export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
-  const { withSpace, withOwner } = opts || {}
+  const { withSpace, withOwner, visibility } = opts || {}
   const {
     spaceByIdMap,
     ownerByIdMap,
@@ -221,5 +222,5 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     }
   })
 
-  return postStructs.filter(({ space }) => isVisible(space?.struct))
+  return withSpace && visibility === 'onlyVisible' ? postStructs.filter(({ space }) => isVisible(space?.struct)) : postStructs
 }

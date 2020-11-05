@@ -1,35 +1,31 @@
-import * as winston from 'winston'
-import chalk from 'chalk'
-import { stringify } from 'circular-json'
-import isEmpty from 'lodash.isempty'
+import chalk, { Chalk } from 'chalk';
+import log, { LogLevel, setDefaultLevel } from 'loglevel'
+import prefix from 'loglevel-plugin-prefix'
 
-require('dotenv').config()
+type Levels = keyof LogLevel;
 
-export const logFormat = (label: string) => winston.format.combine(
-  winston.format.colorize(),
-  winston.format.timestamp(),
-  winston.format.label({ label: label }),
-  winston.format.splat(),
-  winston.format.simple(),
-  winston.format.metadata({ fillExcept: [ 'timestamp', 'level', 'label', 'message' ] }),
-  winston.format.printf(
-    ({ timestamp, level, label, message, metadata }) => {
-      const date = new Date(timestamp)
-      const millis = date.getMilliseconds()
-      const metaStr = isEmpty(metadata) ? '' : ' ' + stringify(metadata, null, 2)
-      return `[${date.toLocaleTimeString()}.${millis}] ${level} ${chalk.bold(label)}: ${message}${metaStr}`
-    }
-  )
-)
+const defaultLevel: Levels = process.env.LOG_LEVEL || 'INFO' as any
 
-const newTransport = (options?: winston.transports.ConsoleTransportOptions) => {
-  return new winston.transports.Console(options)
-}
+setDefaultLevel(defaultLevel);
 
-export const newLogger = (name: string, options?: winston.LoggerOptions) => {
-  return winston.createLogger({
-    ...options,
-    format: logFormat(name),
-    transports: newTransport({ level: options?.level || process.env.LOG_LEVEL || 'info' })
-  })
-}
+const colors: Record<Levels, Chalk> = {
+  TRACE: chalk.magenta,
+  DEBUG: chalk.cyan,
+  INFO: chalk.blue,
+  WARN: chalk.yellow,
+  ERROR: chalk.red,
+  SILENT: chalk.gray
+};
+
+prefix.reg(log);
+log.enableAll();
+
+prefix.apply(log, {
+  format(level, name, time) {
+    const date = new Date()
+    const drawDate = (date: string) => chalk.gray(`[${date}]`)
+    return `${drawDate(`${date.getMonth()}-${date.getDay()}`)} ${drawDate(time.toString())} ${colors[level.toUpperCase() as Levels](level.length < 5 ? level + ' ' : level)} ${chalk.green(`${name}:`)}`;
+  }
+});
+
+export const newLogger = (name: string = 'Subsocial') => log.getLogger(name)
