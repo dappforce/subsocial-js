@@ -81,15 +81,7 @@ export type CommentContent = {
 export type ProfileContent = {
   name: string;
   avatar: string;
-  email: string;
-  personalSite: string;
   about: string;
-  facebook: string;
-  twitter: string;
-  medium: string;
-  linkedIn: string;
-  github: string;
-  instagram: string;
 };
 
 export type IpfsCid = string | CID | RuntimeIpfsCid;
