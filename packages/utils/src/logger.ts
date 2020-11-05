@@ -24,8 +24,8 @@ prefix.apply(log, {
   format(level, name, time) {
     const date = new Date()
     const drawDate = (date: string) => chalk.gray(`[${date}]`)
-    return `${drawDate(`${date.getDay()}.${date.getMonth()}`)} ${drawDate(time.toString())} ${colors[level.toUpperCase() as Levels](level.length < 5 ? level + ' ' : level)} ${chalk.green(`${name}:`)}`;
+    return `${drawDate(`${date.getMonth()}-${date.getDay()}`)} ${drawDate(time.toString())} ${colors[level.toUpperCase() as Levels](level.length < 5 ? level + ' ' : level)} ${chalk.green(`${name}:`)}`;
   }
 });
 
-export const newLogger = (name: string = 'anonymous') => log.getLogger(name)
+export const newLogger = (name: string = 'Subsocial') => log.getLogger(name)
