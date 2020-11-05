@@ -42,7 +42,7 @@ prefix.apply(log, {
   }
 })
 
-export const newLogger = (name: string = 'anonymous', level?: Levels) => { 
+export const newLogger = (name: string = 'Subsocial', level?: Levels) => { 
   const logger = log.getLogger(name)
   logger.setLevel(level || defaultLevel)
   return logger
