@@ -1,21 +1,26 @@
-import CID from 'cids';
-import { IpfsCid as RuntimeIpfsCid } from '../substrate/interfaces';
+import CID from 'cids'
+import { IpfsCid as RuntimeIpfsCid } from '../substrate/interfaces'
 
-export { CID };
+export { CID }
 
-export type CommonContent = CommentContent | PostContent | SpaceContent | ProfileContent | SharedPostContent;
+export type CommonContent =
+  CommentContent |
+  PostContent |
+  SpaceContent |
+  ProfileContent |
+  SharedPostContent
 
 export type Activity = {
-  id: number,
-  account: string,
-  event: string,
-  following_id: string,
-  space_id: string,
-  post_id: string,
-  comment_id: string,
-  date: Date,
+  id: number
+  account: string
+  event: string
+  following_id: string
+  space_id: string
+  post_id: string
+  comment_id: string
+  date: Date
   agg_count: number
-};
+}
 
 type FilterByTags = {
   data: string[]
@@ -38,27 +43,27 @@ export type NavTab = {
   hidden: boolean
 }
 
-export type NamedLinks = {
-  name: string,
+export type NamedLink = {
+  name: string
   url?: string
 }
 
 export type SpaceContent = {
-  name: string;
-  about: string;
-  image: string;
-  email: string;
-  tags: string[];
-  links: NamedLinks[] | string[];
-  navTabs?: NavTab[];
-};
+  name: string
+  about: string
+  image: string
+  email: string
+  tags: string[]
+  links: string[] | NamedLink[]
+  navTabs?: NavTab[]
+}
 
 export type SharedPostContent = {
   body: string
-};
+}
 
 export type ProposalContent = {
-  network: 'kusama' | 'polkadot',
+  network: 'kusama' | 'polkadot'
   proposalIndex: number
 }
 
@@ -67,24 +72,24 @@ export type PostExt = {
 }
 
 export type PostContent = SharedPostContent & {
-  title: string;
-  image: string;
-  tags: string[];
-  canonical: string;
+  title: string
+  image: string
+  tags: string[]
+  canonical: string
   ext?: PostExt
-};
+}
 
 export type CommentContent = {
-  body: string;
-};
+  body: string
+}
 
 export type ProfileContent = {
-  name: string;
-  avatar: string;
-  about: string;
-};
+  name: string
+  avatar: string
+  about: string
+}
 
-export type IpfsCid = string | CID | RuntimeIpfsCid;
+export type IpfsCid = string | CID | RuntimeIpfsCid
 
 export type EventsName =
   'AccountFollowed' |
@@ -99,10 +104,10 @@ export type EventsName =
   'CommentReactionCreated'
 
 export type Counts = {
-  postsCount: number,
-  commentsCount: number,
-  reactionsCount: number,
-  followsCount: number,
-  spacesCount: number,
+  postsCount: number
+  commentsCount: number
+  reactionsCount: number
+  followsCount: number
+  spacesCount: number
   activitiesCount: number
 }
