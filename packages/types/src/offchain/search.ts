@@ -1,12 +1,27 @@
-export type ElasticIndexTypes = 'spaces' | 'posts' | 'profiles' | 'all'
+export type ElasticIndexTypes =
+  'all' |
+  'profiles' |
+  'spaces' |
+  'posts'
 
-export const ElasticIndex = {
+export type ElasticIndexName =
+  'subsocial_profiles' |
+  'subsocial_spaces' |
+  'subsocial_posts'
+
+export type IElasticIndex = Record<string, ElasticIndexName>
+
+export const ElasticIndex: IElasticIndex = {
   profiles: 'subsocial_profiles',
   spaces: 'subsocial_spaces',
   posts: 'subsocial_posts',
 }
 
-export const AllElasticIndexes = [ElasticIndex.profiles, ElasticIndex.spaces, ElasticIndex.posts]
+export const AllElasticIndexes: ElasticIndexName[] = [
+  ElasticIndex.profiles,
+  ElasticIndex.spaces,
+  ElasticIndex.posts
+]
 
 export const ElasticFields = {
   space: {
@@ -30,9 +45,9 @@ export const ElasticFields = {
 }
 
 export type ElasticQueryParams = {
+  indexes?: ElasticIndexTypes[]
   q?: string
+  tags?: string[]
   limit?: number
   offset?: number
-  indexes?: ElasticIndexTypes[]
-  tagsFilter?: string[]
 }
