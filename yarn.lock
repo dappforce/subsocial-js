@@ -538,27 +538,6 @@
     "@types/websocket" "^1.0.1"
     websocket "^1.0.32"
 
-"@subsocial/types@latest":
-  version "0.4.15"
-  resolved "https://registry.yarnpkg.com/@subsocial/types/-/types-0.4.15.tgz#c9eb307917347e9462ad7d59522e204ffe89e3aa"
-  integrity sha512-SrcXFiCUWea4aThY0xwsBekplHG5Dr2b738qT/DJ/o/Fyd50le7//4CFlbfyIKKRG//5Z8+1dZYDcjUbPAVu3g==
-  dependencies:
-    "@subsocial/utils" latest
-    cids "^0.7.1"
-
-"@subsocial/utils@latest":
-  version "0.4.13"
-  resolved "https://registry.yarnpkg.com/@subsocial/utils/-/utils-0.4.13.tgz#638898e8ac642eb89b5fdf594f5d08f95b70dfa7"
-  integrity sha512-j+CHLGBQK/Np6D8dpWWe46uq6uW38YyKG/CLXzJa7lNZz5XYLkBwy1jG3rcMGiyMw3oGP7gux6m27RrTUZbO4Q==
-  dependencies:
-    bn.js "^5.1.1"
-    chalk "^3.0.0"
-    dotenv "^8.0.0"
-    lodash.isempty "^4.4.0"
-    lodash.truncate "^4.4.2"
-    loglevel "^1.7.0"
-    loglevel-plugin-prefix "^0.8.4"
-
 "@types/axios@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@types/axios/-/axios-0.14.0.tgz#ec2300fbe7d7dddd7eb9d3abf87999964cafce46"
