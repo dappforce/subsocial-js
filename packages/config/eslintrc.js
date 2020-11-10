@@ -20,17 +20,11 @@ module.exports = {
 
     // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     'plugin:@typescript-eslint/recommended',
-
-    // Uses eslint-config-prettier to disable ESLint rules from
-    // @typescript-eslint/eslint-plugin that would conflict with prettier
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
   ],
-  plugins: ['jsx-a11y', 'prefer-object-spread', 'prettier', 'react-hooks', '@typescript-eslint'],
+  plugins: [ 'jsx-a11y', 'prefer-object-spread', 'prettier', 'react-hooks' ],
   rules: {
     // In an ideal world, we'd never have to use @ts-ignore, but that's not
     // possible right now.
-    'space-before-function-paren': ['warn', 'always'],
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
 
@@ -76,13 +70,12 @@ module.exports = {
 
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-    'beforeStatementContinuationChars': 'always',
     // Place to specify ESLint rules. Can be used to overwrite rules
     // specified from the extended configs
 
     // We're using TypeScript, so prop-types aren't so interesting
     'react/prop-types': 'off',
-        'no-unused-vars': 'off',
+    'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [ 'off' ],
     'semi': 'off',
     'comma-spacing': 'warn',
@@ -101,14 +94,8 @@ module.exports = {
     '@typescript-eslint/camelcase': 'off',
     'react/prop-types': 'off',
     '@typescript-eslint/array-type': 'off',
-    // This is documented as the default, but apparently now needs to be
-    // set explicitly
-    'prettier/prettier': [
-      'error',
-      {},
-      {
-        usePrettierrc: true,
-      },
-    ],
+
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
 };
