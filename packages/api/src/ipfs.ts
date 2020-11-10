@@ -4,7 +4,7 @@ import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/util
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from './utils';
 import { Content } from '@subsocial/types/substrate/classes';
-import { SubsocialContext, ContentResult } from './utils/types';
+import { SubsocialContext, ContentResult, UseServerProps } from './utils/types';
 
 export function getIpfsCidOfSocialAccount (struct: SocialAccount): string | undefined {
   const profile = struct?.profile
@@ -48,7 +48,7 @@ export class SubsocialIpfsApi {
   private ipfsNodeUrl!: IpfsUrl // IPFS Node ReadOnly Gateway
 
   private offchainUrl!: string
-  private useServer?: boolean
+  private useServer?: UseServerProps
 
   constructor (props: SubsocialIpfsProps) {
     const { ipfsNodeUrl, offchainUrl, useServer } = props;
@@ -90,7 +90,7 @@ export class SubsocialIpfsApi {
   // Find multiple
 
   getUniqueCids (cids: IpfsCid[], contentName?: string) {
-    contentName = nonEmptyStr(contentName) ? contentName + ' content' : 'content'
+    contentName = nonEmptyStr(contentName) ? `${contentName  } content` : 'content'
     const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
 
     if (isEmptyArray(ipfsCids)) {
@@ -125,7 +125,10 @@ export class SubsocialIpfsApi {
 
   async getContentArrayFromOffchain<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
-      const res = await axios.post(`${this.offchainUrl}/ipfs/get`, { cids });
+      
+      const res = this.useServer?.httpRequestMethod === 'get'
+        ? await axios.get(`${this.offchainUrl}/ipfs/get?cids=${cids.join('&&cids=')}`)
+        : await axios.post(`${this.offchainUrl}/ipfs/get`, { cids })
 
       if (res.status !== 200) {
         log.error(`${this.getContentArrayFromIpfs.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)

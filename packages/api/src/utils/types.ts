@@ -1,7 +1,13 @@
 import { AnyPostId, AnySpaceId } from '@subsocial/types'
 
+export type HttpRequestMethod = 'post' | 'get'
+
+export type UseServerProps = {
+  httpRequestMethod: HttpRequestMethod
+}
+
 export type SubsocialContext = {
-  useServer?: boolean
+  useServer?: UseServerProps
 }
 
 export type Visibility = 'onlyVisible' | 'onlyHidden' | 'onlyPublic' | 'onlyUnlisted'
