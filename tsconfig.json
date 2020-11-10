@@ -8,10 +8,20 @@
     "**/scripts/**/*"
   ],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths":
+    {
+      "@subsocial/types": ["packages/types/src"],
+      "@subsocial/types/*": ["packages/types/src/*"],
+      "@subsocial/utils": ["packages/utils/src"],
+      "@subsocial/utils/*": ["packages/utils/src/*"],
+      "@subsocial/api": ["packages/api/src"],
+      "@subsocial/api/*": ["packages/api/src/*"]
+    },
     "skipLibCheck": true,
     "typeRoots": [
       "./node_modules/@polkadot/ts",
       "./node_modules/@types"
-    ],
+    ]
   }
 }
