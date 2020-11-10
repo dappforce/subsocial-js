@@ -127,7 +127,7 @@ export class SubsocialIpfsApi {
     try {
       
       const res = this.useServer?.httpRequestMethod === 'get'
-        ? await axios.get(`${this.offchainUrl}/ipfs/get?cids=${cids.join('&&cids=')}`)
+        ? await axios.get(`${this.offchainUrl}/ipfs/get?cids=${cids.join('&cids=')}`)
         : await axios.post(`${this.offchainUrl}/ipfs/get`, { cids })
 
       if (res.status !== 200) {
