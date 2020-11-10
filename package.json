@@ -14,9 +14,9 @@
     "clean:build": "find . -name \"build\" -type d -prune -exec rm -rf '{}' +",
     "publish:all": "yarn build && ./scripts/publish-all.sh",
     "publish:types": "yarn build:types && ./scripts/publish-types.sh",
-    "publish:utils": "yarn build:api && ./scripts/publish-utils.sh",
+    "publish:utils": "yarn build:utils && ./scripts/publish-utils.sh",
     "publish:config": "./scripts/publish-config.sh",
-    "publish:api": "yarn build:utils && ./scripts/publish-api.sh"
+    "publish:api": "yarn build:api && ./scripts/publish-api.sh"
   },
   "devDependencies": {
     "lerna": "^2.11.0",
