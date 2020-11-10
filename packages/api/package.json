@@ -22,7 +22,7 @@
     "axios": "^0.19.2"
   },
   "devDependencies": {
-    "@subsocial/types": "^0.4.17",
+    "@subsocial/types": "latest",
     "@types/axios": "^0.14.0"
   },
   "scripts": {

@@ -66,7 +66,7 @@ export class SubsocialIpfsApi {
       const res = await this.ipfsNodeRequest('version')
       log.info('Connected to IPFS Node with version ', res.data.version)
     } catch (err) {
-      log.error('Failed to connect to IPFS node: ', err)
+      log.error('Failed to connect to IPFS node: ', err.stack)
     }
   }
 
