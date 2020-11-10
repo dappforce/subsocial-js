@@ -66,7 +66,7 @@ export class SubsocialIpfsApi {
       const res = await this.ipfsNodeRequest('version')
       log.info('Connected to IPFS Node with version ', res.data.version)
     } catch (err) {
-      log.error('Failed to connect to IPFS node: %o', err)
+      log.error('Failed to connect to IPFS node: ', err)
     }
   }
 
@@ -139,7 +139,7 @@ export class SubsocialIpfsApi {
       log.debug(`Loaded ${pluralize(contents.length, contentName)}`)
       return contents;
     } catch (error) {
-      log.error('Failed to get content to IPFS from client side via offchain: %o', error)
+      log.error('Failed to get content to IPFS from client side via offchain: ', error)
       return {};
     }
   }
@@ -204,7 +204,7 @@ export class SubsocialIpfsApi {
 
       log.info(`Unpinned content with hash: ${cid}`);
     } catch (error) {
-      log.error('Failed to unpin content in IPFS from client side via offchain: %o', error)
+      log.error('Failed to unpin content in IPFS from client side via offchain: ', error)
     }
   }
 
@@ -219,7 +219,7 @@ export class SubsocialIpfsApi {
 
       return res.data;
     } catch (error) {
-      log.error('Failed to add content to IPFS from client side via offchain: %o', error)
+      log.error('Failed to add content to IPFS from client side via offchain: ', error)
       return undefined;
     }
   }
@@ -245,7 +245,7 @@ export class SubsocialIpfsApi {
 
       return res.data;
     } catch (error) {
-      log.error('Failed to add file to IPFS from client side via offchain: %o', error)
+      log.error('Failed to add file to IPFS from client side via offchain: ', error)
       return undefined;
     }
   }
