@@ -8,7 +8,7 @@ export const registerSubsocialTypes = (): void => {
   try {
     registry.register(types);
   } catch (err) {
-    logger.error('Failed to register custom types of Subsocial modules', err.stack);
+    logger.error('Failed to register custom types of Subsocial blockchain:', err.stack);
   }
 };
 
