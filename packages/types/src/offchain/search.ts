@@ -51,3 +51,22 @@ export type ElasticQueryParams = {
   limit?: number
   offset?: number
 }
+
+export type ElasticSpaceDoc = {
+  name?: string;
+  handle?: string;
+  about?: string;
+  tags?: string[];
+}
+
+export type ElasticPostDoc = {
+  spaceId?: string;
+  title?: string;
+  body?: string;
+  tags?: string[];
+}
+
+export type ElasticProfileDoc = {
+  name?: string;
+  about?: string;
+}
