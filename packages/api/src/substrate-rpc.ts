@@ -57,7 +57,7 @@ const createRpcJson = ({ moduleName, method }: StorageItem, params: RpcParams) =
   params
 })
 
-export class SubsocialSubstrateApi {
+export class SubsocialSubstrateRpc {
 
   private rpcUrl: string // Polkadot API (connected)
   // private context?: SubsocialContextProps TODO use when need
@@ -271,4 +271,4 @@ export class SubsocialSubstrateApi {
 
 }
 
-const logger = newLogger(SubsocialSubstrateApi.name);
+const logger = newLogger(SubsocialSubstrateRpc.name);
