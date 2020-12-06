@@ -11,14 +11,18 @@ export type CommonContent =
   SharedPostContent
 
 export type Activity = {
-  id: number
   account: string
-  event: string
-  following_id: string
-  space_id: string
-  post_id: string
-  comment_id: string
-  date: Date
+  block_number: string
+  event_index: number
+  event: EventsName
+  /** Account id. */
+  following_id?: string
+  space_id?: string
+  post_id?: string
+  comment_id?: string
+  /** Date of this activity. Example: "2020-12-03T19:22:36.000Z" */
+  date: string
+  aggregated: boolean
   agg_count: number
 }
 

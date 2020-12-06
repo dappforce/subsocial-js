@@ -5,18 +5,18 @@
   ],
   "scripts": {
     "build": "lerna run build",
-    "build:types": "lerna run build --scope=@subsocial/types --include-filtered-dependencies",
-    "build:api": "lerna run build --scope=@subsocial/api --include-filtered-dependencies",
-    "build:utils": "lerna run build --scope=@subsocial/utils --include-filtered-dependencies",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate",
+    "build:types": "lerna run build --scope=@subsocial/types --include-filtered-dependencies",
+    "build:utils": "lerna run build --scope=@subsocial/utils --include-filtered-dependencies",
+    "build:api": "lerna run build --scope=@subsocial/api --include-filtered-dependencies",
     "clean": "lerna clean && yarn clean:build",
     "clean:modules": "lerna clean",
     "clean:build": "find . -name \"build\" -type d -prune -exec rm -rf '{}' +",
-    "publish:all": "yarn build && ./scripts/publish-all.sh",
+    "publish:config": "./scripts/publish-config.sh",
     "publish:types": "yarn build:types && ./scripts/publish-types.sh",
     "publish:utils": "yarn build:utils && ./scripts/publish-utils.sh",
-    "publish:config": "./scripts/publish-config.sh",
-    "publish:api": "yarn build:api && ./scripts/publish-api.sh"
+    "publish:api": "yarn build:api && ./scripts/publish-api.sh",
+    "publish:all": "yarn build && ./scripts/publish-all.sh"
   },
   "devDependencies": {
     "lerna": "^2.11.0",
