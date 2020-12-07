@@ -6,9 +6,9 @@
   "scripts": {
     "build": "lerna run build",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate",
-    "build:types": "lerna run build --scope=@subsocial/types --include-filtered-dependencies && lerna link",
-    "build:utils": "lerna run build --scope=@subsocial/utils --include-filtered-dependencies && lerna link",
-    "build:api": "lerna run build --scope=@subsocial/api --include-filtered-dependencies && lerna link",
+    "build:types": "lerna run build --scope=@subsocial/types --include-filtered-dependencies",
+    "build:utils": "lerna run build --scope=@subsocial/utils --include-filtered-dependencies",
+    "build:api": "lerna run build --scope=@subsocial/api --include-filtered-dependencies",
     "clean": "lerna clean && yarn clean:build",
     "clean:modules": "lerna clean",
     "clean:build": "find . -name \"build\" -type d -prune -exec rm -rf '{}' +",
@@ -17,7 +17,7 @@
     "publish:utils": "yarn build:utils && ./scripts/publish-utils.sh",
     "publish:api": "yarn build:api && ./scripts/publish-api.sh",
     "publish:all": "yarn build && ./scripts/publish-all.sh",
-    "postinstall": "lerna bootstrap && yarn build:utils"
+    "postinstall": "lerna bootstrap"
   },
   "devDependencies": {
     "lerna": "3.22.0",
