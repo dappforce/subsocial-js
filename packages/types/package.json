@@ -7,6 +7,7 @@
   "license": "GPL-3.0-only",
   "publishConfig": {
     "access": "public",
+    "directory": "src",
     "registry": "https://registry.npmjs.org"
   },
   "repository": {
