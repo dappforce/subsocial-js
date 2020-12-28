@@ -1,13 +1,15 @@
+import { AccountId } from '@polkadot/types/interfaces/runtime';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
 import { AccountId } from '@polkadot/types/interfaces';
 import { AnyAccountId, AnySpaceId, AnyPostId, AnyReactionId, SubstrateId, PalletName } from '@subsocial/types';
-import { Space, SpaceId, Post, PostId, Reaction, ReactionId, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { Space, SpaceId, Post, PostId, Reaction, ReactionId } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from './utils';
 import { VisibilityFilter } from './utils/visibility-filter';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery, SubsocialContext } from './utils/types';
+import { SocialAccountWithId } from '@subsocial/types/dto';
 
 type StorageItem = {
   pallet: PalletName,
@@ -90,12 +92,27 @@ export class SubsocialSubstrateApi {
         return []
       }
 
-      const structs = (await this.queryPalletMulti(storageItem, ids))
-        .filter(x => x.isSome)
-        .map(x => x.unwrap())
+      const structs = await this.queryPalletMulti(storageItem, ids)
 
-      logger.debug(`Loaded ${pluralize(structs.length, 'struct')} from ${storage}`)
-      return structs
+      const res: T[] = [];
+
+      structs.forEach((x, i) => {
+        if (x.isSome) {
+          const id = ids[i]
+          const item = x.unwrap()
+
+          res.push(storageItem.pallet === 'profiles'
+            ? {
+                id,
+                ...item
+              }
+            : item
+          )
+        }
+      })
+
+      logger.debug(`Loaded ${pluralize(res.length, 'struct')} from ${storage}`)
+      return res
     } catch (err) {
       logger.error(`Failed to load struct(s) from ${storage} by ${ids.length} id(s):`, err)
       return []
@@ -112,7 +129,7 @@ export class SubsocialSubstrateApi {
     return VisibilityFilter<Post>(posts, visibility)
   }
 
-  async findSocialAccounts (ids: AnyAccountId[]): Promise<SocialAccount[]> {
+  async findSocialAccounts (ids: AnyAccountId[]): Promise<SocialAccountWithId[]> {
     const accountIds = ids.map(id => asAccountId(id)).filter(x => typeof x !== 'undefined') as AccountId[]
     return this.findStructs({ pallet: 'profiles', storage: 'socialAccountById' }, accountIds);
   }
@@ -132,7 +149,7 @@ export class SubsocialSubstrateApi {
     return getFirstOrUndefined(await this.findPosts({ ids: [ id ], visibility }))
   }
 
-  async findSocialAccount (id: AnyAccountId): Promise<SocialAccount | undefined> {
+  async findSocialAccount (id: AnyAccountId): Promise<SocialAccountWithId | undefined> {
     return getFirstOrUndefined(await this.findSocialAccounts([ id ]))
   }
 

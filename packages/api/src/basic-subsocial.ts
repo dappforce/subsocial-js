@@ -1,8 +1,9 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { SpaceData, CommonData, PostData, ProfileData } from '@subsocial/types';
+import { SocialAccountWithId } from '@subsocial/types/dto';
 import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
 import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
-import { Space, Post, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { Space, Post } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
@@ -89,7 +90,7 @@ export class BasicSubsocialApi {
     const findStructs = this.substrate.findSocialAccounts.bind(this.substrate)
     const findContents = this.ipfs.findProfiles.bind(this.ipfs)
 
-    const profiles = await this.findDataArray<AnyAccountId, SocialAccount, ProfileContent>(
+    const profiles = await this.findDataArray<AnyAccountId, SocialAccountWithId, ProfileContent>(
       ids, findStructs, findContents
     ) as ProfileData[]
 

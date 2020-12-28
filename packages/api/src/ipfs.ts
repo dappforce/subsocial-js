@@ -1,12 +1,13 @@
-import { IpfsCid as RuntimeIpfsCid, SocialAccount } from '@subsocial/types/substrate/interfaces';
+import { IpfsCid as RuntimeIpfsCid } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from './utils';
 import { Content } from '@subsocial/types/substrate/classes';
 import { SubsocialContext, ContentResult, UseServerProps } from './utils/types';
+import { SocialAccountWithId } from '@subsocial/types/dto';
 
-export function getIpfsCidOfSocialAccount (struct: SocialAccount): string | undefined {
+export function getIpfsCidOfSocialAccount (struct: SocialAccountWithId): string | undefined {
   const profile = struct?.profile
   if (profile && profile.isSome) {
     return getIpfsCidOfStruct(profile.unwrap())
@@ -18,13 +19,13 @@ type HasContentField = {
   content: Content
 }
 
-type HasIpfsCidSomewhere = HasContentField | SocialAccount
+type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
 
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
   if (isIpfs((struct as HasContentField).content)) {
     return (struct as HasContentField).content.asIpfs.toString()
-  } else if ((struct as SocialAccount).profile) {
-    return getIpfsCidOfSocialAccount(struct as SocialAccount)
+  } else if ((struct as SocialAccountWithId).profile) {
+    return getIpfsCidOfSocialAccount(struct as SocialAccountWithId)
   }
   return undefined
 }
