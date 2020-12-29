@@ -1,4 +1,3 @@
-import { AccountId } from '@polkadot/types/interfaces/runtime';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
 import { AccountId } from '@polkadot/types/interfaces';
