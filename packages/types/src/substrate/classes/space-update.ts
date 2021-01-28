@@ -3,13 +3,15 @@ import { Option, Struct, bool } from '@polkadot/types';
 import registry from '../registry';
 import { OptionOptionText } from './utils';
 import { OptionContent } from './content';
+import { SpacePermissions } from '../interfaces';
 
 // TODO add permissions
 
 export type SpaceUpdateType = {
   handle: OptionOptionText;
   content: OptionContent;
-  hidden: Option<bool>
+  hidden: Option<bool>;
+  permissions: Option<Option<SpacePermissions>>;
 };
 
 export class SpaceUpdate extends Struct {
@@ -19,7 +21,8 @@ export class SpaceUpdate extends Struct {
       {
         handle: 'Option<Option<Text>>' as any,
         content: 'Option<Content>',
-        hidden: 'Option<bool>'
+        hidden: 'Option<bool>',
+        permissions: 'Option<Option<SpacePermissions>>' as any
       },
       value
     );
@@ -43,5 +46,9 @@ export class SpaceUpdate extends Struct {
 
   get hidden (): bool {
     return this.get('hidden') as bool;
+  }
+
+  get permissions (): Option<Option<SpacePermissions>> {
+    return this.get('permissions') as Option<Option<SpacePermissions>>;
   }
 }
