@@ -1,12 +1,13 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.4.23",
+  "version": "0.4.26",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "build/index.js",
   "license": "GPL-3.0-only",
   "publishConfig": {
     "access": "public",
+    "directory": "src",
     "registry": "https://registry.npmjs.org"
   },
   "repository": {

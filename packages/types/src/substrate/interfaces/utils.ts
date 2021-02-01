@@ -1,9 +1,10 @@
+import { AccountId } from '@polkadot/types/interfaces';
 import BN from 'bn.js';
-import { SpaceId, PostId, Space, Post, ReactionId, SocialAccount } from '.';
-import AccountId from '@polkadot/types/generic/AccountId';
+import { SpaceId, PostId, Space, Post, ReactionId } from '.';
+import { SocialAccountWithId } from '../../dto';
 
 export type SubstrateId = SpaceId | PostId | BN;
-export type CommonStruct = Space | Post | SocialAccount;
+export type CommonStruct = Space | Post | SocialAccountWithId;
 export type AnyAccountId = AccountId | string;
 export type AnySpaceId = SpaceId | BN;
 export type AnyPostId = PostId | BN;

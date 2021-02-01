@@ -16,13 +16,14 @@
     "publish:types": "yarn build:types && ./scripts/publish-types.sh",
     "publish:utils": "yarn build:utils && ./scripts/publish-utils.sh",
     "publish:api": "yarn build:api && ./scripts/publish-api.sh",
-    "publish:all": "yarn build && ./scripts/publish-all.sh"
+    "publish:all": "yarn build && ./scripts/publish-all.sh",
+    "postinstall": "lerna bootstrap --force-local && lerna link --force-local"
   },
   "devDependencies": {
-    "lerna": "^2.11.0",
-    "ts-node": "^9.0.0"
+    "lerna": "3.22.0",
+    "ts-node": "9.0.0"
   },
   "dependencies": {
-    "typescript": "^4.0.5"
+    "typescript": "4.0.5"
   }
 }
