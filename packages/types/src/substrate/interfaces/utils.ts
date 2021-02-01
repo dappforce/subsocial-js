@@ -1,6 +1,6 @@
+import { AccountId } from '@polkadot/types/interfaces';
 import BN from 'bn.js';
 import { SpaceId, PostId, Space, Post, ReactionId } from '.';
-import AccountId from '@polkadot/types/generic/AccountId';
 import { SocialAccountWithId } from '../../dto';
 
 export type SubstrateId = SpaceId | PostId | BN;

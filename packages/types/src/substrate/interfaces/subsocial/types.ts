@@ -1,9 +1,8 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { BTreeSet, Enum, Option, Struct } from '@polkadot/types/codec';
-import { Text, bool, i32, u16, u32, u64, u8 } from '@polkadot/types/primitive';
-import { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
+import type { BTreeSet, Enum, Option, Struct, Text, bool, i32, u16, u32, u64, u8 } from '@polkadot/types';
+import type { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
 
 /** @name Address */
 export interface Address extends AccountId {}
