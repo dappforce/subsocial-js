@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.4.26",
+  "version": "0.4.30",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "build/index.js",
@@ -25,7 +25,8 @@
     "lodash.isempty": "^4.4.0",
     "lodash.truncate": "^4.4.2",
     "loglevel": "^1.7.0",
-    "loglevel-plugin-prefix": "^0.8.4"
+    "loglevel-plugin-prefix": "^0.8.4",
+    "@sindresorhus/slugify": "^1.1.0"
   },
   "devDependencies": {
     "@types/circular-json": "^0.4.0",
