@@ -92,6 +92,16 @@ export interface EntityStatus extends Enum {
   readonly isBlocked: boolean;
 }
 
+/** @name Faucet */
+export interface Faucet extends Struct {
+  readonly enabled: bool;
+  readonly period: BlockNumber;
+  readonly period_limit: Balance;
+  readonly drip_limit: Balance;
+  readonly next_period_at: BlockNumber;
+  readonly dripped_in_current_period: Balance;
+}
+
 /** @name FaucetSettings */
 export interface FaucetSettings extends Struct {
   readonly period: Option<BlockNumber>;
@@ -102,6 +112,14 @@ export interface FaucetSettings extends Struct {
 export interface FaucetSettingsUpdate extends Struct {
   readonly period: Option<Option<BlockNumber>>;
   readonly period_limit: Option<Balance>;
+}
+
+/** @name FaucetUpdate */
+export interface FaucetUpdate extends Struct {
+  readonly enabled: Option<bool>;
+  readonly period: Option<BlockNumber>;
+  readonly period_limit: Option<Balance>;
+  readonly drip_limit: Option<Balance>;
 }
 
 /** @name IpfsCid */

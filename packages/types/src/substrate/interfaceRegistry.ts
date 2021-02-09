@@ -51,7 +51,7 @@ import type { Bounty, BountyIndex, BountyStatus, BountyStatusActive, BountyStatu
 import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import type { VestingInfo } from '@polkadot/types/interfaces/vesting';
-import type { Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, FaucetSettings, FaucetSettingsUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from '../substrate/interfaces/subsocial';
+import type { Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, Faucet, FaucetSettings, FaucetSettingsUpdate, FaucetUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from '../substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -415,8 +415,10 @@ declare module '@polkadot/types/types/registry' {
     'Option<ExtrinsicsWeight>': Option<ExtrinsicsWeight>;
     'Option<ExtrinsicUnknown>': Option<ExtrinsicUnknown>;
     'Option<ExtrinsicV4>': Option<ExtrinsicV4>;
+    'Option<Faucet>': Option<Faucet>;
     'Option<FaucetSettings>': Option<FaucetSettings>;
     'Option<FaucetSettingsUpdate>': Option<FaucetSettingsUpdate>;
+    'Option<FaucetUpdate>': Option<FaucetUpdate>;
     'Option<FeeDetails>': Option<FeeDetails>;
     'Option<Fixed128>': Option<Fixed128>;
     'Option<Fixed64>': Option<Fixed64>;
@@ -1188,8 +1190,10 @@ declare module '@polkadot/types/types/registry' {
     'Vec<ExtrinsicsWeight>': Vec<ExtrinsicsWeight>;
     'Vec<ExtrinsicUnknown>': Vec<ExtrinsicUnknown>;
     'Vec<ExtrinsicV4>': Vec<ExtrinsicV4>;
+    'Vec<Faucet>': Vec<Faucet>;
     'Vec<FaucetSettings>': Vec<FaucetSettings>;
     'Vec<FaucetSettingsUpdate>': Vec<FaucetSettingsUpdate>;
+    'Vec<FaucetUpdate>': Vec<FaucetUpdate>;
     'Vec<FeeDetails>': Vec<FeeDetails>;
     'Vec<Fixed128>': Vec<Fixed128>;
     'Vec<Fixed64>': Vec<Fixed64>;
@@ -1961,8 +1965,10 @@ declare module '@polkadot/types/types/registry' {
     ExtrinsicsWeight: ExtrinsicsWeight;
     ExtrinsicUnknown: ExtrinsicUnknown;
     ExtrinsicV4: ExtrinsicV4;
+    Faucet: Faucet;
     FaucetSettings: FaucetSettings;
     FaucetSettingsUpdate: FaucetSettingsUpdate;
+    FaucetUpdate: FaucetUpdate;
     FeeDetails: FeeDetails;
     Fixed128: Fixed128;
     Fixed64: Fixed64;

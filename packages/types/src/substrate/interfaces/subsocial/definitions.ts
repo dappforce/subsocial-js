@@ -307,6 +307,22 @@ export default {
         IPFS: 'Text',
         Hyper: 'Text'
       }
+    },
+    Faucet: {
+      enabled: 'bool',
+      period: 'BlockNumber',
+      period_limit: 'Balance',
+      drip_limit: 'Balance',
+  
+      next_period_at: 'BlockNumber',
+      dripped_in_current_period: 'Balance'
+    },
+  
+    FaucetUpdate: {
+      enabled: 'Option<bool>',
+      period: 'Option<BlockNumber>',
+      period_limit: 'Option<Balance>',
+      drip_limit: 'Option<Balance>'
     }
   }
 }
