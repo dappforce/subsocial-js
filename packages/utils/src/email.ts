@@ -10,7 +10,7 @@ export const formatEmail = (email?: string) => {
 	return `${username.replace(/[\W_]/g, '')}@${domain}`
 }
 
-const validEmailProviders = [
+export const validEmailProviders = [
   'gmail.com',
   'google.com',
   'yahoo.com',
