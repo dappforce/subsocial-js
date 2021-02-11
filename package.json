@@ -3,6 +3,7 @@
   "workspaces": [
     "packages/*"
   ],
+  "repository": "github:olehmell/subsocial-sdk",
   "scripts": {
     "build": "lerna run build",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate",
