@@ -62,6 +62,8 @@ export class SubsocialIpfsApi {
   }
 
   private async testConnection () {
+    if (this.useServer) return
+
     try {
       // Test IPFS Node connection by requesting its version
       const res = await this.ipfsNodeRequest('version')
