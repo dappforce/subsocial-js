@@ -323,6 +323,26 @@ export default {
       period: 'Option<BlockNumber>',
       period_limit: 'Option<Balance>',
       drip_limit: 'Option<Balance>'
+    },
+    ChangeId: 'u64',
+  
+    SpaceOwners: {
+      created: 'WhoAndWhen',
+      space_id: 'SpaceId',
+      owners: 'Vec<AccountId>',
+      threshold: 'u16',
+      changes_count: 'u16'
+    },
+    Change: {
+      created: 'WhoAndWhen',
+      id: 'ChangeId',
+      space_id: 'SpaceId',
+      add_owners: 'Vec<AccountId>',
+      remove_owners: 'Vec<AccountId>',
+      new_threshold: 'Option<u16>',
+      notes: 'Text',
+      confirmed_by: 'Vec<AccountId>',
+      expires_at: 'BlockNumber'
     }
   }
 }

@@ -20,7 +20,7 @@ import type { DeployData, FundIndex, FundInfo, LastContribution } from '@polkado
 import type { AccountVote, AccountVoteSplit, AccountVoteStandard, Conviction, Delegations, PreimageStatus, PreimageStatusAvailable, PriorLock, PropIndex, Proposal, ProxyState, ReferendumIndex, ReferendumInfo, ReferendumInfoFinished, ReferendumInfoTo239, ReferendumStatus, Tally, Voting, VotingDelegating, VotingDirect, VotingDirectVote } from '@polkadot/types/interfaces/democracy';
 import type { ApprovalFlag, DefunctVoter, Renouncing, SetIndex, Vote, VoteIndex, VoteThreshold, VoterInfo } from '@polkadot/types/interfaces/elections';
 import type { CreatedBlock, ImportedAux } from '@polkadot/types/interfaces/engine';
-import type { EthAccount, EthBlock, EthBloom, EthCallRequest, EthFilter, EthFilterAddress, EthFilterTopic, EthFilterTopicEntry, EthFilterTopicInner, EthHeader, EthLog, EthReceipt, EthRichBlock, EthRichHeader, EthStorageProof, EthSubKind, EthSubParams, EthSubResult, EthSyncInfo, EthSyncStatus, EthTransaction, EthTransactionAction, EthTransactionCondition, EthTransactionRequest, EthTransactionStatus, EthWork, EthereumAccountId, EthereumLookupSource, EthereumSignature } from '@polkadot/types/interfaces/eth';
+import type { EthAccount, EthBlock, EthBloom, EthCallRequest, EthFilter, EthFilterAddress, EthFilterChanges, EthFilterTopic, EthFilterTopicEntry, EthFilterTopicInner, EthHeader, EthLog, EthReceipt, EthRichBlock, EthRichHeader, EthStorageProof, EthSubKind, EthSubParams, EthSubResult, EthSyncInfo, EthSyncStatus, EthTransaction, EthTransactionAction, EthTransactionCondition, EthTransactionRequest, EthTransactionStatus, EthWork, EthereumAccountId, EthereumLookupSource, EthereumSignature } from '@polkadot/types/interfaces/eth';
 import type { EvmAccount, EvmLog, EvmVicinity, ExitError, ExitFatal, ExitReason, ExitRevert, ExitSucceed } from '@polkadot/types/interfaces/evm';
 import type { AnySignature, EcdsaSignature, Ed25519Signature, Extrinsic, ExtrinsicEra, ExtrinsicPayload, ExtrinsicPayloadUnknown, ExtrinsicPayloadV4, ExtrinsicSignature, ExtrinsicSignatureV4, ExtrinsicUnknown, ExtrinsicV4, ImmortalEra, MortalEra, MultiSignature, Signature, SignerPayload, Sr25519Signature } from '@polkadot/types/interfaces/extrinsics';
 import type { AssetOptions, Owner, PermissionLatest, PermissionVersions, PermissionsV1 } from '@polkadot/types/interfaces/genericAsset';
@@ -51,7 +51,7 @@ import type { Bounty, BountyIndex, BountyStatus, BountyStatusActive, BountyStatu
 import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import type { VestingInfo } from '@polkadot/types/interfaces/vesting';
-import type { Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, Faucet, FaucetSettings, FaucetSettingsUpdate, FaucetUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from '../substrate/interfaces/subsocial';
+import type { Change, ChangeId, Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, Faucet, FaucetSettings, FaucetSettingsUpdate, FaucetUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpaceOwners, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from '../substrate/interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -69,6 +69,7 @@ declare module '@polkadot/types/types/registry' {
     'Compact<BalanceOf>': Compact<BalanceOf>;
     'Compact<BlockNumber>': Compact<BlockNumber>;
     'Compact<BountyIndex>': Compact<BountyIndex>;
+    'Compact<ChangeId>': Compact<ChangeId>;
     'Compact<ConsensusEngineId>': Compact<ConsensusEngineId>;
     'Compact<ContractDiscriminant>': Compact<ContractDiscriminant>;
     'Compact<CoreIndex>': Compact<CoreIndex>;
@@ -237,6 +238,8 @@ declare module '@polkadot/types/types/registry' {
     'Option<CandidateReceipt>': Option<CandidateReceipt>;
     'Option<ChainProperties>': Option<ChainProperties>;
     'Option<ChainType>': Option<ChainType>;
+    'Option<Change>': Option<Change>;
+    'Option<ChangeId>': Option<ChangeId>;
     'Option<ChangesTrieConfiguration>': Option<ChangesTrieConfiguration>;
     'Option<CodeHash>': Option<CodeHash>;
     'Option<CollatorId>': Option<CollatorId>;
@@ -361,6 +364,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<EthereumSignature>': Option<EthereumSignature>;
     'Option<EthFilter>': Option<EthFilter>;
     'Option<EthFilterAddress>': Option<EthFilterAddress>;
+    'Option<EthFilterChanges>': Option<EthFilterChanges>;
     'Option<EthFilterTopic>': Option<EthFilterTopic>;
     'Option<EthFilterTopicEntry>': Option<EthFilterTopicEntry>;
     'Option<EthFilterTopicInner>': Option<EthFilterTopicInner>;
@@ -777,6 +781,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<SpaceId>': Option<SpaceId>;
     'Option<SpaceModerationSettings>': Option<SpaceModerationSettings>;
     'Option<SpaceModerationSettingsUpdate>': Option<SpaceModerationSettingsUpdate>;
+    'Option<SpaceOwners>': Option<SpaceOwners>;
     'Option<SpacePermission>': Option<SpacePermission>;
     'Option<SpacePermissions>': Option<SpacePermissions>;
     'Option<SpacePermissionsContext>': Option<SpacePermissionsContext>;
@@ -1012,6 +1017,8 @@ declare module '@polkadot/types/types/registry' {
     'Vec<CandidateReceipt>': Vec<CandidateReceipt>;
     'Vec<ChainProperties>': Vec<ChainProperties>;
     'Vec<ChainType>': Vec<ChainType>;
+    'Vec<Change>': Vec<Change>;
+    'Vec<ChangeId>': Vec<ChangeId>;
     'Vec<ChangesTrieConfiguration>': Vec<ChangesTrieConfiguration>;
     'Vec<CodeHash>': Vec<CodeHash>;
     'Vec<CollatorId>': Vec<CollatorId>;
@@ -1136,6 +1143,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<EthereumSignature>': Vec<EthereumSignature>;
     'Vec<EthFilter>': Vec<EthFilter>;
     'Vec<EthFilterAddress>': Vec<EthFilterAddress>;
+    'Vec<EthFilterChanges>': Vec<EthFilterChanges>;
     'Vec<EthFilterTopic>': Vec<EthFilterTopic>;
     'Vec<EthFilterTopicEntry>': Vec<EthFilterTopicEntry>;
     'Vec<EthFilterTopicInner>': Vec<EthFilterTopicInner>;
@@ -1552,6 +1560,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<SpaceId>': Vec<SpaceId>;
     'Vec<SpaceModerationSettings>': Vec<SpaceModerationSettings>;
     'Vec<SpaceModerationSettingsUpdate>': Vec<SpaceModerationSettingsUpdate>;
+    'Vec<SpaceOwners>': Vec<SpaceOwners>;
     'Vec<SpacePermission>': Vec<SpacePermission>;
     'Vec<SpacePermissions>': Vec<SpacePermissions>;
     'Vec<SpacePermissionsContext>': Vec<SpacePermissionsContext>;
@@ -1787,6 +1796,8 @@ declare module '@polkadot/types/types/registry' {
     CandidateReceipt: CandidateReceipt;
     ChainProperties: ChainProperties;
     ChainType: ChainType;
+    Change: Change;
+    ChangeId: ChangeId;
     ChangesTrieConfiguration: ChangesTrieConfiguration;
     CodeHash: CodeHash;
     CollatorId: CollatorId;
@@ -1911,6 +1922,7 @@ declare module '@polkadot/types/types/registry' {
     EthereumSignature: EthereumSignature;
     EthFilter: EthFilter;
     EthFilterAddress: EthFilterAddress;
+    EthFilterChanges: EthFilterChanges;
     EthFilterTopic: EthFilterTopic;
     EthFilterTopicEntry: EthFilterTopicEntry;
     EthFilterTopicInner: EthFilterTopicInner;
@@ -2327,6 +2339,7 @@ declare module '@polkadot/types/types/registry' {
     SpaceId: SpaceId;
     SpaceModerationSettings: SpaceModerationSettings;
     SpaceModerationSettingsUpdate: SpaceModerationSettingsUpdate;
+    SpaceOwners: SpaceOwners;
     SpacePermission: SpacePermission;
     SpacePermissions: SpacePermissions;
     SpacePermissionsContext: SpacePermissionsContext;
