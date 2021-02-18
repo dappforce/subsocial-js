@@ -11,12 +11,10 @@ type SummarizeOpt = {
   omission?: string;
 }
 
-type SummarizeFn = (text: string, opts?: SummarizeOpt) => string
-
 /** Shorten a plain text up to `limit` chars. Split by separators. */
-export const summarize: SummarizeFn = (
-  text,
-  opts = {}
+export const summarize = (
+  text: string,
+  opts: SummarizeOpt = {}
 ): string => {
   if (isEmptyStr(text)) return ''
 
@@ -36,10 +34,16 @@ export const summarize: SummarizeFn = (
     })
 }
 
-export const summarizeMd: SummarizeFn = (
-  md,
-  opts = {}
+export const summarizeMd = (
+  md: string,
+  opts: SummarizeOpt = {}
 ) => {
   const text = mdToText(md)?.trim() || ''
-  return summarize(text, opts)
+  const summary = summarize(text, opts)
+  const isShowMore = text.length > summary.length
+
+  return {
+    summary,
+    isShowMore
+  }
 }
