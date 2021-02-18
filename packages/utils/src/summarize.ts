@@ -1,5 +1,6 @@
 import { isEmptyStr } from './string'
 import truncate from 'lodash.truncate'
+import { mdToText } from './md'
 
 const DEFAULT_SUMMARY_LEN = 300
 
@@ -10,11 +11,12 @@ type SummarizeOpt = {
   omission?: string;
 }
 
-//TODO: remove because was extracted to @subsocial/utils
+type SummarizeFn = (text: string, opts?: SummarizeOpt) => string
+
 /** Shorten a plain text up to `limit` chars. Split by separators. */
-export const summarize = (
-  text: string,
-  opts: SummarizeOpt = {}
+export const summarize: SummarizeFn = (
+  text,
+  opts = {}
 ): string => {
   if (isEmptyStr(text)) return ''
 
@@ -32,4 +34,12 @@ export const summarize = (
       separator: SEPARATOR,
       omission
     })
+}
+
+export const summarizeMd: SummarizeFn = (
+  md,
+  opts = {}
+) => {
+  const text = mdToText(md)?.trim() || ''
+  return summarize(text, opts)
 }
