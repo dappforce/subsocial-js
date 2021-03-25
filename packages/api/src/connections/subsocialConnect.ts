@@ -13,16 +13,20 @@ type Api = SubsocialApi & {
   api: ApiPromise
 }
 
-export const newSubsocialApi = async (context: SubsocialApiProps) => {
+type NewSubsocialApiProps = Omit<SubsocialApiProps, 'substrateApi'> & {
+  substrateNodeUrl: string
+}
+
+export const newSubsocialApi = async ({ substrateNodeUrl, ...props }: NewSubsocialApiProps) => {
   if (!subsocial && !isLoadingSubsocial) {
     isLoadingSubsocial = true
-    const api = await getApi()
-    subsocial = new SubsocialApi(context)
+    const substrateApi = await getApi()
+    subsocial = new SubsocialApi({ substrateApi, ...props })
     isLoadingSubsocial = false;
 
-    (subsocial as any).api = api
+    (subsocial as any).api = substrateApi
   }
   return subsocial as Api
 }
 
-export const createResolveSubsocialApi = (context: SubsocialApiProps) => () => newSubsocialApi(context)
+export const createResolveSubsocialApi = (context: NewSubsocialApiProps) => () => newSubsocialApi(context)
