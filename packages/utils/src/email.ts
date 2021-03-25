@@ -20,8 +20,9 @@ export const validEmailProviders = [
   'msn.com',
   'live.com',
   'aol.com',
+  'qq.com',
   'yandex.com',
-  'mail.ru'
+  'mail.ru',
 ]
 
 const validEmailSet = new Set(validEmailProviders)
