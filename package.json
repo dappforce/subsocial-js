@@ -6,7 +6,7 @@
   "repository": "github:olehmell/subsocial-sdk",
   "scripts": {
     "build": "lerna run build",
-    "build:interfaces": "node -r ts-node/register packages/types/scripts/generate",
+    "build:interfaces": "node -r ts-node/register packages/types/scripts/generate && ./scripts/typegen-fix-import.sh",
     "build:types": "lerna run build --scope=@subsocial/types --include-filtered-dependencies",
     "build:utils": "lerna run build --scope=@subsocial/utils --include-filtered-dependencies",
     "build:api": "lerna run build --scope=@subsocial/api --include-filtered-dependencies",
