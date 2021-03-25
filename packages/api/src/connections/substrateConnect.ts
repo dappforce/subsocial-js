@@ -1,8 +1,9 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { types } from '@subsocial/types/substrate/preparedTypes';
 import { newLogger } from '@subsocial/utils';
 import registry from '@subsocial/types/substrate/registry';
 import { formatBalance } from '@polkadot/util';
+import { registryTypes as types } from '@subsocial/types'
+import rpc from '@polkadot/types/interfaces/jsonrpc'
 
 const DEFAULT_DECIMALS = [ 12 ]
 const DEFAULT_TOKEN = [ 'SMN' ]
@@ -11,24 +12,22 @@ const logger = newLogger('SubstrateConnection');
 
 let api: ApiPromise;
 
-export { api };
-
-export class DfApi {
+export class SubstrateConnect {
 
   protected static api: ApiPromise;
 
   protected static connected = false;
 
-  public static connect = async (nodeUrl?: string): Promise<ApiPromise> => {
+  public static connect = async (nodeUrl?: string, metadata?: Record<string, string>): Promise<ApiPromise> => {
     const rpcEndpoint = nodeUrl || 'ws://127.0.0.1:9944/';
     const provider = new WsProvider(rpcEndpoint);
 
     logger.info(`Connecting to Substrate node at ${rpcEndpoint}...`);
-    const api = await ApiPromise.create({ provider, types });
+    const api = new ApiPromise({ provider, types, rpc: { ...rpc }, metadata })
     await api.isReady
-    DfApi.api = api
-    DfApi.connected = true
-    DfApi.logChainInfo()
+    SubstrateConnect.api = api
+    SubstrateConnect.connected = true
+    SubstrateConnect.logChainInfo()
 
     const properties = await api.rpc.system.properties()
 
@@ -46,7 +45,7 @@ export class DfApi {
   }
 
   public static disconnect = () => {
-    const { api: localApi, connected } = DfApi;
+    const { api: localApi, connected } = SubstrateConnect;
     if (api !== undefined && localApi && localApi.isReady && connected) {
       try {
         localApi.disconnect();
@@ -54,14 +53,14 @@ export class DfApi {
       } catch (err) {
         logger.error('Failed to disconnect from Substrate node:', err)
       } finally {
-        DfApi.connected = false
+        SubstrateConnect.connected = false
       }
     }
   }
 
   /** Retrieve the chain & node information via RPC calls and log into console.  */
   protected static logChainInfo = async () => {
-    const { system } = DfApi.api.rpc;
+    const { system } = SubstrateConnect.api.rpc;
 
     const [ chain, nodeName, nodeVersion ] = await Promise.all(
       [ system.chain(), system.name(), system.version() ]);
@@ -70,14 +69,11 @@ export class DfApi {
   }
 }
 
-export const Api = DfApi
+export const Api = SubstrateConnect
 
-export default DfApi
+export default SubstrateConnect
 
 /** Get the current open connection to Substrate node. */
 export const getApi = async () => {
-  if (!api) {
-    api = await DfApi.connect()
-  }
-  return api
+  return api || await SubstrateConnect.connect()
 }

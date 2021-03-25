@@ -7,9 +7,9 @@ import { Space, Post } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from './ipfs';
 import { SubsocialSubstrateApi } from './substrate';
-import { getUniqueIds, SupportedSubstrateId } from './utils';
-import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery, SubsocialContext, ContentResult } from './utils/types';
-import { contentFilter } from './utils/content-filter';
+import { getUniqueIds, SupportedSubstrateId } from '../utils/common';
+import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery, SubsocialContext, ContentResult } from '../utils/types';
+import { contentFilter } from '../utils/content-filter';
 
 export type SubsocialApiProps = SubsocialContext & {
   substrateApi: SubstrateApi,

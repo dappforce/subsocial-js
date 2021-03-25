@@ -1,8 +1,8 @@
 import { BasicSubsocialApi } from './basic-subsocial';
-import { FindStructsFns, loadAndSetPostRelatedStructs } from './utils/loadPostStructs';
+import { FindStructsFns, loadAndSetPostRelatedStructs } from '../utils/loadPostStructs';
 import { PostWithSomeDetails, PostWithAllDetails, AnySpaceId, AnyPostId } from '@subsocial/types';
 import { getFirstOrUndefined } from '@subsocial/utils';
-import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } from './utils/types';
+import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } from '../utils/types';
 
 export class SubsocialApi extends BasicSubsocialApi {
 
