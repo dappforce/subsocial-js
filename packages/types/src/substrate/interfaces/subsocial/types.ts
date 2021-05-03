@@ -1,14 +1,8 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, i32, u16, u32, u64, u8 } from '@polkadot/types';
+import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, i32, u16, u32, u64 } from '@polkadot/types';
 import type { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
-
-/** @name Address */
-export interface Address extends AccountId {}
-
-/** @name BountyIndex */
-export interface BountyIndex extends u32 {}
 
 /** @name Change */
 export interface Change extends Struct {
@@ -141,9 +135,6 @@ export interface FaucetUpdate extends Struct {
 /** @name IpfsCid */
 export interface IpfsCid extends Text {}
 
-/** @name LookupSource */
-export interface LookupSource extends AccountId {}
-
 /** @name Post */
 export interface Post extends Struct {
   readonly id: PostId;
@@ -221,9 +212,6 @@ export interface ReactionKind extends Enum {
   readonly isUpvote: boolean;
   readonly isDownvote: boolean;
 }
-
-/** @name RefCount */
-export interface RefCount extends u8 {}
 
 /** @name Report */
 export interface Report extends Struct {

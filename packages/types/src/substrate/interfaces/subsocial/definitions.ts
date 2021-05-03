@@ -1,11 +1,7 @@
 export default {
   types: {
-    Address: 'AccountId',
-    LookupSource: 'AccountId',
-    RefCount: 'u8',
     IpfsCid: 'Text',
     DonationId: 'u64',
-    BountyIndex: 'u32',
     DonationRecipient: {
       _enum: {
         Account: 'AccountId',
