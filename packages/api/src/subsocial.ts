@@ -15,9 +15,9 @@ export class SubsocialApi extends BasicSubsocialApi {
   /**
    * Find and load all public spaces
    *
-   * @param ids - Input Array of space ids
+   * @param ids - Input array of space ids
    *
-   * @returns An array of space structs
+   * @returns An array of Space structs
    *
    */
   async findAllSpaces (ids: AnySpaceId[]) {
