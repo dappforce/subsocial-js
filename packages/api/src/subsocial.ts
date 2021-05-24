@@ -12,6 +12,14 @@ export class SubsocialApi extends BasicSubsocialApi {
     findProfiles: this.findProfiles.bind(this)
   }
 
+  /**
+   * Find and load all public spaces
+   *
+   * @param ids - Input Array of space ids
+   *
+   * @returns An array of space structs
+   *
+   */
   async findAllSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids })
   }
