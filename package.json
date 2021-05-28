@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "lerna": "3.22.0",
-    "ts-node": "9.0.0"
+    "ts-node": "9.0.0",
+    "typedoc": "^0.20.36"
   },
   "dependencies": {
     "@types/jest": "^26.0.20",

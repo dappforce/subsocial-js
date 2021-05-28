@@ -7,6 +7,7 @@ import { Content } from '@subsocial/types/substrate/classes';
 import { SubsocialContext, ContentResult, UseServerProps } from '../utils/types';
 import { SocialAccountWithId } from '@subsocial/types/dto';
 
+/** Return IPFS cid by social account struct */
 export function getIpfsCidOfSocialAccount (struct: SocialAccountWithId): string | undefined {
   const profile = struct?.profile
   if (profile && profile.isSome) {
@@ -20,7 +21,16 @@ type HasContentField = {
 }
 
 type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
-
+/** Return IPFS cid by struct that has a content field
+ * @typeParam S ```
+ * type HasContentField = {
+ *   content: Content
+ * }
+ *
+ * type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
+ * ```
+ * {@link Content}, {@link SocialAccountWithId}
+*/
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
   if (isIpfs((struct as HasContentField).content)) {
     return (struct as HasContentField).content.asIpfs.toString()
@@ -30,6 +40,14 @@ export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): s
   return undefined
 }
 
+/** Get an array of cids by starcts array
+ * ```
+ * type HasContentField = {
+ *   content: Content
+ * }
+ * type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
+ * ```
+*/
 export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): string[] {
   return structs
     .map(getIpfsCidOfStruct)
@@ -39,18 +57,26 @@ export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): string[] {
 type IpfsUrl = string
 type IpfsNodeEndpoint = 'cat' | 'version' | 'dag/get'
 
+/**
+ * ```
+ * type IpfsUrl = string
+ * type IpfsNodeEndpoint = 'cat' | 'version' | 'dag/get'
+ * ````
+ */
 export type SubsocialIpfsProps = SubsocialContext & {
   ipfsNodeUrl: IpfsUrl,
   offchainUrl: string
 }
 
+/** Aggregated api for working with IPFS to get the content of the spaces of posts and profiles */
 export class SubsocialIpfsApi {
-
+  /** Ipfs node readonly geteway */
   private ipfsNodeUrl!: IpfsUrl // IPFS Node ReadOnly Gateway
-
+  /** Offchain geteway */
   private offchainUrl!: string
   private useServer?: UseServerProps
 
+  /** Sets values for ptivate fields from props and trying to make a test connection */
   constructor (props: SubsocialIpfsProps) {
     const { ipfsNodeUrl, offchainUrl, useServer } = props;
 
@@ -61,6 +87,7 @@ export class SubsocialIpfsApi {
     this.testConnection()
   }
 
+  /** Trying to make a test connection  */
   private async testConnection () {
     if (this.useServer) return
 
@@ -76,6 +103,7 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // IPFS Request wrapper
 
+  /** Makes a request to the IPFS node */
   private async ipfsNodeRequest (endpoint: IpfsNodeEndpoint, cid?: CID): Promise<AxiosResponse<any>> {
     const config: AxiosRequestConfig = {
       method: 'GET',
@@ -92,6 +120,7 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Find multiple
 
+  /** Return unique cids from cids array */
   getUniqueCids (cids: IpfsCid[], contentName?: string) {
     contentName = nonEmptyStr(contentName) ? `${contentName  } content` : 'content'
     const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
@@ -104,6 +133,7 @@ export class SubsocialIpfsApi {
     return ipfsCids
   }
 
+  /** Return object with contents from IPFS by cids array */
   async getContentArrayFromIpfs<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
       const ipfsCids = this.getUniqueCids(cids, contentName)
@@ -126,9 +156,10 @@ export class SubsocialIpfsApi {
     }
   }
 
+  /** Return object with contents from IPFS through offchain by cids array */
   async getContentArrayFromOffchain<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
-      
+
       const res = this.useServer?.httpRequestMethod === 'get'
         ? await axios.get(`${this.offchainUrl}/ipfs/get?cids=${cids.join('&cids=')}`)
         : await axios.post(`${this.offchainUrl}/ipfs/get`, { cids })
@@ -153,18 +184,22 @@ export class SubsocialIpfsApi {
       : this.getContentArrayFromIpfs(cids, contentName)
   }
 
+  /** Get spaces content array by cid */
   async findSpaces (cids: IpfsCid[]): Promise<ContentResult<SpaceContent>> {
     return this.getContentArray(cids, 'space')
   }
 
+  /** Get posts content array by cid */
   async findPosts (cids: IpfsCid[]): Promise<ContentResult<PostContent>> {
     return this.getContentArray(cids, 'post')
   }
 
+  /** Get comments content array by cid */
   async findComments (cids: IpfsCid[]): Promise<ContentResult<CommentContent>> {
     return this.getContentArray(cids, 'comment')
   }
 
+  /** Get profiles content array by cid */
   async findProfiles (cids: IpfsCid[]): Promise<ContentResult<ProfileContent>> {
     return this.getContentArray(cids, 'account')
   }
@@ -177,25 +212,29 @@ export class SubsocialIpfsApi {
     return content[cid.toString()]
   }
 
+  /** Get single space content by cid */
   async findSpace (cid: IpfsCid): Promise<SpaceContent | undefined> {
     return this.getContent<SpaceContent>(cid, 'space')
   }
 
+  /** Get single post content by cid */
   async findPost (cid: IpfsCid): Promise<PostContent | undefined> {
     return this.getContent<PostContent>(cid, 'post')
   }
 
+  /** Get single comment content by cid */
   async findComment (cid: IpfsCid): Promise<CommentContent | undefined> {
     return this.getContent<CommentContent>(cid, 'comment')
   }
 
+  /** Get single profile content by cid */
   async findProfile (cid: IpfsCid): Promise<ProfileContent | undefined> {
     return this.getContent<ProfileContent>(cid, 'account')
   }
 
   // ---------------------------------------------------------------------
   // Remove
-
+  /** Unpin content in IPFS */
   async removeContent (cid: IpfsCid) {
     try {
       const res = await axios.delete(`${this.offchainUrl}/ipfs/pins/${cid}`);
@@ -211,6 +250,7 @@ export class SubsocialIpfsApi {
     }
   }
 
+  /** Add and pin content in IPFS */
   async saveContent (content: CommonContent): Promise<RuntimeIpfsCid | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
@@ -227,6 +267,7 @@ export class SubsocialIpfsApi {
     }
   }
 
+  /** Add and pit file in IPFS */
   async saveFile (file: File | Blob) {
     if (typeof window === 'undefined') {
       throw new Error('This function works only in a browser')
@@ -253,18 +294,21 @@ export class SubsocialIpfsApi {
     }
   }
 
+  /** Add and pin space content in IPFS */
   async saveSpace (content: SpaceContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved space with hash: ${hash}`)
     return hash;
   }
 
+  /** Add and pin post content in IPFS */
   async savePost (content: PostContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved post with hash: ${hash}`)
     return hash;
   }
 
+  /** Add and pin comment content in IPFS */
   async saveComment (content: CommentContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved comment with hash: ${hash}`)

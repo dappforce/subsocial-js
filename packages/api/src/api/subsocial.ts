@@ -12,6 +12,7 @@ export class SubsocialApi extends BasicSubsocialApi {
     findProfiles: this.findProfiles.bind(this)
   }
 
+  /** Find and all spaces */
   async findAllSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids })
   }
@@ -26,6 +27,7 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findSpaces({ ids, visibility: 'onlyUnlisted' })
   }
 
+  /** Find and load all posts */
   async findAllPosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids })
   }
@@ -46,22 +48,27 @@ export class SubsocialApi extends BasicSubsocialApi {
     return loadAndSetPostRelatedStructs(posts, this.structFinders, filter)
   }
 
+  /** Find and load posts that have `hidden == false` field in Substrate struct and their IPFS content is not empty with their extension and owner's profile (if defined). */
   async findPublicPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
     return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyPublic' })
   }
 
+  /** Find and load posts that have `hidden == true` field in Substrate struct and their IPFS content is not empty with their extension and owner's profile (if defined). */
   async findUnlistedPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
     return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyUnlisted' })
   }
 
+  /** Find and load posts with their extension, owner's profile and space (if defined). */
   async findPostsWithAllDetails ({ ids, visibility }: FindPostsQuery): Promise<PostWithAllDetails[]> {
     return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<PostWithAllDetails[]>
   }
 
+  /** Find and load posts that have `hidden == false` field in Substrate struct and their IPFS content is not empty with their extension and owner's profile and space (if defined). */
   async findPublicPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
     return this.findPostsWithAllDetails({ ids, visibility: 'onlyPublic' })
   }
 
+  /** Find and load posts that have `hidden == true` field in Substrate struct and their IPFS content is not empty with their extension and owner's profile and space (if defined). */
   async findUnlistedPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
     return this.findPostsWithAllDetails({ ids, visibility: 'onlyUnlisted' })
   }
@@ -88,26 +95,32 @@ export class SubsocialApi extends BasicSubsocialApi {
     return getFirstOrUndefined(await this.findUnlistedPosts([ id ]))
   }
 
+  /** Find and load post with their extension and owner's profile (if defined). */
   async findPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
     return getFirstOrUndefined(await this.findPostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
 
+  /** Find and load post that have `hidden == false` field in Substrate struct and their IPFS content is not empty with their extension and owner's profile (if defined). */
   async findPublicPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
     return getFirstOrUndefined(await this.findPublicPostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
 
+  /** Find and load post that have `hidden == true` field in Substrate struct and their IPFS content is not empty with their extension and owner's profile (if defined). */
   async findUnlistedPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
     return getFirstOrUndefined(await this.findUnlistedPostsWithSomeDetails({ ids: [ id ], ...opts }))
   }
 
+  /** Find and load post with their extension and owner's profile and space (if defined). */
   async findPostWithAllDetails (id: AnyPostId) {
     return getFirstOrUndefined(await this.findPostsWithAllDetails({ ids: [ id ] }))
   }
 
+  /** Find and load posts that have `hidden == false` field in Substrate struct and their IPFS content is not empty with their extension and owner's profile and space (if defined). */
   async findPublicPostWithAllDetails (id: AnyPostId) {
     return getFirstOrUndefined(await this.findPublicPostsWithAllDetails([ id ]))
   }
 
+  /** Find and load posts that have `hidden == true` field in Substrate struct and their IPFS content is not empty with their extension and owner's profile and space (if defined). */
   async findUnlistedPostWithAllDetails (id: AnyPostId) {
     return getFirstOrUndefined(await this.findUnlistedPostsWithAllDetails([ id ]))
   }

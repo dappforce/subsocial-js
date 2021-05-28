@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node"
+  },
+  "typedocOptions": {
+    "entryPoints": ["index.ts"],
+    "out": "docs",
+    "excludeExternals": true,
+    "name": "Subsocial JS SDK",
+    "theme": "minimal",
+    "hideGenerator": true,
+  }
+}
