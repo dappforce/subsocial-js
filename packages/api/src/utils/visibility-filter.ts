@@ -11,7 +11,7 @@ export const isEmptyContent = (struct?: StructWithHidden) => !struct || struct.c
 export const isUnlisted = (struct?: StructWithHidden) => isHidden(struct) || isEmptyContent(struct)
 export const isPublic = (struct?: StructWithHidden): struct is StructWithHidden => !isUnlisted(struct)
 
-export function VisibilityFilter<T extends StructWithHidden> (structs: T[], filter?: Visibility): T[] {
+export function visibilityFilter<T extends StructWithHidden> (structs: T[], filter?: Visibility): T[] {
 
   switch (filter) {
     case 'onlyVisible': return structs.filter(isVisible)
