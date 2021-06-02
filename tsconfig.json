@@ -6,10 +6,10 @@
   },
   "typedocOptions": {
     "entryPoints": ["index.ts"],
-    "out": "docs",
+    "out": "doc",
     "excludeExternals": true,
     "name": "Subsocial JS SDK",
-    "theme": "minimal",
+    "theme": "./themes/docs-theme",
     "hideGenerator": true,
   }
 }

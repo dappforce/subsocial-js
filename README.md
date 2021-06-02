@@ -8,7 +8,7 @@ To learn more about Subsocial, please visit [Subsocial Network](http://subsocial
 
 ## Supported by Web3 Foundation
 
-<img src="https://github.com/dappforce/dappforce-subsocial/blob/master/w3f-badge.svg" width="100%" height="200" alt="Web3 Foundation grants badge" />
+<img src="https://raw.githubusercontent.com/dappforce/subsocial/95af3deb2d5982d3c61869e9e45f23e893a7790c/w3f-badge.svg" width="100%" height="200" alt="Web3 Foundation grants badge" />
 
 Subsocial is a recipient of the technical grant from Web3 Foundation. We have successfully delivered all three milestones described in Subsocial's grant application. [Official announcement](https://medium.com/web3foundation/web3-foundation-grants-wave-3-recipients-6426e77f1230).
 

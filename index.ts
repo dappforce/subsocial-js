@@ -1,4 +1,3 @@
-export * from './packages/api/src/api/index'
 export * as API from './packages/api/src/index'
 
 export * from './packages/api/src/connections/index'
