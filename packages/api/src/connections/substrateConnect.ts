@@ -74,6 +74,6 @@ export const Api = SubstrateConnect
 export default SubstrateConnect
 
 /** Get the current open connection to Substrate node. */
-export const getApi = async () => {
-  return api || await SubstrateConnect.connect()
+export const getApi = async (url: string) => {
+  return api || await SubstrateConnect.connect(url)
 }
