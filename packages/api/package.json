@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/api",
-  "version": "0.5.3-beta.2",
+  "version": "0.5.6",
   "description": "JavaScript API for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
-    "@polkadot/api": "~4.13.1",
+    "@polkadot/api": "~4.15.1",
     "@subsocial/utils": "^0.4.39",
-    "@subsocial/types": "0.5.3-beta.2",
+    "@subsocial/types": "0.5.6",
     "axios": "^0.21.1"
   },
   "scripts": {

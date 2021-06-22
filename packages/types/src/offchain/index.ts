@@ -67,20 +67,23 @@ export type SharedPostContent = {
 }
 
 export type ProposalContent = {
+
+}
+
+export type SubstrareProposal = {
+  kind: 'substrateProposal'
   network: 'kusama' | 'polkadot'
   proposalIndex: number
 }
 
-export type PostExt = {
-  proposal?: ProposalContent
-}
+export type MetaItem = SubstrareProposal
 
 export type PostContent = SharedPostContent & {
   title: string
   image: string
   tags: string[]
   canonical: string
-  ext?: PostExt
+  meta?: MetaItem[]
 }
 
 export type CommentContent = {
