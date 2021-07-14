@@ -3,19 +3,33 @@ import { isEmptyStr } from './string'
 
 const remark = require('remark')
 const strip = require('strip-markdown')
+const html = require('remark-html')
+const remarkGfm = require('remark-gfm')
 // const squeezeParagraphs = require('remark-squeeze-paragraphs')
 
-const processMd = remark()
+type ProccesMdFn = (md?: string) => string
+
+const processMdToText: ProccesMdFn = remark()
   .use(strip)
   // .use(squeezeParagraphs) // <-- doesn't work very well: leaves couple sequential new lines
   .processSync
 
-export const mdToText = (md?: string) => {
-  if (isEmptyStr(md)) return md
+export const buildMdToEntity = (processMd: ProccesMdFn)=> 
+  (md?: string) => {
+    if (isEmptyStr(md)) return md
 
-  return String(processMd(md) as string)
-    // strip-markdown renders URLs as:
-    // http&#x3A;//hello.com
-    // so we need to fix this issue
-    .replace(/&#x3A;/g, ':')
-}
+    return String(processMd(md) as string)
+      // strip-markdown renders URLs as:
+      // http&#x3A;//hello.com
+      // so we need to fix this issue
+      .replace(/&#x3A;/g, ':')
+  }
+
+export const mdToText = buildMdToEntity(processMdToText)
+
+const processMdToHtml = remark()
+  .use(remarkGfm)
+  .use(html)
+  .processSync
+
+export const mdToHtml = buildMdToEntity(processMdToHtml)
