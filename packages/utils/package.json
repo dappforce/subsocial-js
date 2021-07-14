@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.4.39",
+  "version": "0.5.9-dev.5",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "build/index.js",
@@ -28,6 +28,8 @@
     "loglevel": "^1.7.0",
     "loglevel-plugin-prefix": "^0.8.4",
     "remark": "^13.0.0",
+    "remark-html": "^13.0.1",
+    "remark-gfm": "^1.0.0",
     "strip-markdown": "^4.0.0"
   },
   "devDependencies": {
