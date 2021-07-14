@@ -26,69 +26,48 @@ export type Activity = {
   agg_count: number
 }
 
-type FilterByTags = {
-  data: string[]
-}
-
-type Url = {
-  data: string
-}
-
-type NavTabContent = FilterByTags | Url
-
-type ContentType = 'by-tag' | 'url'
-
-export type NavTab = {
-  id: number
-  type: ContentType
-  content: NavTabContent
-  title: string
-  description: string
-  hidden: boolean
-}
-
 export type NamedLink = {
   name: string
   url?: string
 }
 
-export type SpaceContent = {
+type ContentFormat = {
+  format?: 'md' | 'html'
+}
+
+export type SpaceContent = ContentFormat & {
   name: string
   about: string
   image: string
   email: string
   tags: string[]
   links: string[] | NamedLink[]
-  navTabs?: NavTab[]
 }
 
-export type SharedPostContent = {
+type CommonPostContent = ContentFormat & {
   body: string
 }
 
-export type ProposalContent = {
-
-}
+export type SharedPostContent = CommonPostContent
 
 export type SubstrareProposal = {
-  kind: 'substrateProposal'
-  network: 'kusama' | 'polkadot'
+  kind: 'SubstrateProposal'
+  network: 'Kusama' | 'Polkadot'
   proposalIndex: number
 }
 
 export type MetaItem = SubstrareProposal
 
-export type PostContent = SharedPostContent & {
+export type PostContent = CommonPostContent & {
   title: string
   image: string
   tags: string[]
   canonical: string
+  link?: string
   meta?: MetaItem[]
 }
 
-export type CommentContent = {
-  body: string
-}
+export type CommentContent = CommonPostContent
 
 export type ProfileContent = {
   name: string
