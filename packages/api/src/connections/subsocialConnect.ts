@@ -20,7 +20,7 @@ type NewSubsocialApiProps = Omit<SubsocialApiProps, 'substrateApi'> & {
 export const newSubsocialApi = async ({ substrateNodeUrl, ...props }: NewSubsocialApiProps) => {
   if (!subsocial && !isLoadingSubsocial) {
     isLoadingSubsocial = true
-    const substrateApi = await getApi()
+    const substrateApi = await getApi(substrateNodeUrl)
     subsocial = new SubsocialApi({ substrateApi, ...props })
     isLoadingSubsocial = false;
 

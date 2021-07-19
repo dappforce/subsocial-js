@@ -3,6 +3,10 @@
 
 import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, i32, u16, u32, u64 } from '@polkadot/types';
 import type { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
+import type { AccountInfoWithRefCount } from '@polkadot/types/interfaces/system';
+
+/** @name AccountInfo */
+export interface AccountInfo extends AccountInfoWithRefCount {}
 
 /** @name Change */
 export interface Change extends Struct {

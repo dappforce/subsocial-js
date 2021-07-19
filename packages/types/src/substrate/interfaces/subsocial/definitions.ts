@@ -1,5 +1,8 @@
 export default {
   types: {
+    // Overwrite
+    AccountInfo: 'AccountInfoWithRefCount',
+    // Custom types
     IpfsCid: 'Text',
     DonationId: 'u64',
     DonationRecipient: {
@@ -309,11 +312,11 @@ export default {
       period: 'BlockNumber',
       period_limit: 'Balance',
       drip_limit: 'Balance',
-  
+
       next_period_at: 'BlockNumber',
       dripped_in_current_period: 'Balance'
     },
-  
+
     FaucetUpdate: {
       enabled: 'Option<bool>',
       period: 'Option<BlockNumber>',
@@ -321,7 +324,7 @@ export default {
       drip_limit: 'Option<Balance>'
     },
     ChangeId: 'u64',
-  
+
     SpaceOwners: {
       created: 'WhoAndWhen',
       space_id: 'SpaceId',
