@@ -1,4 +1,4 @@
-import { BasicSubsocialApi } from './basic-subsocial';
+import { BasicSubsocialApi } from './basic';
 import { FindStructsFns, loadAndSetPostRelatedStructs } from '../utils/loadPostStructs';
 import { PostWithSomeDetails, PostWithAllDetails, AnySpaceId, AnyPostId } from '@subsocial/types';
 import { getFirstOrUndefined } from '@subsocial/utils';
