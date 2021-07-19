@@ -3,9 +3,8 @@ import { PostData, PostWithSomeDetails, ProfileData, SpaceData } from '@subsocia
 import { PostId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from './common'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
-import { PostDetailsOpts } from './types';
-import { isVisible } from './visibility-filter';
 import { AccountId } from '@polkadot/types/interfaces'
+import { isVisible, PostDetailsOpts } from '../filters';
 
 export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,

@@ -23,36 +23,6 @@ import {
 import { flattenPostStruct, flattenProfileStruct, flattenSpaceStruct } from './flatteners'
 import { summarizeMd } from '@subsocial/utils'
 
-export type AnyId = EntityId | BN
-
-export function idToBn (id: AnyId): BN {
-  return BN.isBN(id) ? id : new BN(id)
-}
-
-export function idsToBns (ids: AnyId[]): BN[] {
-  return ids.map(idToBn)
-}
-
-// export function idToSpaceId (id: AnyId): SpaceId {
-//   return idToBn(id) as SpaceId
-// }
-
-export function idToPostId (id: AnyId): PostId {
-  return idToBn(id) as PostId
-}
-
-export function bnToId (bnId: BN): EntityId {
-  return bnId.toString()
-}
-
-export function bnsToIds (bnIds: BN[]): EntityId[] {
-  return bnIds.map(bnToId)
-}
-
-// export function asSharedPostData (postData: PostData): SharedPostData {
-//   return postData as unknown as SharedPostData
-// }
-
 export function asCommentData (postData: PostData): CommentData {
   return postData as unknown as CommentData
 }

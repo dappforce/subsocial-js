@@ -4,7 +4,7 @@ import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/util
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
 import { Content } from '@subsocial/types/substrate/classes';
-import { SubsocialContext, ContentResult, UseServerProps } from '../utils/types';
+import { SubsocialContext, ContentResult, UseServerProps } from '../types';
 import { SocialAccountWithId } from '@subsocial/types/dto';
 
 export function getIpfsCidOfSocialAccount (struct: SocialAccountWithId): string | undefined {

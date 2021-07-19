@@ -1,11 +1,14 @@
 import * as sub from '@subsocial/types/offchain'
 import { HasId, ProfileStruct, SpaceStruct, PostStruct, CommentStruct, SharedPostStruct } from './flatteners'
+import BN from 'bn.js'
 
+export type AnyId = EntityId | BN
 export type EntityId = string
 export type AccountId = EntityId
 export type SpaceId = EntityId
 export type PostId = EntityId
 export type ReactionId = EntityId
+
 
 /** `ProfileId` is the alias for `AccountId`. */
 export type ProfileId = EntityId

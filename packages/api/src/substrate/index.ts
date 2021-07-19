@@ -6,9 +6,10 @@ import { Space, SpaceId, Post, PostId, Reaction, ReactionId } from '@subsocial/t
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
-import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery, SubsocialContext } from '../utils/types';
+import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '../filters';
 import { SocialAccountWithId } from '@subsocial/types/dto';
-import { visibilityFilter } from '../utils';
+import { visibilityFilter } from '../filters';
+import { SubsocialContext } from '../types';
 
 type StorageItem = {
   pallet: PalletName,

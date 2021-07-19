@@ -44,5 +44,5 @@ export const newFlatSubsocialApi = async (props: NewSubsocialApiProps) => {
   return flatSubsocial
 }
 
-export const createResolveSubsocialApi = (context: NewSubsocialApiProps) => () => newSubsocialApi(context)
-export const createResolveFlatSubsocialApi = (context: NewSubsocialApiProps) => () => newFlatSubsocialApi(context)
+export const createSubsocialApiResolver = (context: NewSubsocialApiProps) => () => newSubsocialApi(context)
+export const createFlatSubsocialApiResolver = (context: NewSubsocialApiProps) => () => newFlatSubsocialApi(context)
