@@ -19,7 +19,7 @@
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
     "@polkadot/api": "~4.15.1",
-    "@subsocial/utils": "^0.4.39",
+    "@subsocial/utils": "0.5.9-dev.6",
     "@subsocial/types": "0.5.9-dev.6",
     "axios": "^0.21.1"
   },
