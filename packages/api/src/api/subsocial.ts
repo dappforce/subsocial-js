@@ -17,12 +17,36 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findSpaces({ ids })
   }
 
-  /** Find and load public spaces that have `hidden == false` field in Substrate struct and their IPFS content is not empty. */
+  /**
+   * Find and load an array of information about public spaces from Subsocial blockchain and IPFS by a given array of
+   * space `ids`.
+   *
+   * Space is considered public if it meets the next conditions:
+   * - The `hidden` field on its' blockchain structure is `false`.
+   * - And there is a corresponding JSON file that represents the space's content on IPFS.
+   *
+   * @param ids - An array of ids of desired spaces.
+   *
+   * @returns An array of data about desired spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
+   * spaces to given array of `ids`, an empty array is returned.
+   */  
   async findPublicSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids, visibility: 'onlyPublic', withContentOnly: true })
   }
 
-  /** Find and load unlisted spaces that have either `hidden == true` field in Substrate struct or their IPFS content is empty. */
+  /**
+   * Find and load an array of information about unlisted spaces from Subsocial blockchain and IPFS by a given array of
+   * space `ids`.
+   *
+   * Space is considered unlisted if it meets either of these conditions:
+   * - The `hidden` field on it's blockchain structure is `true`.
+   * - Or there is no corresponding JSON file that represents the space's content on IPFS.
+   *
+   * @param ids - An array of ids of desired spaces.
+   *
+   * @returns An array of data about desired spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
+   * spaces to given array of `ids`, an empty array is returned.
+   */    
   async findUnlistedSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids, visibility: 'onlyUnlisted' })
   }
@@ -32,12 +56,36 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findPosts({ ids })
   }
 
-  /** Find and load public posts that have `hidden == false` field in Substrate struct and their IPFS content is not empty. */
+  /**
+   * Find and load an array of information about public posts from Subsocial blockchain and IPFS by a given array of
+   * post `ids`.
+   *
+   * Post is considered public if it meets the next conditions:
+   * - The `hidden` field on its' blockchain structure is `false`.
+   * - And there is a corresponding JSON file that represents the post's content on IPFS.
+   *
+   * @param ids - An array of ids of desired posts.
+   *
+   * @returns An array of data about desired posts aggregated from Subsocial blockchain and IPFS. If no corresponding
+   * posts to given array of `ids`, an empty array is returned.
+   */    
   async findPublicPosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids, visibility: 'onlyPublic', withContentOnly: true })
   }
 
-  /** Find and load unlisted posts that have either `hidden == true` field in Substrate struct or their IPFS content is empty. */
+  /**
+   * Find and load an array of information about unlisted posts from Subsocial blockchain and IPFS by a given array of
+   * post `ids`.
+   *
+   * Post is considered unlisted if it meets either of these conditions:
+   * - The `hidden` field on it's blockchain structure is `true`.
+   * - Or there is no corresponding JSON file that represents the post's content on IPFS.
+   *
+   * @param ids - An array of ids of desired posts
+   *
+   * @returns An array of data about desired posts aggregated from Subsocial blockchain and IPFS. If no corresponding
+   * posts to given array of `ids`, an empty array is returned.
+   */  
   async findUnlistedPosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids, visibility: 'onlyUnlisted' })
   }
@@ -75,22 +123,66 @@ export class SubsocialApi extends BasicSubsocialApi {
 
   // Functions that return a single element
 
-  /** Find and load a public space that has `hidden == false` field in Substrate struct and its IPFS content is not empty. */
+  /**
+   * Find and load information about a public space from Subsocial blockchain and IPFS using space id.
+   *
+   * Space is considered public if it meets these conditions:
+   * - The `hidden` field on it's blockchain structure is `false`.
+   * - And there is a corresponding JSON file that represents the space's content on IPFS.
+   *
+   * @param id - Id of desired space.
+   *
+   * @returns Data about desired space aggregated from blockchain and IPFS. If no corresponding space to given id,
+   * `undefined` is returned.
+   */  
   async findPublicSpace (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findPublicSpaces([ id ]))
   }
 
-  /** Find and load an unlisted space that has either `hidden == true` field in Substrate struct or its IPFS content is empty. */
+  /**
+   * Find and load information about an unlisted space from blockchain and from IPFS by a given space id.
+   *
+   * Space is considered unlisted if it meets either of these conditions:
+   * - The `hidden` field on it's blockchain structure is `true`.
+   * - Or there is no corresponding JSON file that represents the space's content on IPFS.
+   *
+   * @param id - Id of desired space.
+   *
+   * @returns Data about a desired space aggregated from blockchain and IPFS. If no corresponding space to given id,
+   * `undefined` is returned.
+   */
   async findUnlistedSpace (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findUnlistedSpaces([ id ]))
   }
 
-  /** Find and load a public post that has `hidden == false` field in Substrate struct and its IPFS content is not empty. */
+  /**
+   * Find and load information about a public post from Subsocial blockchain and IPFS using post id.
+   *
+   * Post is considered public if it meets the next conditions:
+   * - The `hidden` field on it's blockchain structure is `false`.
+   * - And there is a corresponding JSON file that represents the post's content on IPFS.
+   *
+   * @param id - Id of desired post.
+   *
+   * @returns Data about desired post aggregated from blockchain and IPFS. If no corresponding post to given id,
+   * `undefined` is returned.
+   */  
   async findPublicPost (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findPublicPosts([ id ]))
   }
 
-  /** Find and load an unlisted space that has either `hidden == true` field in Substrate struct or its IPFS content is empty. */
+  /**
+   * Find and load information about an unlisted post from blockchain and from IPFS by a given post id.
+   *
+   * Post is considered unlisted if it meets either of these conditions:
+   * - The `hidden` field on it's blockchain structure is `true`.
+   * - Or there is no corresponding JSON file that represents the post's content on IPFS.
+   *
+   * @param id - Id of desired post.
+   *
+   * @returns Data about desired post aggregated from blockchain and IPFS. If no corresponding post to given id,
+   * `undefined` is returned.
+   */  
   async findUnlistedPost (id: AnySpaceId) {
     return getFirstOrUndefined(await this.findUnlistedPosts([ id ]))
   }

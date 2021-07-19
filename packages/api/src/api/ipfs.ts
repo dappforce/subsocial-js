@@ -21,16 +21,8 @@ type HasContentField = {
 }
 
 type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
-/** Return IPFS cid by struct that has a content field
- * @typeParam S ```
- * type HasContentField = {
- *   content: Content
- * }
- *
- * type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
- * ```
- * {@link Content}, {@link SocialAccountWithId}
-*/
+
+/** Try to resolve a corresponding IPFS CID of a given struct. */
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
   if (isIpfs((struct as HasContentField).content)) {
     return (struct as HasContentField).content.asIpfs.toString()
@@ -40,14 +32,7 @@ export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): s
   return undefined
 }
 
-/** Get an array of cids by starcts array
- * ```
- * type HasContentField = {
- *   content: Content
- * }
- * type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
- * ```
-*/
+/** Extract ids of an array of structs. */
 export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): string[] {
   return structs
     .map(getIpfsCidOfStruct)
@@ -57,22 +42,18 @@ export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): string[] {
 type IpfsUrl = string
 type IpfsNodeEndpoint = 'cat' | 'version' | 'dag/get'
 
-/**
- * ```
- * type IpfsUrl = string
- * type IpfsNodeEndpoint = 'cat' | 'version' | 'dag/get'
- * ````
- */
 export type SubsocialIpfsProps = SubsocialContext & {
   ipfsNodeUrl: IpfsUrl,
   offchainUrl: string
 }
 
-/** Aggregated api for working with IPFS to get the content of the spaces of posts and profiles */
+/** Aggregated API to work with IPFS: get the content of the spaces of posts and profiles. */
 export class SubsocialIpfsApi {
-  /** Ipfs node readonly geteway */
+
+  /** IPFS node readonly gateway */
   private ipfsNodeUrl!: IpfsUrl // IPFS Node ReadOnly Gateway
-  /** Offchain geteway */
+
+  /** Offchain gateway */
   private offchainUrl!: string
   private useServer?: UseServerProps
 
@@ -184,22 +165,60 @@ export class SubsocialIpfsApi {
       : this.getContentArrayFromIpfs(cids, contentName)
   }
 
-  /** Get spaces content array by cid */
+  /**
+   * Find and load an array of off-chain information about spaces from IPFS by a given array of `cids`.
+   *
+   * Space information only exists if there is a corresponding JSON file that represents the spaces' content on IPFS.
+   *
+   * @param cids - An array of IPFS content ids of desired spaces.
+   *
+   * @returns An array of data about desired spaces from IPFS. If no corresponding spaces to given array of `cids`, an
+   * empty array is returned.
+   */
   async findSpaces (cids: IpfsCid[]): Promise<ContentResult<SpaceContent>> {
     return this.getContentArray(cids, 'space')
   }
 
-  /** Get posts content array by cid */
+  /**
+   * Find and load an array of off-chain information about posts from IPFS by a given array of `cids`.
+   *
+   * Post information only exists if there is a corresponding JSON file that represents the posts' content on IPFS.
+   *
+   * @param cids - An array of IPFS content ids of desired posts.
+   *
+   * @returns An array of data about desired posts from IPFS. If no corresponding posts to given array of `cids`, an
+   * empty array is returned.
+   */
   async findPosts (cids: IpfsCid[]): Promise<ContentResult<PostContent>> {
     return this.getContentArray(cids, 'post')
   }
 
-  /** Get comments content array by cid */
+  /**
+   * Find and load an array of off-chain information about comments from IPFS by a given array of `cids`.
+   *
+   * Comment information only exists if there is a corresponding JSON file that represents the comments' content on
+   * IPFS.
+   *
+   * @param cids - An array of IPFS content ids of desired comments.
+   *
+   * @returns An array of data about desired comments from IPFS. If no corresponding comments to given array of `cids`,
+   * an empty array is returned.
+   */
   async findComments (cids: IpfsCid[]): Promise<ContentResult<CommentContent>> {
     return this.getContentArray(cids, 'comment')
   }
 
-  /** Get profiles content array by cid */
+  /**
+   * Find and load an array of off-chain information about profiles from IPFS by a given array of `cids`.
+   *
+   * Profile information only exists if there is a corresponding JSON file that represents the profiles' content on
+   * IPFS.
+   *
+   * @param cids - An array of IPFS content ids of desired profiles.
+   *
+   * @returns An array of data about desired profiles from IPFS. If no corresponding profiles to given array of `cids`,
+   * an empty array is returned.
+   */
   async findProfiles (cids: IpfsCid[]): Promise<ContentResult<ProfileContent>> {
     return this.getContentArray(cids, 'account')
   }
@@ -212,22 +231,58 @@ export class SubsocialIpfsApi {
     return content[cid.toString()]
   }
 
-  /** Get single space content by cid */
+  /**
+   * Find and load off-chain information about a space from IPFS by a given `cid`.
+   *
+   * Space information only exists if there is a corresponding JSON file that represents the space's content on IPFS.
+   *
+   * @param cid - IPFS content id of a desired space.
+   *
+   * @returns Data about a desired space from IPFS. If no corresponding space to given `id`, `undefined` is returned.
+   */
   async findSpace (cid: IpfsCid): Promise<SpaceContent | undefined> {
     return this.getContent<SpaceContent>(cid, 'space')
   }
 
-  /** Get single post content by cid */
+  /**
+   * Find and load off-chain information about a post from IPFS by a given `cid`.
+   *
+   * Post information only exists if there is a corresponding JSON file that represents the post's content on IPFS.
+   *
+   * @param cid - IPFS content id of a desired post.
+   *
+   * @returns Data about a desired post from IPFS. If no corresponding post to given `id`, `undefined` is returned.
+   */
   async findPost (cid: IpfsCid): Promise<PostContent | undefined> {
     return this.getContent<PostContent>(cid, 'post')
   }
 
-  /** Get single comment content by cid */
+  /**
+   * Find and load off-chain information about a comment from IPFS by a given `cid`.
+   *
+   * Comment information only exists if there is a corresponding JSON file that represents the comment's content on
+   * IPFS.
+   *
+   * @param cid - IPFS content id of a desired comment.
+   *
+   * @returns Data about a desired comment from IPFS. If no corresponding comments to given `id`, `undefined` is
+   * returned.
+   */
   async findComment (cid: IpfsCid): Promise<CommentContent | undefined> {
     return this.getContent<CommentContent>(cid, 'comment')
   }
 
-  /** Get single profile content by cid */
+  /**
+   * Find and load off-chain information about a profile from IPFS by a given `cid`.
+   *
+   * Profile information only exists if there is a corresponding JSON file that represents the profile's content on
+   * IPFS.
+   *
+   * @param cid - IPFS content id of a desired profile.
+   *
+   * @returns Data about a desired profile from IPFS. If no corresponding profiles to given `id`, `undefined` is
+   * returned.
+   */
   async findProfile (cid: IpfsCid): Promise<ProfileContent | undefined> {
     return this.getContent<ProfileContent>(cid, 'account')
   }

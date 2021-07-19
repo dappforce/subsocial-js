@@ -10,6 +10,16 @@ export type SubsocialContext = {
   useServer?: UseServerProps
 }
 
+/** 
+ * The four visible state filters correspond to the next conditions:
+ * 
+ * - `onlyVisible` – The `hidden` field on corresponding Substrate struct (e.g. `Space` or `Post`) is `false`.
+ * - `onlyHidden` – The `hidden` field on corresponding Substrate struct (e.g. `Space` or `Post`) is `true`.
+ * - `onlyPublic` – The `hidden` field on corresponding Substrate struct (e.g. `Space` or `Post`) is `false` 
+ * and there is a corresponding JSON file on IPFS.
+ * - `onlyUnlisted` – Either the `hidden` field on corresponding Substrate struct (e.g. `Space` or `Post`) is `true` 
+ * or there is a no corresponding JSON file on IPFS.
+ */
 export type Visibility = 'onlyVisible' | 'onlyHidden' | 'onlyPublic' | 'onlyUnlisted'
 
 export type VisibilityFilter = {
@@ -27,16 +37,23 @@ export type PostDetailsOpts = VisibilityFilter & {
   withOwner?: boolean
 }
 
-type IdsFilter<Id> = {
-  ids: Id[]
-}
-
-type IdFilter<Id> = {
+/**
+ * Properties:
+ * - `id` - Id of desired struct.
+ * - `visibility` - Filter for visible state of the struct (see {@link Visibility}).
+ */
+export type FindStruct<Id> = {
   id: Id
-}
+} & Filters
 
-export type FindStructs<Id> = IdsFilter<Id> & Filters
-export type FindStruct<Id> = IdFilter<Id> & Filters
+/**
+ * Properties:
+ * - `ids` - An array of ids of desired structs.
+ * - `visibility` - Filter for visible state of the structs (see {@link Visibility}).
+ */
+export type FindStructs<Id> = {
+  ids: Id[]
+} & Filters
 
 export type FindPostsQuery = FindStructs<AnyPostId>
 export type FindSpacesQuery = FindStructs<AnySpaceId>
