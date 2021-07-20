@@ -97,7 +97,7 @@ export class FlatSubsocialApi implements IFlatSubsocialApi {
     )
   }
 
-  public async findPublicPostsWithSomeDetails (query: FindPostsQuery) {
+  public async findPublicPostsWithSomeDetails (query: FindPostsWithDetailsQuery) {
     return convertToNewPostWithSomeDetailsArray(
        await this.subsocial.findPublicPostsWithSomeDetails(query)
     )
