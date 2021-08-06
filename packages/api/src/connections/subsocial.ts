@@ -13,17 +13,18 @@ type Api = SubsocialApi & {
 }
 
 type NewSubsocialApiProps = Omit<SubsocialApiProps, 'substrateApi'> & {
-  substrateNodeUrl: string
+  substrateNodeUrl: string,
+  substrateApi?: ApiPromise
 }
 
 /**
  * Create a new or return existing connection to Subsocial API
  * (includes Substrate and IPFS connections).
  */
-export const newSubsocialApi = async ({ substrateNodeUrl, ...props }: NewSubsocialApiProps) => {
+export const newSubsocialApi = async ({ substrateNodeUrl, substrateApi: initApi, ...props }: NewSubsocialApiProps) => {
   if (!subsocial && !isLoadingSubsocial) {
     isLoadingSubsocial = true
-    const substrateApi = await getApi(substrateNodeUrl)
+    const substrateApi = initApi || await getApi(substrateNodeUrl)
     subsocial = new SubsocialApi({ substrateApi, ...props })
     isLoadingSubsocial = false;
 
