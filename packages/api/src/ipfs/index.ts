@@ -7,6 +7,7 @@ import { Content } from '@subsocial/types/substrate/classes';
 import { SubsocialContext, ContentResult, UseServerProps } from '../types';
 import { SocialAccountWithId } from '@subsocial/types/dto';
 
+/** Return IPFS cid by social account struct */
 export function getIpfsCidOfSocialAccount (struct: SocialAccountWithId): string | undefined {
   const profile = struct?.profile
   if (profile && profile.isSome) {
@@ -56,6 +57,7 @@ export class SubsocialIpfsApi {
   private offchainUrl!: string
   private useServer?: UseServerProps
 
+  /** Sets values for ptivate fields from props and trying to make a test connection */
   constructor (props: SubsocialIpfsProps) {
     const { ipfsNodeUrl, offchainUrl, useServer } = props;
 
@@ -66,6 +68,7 @@ export class SubsocialIpfsApi {
     this.testConnection()
   }
 
+  /** Trying to make a test connection  */
   private async testConnection () {
     if (this.useServer) return
 
@@ -81,6 +84,7 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // IPFS Request wrapper
 
+  /** Makes a request to the IPFS node */
   private async ipfsNodeRequest (endpoint: IpfsNodeEndpoint, cid?: CID): Promise<AxiosResponse<any>> {
     const config: AxiosRequestConfig = {
       method: 'GET',
@@ -97,6 +101,7 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Find multiple
 
+  /** Return unique cids from cids array */
   getUniqueCids (cids: IpfsCid[], contentName?: string) {
     contentName = nonEmptyStr(contentName) ? `${contentName  } content` : 'content'
     const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
@@ -109,6 +114,7 @@ export class SubsocialIpfsApi {
     return ipfsCids
   }
 
+  /** Return object with contents from IPFS by cids array */
   async getContentArrayFromIpfs<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
       const ipfsCids = this.getUniqueCids(cids, contentName)
@@ -131,9 +137,10 @@ export class SubsocialIpfsApi {
     }
   }
 
+  /** Return object with contents from IPFS through offchain by cids array */
   async getContentArrayFromOffchain<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
-      
+
       const res = this.useServer?.httpRequestMethod === 'get'
         ? await axios.get(`${this.offchainUrl}/ipfs/get?cids=${cids.join('&cids=')}`)
         : await axios.post(`${this.offchainUrl}/ipfs/get`, { cids })
@@ -282,7 +289,7 @@ export class SubsocialIpfsApi {
 
   // ---------------------------------------------------------------------
   // Remove
-
+  /** Unpin content in IPFS */
   async removeContent (cid: IpfsCid) {
     try {
       const res = await axios.delete(`${this.offchainUrl}/ipfs/pins/${cid}`);
@@ -298,6 +305,7 @@ export class SubsocialIpfsApi {
     }
   }
 
+  /** Add and pin content in IPFS */
   async saveContent (content: CommonContent): Promise<RuntimeIpfsCid | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
@@ -314,6 +322,7 @@ export class SubsocialIpfsApi {
     }
   }
 
+  /** Add and pit file in IPFS */
   async saveFile (file: File | Blob) {
     if (typeof window === 'undefined') {
       throw new Error('This function works only in a browser')
@@ -340,18 +349,21 @@ export class SubsocialIpfsApi {
     }
   }
 
+  /** Add and pin space content in IPFS */
   async saveSpace (content: SpaceContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved space with hash: ${hash}`)
     return hash;
   }
 
+  /** Add and pin post content in IPFS */
   async savePost (content: PostContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved post with hash: ${hash}`)
     return hash;
   }
 
+  /** Add and pin comment content in IPFS */
   async saveComment (content: CommentContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved comment with hash: ${hash}`)
