@@ -18,7 +18,7 @@
     "publish:utils": "yarn build:utils && ./scripts/publish-utils.sh",
     "publish:api": "yarn build:api && ./scripts/publish-api.sh",
     "publish:examples": "yarn build:api && ./scripts/publish-examples.sh",
-    "publish:all": "yarn build && ./scripts/publish-all.sh",
+    "publish:all": "yarn build && yarn lerna publish from-package --dist-tag sub3 --contents build",
     "clean": "lerna clean && yarn clean:build",
     "clean:modules": "lerna clean",
     "clean:build": "find . -name \"build\" -type d -prune -exec rm -rf '{}' +",
