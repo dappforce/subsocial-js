@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.6.1",
+  "version": "0.6.1-alpha.0",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "build/index.js",
@@ -50,5 +50,5 @@
     "polkadot",
     "kusama"
   ],
-  "gitHead": "99ff3523479c1b7773b16ab05275eaa9aa547861"
+  "gitHead": "663ef1f372cfe792d59154e86b8ccfe96c8ac3cc"
 }
