@@ -1,7 +1,9 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/api",
+    "packages/types",
+    "packages/utils"
   ],
   "repository": "github:olehmell/subsocial-sdk",
   "scripts": {
