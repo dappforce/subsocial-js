@@ -18,13 +18,13 @@
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
-    "@polkadot/api": "~5.1.1",
+    "@polkadot/api": "^5.4.1",
     "@subsocial/utils": "0.6.0",
     "@subsocial/types": "0.6.0",
     "axios": "^0.21.1"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp ./README.md ./build",
     "build:watch": "tsc --watch"
   },
   "keywords": [

@@ -24,6 +24,7 @@
     "chalk": "^3.0.0",
     "dotenv": "^8.0.0",
     "lodash.isempty": "^4.4.0",
+    "lodash.memoize": "^4.1.2",
     "lodash.truncate": "^4.4.2",
     "loglevel": "^1.7.0",
     "loglevel-plugin-prefix": "^0.8.4",
@@ -39,7 +40,7 @@
     "@types/loglevel": "^1.6.3"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp ./README.md ./build",
     "build:watch": "tsc --watch"
   },
   "keywords": [
