@@ -5,7 +5,7 @@
     "packages/types",
     "packages/utils"
   ],
-  "repository": "github:olehmell/subsocial-sdk",
+  "repository": "https://github.com/dappforce/subsocial-js",
   "scripts": {
     "build": "lerna run build",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate && ./scripts/typegen-fix-import.sh",
