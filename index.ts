@@ -3,7 +3,7 @@ export * as API from './packages/api/src/index'
 export * from './packages/api/src/connections/index'
 
 export * from './packages/api/src/utils/index'
-export * from './packages/api/src/utils/types'
+export * from './packages/api/src/types'
 
 export * as DTO from './packages/types/src/dto/index'
 
