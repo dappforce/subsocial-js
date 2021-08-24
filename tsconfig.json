@@ -2,7 +2,16 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "target": "es6",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "typeRoots": [
+      "./node_modules/@polkadot/ts",
+      "./node_modules/@types"
+    ],
+    "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
+    "strict": true,                           /* Enable all strict type-checking options. */
+    "skipLibCheck": true,                     /* Skip type checking of declaration files. */
+    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */,
+    "declaration": true,
   },
   "typedocOptions": {
     "entryPoints": ["index.ts"],
