@@ -1,14 +1,28 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { BTreeSet, Enum, Option, Struct, Text, bool, i32, u16, u32, u64, u8 } from '@polkadot/types';
+import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, i32, u16, u32, u64 } from '@polkadot/types';
 import type { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
+import type { AccountInfoWithRefCount } from '@polkadot/types/interfaces/system';
 
-/** @name Address */
-export interface Address extends AccountId {}
+/** @name AccountInfo */
+export interface AccountInfo extends AccountInfoWithRefCount {}
 
-/** @name BountyIndex */
-export interface BountyIndex extends u32 {}
+/** @name Change */
+export interface Change extends Struct {
+  readonly created: WhoAndWhen;
+  readonly id: ChangeId;
+  readonly space_id: SpaceId;
+  readonly add_owners: Vec<AccountId>;
+  readonly remove_owners: Vec<AccountId>;
+  readonly new_threshold: Option<u16>;
+  readonly notes: Text;
+  readonly confirmed_by: Vec<AccountId>;
+  readonly expires_at: BlockNumber;
+}
+
+/** @name ChangeId */
+export interface ChangeId extends u64 {}
 
 /** @name Comment */
 export interface Comment extends Struct {
@@ -92,6 +106,16 @@ export interface EntityStatus extends Enum {
   readonly isBlocked: boolean;
 }
 
+/** @name Faucet */
+export interface Faucet extends Struct {
+  readonly enabled: bool;
+  readonly period: BlockNumber;
+  readonly period_limit: Balance;
+  readonly drip_limit: Balance;
+  readonly next_period_at: BlockNumber;
+  readonly dripped_in_current_period: Balance;
+}
+
 /** @name FaucetSettings */
 export interface FaucetSettings extends Struct {
   readonly period: Option<BlockNumber>;
@@ -104,11 +128,16 @@ export interface FaucetSettingsUpdate extends Struct {
   readonly period_limit: Option<Balance>;
 }
 
+/** @name FaucetUpdate */
+export interface FaucetUpdate extends Struct {
+  readonly enabled: Option<bool>;
+  readonly period: Option<BlockNumber>;
+  readonly period_limit: Option<Balance>;
+  readonly drip_limit: Option<Balance>;
+}
+
 /** @name IpfsCid */
 export interface IpfsCid extends Text {}
-
-/** @name LookupSource */
-export interface LookupSource extends AccountId {}
 
 /** @name Post */
 export interface Post extends Struct {
@@ -187,9 +216,6 @@ export interface ReactionKind extends Enum {
   readonly isUpvote: boolean;
   readonly isDownvote: boolean;
 }
-
-/** @name RefCount */
-export interface RefCount extends u8 {}
 
 /** @name Report */
 export interface Report extends Struct {
@@ -290,6 +316,15 @@ export interface SpaceModerationSettings extends Struct {
 /** @name SpaceModerationSettingsUpdate */
 export interface SpaceModerationSettingsUpdate extends Struct {
   readonly autoblock_threshold: Option<Option<u16>>;
+}
+
+/** @name SpaceOwners */
+export interface SpaceOwners extends Struct {
+  readonly created: WhoAndWhen;
+  readonly space_id: SpaceId;
+  readonly owners: Vec<AccountId>;
+  readonly threshold: u16;
+  readonly changes_count: u16;
 }
 
 /** @name SpacePermission */

@@ -1,6 +1,11 @@
-export * from './substrate'
-export * from './ipfs'
-export * from './subsocial'
-export * from './basic-subsocial'
+/**
+ * A set of API wrappers for Subsocial Network.
+ *
+ * @packageDocumentation
+ *
+ * @category API
+ */
+
+export * from './api'
 export * from './utils'
-export * from './substrateConnect'
+export * from './connections'

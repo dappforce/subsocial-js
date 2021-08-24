@@ -2,7 +2,7 @@
   "exclude": [ 
     "scripts/*/**",
     "build/*/**",
-    "test/*/**"
+    "src/test"
   ],
   "compilerOptions": {
     "typeRoots": [

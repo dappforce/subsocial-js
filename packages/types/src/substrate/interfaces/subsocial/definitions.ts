@@ -1,11 +1,10 @@
 export default {
   types: {
-    Address: 'AccountId',
-    LookupSource: 'AccountId',
-    RefCount: 'u8',
+    // Overwrite
+    AccountInfo: 'AccountInfoWithRefCount',
+    // Custom types
     IpfsCid: 'Text',
     DonationId: 'u64',
-    BountyIndex: 'u32',
     DonationRecipient: {
       _enum: {
         Account: 'AccountId',
@@ -307,6 +306,42 @@ export default {
         IPFS: 'Text',
         Hyper: 'Text'
       }
+    },
+    Faucet: {
+      enabled: 'bool',
+      period: 'BlockNumber',
+      period_limit: 'Balance',
+      drip_limit: 'Balance',
+
+      next_period_at: 'BlockNumber',
+      dripped_in_current_period: 'Balance'
+    },
+
+    FaucetUpdate: {
+      enabled: 'Option<bool>',
+      period: 'Option<BlockNumber>',
+      period_limit: 'Option<Balance>',
+      drip_limit: 'Option<Balance>'
+    },
+    ChangeId: 'u64',
+
+    SpaceOwners: {
+      created: 'WhoAndWhen',
+      space_id: 'SpaceId',
+      owners: 'Vec<AccountId>',
+      threshold: 'u16',
+      changes_count: 'u16'
+    },
+    Change: {
+      created: 'WhoAndWhen',
+      id: 'ChangeId',
+      space_id: 'SpaceId',
+      add_owners: 'Vec<AccountId>',
+      remove_owners: 'Vec<AccountId>',
+      new_threshold: 'Option<u16>',
+      notes: 'Text',
+      confirmed_by: 'Vec<AccountId>',
+      expires_at: 'BlockNumber'
     }
   }
 }

@@ -9,3 +9,4 @@ export type PalletName = 'permissions' | 'posts' | 'profileFollows' | 'profiles'
 
 export * from './interfaces/utils'
 export * as classes from './classes'
+export * from './rpc'

@@ -8,3 +8,8 @@ export const isEmptyStr = (x: any): boolean =>
 
 export const nonEmptyStr = (x?: any): x is string =>
   isStr(x) && x.trim().length > 0;
+
+export const asString = (x: { toString: () => string }): string => {
+  return typeof x === 'string' ? x : x.toString()
+}
+  
