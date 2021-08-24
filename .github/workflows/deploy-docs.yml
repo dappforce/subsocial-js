@@ -1,4 +1,4 @@
-name: Deploy Subsocial JS docs to js-docs repository
+name: Deploy Subsocial JS Docs to dappforce/js-docs repository
 
 on:
   workflow_dispatch:
