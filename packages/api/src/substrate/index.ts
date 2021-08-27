@@ -281,10 +281,6 @@ export class SubsocialSubstrateApi {
     return this.isBooleanByAccount({ pallet: 'spaceFollows', storage: 'spaceFollowedByAccount' }, myAddress, spaceId)
   }
 
-  async isPostSharedByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<boolean> {
-    return this.isBooleanByAccount({ pallet: 'posts', storage: 'postSharedByAccount' }, accountId, postId)
-  }
-
   async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<ReactionId> {
     return this.getReactionIdByAccount(accountId, postId)
   }
