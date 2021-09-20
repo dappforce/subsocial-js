@@ -5,7 +5,7 @@
     "packages/types",
     "packages/utils"
   ],
-  "version": "0.6.1-dev.2",
+  "version": "0.6.2-dev.3",
   "npmClient": "yarn",
   "useWorkspaces": true
 }
