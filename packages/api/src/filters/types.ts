@@ -1,15 +1,5 @@
 import { AnyPostId, AnySpaceId } from '@subsocial/types'
 
-export type HttpRequestMethod = 'post' | 'get'
-
-export type UseServerProps = {
-  httpRequestMethod: HttpRequestMethod
-}
-
-export type SubsocialContext = {
-  useServer?: UseServerProps
-}
-
 /** 
  * The four visible state filters correspond to the next conditions:
  * 
@@ -62,7 +52,3 @@ export type FindSpaceQuery = FindStruct<AnySpaceId>
 
 export type FindPostsWithDetailsQuery = FindPostsQuery & PostDetailsOpts
 export type FindPostWithDetailsQuery = FindPostQuery & PostDetailsOpts
-
-type CidAsStr = string
-
-export type ContentResult<T> = Record<CidAsStr, T>

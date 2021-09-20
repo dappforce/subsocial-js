@@ -5,11 +5,12 @@ import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } fro
 import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
 import { Space, Post } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
-import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from './ipfs';
-import { SubsocialSubstrateApi } from './substrate';
+import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from '../ipfs';
+import { SubsocialSubstrateApi } from '../substrate';
 import { getUniqueIds, SupportedSubstrateId } from '../utils/common';
-import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery, SubsocialContext, ContentResult } from '../utils/types';
-import { contentFilter } from '../utils/content-filter';
+import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery } from '../filters';
+import { contentFilter } from '../filters/content-filter';
+import { SubsocialContext, ContentResult } from '../types';
 
 
 export type SubsocialApiProps = SubsocialContext & {

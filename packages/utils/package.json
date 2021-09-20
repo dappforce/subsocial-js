@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.5.9-dev.6",
+  "version": "0.6.2-dev.3",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "build/index.js",
@@ -24,12 +24,13 @@
     "chalk": "^3.0.0",
     "dotenv": "^8.0.0",
     "lodash.isempty": "^4.4.0",
+    "lodash.memoize": "^4.1.2",
     "lodash.truncate": "^4.4.2",
     "loglevel": "^1.7.0",
     "loglevel-plugin-prefix": "^0.8.4",
     "remark": "^13.0.0",
-    "remark-html": "^13.0.1",
     "remark-gfm": "^1.0.0",
+    "remark-html": "^13.0.1",
     "strip-markdown": "^4.0.0"
   },
   "devDependencies": {
@@ -39,7 +40,7 @@
     "@types/loglevel": "^1.6.3"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp ./README.md ./build",
     "build:watch": "tsc --watch"
   },
   "keywords": [
@@ -48,5 +49,6 @@
     "substrate",
     "polkadot",
     "kusama"
-  ]
+  ],
+  "gitHead": "fb1408775bb4a66b694a32090f9d7115b6c68f70"
 }

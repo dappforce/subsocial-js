@@ -27,7 +27,7 @@ prefix.apply(log, {
   format(_level, _name, _time) {
     const now = new Date()
 
-    const date = now.getMonth() + '-' + now.getDay()
+    const date = `${now.getDate()}-${now.getMonth()}`
 
     const time = _time.toString()
 

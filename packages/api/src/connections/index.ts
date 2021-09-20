@@ -1,2 +1,2 @@
-export * from './substrateConnect'
-export * from './subsocialConnect'
+export * from './substrate'
+export * from './subsocial'

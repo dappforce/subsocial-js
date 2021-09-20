@@ -1,11 +1,3 @@
-/**
- * Set of functions to load information from Subsocial blockchain.
- * 
- * @packageDocumentation
- *
- * @category Substrate
- */
-
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
 import { AccountId } from '@polkadot/types/interfaces';
@@ -14,9 +6,10 @@ import { Space, SpaceId, Post, PostId, Reaction, ReactionId } from '@subsocial/t
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
-import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery, SubsocialContext } from '../utils/types';
+import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '../filters';
 import { SocialAccountWithId } from '@subsocial/types/dto';
-import { visibilityFilter } from '../utils';
+import { visibilityFilter } from '../filters';
+import { SubsocialContext } from '../types';
 
 type StorageItem = {
   pallet: PalletName,
@@ -286,10 +279,6 @@ export class SubsocialSubstrateApi {
 
   async isSpaceFollower (myAddress: AnyAccountId, spaceId: AnySpaceId): Promise<boolean> {
     return this.isBooleanByAccount({ pallet: 'spaceFollows', storage: 'spaceFollowedByAccount' }, myAddress, spaceId)
-  }
-
-  async isPostSharedByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<boolean> {
-    return this.isBooleanByAccount({ pallet: 'posts', storage: 'postSharedByAccount' }, accountId, postId)
   }
 
   async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<ReactionId> {

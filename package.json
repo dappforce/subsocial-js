@@ -1,21 +1,21 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/api",
+    "packages/types",
+    "packages/utils"
   ],
-  "repository": "github:olehmell/subsocial-sdk",
+  "repository": "https://github.com/dappforce/subsocial-js",
   "scripts": {
     "build": "lerna run build",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate && ./scripts/typegen-fix-import.sh",
     "build:types": "lerna run build --scope=@subsocial/types",
     "build:utils": "lerna run build --scope=@subsocial/utils",
     "build:api": "lerna run build --scope=@subsocial/api",
-    "build:examples": "lerna run build --scope=@subsocial/examples",
     "publish:config": "./scripts/publish-config.sh",
     "publish:types": "yarn build:types && ./scripts/publish-types.sh",
     "publish:utils": "yarn build:utils && ./scripts/publish-utils.sh",
     "publish:api": "yarn build:api && ./scripts/publish-api.sh",
-    "publish:examples": "yarn build:api && ./scripts/publish-examples.sh",
     "publish:all": "yarn build && ./scripts/publish-all.sh",
     "clean": "lerna clean && yarn clean:build",
     "clean:modules": "lerna clean",
@@ -32,6 +32,6 @@
     "@types/jest": "^26.0.20",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.1",
-    "typescript": "4.0.5"
+    "typescript": "^4.1.2"
   }
 }

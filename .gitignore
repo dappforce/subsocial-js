@@ -110,3 +110,6 @@ typings/
 
 # TypeDoc generated files
 doc
+
+#npmrc
+.npmrc

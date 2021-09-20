@@ -45,6 +45,10 @@ export function asAccountId (id: AnyAccountId): GenericAccountId | undefined {
   }
 }
 
+export function isAccountId (id:AnyAccountId): boolean {
+  return !!asAccountId(id)
+}
+
 export const getSharedPostId = (postData: any): PostId | undefined => {
   if (!postData) return undefined;
 

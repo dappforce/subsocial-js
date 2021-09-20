@@ -4,6 +4,8 @@ import registry from '@subsocial/types/substrate/registry';
 import { formatBalance } from '@polkadot/util';
 import { registryTypes as types } from '@subsocial/types'
 import rpc from '@polkadot/types/interfaces/jsonrpc'
+import { ChainProperties } from '@polkadot/types/interfaces'
+import { Text, U32 } from '@polkadot/types';
 
 const DEFAULT_DECIMALS = [ 12 ]
 const DEFAULT_TOKEN = [ 'SMN' ]
@@ -29,10 +31,10 @@ export class SubstrateConnect {
     SubstrateConnect.connected = true
     SubstrateConnect.logChainInfo()
 
-    const properties = await api.rpc.system.properties()
+    const properties = await api.rpc.system.properties() as ChainProperties
 
-    const tokenSymbol = properties.tokenSymbol.unwrapOr(undefined)?.map(x => x.toString()) || DEFAULT_TOKEN;
-    const tokenDecimals = properties.tokenDecimals.unwrapOr(undefined)?.map(x => x.toNumber()) || DEFAULT_DECIMALS;
+    const tokenSymbol = properties.tokenSymbol.unwrapOr(undefined)?.map((x: Text) => x.toString()) || DEFAULT_TOKEN;
+    const tokenDecimals = properties.tokenDecimals.unwrapOr(undefined)?.map((x: U32) => x.toNumber()) || DEFAULT_DECIMALS;
 
     registry.setChainProperties(properties)
 
