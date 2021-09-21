@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/types",
-  "version": "0.6.2-dev.3",
+  "version": "6.0.3-dev.1",
   "description": "JavaScript type definitions for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "build/index.js",
@@ -19,13 +19,13 @@
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
-    "@polkadot/types": "^5.9.2-10",
-    "@polkadot/types-known": "^5.9.2-10",
-    "@subsocial/utils": "^0.6.2-dev.3",
+    "@polkadot/types": "^6.0.5",
+    "@polkadot/types-known": "^6.0.5",
+    "@subsocial/utils": "^6.0.3-dev.1",
     "cids": "^0.7.1"
   },
   "devDependencies": {
-    "@polkadot/typegen": "^5.9.2-10"
+    "@polkadot/typegen": "^6.0.5"
   },
   "scripts": {
     "build": "tsc && cp ./README.md ./build",
