@@ -1,0 +1,37 @@
+name: Deploy Subsocial JS Docs to dappforce/js-docs repository
+
+on:
+  workflow_dispatch:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        node-version: [ 14.x ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install Yarn dependencies
+        run: yarn install
+      - name: Build Docs
+        run: yarn typedoc
+      - name: Prepare GitHub Pages repository
+        run: |
+          mkdir pages
+          mv doc pages/js-sdk
+          cp scripts/docs-static/* pages/
+      - name: Deploy docs to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: dappforce/js-docs
+          publish_dir: ./pages
+          publish_branch: main
