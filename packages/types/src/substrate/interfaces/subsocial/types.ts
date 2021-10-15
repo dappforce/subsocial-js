@@ -381,6 +381,11 @@ export interface SpacePermissionsContext extends Struct {
 /** @name SpacePermissionSet */
 export interface SpacePermissionSet extends BTreeSet<SpacePermission> {}
 
+/** @name SpacesSettings */
+export interface SpacesSettings extends Struct {
+  readonly handles_enabled: bool;
+}
+
 /** @name SpaceUpdate */
 export interface SpaceUpdate extends Struct {
   readonly parent_id: Option<Option<SpaceId>>;
