@@ -125,6 +125,9 @@ export default {
       is_space_follower: 'bool',
       space_perms: 'Option<SpacePermissions>'
     },
+    SpacesSettings: {
+      handles_enabled: "bool"
+    },
     PostHistoryRecord: {
       edited: 'WhoAndWhen',
       old_data: 'PostUpdate'
