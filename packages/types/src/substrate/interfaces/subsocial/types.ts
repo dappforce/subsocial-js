@@ -217,13 +217,20 @@ export interface ReactionKind extends Enum {
   readonly isDownvote: boolean;
 }
 
+/** @name Reason */
+export interface Reason extends Enum {
+  readonly isOther: boolean;
+  readonly isNsfw: boolean;
+}
+
 /** @name Report */
 export interface Report extends Struct {
   readonly id: ReportId;
   readonly created: WhoAndWhen;
   readonly reported_entity: EntityId;
   readonly reported_within: SpaceId;
-  readonly reason: Content;
+  readonly reason: Reason;
+  readonly details: Content;
 }
 
 /** @name ReportId */
