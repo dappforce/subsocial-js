@@ -57,7 +57,16 @@ export default {
       _enum: ["Allowed", "Blocked"],
     },
     Reason: {
-      _enum: ["Other", "NSFW"],
+      _enum: [
+        "Other",
+        "SexualContent",
+        "PhysicalViolence",
+        "AbuseOrHarassment",
+        "Spam",
+        "Scam",
+        "SaleOfIllegalGoods",
+        "CopyrightInfringement",
+      ],
     },
     Report: {
       id: "ReportId",

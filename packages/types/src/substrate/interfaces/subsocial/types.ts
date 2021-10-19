@@ -220,7 +220,13 @@ export interface ReactionKind extends Enum {
 /** @name Reason */
 export interface Reason extends Enum {
   readonly isOther: boolean;
-  readonly isNsfw: boolean;
+  readonly isSexualContent: boolean;
+  readonly isPhysicalViolence: boolean;
+  readonly isAbuseOrHarassment: boolean;
+  readonly isSpam: boolean;
+  readonly isScam: boolean;
+  readonly isSaleOfIllegalGoods: boolean;
+  readonly isCopyrightInfringement: boolean;
 }
 
 /** @name Report */
