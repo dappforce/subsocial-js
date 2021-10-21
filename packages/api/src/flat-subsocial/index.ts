@@ -14,6 +14,7 @@ import { FindPostQuery, FindPostsQuery, FindPostsWithDetailsQuery, FindSpaceQuer
 import { AnyAccountId } from '@subsocial/types'
 import { SubsocialApi } from '../subsocial'
 import { ProfileData, SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId } from './dto'
+import { idsToBns, idToBn } from '@subsocial/utils'
 
 export interface IFlatSubsocialApi {
   findProfile: (id: AnyAccountId) => Promise<ProfileData | undefined>
@@ -114,13 +115,4 @@ export class FlatSubsocialApi implements IFlatSubsocialApi {
        await this.subsocial.findUnlistedPostsWithAllDetails(idsToBns(ids))
     )
   }
-}
-
-function idsToBns(ids: AnyId[]): import("@subsocial/types").AnySpaceId[] {
-  throw new Error('Function not implemented.')
-}
-
-
-function idToBn(id: AnyId): import("@subsocial/types").AnyPostId {
-  throw new Error('Function not implemented.')
 }
