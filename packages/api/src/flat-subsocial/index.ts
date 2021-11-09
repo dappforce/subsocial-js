@@ -14,6 +14,8 @@ import { FindPostQuery, FindPostsQuery, FindPostsWithDetailsQuery, FindSpaceQuer
 import { AnyAccountId } from '@subsocial/types'
 import { SubsocialApi } from '../subsocial'
 import { ProfileData, SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId } from './dto'
+import { getFirstOrUndefined, idsToBns, idToBn } from '@subsocial/utils'
+import { flattenSpaceStructs, flattenPostStructs, flattenProfileStructs, ProfileStruct, SpaceStruct, PostStruct } from './flatteners'
 
 export interface IFlatSubsocialApi {
   findProfile: (id: AnyAccountId) => Promise<ProfileData | undefined>
@@ -22,6 +24,14 @@ export interface IFlatSubsocialApi {
   findSpace: (query: FindSpaceQuery) => Promise<SpaceData | undefined>
   findPublicSpaces: (ids: AnyId[]) => Promise<SpaceData[]>
   findUnlistedSpaces: (ids: AnyId[]) => Promise<SpaceData[]>
+
+  findSpaceStructs: (ids: AnyId[]) => Promise<SpaceStruct[]>
+  findPostStructs: (ids: AnyId[]) => Promise<PostStruct[]>
+  findProfileStructs: (ids: AnyAccountId[]) => Promise<ProfileStruct[]>
+
+  findSpaceStruct: (id: AnyId) => Promise<SpaceStruct | undefined>
+  findPostStruct: (id: AnyId) => Promise<PostStruct | undefined>
+  findProfileStruct: (id: AnyAccountId) => Promise<ProfileStruct | undefined>
 
   findPost: (query: FindPostQuery) => Promise<PostData | undefined>
   findPublicPosts: (ids: AnyId[]) => Promise<PostData[]>
@@ -34,11 +44,43 @@ export interface IFlatSubsocialApi {
 }
 
 export class FlatSubsocialApi implements IFlatSubsocialApi {
-  private subsocial: SubsocialApi
+  private _subsocial: SubsocialApi
 
   constructor (subsocial: SubsocialApi) {
-    this.subsocial = subsocial
+    this._subsocial = subsocial
   }
+
+  get subsocial() {
+    return this._subsocial 
+  }
+
+  public async findSpaceStructs (ids: AnyId[]): Promise<SpaceStruct[]> {
+    const structs = await this.subsocial.substrate.findSpaces({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
+    return flattenSpaceStructs(structs)
+  }
+
+  public async findPostStructs (ids: AnyId[]): Promise<PostStruct[]> {
+    const structs = await this.subsocial.substrate.findPosts({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
+    return flattenPostStructs(structs)
+  }
+
+  public async findProfileStructs (ids: AnyAccountId[]): Promise<ProfileStruct[]> {
+    const structs = await this.subsocial.substrate.findSocialAccounts(ids)
+    return flattenProfileStructs(structs)
+  }
+
+  public async findSpaceStruct (id: AnyId): Promise<SpaceStruct | undefined> {
+    return getFirstOrUndefined(await this.findSpaceStructs([ id ]))
+  }
+
+  public async findPostStruct (id: AnyId): Promise<PostStruct | undefined> {
+    return getFirstOrUndefined(await this.findPostStructs([ id ]))
+  }
+
+  public async findProfileStruct (id: AnyAccountId): Promise<ProfileStruct | undefined>{
+    return getFirstOrUndefined(await this.findProfileStructs([ id ]))
+  }
+
 
   public async findProfile (id: AnyAccountId) {
     const old = await this.subsocial.findProfile(id)
@@ -114,13 +156,5 @@ export class FlatSubsocialApi implements IFlatSubsocialApi {
        await this.subsocial.findUnlistedPostsWithAllDetails(idsToBns(ids))
     )
   }
-}
-
-function idsToBns(ids: AnyId[]): import("@subsocial/types").AnySpaceId[] {
-  throw new Error('Function not implemented.')
-}
-
-
-function idToBn(id: AnyId): import("@subsocial/types").AnyPostId {
-  throw new Error('Function not implemented.')
+  
 }

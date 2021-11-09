@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.6.4-dev.2",
+  "version": "0.6.4-dev.9",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "build/index.js",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
+    "@polkadot/util-crypto": "6.6.1",
     "@sindresorhus/slugify": "^1.1.0",
     "bn.js": "^5.1.1",
     "chalk": "^3.0.0",

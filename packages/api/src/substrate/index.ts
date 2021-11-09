@@ -242,14 +242,6 @@ export class SubsocialSubstrateApi {
     return idOpt.unwrapOr(undefined)
   }
 
-  async getAccountIdByHandle (handle: string): Promise<AccountId | undefined> {
-    if (isEmptyStr(handle)) {
-      return undefined
-    }
-    const idOpt = await this.queryProfiles('accountByProfileUsername', handle) as Option<AccountId>
-    return idOpt.unwrapOr(undefined)
-  }
-
   async getReplyIdsByPostId (id: AnyPostId): Promise<PostId[]> {
     return this.queryPosts('replyIdsByPostId', id);
   }

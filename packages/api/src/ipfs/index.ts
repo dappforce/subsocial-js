@@ -76,7 +76,7 @@ export class SubsocialIpfsApi {
       // Test IPFS Node connection by requesting its version
       const res = await this.ipfsNodeRequest('version')
       log.info('Connected to IPFS Node with version ', res.data.version)
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to connect to IPFS node:', err.stack)
     }
   }
@@ -151,7 +151,7 @@ export class SubsocialIpfsApi {
       }
 
       const contents = res.data;
-      log.debug(`Loaded ${pluralize(contents.length, contentName)}`)
+      log.debug(`Loaded ${cids.length} ${contentName}`)
       return contents;
     } catch (error) {
       log.error('Failed to get content from IPFS via Offchain API:', error)
