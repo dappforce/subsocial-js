@@ -26,7 +26,7 @@ jobs:
         run: yarn build:interfaces
 
       - name: Run tests
-        run: yarn yest
+        run: yarn test
 
       - name: Run build
         run: yarn build
