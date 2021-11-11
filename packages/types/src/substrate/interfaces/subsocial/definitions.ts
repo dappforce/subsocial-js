@@ -1,7 +1,5 @@
 export default {
   types: {
-    // Overwrite
-    AccountInfo: 'AccountInfoWithDualRefCount',
     // Custom types
     IpfsCid: 'Text',
     DonationId: 'u64',
