@@ -1,7 +1,5 @@
 export default {
   types: {
-    // Overwrite
-    AccountInfo: "AccountInfoWithDualRefCount",
     // Custom types
     IpfsCid: "Text",
     DonationId: "u64",
@@ -134,6 +132,9 @@ export default {
       is_space_owner: "bool",
       is_space_follower: "bool",
       space_perms: "Option<SpacePermissions>",
+    },
+    SpacesSettings: {
+      handles_enabled: "bool"
     },
     PostHistoryRecord: {
       edited: "WhoAndWhen",
