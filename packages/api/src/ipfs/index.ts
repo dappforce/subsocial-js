@@ -129,7 +129,7 @@ export class SubsocialIpfsApi {
 
       const loadContentFns = ipfsCids.map(getFormatedContent);
       await Promise.all(loadContentFns);
-      log.debug(`Loaded ${pluralize(cids.length, contentName)}`)
+      log.debug(`Loaded ${pluralize({ count: cids.length,singularText: contentName })}`)
       return content
     } catch (err) {
       console.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
