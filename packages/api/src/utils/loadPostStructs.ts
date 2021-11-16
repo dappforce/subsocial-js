@@ -1,5 +1,4 @@
-import { AnyAccountId, AnyPostId, AnySpaceId } from '@subsocial/types/build/substrate/utils';
-import { PostData, PostWithSomeDetails, ProfileData, SpaceData } from '@subsocial/types'
+import { AnyPostId, AnySpaceId, AnyAccountId, PostData, PostWithSomeDetails, ProfileData, SpaceData} from '@subsocial/types'
 import { PostId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from './common'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'

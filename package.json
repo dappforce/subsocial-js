@@ -8,7 +8,7 @@
   "repository": "https://github.com/dappforce/subsocial-js",
   "scripts": {
     "build": "lerna run build",
-    "build:interfaces": "node -r ts-node/register packages/types/scripts/generate && ./scripts/typegen-fix-import.sh",
+    "build:interfaces": "node -r ts-node/register packages/types/scripts/generate && ./scripts/typegen-fix-import.sh && node -r ts-node/register packages/types/scripts/compile-bundles.ts",
     "build:types": "lerna run build --scope=@subsocial/types",
     "build:utils": "lerna run build --scope=@subsocial/utils",
     "build:api": "lerna run build --scope=@subsocial/api",

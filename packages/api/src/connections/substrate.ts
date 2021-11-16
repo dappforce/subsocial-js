@@ -2,7 +2,7 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { newLogger } from '@subsocial/utils';
 import registry from '@subsocial/types/substrate/registry';
 import { formatBalance } from '@polkadot/util';
-import { registryTypes as types } from '@subsocial/types'
+import { typesBundle } from '@subsocial/types'
 import rpc from '@polkadot/types/interfaces/jsonrpc'
 import { ChainProperties } from '@polkadot/types/interfaces'
 import { Text, U32 } from '@polkadot/types';
@@ -25,7 +25,7 @@ export class SubstrateConnect {
     const provider = new WsProvider(rpcEndpoint);
 
     logger.info(`Connecting to Substrate node at ${rpcEndpoint}...`);
-    const api = new ApiPromise({ provider, types, rpc: { ...rpc }, metadata })
+    const api = new ApiPromise({ provider, typesBundle, rpc: { ...rpc }, metadata })
     await api.isReady
     SubstrateConnect.api = api
     SubstrateConnect.connected = true

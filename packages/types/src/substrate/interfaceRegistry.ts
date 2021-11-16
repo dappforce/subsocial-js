@@ -58,7 +58,7 @@ import type { ClassDetails, ClassId, ClassMetadata, DepositBalance, DepositBalan
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import type { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import type { AssetInstance, AssetInstanceV0, AssetInstanceV1, AssetInstanceV2, BodyId, BodyPart, DoubleEncodedCall, Fungibility, FungibilityV0, FungibilityV1, FungibilityV2, InboundStatus, InstructionV2, InteriorMultiLocation, Junction, JunctionV0, JunctionV1, JunctionV2, Junctions, JunctionsV1, JunctionsV2, MultiAsset, MultiAssetFilter, MultiAssetFilterV1, MultiAssetFilterV2, MultiAssetV0, MultiAssetV1, MultiAssetV2, MultiAssets, MultiAssetsV1, MultiAssetsV2, MultiLocation, MultiLocationV0, MultiLocationV1, MultiLocationV2, NetworkId, OriginKindV0, OriginKindV1, OriginKindV2, OutboundStatus, Outcome, QueryId, QueryStatus, QueueConfigData, Response, ResponseV0, ResponseV1, ResponseV2, ResponseV2Error, ResponseV2Result, VersionMigrationStage, VersionedMultiAsset, VersionedMultiAssets, VersionedMultiLocation, VersionedResponse, VersionedXcm, WeightLimitV2, WildFungibility, WildFungibilityV0, WildFungibilityV1, WildFungibilityV2, WildMultiAsset, WildMultiAssetV1, WildMultiAssetV2, Xcm, XcmAssetId, XcmError, XcmErrorV0, XcmErrorV1, XcmErrorV2, XcmOrder, XcmOrderV0, XcmOrderV1, XcmOrderV2, XcmOrigin, XcmOriginKind, XcmV0, XcmV1, XcmV2, XcmVersion, XcmpMessageFormat } from '@polkadot/types/interfaces/xcm';
-import type { Change, ChangeId, Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, Faucet, FaucetSettings, FaucetSettingsUpdate, FaucetUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Reason, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpaceOwners, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, SpacesSettings, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from './interfaces/subsocial';
+import type { Comment, Content, Faucet, FaucetSettings, FaucetSettingsUpdate, FaucetUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Role, RoleId, RoleUpdate, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceOwners, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, SpacesSettings, User, WhoAndWhen } from './interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -190,8 +190,6 @@ declare module '@polkadot/types/types/registry' {
     ChainId: ChainId;
     ChainProperties: ChainProperties;
     ChainType: ChainType;
-    Change: Change;
-    ChangeId: ChangeId;
     ChangesTrieConfiguration: ChangesTrieConfiguration;
     ChangesTrieSignal: ChangesTrieSignal;
     ClassDetails: ClassDetails;
@@ -297,16 +295,9 @@ declare module '@polkadot/types/types/registry' {
     DisputeState: DisputeState;
     DisputeStatement: DisputeStatement;
     DisputeStatementSet: DisputeStatementSet;
-    Donation: Donation;
-    DonationId: DonationId;
-    DonationRecipient: DonationRecipient;
-    DonationSettings: DonationSettings;
-    DonationSettingsUpdate: DonationSettingsUpdate;
     DoubleEncodedCall: DoubleEncodedCall;
     DoubleVoteReport: DoubleVoteReport;
     DownwardMessage: DownwardMessage;
-    Drop: Drop;
-    DropId: DropId;
     EcdsaSignature: EcdsaSignature;
     Ed25519Signature: Ed25519Signature;
     EIP1559Transaction: EIP1559Transaction;
@@ -319,8 +310,6 @@ declare module '@polkadot/types/types/registry' {
     ElectionStatus: ElectionStatus;
     EncodedFinalityProofs: EncodedFinalityProofs;
     EncodedJustification: EncodedJustification;
-    EntityId: EntityId;
-    EntityStatus: EntityStatus;
     EpochAuthorship: EpochAuthorship;
     Era: Era;
     EraIndex: EraIndex;
@@ -771,7 +760,6 @@ declare module '@polkadot/types/types/registry' {
     ReactionKind: ReactionKind;
     ReadProof: ReadProof;
     ReadySolution: ReadySolution;
-    Reason: Reason;
     Reasons: Reasons;
     RecoveryConfig: RecoveryConfig;
     RefCount: RefCount;
@@ -797,10 +785,8 @@ declare module '@polkadot/types/types/registry' {
     Renouncing: Renouncing;
     RentProjection: RentProjection;
     ReplacementTimes: ReplacementTimes;
-    Report: Report;
     ReportedRoundStates: ReportedRoundStates;
     Reporter: Reporter;
-    ReportId: ReportId;
     ReportIdOf: ReportIdOf;
     ReserveData: ReserveData;
     ReserveIdentifier: ReserveIdentifier;
@@ -833,7 +819,6 @@ declare module '@polkadot/types/types/registry' {
     ScheduleTo258: ScheduleTo258;
     ScheduleTo264: ScheduleTo264;
     Scheduling: Scheduling;
-    ScoringAction: ScoringAction;
     Seal: Seal;
     SealV0: SealV0;
     SeatHolder: SeatHolder;
@@ -842,7 +827,6 @@ declare module '@polkadot/types/types/registry' {
     SessionIndex: SessionIndex;
     SessionInfo: SessionInfo;
     SessionInfoValidatorGroup: SessionInfoValidatorGroup;
-    SessionKey: SessionKey;
     SessionKeys1: SessionKeys1;
     SessionKeys10: SessionKeys10;
     SessionKeys10B: SessionKeys10B;
@@ -934,8 +918,6 @@ declare module '@polkadot/types/types/registry' {
     Space: Space;
     SpaceHistoryRecord: SpaceHistoryRecord;
     SpaceId: SpaceId;
-    SpaceModerationSettings: SpaceModerationSettings;
-    SpaceModerationSettingsUpdate: SpaceModerationSettingsUpdate;
     SpaceOwners: SpaceOwners;
     SpacePermission: SpacePermission;
     SpacePermissions: SpacePermissions;
@@ -995,12 +977,6 @@ declare module '@polkadot/types/types/registry' {
     StrikeCount: StrikeCount;
     SubId: SubId;
     SubmissionIndicesOf: SubmissionIndicesOf;
-    Subscription: Subscription;
-    SubscriptionId: SubscriptionId;
-    SubscriptionPeriod: SubscriptionPeriod;
-    SubscriptionPlan: SubscriptionPlan;
-    SubscriptionPlanId: SubscriptionPlanId;
-    SuggestedStatus: SuggestedStatus;
     Supports: Supports;
     SyncState: SyncState;
     SystemInherentData: SystemInherentData;
