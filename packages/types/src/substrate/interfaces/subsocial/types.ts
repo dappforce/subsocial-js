@@ -8,6 +8,9 @@ import type { AccountInfoWithTripleRefCount } from '@polkadot/types/interfaces/s
 /** @name AccountInfo */
 export interface AccountInfo extends AccountInfoWithTripleRefCount {}
 
+/** @name Address */
+export interface Address extends AccountId {}
+
 /** @name Comment */
 export interface Comment extends Struct {
   readonly parent_id: Option<PostId>;
@@ -23,6 +26,24 @@ export interface Content extends Enum {
   readonly asIpfs: Text;
   readonly isHyper: boolean;
   readonly asHyper: Text;
+}
+
+/** @name EntityId */
+export interface EntityId extends Enum {
+  readonly isContent: boolean;
+  readonly asContent: Content;
+  readonly isAccount: boolean;
+  readonly asAccount: AccountId;
+  readonly isSpace: boolean;
+  readonly asSpace: SpaceId;
+  readonly isPost: boolean;
+  readonly asPost: PostId;
+}
+
+/** @name EntityStatus */
+export interface EntityStatus extends Enum {
+  readonly isAllowed: boolean;
+  readonly isBlocked: boolean;
 }
 
 /** @name Faucet */
@@ -57,6 +78,9 @@ export interface FaucetUpdate extends Struct {
 
 /** @name IpfsCid */
 export interface IpfsCid extends Text {}
+
+/** @name LookupSource */
+export interface LookupSource extends AccountId {}
 
 /** @name Post */
 export interface Post extends Struct {
@@ -136,6 +160,18 @@ export interface ReactionKind extends Enum {
   readonly isDownvote: boolean;
 }
 
+/** @name Report */
+export interface Report extends Struct {
+  readonly id: ReportId;
+  readonly created: WhoAndWhen;
+  readonly reported_entity: EntityId;
+  readonly reported_within: SpaceId;
+  readonly reason: Content;
+}
+
+/** @name ReportId */
+export interface ReportId extends u64 {}
+
 /** @name Role */
 export interface Role extends Struct {
   readonly created: WhoAndWhen;
@@ -156,6 +192,19 @@ export interface RoleUpdate extends Struct {
   readonly disabled: Option<bool>;
   readonly content: Option<Content>;
   readonly permissions: Option<SpacePermissionSet>;
+}
+
+/** @name ScoringAction */
+export interface ScoringAction extends Enum {
+  readonly isUpvotePost: boolean;
+  readonly isDownvotePost: boolean;
+  readonly isSharePost: boolean;
+  readonly isCreateComment: boolean;
+  readonly isUpvoteComment: boolean;
+  readonly isDownvoteComment: boolean;
+  readonly isShareComment: boolean;
+  readonly isFollowSpace: boolean;
+  readonly isFollowAccount: boolean;
 }
 
 /** @name SocialAccount */
@@ -192,6 +241,16 @@ export interface SpaceHistoryRecord extends Struct {
 
 /** @name SpaceId */
 export interface SpaceId extends u64 {}
+
+/** @name SpaceModerationSettings */
+export interface SpaceModerationSettings extends Struct {
+  readonly autoblock_threshold: Option<u16>;
+}
+
+/** @name SpaceModerationSettingsUpdate */
+export interface SpaceModerationSettingsUpdate extends Struct {
+  readonly autoblock_threshold: Option<Option<u16>>;
+}
 
 /** @name SpaceOwners */
 export interface SpaceOwners extends Struct {
@@ -268,6 +327,13 @@ export interface SpaceUpdate extends Struct {
   readonly content: Option<Content>;
   readonly hidden: Option<bool>;
   readonly permissions: Option<Option<SpacePermissions>>;
+}
+
+/** @name SuggestedStatus */
+export interface SuggestedStatus extends Struct {
+  readonly suggested: WhoAndWhen;
+  readonly status: Option<EntityStatus>;
+  readonly report_id: Option<ReportId>;
 }
 
 /** @name User */
