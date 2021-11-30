@@ -1,7 +1,11 @@
-import * as dfDefinitions from './interfaces/definitions';
+import allDefinitions from './interfaces/definitions';
+import {OverrideBundleType, OverrideBundleDefinition} from "@polkadot/types/types";
+import {isDef} from "@subsocial/utils";
 
-export const allDefinitions = {
-  ...dfDefinitions
-};
+export const specBundle: Record<string, OverrideBundleDefinition> = allDefinitions
 
-export const types = Object.values(allDefinitions).map(({ types }) => types).reduce((all, types) => Object.assign(all, types), {});
+export const typesBundle: OverrideBundleType = {
+    spec: specBundle
+}
+
+export const types = Object.values(allDefinitions).flatMap(({ types }) => types).filter(isDef);

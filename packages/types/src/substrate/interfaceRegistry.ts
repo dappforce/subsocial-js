@@ -32,7 +32,7 @@ import type { AuthorityIndex, AuthorityList, AuthoritySet, AuthoritySetChange, A
 import type { IdentityFields, IdentityInfo, IdentityInfoAdditional, IdentityInfoTo198, IdentityJudgement, RegistrarIndex, RegistrarInfo, Registration, RegistrationJudgement, RegistrationTo198 } from '@polkadot/types/interfaces/identity';
 import type { AuthIndex, AuthoritySignature, Heartbeat, HeartbeatTo244, OpaqueMultiaddr, OpaqueNetworkState, OpaquePeerId } from '@polkadot/types/interfaces/imOnline';
 import type { CallIndex, LotteryConfig } from '@polkadot/types/interfaces/lottery';
-import type { ErrorMetadataLatest, ErrorMetadataV10, ErrorMetadataV11, ErrorMetadataV12, ErrorMetadataV13, ErrorMetadataV14, ErrorMetadataV9, EventMetadataLatest, EventMetadataV10, EventMetadataV11, EventMetadataV12, EventMetadataV13, EventMetadataV14, EventMetadataV9, ExtrinsicMetadataLatest, ExtrinsicMetadataV11, ExtrinsicMetadataV12, ExtrinsicMetadataV13, ExtrinsicMetadataV14, FunctionArgumentMetadataLatest, FunctionArgumentMetadataV10, FunctionArgumentMetadataV11, FunctionArgumentMetadataV12, FunctionArgumentMetadataV13, FunctionArgumentMetadataV14, FunctionArgumentMetadataV9, FunctionMetadataLatest, FunctionMetadataV10, FunctionMetadataV11, FunctionMetadataV12, FunctionMetadataV13, FunctionMetadataV14, FunctionMetadataV9, MetadataAll, MetadataLatest, MetadataV10, MetadataV11, MetadataV12, MetadataV13, MetadataV14, MetadataV9, ModuleConstantMetadataV10, ModuleConstantMetadataV11, ModuleConstantMetadataV12, ModuleConstantMetadataV13, ModuleConstantMetadataV9, ModuleMetadataV10, ModuleMetadataV11, ModuleMetadataV12, ModuleMetadataV13, ModuleMetadataV9, PalletCallMetadataLatest, PalletCallMetadataV14, PalletConstantMetadataLatest, PalletConstantMetadataV14, PalletErrorMetadataLatest, PalletErrorMetadataV14, PalletEventMetadataLatest, PalletEventMetadataV14, PalletMetadataLatest, PalletMetadataV14, PalletStorageMetadataLatest, PalletStorageMetadataV14, PortableRegistry, PortableRegistryV14, PortableType, PortableTypeV14, SignedExtensionMetadataLatest, SignedExtensionMetadataV14, StorageEntryMetadataLatest, StorageEntryMetadataV10, StorageEntryMetadataV11, StorageEntryMetadataV12, StorageEntryMetadataV13, StorageEntryMetadataV14, StorageEntryMetadataV9, StorageEntryModifierLatest, StorageEntryModifierV10, StorageEntryModifierV11, StorageEntryModifierV12, StorageEntryModifierV13, StorageEntryModifierV14, StorageEntryModifierV9, StorageEntryTypeLatest, StorageEntryTypeV10, StorageEntryTypeV11, StorageEntryTypeV12, StorageEntryTypeV13, StorageEntryTypeV14, StorageEntryTypeV9, StorageHasher, StorageHasherV10, StorageHasherV11, StorageHasherV12, StorageHasherV13, StorageHasherV14, StorageHasherV9, StorageMetadataV10, StorageMetadataV11, StorageMetadataV12, StorageMetadataV13, StorageMetadataV9 } from '@polkadot/types/interfaces/metadata';
+import type { ErrorMetadataLatest, ErrorMetadataV10, ErrorMetadataV11, ErrorMetadataV12, ErrorMetadataV13, ErrorMetadataV14, ErrorMetadataV9, EventMetadataLatest, EventMetadataV10, EventMetadataV11, EventMetadataV12, EventMetadataV13, EventMetadataV14, EventMetadataV9, ExtrinsicMetadataLatest, ExtrinsicMetadataV11, ExtrinsicMetadataV12, ExtrinsicMetadataV13, ExtrinsicMetadataV14, FunctionArgumentMetadataLatest, FunctionArgumentMetadataV10, FunctionArgumentMetadataV11, FunctionArgumentMetadataV12, FunctionArgumentMetadataV13, FunctionArgumentMetadataV14, FunctionArgumentMetadataV9, FunctionMetadataLatest, FunctionMetadataV10, FunctionMetadataV11, FunctionMetadataV12, FunctionMetadataV13, FunctionMetadataV14, FunctionMetadataV9, MetadataAll, MetadataLatest, MetadataV10, MetadataV11, MetadataV12, MetadataV13, MetadataV14, MetadataV9, ModuleConstantMetadataV10, ModuleConstantMetadataV11, ModuleConstantMetadataV12, ModuleConstantMetadataV13, ModuleConstantMetadataV9, ModuleMetadataV10, ModuleMetadataV11, ModuleMetadataV12, ModuleMetadataV13, ModuleMetadataV9, PalletCallMetadataLatest, PalletCallMetadataV14, PalletConstantMetadataLatest, PalletConstantMetadataV14, PalletErrorMetadataLatest, PalletErrorMetadataV14, PalletEventMetadataLatest, PalletEventMetadataV14, PalletMetadataLatest, PalletMetadataV14, PalletStorageMetadataLatest, PalletStorageMetadataV14, PortableType, PortableTypeV14, SignedExtensionMetadataLatest, SignedExtensionMetadataV14, StorageEntryMetadataLatest, StorageEntryMetadataV10, StorageEntryMetadataV11, StorageEntryMetadataV12, StorageEntryMetadataV13, StorageEntryMetadataV14, StorageEntryMetadataV9, StorageEntryModifierLatest, StorageEntryModifierV10, StorageEntryModifierV11, StorageEntryModifierV12, StorageEntryModifierV13, StorageEntryModifierV14, StorageEntryModifierV9, StorageEntryTypeLatest, StorageEntryTypeV10, StorageEntryTypeV11, StorageEntryTypeV12, StorageEntryTypeV13, StorageEntryTypeV14, StorageEntryTypeV9, StorageHasher, StorageHasherV10, StorageHasherV11, StorageHasherV12, StorageHasherV13, StorageHasherV14, StorageHasherV9, StorageMetadataV10, StorageMetadataV11, StorageMetadataV12, StorageMetadataV13, StorageMetadataV9 } from '@polkadot/types/interfaces/metadata';
 import type { MmrLeafProof } from '@polkadot/types/interfaces/mmr';
 import type { StorageKind } from '@polkadot/types/interfaces/offchain';
 import type { DeferredOffenceOf, Kind, OffenceDetails, Offender, OpaqueTimeSlot, ReportIdOf, Reporter } from '@polkadot/types/interfaces/offences';
@@ -58,7 +58,7 @@ import type { ClassDetails, ClassId, ClassMetadata, DepositBalance, DepositBalan
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import type { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import type { AssetInstance, AssetInstanceV0, AssetInstanceV1, AssetInstanceV2, BodyId, BodyPart, DoubleEncodedCall, Fungibility, FungibilityV0, FungibilityV1, FungibilityV2, InboundStatus, InstructionV2, InteriorMultiLocation, Junction, JunctionV0, JunctionV1, JunctionV2, Junctions, JunctionsV1, JunctionsV2, MultiAsset, MultiAssetFilter, MultiAssetFilterV1, MultiAssetFilterV2, MultiAssetV0, MultiAssetV1, MultiAssetV2, MultiAssets, MultiAssetsV1, MultiAssetsV2, MultiLocation, MultiLocationV0, MultiLocationV1, MultiLocationV2, NetworkId, OriginKindV0, OriginKindV1, OriginKindV2, OutboundStatus, Outcome, QueryId, QueryStatus, QueueConfigData, Response, ResponseV0, ResponseV1, ResponseV2, ResponseV2Error, ResponseV2Result, VersionMigrationStage, VersionedMultiAsset, VersionedMultiAssets, VersionedMultiLocation, VersionedResponse, VersionedXcm, WeightLimitV2, WildFungibility, WildFungibilityV0, WildFungibilityV1, WildFungibilityV2, WildMultiAsset, WildMultiAssetV1, WildMultiAssetV2, Xcm, XcmAssetId, XcmError, XcmErrorV0, XcmErrorV1, XcmErrorV2, XcmOrder, XcmOrderV0, XcmOrderV1, XcmOrderV2, XcmOrigin, XcmOriginKind, XcmV0, XcmV1, XcmV2, XcmVersion, XcmpMessageFormat } from '@polkadot/types/interfaces/xcm';
-import type { Change, ChangeId, Comment, Content, Donation, DonationId, DonationRecipient, DonationSettings, DonationSettingsUpdate, Drop, DropId, EntityId, EntityStatus, Faucet, FaucetSettings, FaucetSettingsUpdate, FaucetUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SessionKey, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpaceOwners, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, SpacesSettings, Subscription, SubscriptionId, SubscriptionPeriod, SubscriptionPlan, SubscriptionPlanId, SuggestedStatus, User, WhoAndWhen } from './interfaces/subsocial';
+import type { Comment, Content, EntityId, EntityStatus, Faucet, FaucetSettings, FaucetSettingsUpdate, FaucetUpdate, IpfsCid, Post, PostExtension, PostHistoryRecord, PostId, PostUpdate, Profile, ProfileHistoryRecord, ProfileUpdate, Reaction, ReactionId, ReactionKind, Report, ReportId, Role, RoleId, RoleUpdate, ScoringAction, SocialAccount, Space, SpaceHistoryRecord, SpaceId, SpaceModerationSettings, SpaceModerationSettingsUpdate, SpaceOwners, SpacePermission, SpacePermissionSet, SpacePermissions, SpacePermissionsContext, SpaceUpdate, SpacesSettings, SuggestedStatus, User, WhoAndWhen } from './interfaces/subsocial';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -190,8 +190,6 @@ declare module '@polkadot/types/types/registry' {
     ChainId: ChainId;
     ChainProperties: ChainProperties;
     ChainType: ChainType;
-    Change: Change;
-    ChangeId: ChangeId;
     ChangesTrieConfiguration: ChangesTrieConfiguration;
     ChangesTrieSignal: ChangesTrieSignal;
     ClassDetails: ClassDetails;
@@ -297,16 +295,9 @@ declare module '@polkadot/types/types/registry' {
     DisputeState: DisputeState;
     DisputeStatement: DisputeStatement;
     DisputeStatementSet: DisputeStatementSet;
-    Donation: Donation;
-    DonationId: DonationId;
-    DonationRecipient: DonationRecipient;
-    DonationSettings: DonationSettings;
-    DonationSettingsUpdate: DonationSettingsUpdate;
     DoubleEncodedCall: DoubleEncodedCall;
     DoubleVoteReport: DoubleVoteReport;
     DownwardMessage: DownwardMessage;
-    Drop: Drop;
-    DropId: DropId;
     EcdsaSignature: EcdsaSignature;
     Ed25519Signature: Ed25519Signature;
     EIP1559Transaction: EIP1559Transaction;
@@ -717,8 +708,6 @@ declare module '@polkadot/types/types/registry' {
     Phase: Phase;
     PhragmenScore: PhragmenScore;
     Points: Points;
-    PortableRegistry: PortableRegistry;
-    PortableRegistryV14: PortableRegistryV14;
     PortableType: PortableType;
     PortableTypeV14: PortableTypeV14;
     Post: Post;
@@ -841,7 +830,6 @@ declare module '@polkadot/types/types/registry' {
     SessionIndex: SessionIndex;
     SessionInfo: SessionInfo;
     SessionInfoValidatorGroup: SessionInfoValidatorGroup;
-    SessionKey: SessionKey;
     SessionKeys1: SessionKeys1;
     SessionKeys10: SessionKeys10;
     SessionKeys10B: SessionKeys10B;
@@ -994,11 +982,6 @@ declare module '@polkadot/types/types/registry' {
     StrikeCount: StrikeCount;
     SubId: SubId;
     SubmissionIndicesOf: SubmissionIndicesOf;
-    Subscription: Subscription;
-    SubscriptionId: SubscriptionId;
-    SubscriptionPeriod: SubscriptionPeriod;
-    SubscriptionPlan: SubscriptionPlan;
-    SubscriptionPlanId: SubscriptionPlanId;
     SuggestedStatus: SuggestedStatus;
     Supports: Supports;
     SyncState: SyncState;

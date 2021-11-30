@@ -1,1 +1,5 @@
-export { default as subsocial } from './subsocial/definitions';
+import subsocial from './subsocial/definitions';
+
+export default {
+    subsocial
+}

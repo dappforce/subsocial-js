@@ -114,7 +114,7 @@ export class SubsocialSubstrateApi {
         }
       })
 
-      logger.debug(`Loaded ${pluralize(res.length, 'struct')} from ${storage}`)
+      logger.debug(`Loaded ${pluralize({ count: res.length, singularText: 'struct' })} from ${storage}`)
       return res
     } catch (err) {
       logger.error(`Failed to load struct(s) from ${storage} by ${ids.length} id(s):`, err)

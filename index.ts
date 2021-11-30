@@ -18,4 +18,4 @@ export * from './packages/types/src/substrate/registry'
 export * from './packages/types/src/substrate/classes/index'
 
 export * as Interfaces from './packages/types/src/substrate/interfaces/index'
-export * from './packages/types/src/substrate/interfaces/utils'
+export * from '@subsocial/types/build/substrate/utils'

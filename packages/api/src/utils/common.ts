@@ -84,12 +84,14 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
 
 export const isIpfs = (content?: Content) => content && (content.isIpfs || (content as any).IPFS)
 
-export const asIpfsCid = (cid: IpfsCid): CID => {
+export const asIpfsCid = (cid: IpfsCid): CID | undefined => {
+  if (!cid) return undefined
+
   if (cid instanceof CID) {
     return cid
   } else if (typeof cid === 'string') {
     return new CID(cid)
-  } else if (typeof cid.toU8a === 'function') {
+  } else if (typeof cid?.toU8a === 'function') {
     return new CID(cid.toString())
   } else {
     throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsCid')
