@@ -46,6 +46,7 @@ export class SubsocialSubstrateApi {
   private async queryPallet (params: StorageItem, value?: any): Promise<any> {
     const { storage, pallet } = params
     const query = await this.getPalletQuery(pallet)
+    // @ts-ignore
     return query[storage](value)
   }
 
@@ -64,7 +65,8 @@ export class SubsocialSubstrateApi {
   private async queryPalletMulti (params: StorageItem, value: any[]): Promise<any[]> {
     const { storage, pallet } = params
     const query = await this.getPalletQuery(pallet)
-    return query[storage].multi(value)
+        // @ts-ignore
+    return query[storage as any].multi(value)
   }
 
   // TODO maybe pallet: 'posts' | 'spaces

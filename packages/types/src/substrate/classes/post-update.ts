@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { Option, Struct, bool } from '@polkadot/types';
-import { SpaceId } from '../interfaces';
+import { SpaceId } from '@subsocial/definitions/interfaces';
 import registry from '../registry';
 import { OptionContent } from './content';
 // TODO add permissions
@@ -15,7 +15,7 @@ export class PostUpdate extends Struct {
     super(
       registry,
       {
-        space_id: 'Option<u64>',
+        spaceId: 'Option<u64>',
         content: 'Option<Content>',
         hidden: 'Option<bool>'
       },

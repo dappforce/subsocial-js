@@ -1,5 +1,3 @@
-import BN from 'bn.js'
-import { PostId } from '@subsocial/types/substrate/interfaces'
 import {
   ProfileData as OldProfileData,
   SpaceData as OldSpaceData,

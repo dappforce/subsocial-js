@@ -3,9 +3,10 @@
   "packages": [
     "packages/api",
     "packages/types",
-    "packages/utils"
+    "packages/utils",
+    "packages/definitions"
   ],
-  "version": "0.6.5-dev.1",
+  "version": "0.6.6-dev.2",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

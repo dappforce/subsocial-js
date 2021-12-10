@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct } from '@polkadot/types';
-import { PostId, PostExtension as IPostExtension, Comment as IComment } from '../interfaces';
+import { PostId, PostExtension as IPostExtension, Comment as IComment } from '@subsocial/definitions/interfaces';
 import registry from '../registry';
 
 export class RegularPost extends Null {}
 export class SharedPost extends u64 {}
 
 type CommentType = {
-  parent_id: Option<PostId>,
-  root_post_id: PostId
+  parentId: Option<PostId>,
+  rootPostId: PostId
 }
 
 export class Comment extends Struct implements IComment {
@@ -16,19 +16,19 @@ export class Comment extends Struct implements IComment {
     super(
       registry,
       {
-        parent_id: 'Option<u64>',
-        root_post_id: 'u64'
+        parentId: 'Option<u64>',
+        rootPostId: 'u64'
       },
       value
     );
   }
 
-  get parent_id (): Option<PostId> {
-    return this.get('parent_id') as Option<PostId>;
+  get parentId (): Option<PostId> {
+    return this.get('parentId') as Option<PostId>;
   }
 
-  get root_post_id (): PostId {
-    return this.get('root_post_id') as PostId;
+  get rootPostId (): PostId {
+    return this.get('rootPostId') as PostId;
   }
 }
 
@@ -57,8 +57,8 @@ export class PostExtension extends Enum implements IPostExtension {
     return this.type === 'Comment'
   }
 
-  get asComment (): Comment {
-    return this.value as Comment;
+  get asComment (): IComment {
+    return this.value as IComment;
   }
 
   get isRegularPost (): boolean {

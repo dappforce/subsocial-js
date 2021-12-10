@@ -1,5 +1,5 @@
 import CID from 'cids'
-import { IpfsCid as RuntimeIpfsCid } from '../substrate/interfaces'
+import { IpfsCid as RuntimeIpfsCid } from '@subsocial/definitions/interfaces'
 
 export { CID }
 

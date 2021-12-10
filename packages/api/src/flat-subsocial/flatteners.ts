@@ -6,7 +6,7 @@ import { Content, Post, Space, SpacePermissionSet, SpacePermissions, WhoAndWhen 
 import { notEmptyObj } from '@subsocial/utils'
 import BN from 'bn.js'
 import { CommonContent, EntityData, EntityId } from './dto'
-import { SpacePermissionKey, SpacePermissionMap, SpacePermissions as FlatSpacePermissions, SpacePermissionsKey } from '@subsocial/types/substrate/rpc'
+import { FlatSpacePermissionKey, FlatSpacePermissionMap, FlatSpacePermissions, FlatSpacePermissionsKey } from '@subsocial/types/substrate/rpc'
 
 type Id = string
 
@@ -135,7 +135,7 @@ export type ProfileStruct = SocialAccountStruct & Partial<FlatSuperCommon>
 /** Flat representation of a social account that created a profile content. */
 export type PublicProfileStruct = SocialAccountStruct & FlatSuperCommon
 
-type SuperCommonStruct = {
+export type SuperCommonStruct = {
   created: WhoAndWhen
   updated: Option<WhoAndWhen>
   content: Content
@@ -198,7 +198,7 @@ function getContentFields ({ content }: SuperCommonStruct): CanHaveContent {
   return res
 }
 
-function flattenCommonFields (struct: SuperCommonStruct): FlatSuperCommon {
+export function flattenCommonFields (struct: SuperCommonStruct): FlatSuperCommon {
   const { created } = struct
 
   return {
@@ -227,15 +227,13 @@ export const flattenPermisions = (permissions?: SpacePermissions) => {
   if (permissions) {
     for (const [ key, value ] of permissions) {
       const permissionSet = (value as Option<SpacePermissionSet>).unwrapOr(undefined)
-      const permission: SpacePermissionMap = {}
+      const permission: FlatSpacePermissionMap = {}
 
       permissionSet?.forEach(x => {
-        permission[x.toString() as SpacePermissionKey] = true
+        permission[x.toString() as FlatSpacePermissionKey] = true
       })
 
-      const name = key === 'space_owner' ? 'spaceOwner' : key
-
-      flatPermissions[`${name}Permissions` as SpacePermissionsKey] = permission
+      flatPermissions[`${key}Permissions` as FlatSpacePermissionsKey] = permission
     }
   }
 
@@ -243,15 +241,15 @@ export const flattenPermisions = (permissions?: SpacePermissions) => {
 }
 
 export function flattenSpaceStruct (struct: Space): SpaceStruct {
-  const postsCount = struct.posts_count.toNumber()
-  const hiddenPostsCount = struct.hidden_posts_count.toNumber()
+  const postsCount = struct.postsCount.toNumber()
+  const hiddenPostsCount = struct.hiddenPostsCount.toNumber()
   const visiblePostsCount = postsCount - hiddenPostsCount
   const flatPermissions = flattenPermisions(struct.permissions.unwrapOr(undefined))
 
   let parentField: CanHaveParentId = {}
-  if (struct.parent_id.isSome) {
+  if (struct.parentId.isSome) {
     parentField = {
-      parentId: struct.parent_id.unwrap().toString()
+      parentId: struct.parentId.unwrap().toString()
     }
   }
 
@@ -274,7 +272,7 @@ export function flattenSpaceStruct (struct: Space): SpaceStruct {
     postsCount,
     hiddenPostsCount,
     visiblePostsCount,
-    followersCount: struct.followers_count.toNumber(),
+    followersCount: struct.followersCount.toNumber(),
     score: struct.score.toNumber()
   }
 }
@@ -293,12 +291,12 @@ function flattenPostExtension (struct: Post): FlatPostExtension {
     }
     normExt = sharedPost
   } else if (isComment) {
-    const { parent_id, root_post_id } = struct.extension.asComment
+    const { parentId, rootPostId } = struct.extension.asComment
     const comment: CommentExtension = {
-      rootPostId: root_post_id.toString()
+      rootPostId: rootPostId.toString()
     }
-    if (parent_id.isSome) {
-      comment.parentId = parent_id.unwrap().toString()
+    if (parentId.isSome) {
+      comment.parentId = parentId.unwrap().toString()
     }
     normExt = comment
   }
@@ -307,16 +305,16 @@ function flattenPostExtension (struct: Post): FlatPostExtension {
 }
 
 export function flattenPostStruct (struct: Post): PostStruct {
-  const repliesCount = struct.replies_count.toNumber()
-  const hiddenRepliesCount = struct.hidden_replies_count.toNumber()
+  const repliesCount = struct.repliesCount.toNumber()
+  const hiddenRepliesCount = struct.hiddenRepliesCount.toNumber()
   const visibleRepliesCount = repliesCount - hiddenRepliesCount
   const { isRegularPost, isSharedPost, isComment } = struct.extension
   const extensionFields = flattenPostExtension(struct)
 
   let spaceField: CanHaveSpaceId = {}
-  if (struct.space_id.isSome) {
+  if (struct.spaceId.isSome) {
     spaceField = {
-      spaceId: struct.space_id.unwrap().toString(),
+      spaceId: struct.spaceId.unwrap().toString(),
     }
   }
 
@@ -329,9 +327,9 @@ export function flattenPostStruct (struct: Post): PostStruct {
     hiddenRepliesCount,
     visibleRepliesCount,
 
-    sharesCount: struct.shares_count.toNumber(),
-    upvotesCount: struct.upvotes_count.toNumber(),
-    downvotesCount: struct.downvotes_count.toNumber(),
+    sharesCount: struct.sharesCount.toNumber(),
+    upvotesCount: struct.upvotesCount.toNumber(),
+    downvotesCount: struct.downvotesCount.toNumber(),
     score: struct.score.toNumber(),
 
     isRegularPost,
@@ -372,9 +370,9 @@ export function flattenProfileStruct (struct: SocialAccountWithId): ProfileStruc
   return {
     id: struct.id.toString(),
 
-    followersCount: struct.followers_count.toNumber(),
-    followingAccountsCount: struct.following_accounts_count.toNumber(),
-    followingSpacesCount: struct.following_spaces_count.toNumber(),
+    followersCount: struct.followersCount.toNumber(),
+    followingAccountsCount: struct.followingAccountsCount.toNumber(),
+    followingSpacesCount: struct.followingSpacesCount.toNumber(),
     reputation: struct.reputation.toNumber(),
 
     hasProfile,

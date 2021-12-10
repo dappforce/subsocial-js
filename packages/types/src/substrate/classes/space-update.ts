@@ -3,7 +3,7 @@ import { Option, Struct, bool } from '@polkadot/types';
 import registry from '../registry';
 import { OptionOptionText } from './utils';
 import { OptionContent } from './content';
-import { SpacePermissions } from '../interfaces';
+import { SpacePermissions } from '@subsocial/definitions/interfaces';
 
 // TODO add permissions
 

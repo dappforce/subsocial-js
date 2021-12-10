@@ -6,18 +6,18 @@ const v0 = buildTypes({ types: {
             created: "WhoAndWhen",
             updated: "Option<WhoAndWhen>",
             owner: "AccountId",
-            parent_id: "Option<SpaceId>",
+            parentId: "Option<SpaceId>",
             handle: "Option<Text>",
             content: "Content",
             hidden: "bool",
-            posts_count: "u32",
-            hidden_posts_count: "u32",
-            followers_count: "u32",
+            postsCount: "u32",
+            hiddenPostsCount: "u32",
+            followersCount: "u32",
             score: "i32",
             permissions: "Option<SpacePermissions>",
         },
         SpaceUpdate: {
-            parent_id: "Option<Option<SpaceId>>",
+            parentId: "Option<Option<SpaceId>>",
             handle: "Option<Option<Text>>",
             content: "Option<Content>",
             hidden: "Option<bool>",
@@ -26,10 +26,10 @@ const v0 = buildTypes({ types: {
         SpaceId: "u64",
         SpaceOwners: {
             created: "WhoAndWhen",
-            space_id: "SpaceId",
+            spaceId: "SpaceId",
             owners: "Vec<AccountId>",
             threshold: "u16",
-            changes_count: "u16",
+            changesCount: "u16",
         },
     }})
 
@@ -37,7 +37,7 @@ const v1 = buildTypes({
     min: 15,
     types: {
         SpacesSettings: {
-            handles_enabled: "bool"
+            handlesEnabled: "bool"
         },
     }
 })

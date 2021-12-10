@@ -2,7 +2,7 @@ import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { SpaceData, CommonData, PostData, ProfileData } from '@subsocial/types';
 import { SocialAccountWithId } from '@subsocial/types/dto';
 import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
-import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
+import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types';
 import { Space, Post } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from '../ipfs';

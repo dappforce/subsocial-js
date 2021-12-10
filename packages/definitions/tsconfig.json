@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    // this is specific with augmented overrides
+    "rootDir": "src",
+    "outDir": "build",
+    "target": "es6",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+    "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
+    "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+    "skipLibCheck": true,                     /* Skip type checking of declaration files. */
+    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */,
+    "declaration": true,
+    "moduleResolution": "node",
+    "paths": {
+      // this is the package name we use (in the interface imports, --package for generators)
+      "@subsocial/definitions/*": ["src/*"],
+      // here we replace the @polkadot/api augmentation with our own, generated from chain
+      "@polkadot/api/augment": ["src/interfaces/augment-api.ts"],
+      // replace the augmented types with our own, as generated from definitions
+      "@polkadot/types/augment": ["src/interfaces/augment-types.ts"]
+    },
+    // some other options, whatever you want for your environment
+    "jsx": "preserve",
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
+  },
+  "exclude": [
+    "build/**/*",
+    "node_modules"
+  ]
+}
+

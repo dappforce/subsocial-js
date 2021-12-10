@@ -98,7 +98,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
 
     if (withSpace) {
-      const spaceId = post.struct.space_id.unwrapOr(undefined)
+      const spaceId = post.struct.spaceId.unwrapOr(undefined)
       spaceId && rememberRelatedIdAndMapToPostIndices(spaceId, i, postIndicesBySpaceIdMap, spaceIds)
     }
   })
@@ -116,7 +116,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
 
     if (withSpace) {
-      const spaceId = post.struct.space_id.unwrapOr(undefined)
+      const spaceId = post.struct.spaceId.unwrapOr(undefined)
       if (isDefined(spaceId)) {
         spaceIds.push(spaceId)
       } else {
@@ -132,7 +132,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     setExtOnPost({ post }, postIndicesByRootIdMap, extPostStructs)
 
     if (withSpace) {
-      const spaceId = post.struct.space_id.unwrapOr(undefined)
+      const spaceId = post.struct.spaceId.unwrapOr(undefined)
       spaceId && rememberRelatedIdAndMapToPostIndices(spaceId, i, postIndicesBySpaceIdMap, spaceIds)
     }
   })
@@ -203,19 +203,19 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
   }
 
   postStructs.forEach(post => {
-    const { post: { struct: { space_id } }, ext } = post
+    const { post: { struct: { spaceId: spaceIdOpt } }, ext } = post
     setOwnerOnPost(post)
 
     // Set a space if the post has space id:
-    setSpaceOnPost(post, space_id.unwrapOr(undefined))
+    setSpaceOnPost(post, spaceIdOpt.unwrapOr(undefined))
 
     // Set a space (from extension) on post and its extension if extension has space id:
-    const spaceId = ext?.post.struct.space_id.unwrapOr(undefined)
+    const spaceId = ext?.post.struct.spaceId.unwrapOr(undefined)
     setSpaceOnPost(post, spaceId, ext)
 
     if (!spaceId) {
       // Set a space (from root post) on post and its extension if extension does NOT have space id:
-      const spaceId = ext?.ext?.post.struct.space_id.unwrapOr(undefined)
+      const spaceId = ext?.ext?.post.struct.spaceId.unwrapOr(undefined)
       setSpaceOnPost(post, spaceId, ext)
     }
   })

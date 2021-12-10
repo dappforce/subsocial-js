@@ -9,14 +9,14 @@ import roles from './roles';
 import faucet from './faucet';
 import history from './history';
 import moderation from './moderation';
-import score from './score'
 import system from './system'
+import domains from './domains'
 
-const types = [
+const specTypesArray = [
   accountInfo,
   common,
   spaces,
-  score,
+  // score,
   system,
   posts,
   profiles,
@@ -25,9 +25,18 @@ const types = [
   roles,
   faucet,
   history,
-  moderation
+  moderation,
+  domains
 ].flat()
 
+export const typesBundle = {
+  spec: {
+    subsocial: {
+      types: specTypesArray
+    }
+  }
+}
+
 export default {
-    types
+    types: specTypesArray.map(({ types }) => types).reduce((all, types) => Object.assign(all, types))
 }
