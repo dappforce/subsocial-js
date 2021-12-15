@@ -1,5 +1,7 @@
 export { registry } from './registry'
+
 export type PalletName = 
+  | 'domains'
   | 'permissions'
   | 'posts'
   | 'profileFollows'
