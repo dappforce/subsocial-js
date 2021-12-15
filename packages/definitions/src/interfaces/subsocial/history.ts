@@ -4,15 +4,15 @@ const v0 = buildTypes({
     types: {
         SpaceHistoryRecord: {
             edited: "WhoAndWhen",
-            oldData: "SpaceUpdate",
+            old_data: "SpaceUpdate",
         },
         PostHistoryRecord: {
             edited: "WhoAndWhen",
-            oldData: "PostUpdate",
+            old_data: "PostUpdate",
         },
         ProfileHistoryRecord: {
             edited: "WhoAndWhen",
-            oldData: "ProfileUpdate",
+            old_data: "ProfileUpdate",
         },
     }})
 

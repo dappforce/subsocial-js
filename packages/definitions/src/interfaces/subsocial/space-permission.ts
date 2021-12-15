@@ -44,13 +44,13 @@ const v0 = buildTypes({
             none: "Option<SpacePermissionSet>",
             everyone: "Option<SpacePermissionSet>",
             follower: "Option<SpacePermissionSet>",
-            spaceOwner: "Option<SpacePermissionSet>",
+            space_owner: "Option<SpacePermissionSet>",
         },
         SpacePermissionsContext: {
-            spaceId: "SpaceId",
-            isSpaceOwner: "bool",
-            isSpaceFollower: "bool",
-            spacePerms: "Option<SpacePermissions>",
+            space_id: "SpaceId",
+            is_space_owner: "bool",
+            is_space_follower: "bool",
+            space_perms: "Option<SpacePermissions>",
         },
     }})
 

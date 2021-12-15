@@ -100,18 +100,6 @@ export interface IpfsCid extends Text {}
 /** @name LookupSource */
 export interface LookupSource extends AccountId {}
 
-/** @name ModerationEntityId */
-export interface ModerationEntityId extends Enum {
-  readonly isContent: boolean;
-  readonly asContent: Content;
-  readonly isAccount: boolean;
-  readonly asAccount: AccountId;
-  readonly isSpace: boolean;
-  readonly asSpace: SpaceId;
-  readonly isPost: boolean;
-  readonly asPost: PostId;
-}
-
 /** @name Post */
 export interface Post extends Struct {
   readonly id: PostId;
@@ -194,7 +182,7 @@ export interface ReactionKind extends Enum {
 export interface Report extends Struct {
   readonly id: ReportId;
   readonly created: WhoAndWhen;
-  readonly reportedEntity: ModerationEntityId;
+  readonly reportedEntity: EntityId;
   readonly reportedWithin: SpaceId;
   readonly reason: Content;
 }

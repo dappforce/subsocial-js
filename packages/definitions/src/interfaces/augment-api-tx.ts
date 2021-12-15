@@ -6,7 +6,7 @@ declare module '@polkadot/api/types/submittable' {
   import type { Bytes, Compact, Option, U8aFixed, Vec, bool, u128, u16, u32, u64, u8 } from '@polkadot/types';
   import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
   import type { AccountId32, Call, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
-  import type { PalletDomainsDomain, PalletDomainsEntityId, PalletFaucetsFaucetUpdate, PalletMultisigTimepoint, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletProfilesProfileUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletSpacesSpacesSettings, PalletUtilsContent, PalletUtilsUser, SpCoreChangesTrieChangesTrieConfiguration, SpCoreVoid, SpFinalityGrandpaEquivocationProof, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
+  import type { PalletDomainsDomain, PalletDomainsDomainInnerLink, PalletFaucetsFaucetUpdate, PalletMultisigTimepoint, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletProfilesProfileUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletSpacesSpacesSettings, PalletUtilsContent, PalletUtilsUser, SpCoreChangesTrieChangesTrieConfiguration, SpCoreVoid, SpFinalityGrandpaEquivocationProof, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
   import type { AnyNumber, ITuple } from '@polkadot/types/types';
 
   export interface AugmentedSubmittables<ApiType extends ApiTypes> {
@@ -114,12 +114,12 @@ declare module '@polkadot/api/types/submittable' {
       transferKeepAlive: AugmentedSubmittable<(dest: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, Compact<u128>]>;
     };
     domains: {
-      addTopLevelDomains: AugmentedSubmittable<(domains: Vec<Bytes> | (Bytes | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Bytes>]>;
-      purchaseDomain: AugmentedSubmittable<(owner: AccountId32 | string | Uint8Array, domain: PalletDomainsDomain | { tld?: any; nested?: any } | string | Uint8Array, content: PalletUtilsContent | { None: any } | { Raw: any } | { IPFS: any } | { Hyper: any } | string | Uint8Array, expiresIn: u32 | AnyNumber | Uint8Array, soldFor: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, PalletDomainsDomain, PalletUtilsContent, u32, Compact<u128>]>;
-      reserve: AugmentedSubmittable<(domains: Vec<Bytes> | (Bytes | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Bytes>]>;
-      setDomainContent: AugmentedSubmittable<(domain: PalletDomainsDomain | { tld?: any; nested?: any } | string | Uint8Array, newContent: PalletUtilsContent | { None: any } | { Raw: any } | { IPFS: any } | { Hyper: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletDomainsDomain, PalletUtilsContent]>;
-      setInnerValue: AugmentedSubmittable<(domain: PalletDomainsDomain | { tld?: any; nested?: any } | string | Uint8Array, value: Option<PalletDomainsEntityId> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletDomainsDomain, Option<PalletDomainsEntityId>]>;
-      setOuterValue: AugmentedSubmittable<(domain: PalletDomainsDomain | { tld?: any; nested?: any } | string | Uint8Array, valueOpt: Option<Bytes> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletDomainsDomain, Option<Bytes>]>;
+      addTlds: AugmentedSubmittable<(domains: Vec<Bytes> | (Bytes | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Bytes>]>;
+      registerDomain: AugmentedSubmittable<(owner: AccountId32 | string | Uint8Array, fullDomain: PalletDomainsDomain | { tld?: any; domain?: any } | string | Uint8Array, content: PalletUtilsContent | { None: any } | { Raw: any } | { IPFS: any } | { Hyper: any } | string | Uint8Array, expiresIn: u32 | AnyNumber | Uint8Array, price: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, PalletDomainsDomain, PalletUtilsContent, u32, Compact<u128>]>;
+      reserveDomains: AugmentedSubmittable<(domains: Vec<Bytes> | (Bytes | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Bytes>]>;
+      setDomainContent: AugmentedSubmittable<(domain: PalletDomainsDomain | { tld?: any; domain?: any } | string | Uint8Array, newContent: PalletUtilsContent | { None: any } | { Raw: any } | { IPFS: any } | { Hyper: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletDomainsDomain, PalletUtilsContent]>;
+      setInnerValue: AugmentedSubmittable<(domain: PalletDomainsDomain | { tld?: any; domain?: any } | string | Uint8Array, value: Option<PalletDomainsDomainInnerLink> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletDomainsDomain, Option<PalletDomainsDomainInnerLink>]>;
+      setOuterValue: AugmentedSubmittable<(domain: PalletDomainsDomain | { tld?: any; domain?: any } | string | Uint8Array, valueOpt: Option<Bytes> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletDomainsDomain, Option<Bytes>]>;
     };
     dotsamaClaims: {
       addEligibleAccounts: AugmentedSubmittable<(eligibleAccounts: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<AccountId32>]>;

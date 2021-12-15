@@ -47,7 +47,7 @@ declare module '@polkadot/api/types/errors' {
       /**
        * The content stored in domain metadata was not changed.
        **/
-      DomainContentWasNotChanged: AugmentedError<ApiType>;
+      DomainContentNotChanged: AugmentedError<ApiType>;
       /**
        * The domain has expired.
        **/
@@ -57,9 +57,13 @@ declare module '@polkadot/api/types/errors' {
        **/
       DomainNotFound: AugmentedError<ApiType>;
       /**
-       * This domain cannot be purchased yet, because it is reserved.
+       * This domain cannot be registered yet, because it is reserved.
        **/
       DomainReserved: AugmentedError<ApiType>;
+      /**
+       * Cannot insert that many domains to a storage at once.
+       **/
+      DomainsInsertLimitReached: AugmentedError<ApiType>;
       /**
        * A new inner value is the same as the old one.
        **/
@@ -97,9 +101,9 @@ declare module '@polkadot/api/types/errors' {
        **/
       TopLevelDomainIsOffLengthLimits: AugmentedError<ApiType>;
       /**
-       * This top level domain is not allowed.
+       * This top level domain is not supported.
        **/
-      TopLevelDomainNotAllowed: AugmentedError<ApiType>;
+      TopLevelDomainNotSupported: AugmentedError<ApiType>;
       /**
        * Reservation period cannot be a zero value.
        **/

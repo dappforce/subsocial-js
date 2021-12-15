@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/definitions",
-  "version": "0.6.6-dev.2",
+  "version": "0.6.6-dev.9",
   "description": "Subsocial definitions using @polkadot/typegen to generate type definitions",
   "main": "index.js",
   "repository": "https://github.com/dappforce/subsocial-js/packages/definitions",
@@ -23,7 +23,8 @@
     "lint": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@polkadot/api": "^6.11.1"
+    "@polkadot/api": "^6.11.1",
+    "lodash.camelcase": "^4.3.0"
   },
   "devDependencies": {
     "@polkadot/typegen": "^6.11.1",

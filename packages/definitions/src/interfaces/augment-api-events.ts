@@ -5,7 +5,7 @@ declare module '@polkadot/api/types/events' {
   import type { ApiTypes, AugmentedEvent, ModuleEvents } from '@polkadot/api/types';
   import type { Bytes, Null, Option, Result, U8aFixed, Vec, u128, u16, u32, u64 } from '@polkadot/types';
   import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-  import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletMultisigTimepoint, PalletReactionsReactionKind, PalletUtilsUser, SpFinalityGrandpaAppPublic, SpRuntimeDispatchError, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
+  import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletDomainsDomain, PalletMultisigTimepoint, PalletReactionsReactionKind, PalletUtilsUser, SpFinalityGrandpaAppPublic, SpRuntimeDispatchError, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
   import type { ITuple } from '@polkadot/types/types';
 
   export interface AugmentedEvents<ApiType extends ApiTypes> {
@@ -58,21 +58,21 @@ declare module '@polkadot/api/types/events' {
     };
     domains: {
       /**
-       * The domain name was successfully purchased and stored.
+       * The domain name was successfully registered and stored.
        **/
-      DomainPurchased: AugmentedEvent<ApiType, [AccountId32, Bytes, Bytes]>;
+      DomainRegistered: AugmentedEvent<ApiType, [AccountId32, PalletDomainsDomain, u128]>;
       /**
        * The domains list was successfully added to a reserved list.
        **/
-      DomainsReserved: AugmentedEvent<ApiType, []>;
+      DomainsReserved: AugmentedEvent<ApiType, [u16]>;
       /**
        * The domain meta was successfully updated.
        **/
-      DomainUpdated: AugmentedEvent<ApiType, [AccountId32, Bytes, Bytes]>;
+      DomainUpdated: AugmentedEvent<ApiType, [AccountId32, PalletDomainsDomain]>;
       /**
-       * The list of top level domains was successfully added to an allow list.
+       * The list of top level domains was successfully added to the supported list.
        **/
-      TopLevelDomainsAllowed: AugmentedEvent<ApiType, []>;
+      NewTldAdded: AugmentedEvent<ApiType, [u16]>;
     };
     dotsamaClaims: {
       EligibleAccountsAdded: AugmentedEvent<ApiType, [u16]>;

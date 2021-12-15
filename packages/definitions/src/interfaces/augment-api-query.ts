@@ -37,10 +37,10 @@ declare module '@polkadot/api/types/storage' {
       totalIssuance: AugmentedQuery<ApiType, () => Observable<u128>, []>;
     };
     domains: {
-      allowedTopLevelDomains: AugmentedQuery<ApiType, (arg: Bytes | string | Uint8Array) => Observable<bool>, [Bytes]>;
-      purchasedDomains: AugmentedQuery<ApiType, (arg1: Bytes | string | Uint8Array, arg2: Bytes | string | Uint8Array) => Observable<Option<PalletDomainsDomainMeta>>, [Bytes, Bytes]>;
-      purchasedDomainsByAccount: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<Vec<PalletDomainsDomain>>, [AccountId32]>;
+      registeredDomains: AugmentedQuery<ApiType, (arg1: Bytes | string | Uint8Array, arg2: Bytes | string | Uint8Array) => Observable<Option<PalletDomainsDomainMeta>>, [Bytes, Bytes]>;
+      registeredDomainsByOwner: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<Vec<PalletDomainsDomain>>, [AccountId32]>;
       reservedDomains: AugmentedQuery<ApiType, (arg: Bytes | string | Uint8Array) => Observable<bool>, [Bytes]>;
+      supportedTlds: AugmentedQuery<ApiType, (arg: Bytes | string | Uint8Array) => Observable<bool>, [Bytes]>;
     };
     dotsamaClaims: {
       eligibleAccounts: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<bool>, [AccountId32]>;

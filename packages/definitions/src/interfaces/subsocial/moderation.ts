@@ -4,7 +4,7 @@ const v0 = buildTypes({
     min: 15,
     types: {
         ReportId: 'u64',
-        ModerationEntityId: {
+        EntityId: {
             _enum: {
                 Content: 'Content',
                 Account: 'AccountId',
@@ -21,20 +21,20 @@ const v0 = buildTypes({
         Report: {
             id: 'ReportId',
             created: 'WhoAndWhen',
-            reportedEntity: 'ModerationEntityId',
-            reportedWithin: 'SpaceId',
+            reported_entity: 'EntityId',
+            reported_within: 'SpaceId',
             reason: 'Content'
         },
         SuggestedStatus: {
             suggested: 'WhoAndWhen',
             status: 'Option<EntityStatus>',
-            reportId: 'Option<ReportId>'
+            report_id: 'Option<ReportId>'
         },
         SpaceModerationSettings: {
-            autoblockThreshold: 'Option<u16>'
+            autoblock_threshold: 'Option<u16>'
         },
         SpaceModerationSettingsUpdate: {
-            autoblockThreshold: 'Option<Option<u16>>'
+            autoblock_threshold: 'Option<Option<u16>>'
         },
     }})
 

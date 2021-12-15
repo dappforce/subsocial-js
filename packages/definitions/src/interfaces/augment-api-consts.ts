@@ -24,9 +24,17 @@ declare module '@polkadot/api/types/consts' {
     };
     domains: {
       /**
+       * The amount held on deposit for storing the domains structure.
+       **/
+      domainDeposit: u128 & AugmentedConst<ApiType>;
+      /**
+       * The maximum domains amount can be inserted to a storage at once.
+       **/
+      domainsInsertLimit: u32 & AugmentedConst<ApiType>;
+      /**
        * The amount held on deposit per byte within the domains outer value.
        **/
-      outerValueDepositPerByte: u128 & AugmentedConst<ApiType>;
+      outerValueByteDeposit: u128 & AugmentedConst<ApiType>;
       /**
        * The length limit for the domains meta outer value.
        **/

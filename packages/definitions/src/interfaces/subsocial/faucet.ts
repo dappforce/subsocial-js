@@ -4,27 +4,27 @@ const v0 = buildTypes({
     types: {
         FaucetSettings: {
             period: "Option<BlockNumber>",
-            periodLimit: "Balance",
+            period_limit: "Balance",
         },
         FaucetSettingsUpdate: {
             period: "Option<Option<BlockNumber>>",
-            periodLimit: "Option<Balance>",
+            period_limit: "Option<Balance>",
         },
         Faucet: {
             enabled: "bool",
             period: "BlockNumber",
-            periodLimit: "Balance",
-            dripLimit: "Balance",
+            period_limit: "Balance",
+            drip_limit: "Balance",
 
-            nextPeriodAt: "BlockNumber",
-            drippedInCurrentPeriod: "Balance",
+            next_period_at: "BlockNumber",
+            dripped_in_current_period: "Balance",
         },
 
         FaucetUpdate: {
             enabled: "Option<bool>",
             period: "Option<BlockNumber>",
-            periodLimit: "Option<Balance>",
-            dripLimit: "Option<Balance>",
+            period_limit: "Option<Balance>",
+            drip_limit: "Option<Balance>",
         },
     }})
 
