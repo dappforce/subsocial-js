@@ -180,7 +180,7 @@ function getUpdatedFields ({ updated }: SuperCommonStruct): CanBeUpdated {
   if (maybeUpdated) {
     res = {
       ...res,
-      updatedByAccount: maybeUpdated.account.toString(),
+      updatedByAccount: maybeUpdated.account.toHuman(),
       updatedAtBlock: maybeUpdated.block.toNumber(),
       updatedAtTime: maybeUpdated.time.toNumber(),
     }
@@ -192,7 +192,7 @@ function getContentFields ({ content }: SuperCommonStruct): CanHaveContent {
   let res: CanHaveContent = {}
   if (content.isIpfs) {
     res = {
-      contentId: content.asIpfs.toString()
+      contentId: content.asIpfs.toHuman()
     }
   }
   return res
@@ -203,7 +203,7 @@ export function flattenCommonFields (struct: SuperCommonStruct): FlatSuperCommon
 
   return {
     // created:
-    createdByAccount: created.account.toString(),
+    createdByAccount: created.account.toHuman(),
     createdAtBlock: created.block.toNumber(),
     createdAtTime: created.time.toNumber(),
 
@@ -216,7 +216,7 @@ function flattenSpaceOrPostStruct (struct: SpaceOrPostStruct): FlatSpaceOrPost {
   return {
     ...flattenCommonFields(struct),
     id: struct.id.toString(),
-    ownerId: struct.owner.toString(),
+    ownerId: struct.owner.toHuman(),
     hidden: struct.hidden.isTrue,
   }
 }
@@ -249,14 +249,14 @@ export function flattenSpaceStruct (struct: Space): SpaceStruct {
   let parentField: CanHaveParentId = {}
   if (struct.parentId.isSome) {
     parentField = {
-      parentId: struct.parentId.unwrap().toString()
+      parentId: struct.parentId.unwrap().toHuman()
     }
   }
 
   let handleField: CanHaveHandle = {}
   if (struct.handle.isSome) {
     handleField = {
-      handle: struct.handle.unwrap().toString()
+      handle: struct.handle.unwrap().toHuman()
     }
   }
 
@@ -287,16 +287,16 @@ function flattenPostExtension (struct: Post): FlatPostExtension {
 
   if (isSharedPost) {
     const sharedPost: SharedPostExtension = {
-      sharedPostId: struct.extension.asSharedPost.toString()
+      sharedPostId: struct.extension.asSharedPost.toHuman()
     }
     normExt = sharedPost
   } else if (isComment) {
     const { parentId, rootPostId } = struct.extension.asComment
     const comment: CommentExtension = {
-      rootPostId: rootPostId.toString()
+      rootPostId: rootPostId.toHuman()
     }
     if (parentId.isSome) {
-      comment.parentId = parentId.unwrap().toString()
+      comment.parentId = parentId.unwrap().toHuman()
     }
     normExt = comment
   }
@@ -314,7 +314,7 @@ export function flattenPostStruct (struct: Post): PostStruct {
   let spaceField: CanHaveSpaceId = {}
   if (struct.spaceId.isSome) {
     spaceField = {
-      spaceId: struct.spaceId.unwrap().toString(),
+      spaceId: struct.spaceId.unwrap().toHuman(),
     }
   }
 

@@ -25,7 +25,7 @@ type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
 /** Try to resolve a corresponding IPFS CID of a given struct. */
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
   if (isIpfs((struct as HasContentField).content)) {
-    return (struct as HasContentField).content.asIpfs.toString()
+    return (struct as HasContentField).content.asIpfs.toHuman()
   } else if ((struct as SocialAccountWithId).profile) {
     return getIpfsCidOfSocialAccount(struct as SocialAccountWithId)
   }

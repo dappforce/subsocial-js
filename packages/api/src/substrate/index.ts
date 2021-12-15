@@ -4,7 +4,7 @@ import { AccountId } from '@polkadot/types/interfaces';
 import { AnyAccountId, AnySpaceId, AnyPostId, AnyReactionId, SubstrateId, PalletName } from '@subsocial/types';
 import { Space, SpaceId, Post, PostId, Reaction, ReactionId } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
-import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, pluralize } from '@subsocial/utils';
+import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, parseDomain, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '../filters';
 import { SocialAccountWithId } from '@subsocial/types/dto';
@@ -62,7 +62,7 @@ export class SubsocialSubstrateApi {
     return this.queryPallet({ pallet: 'profiles', storage }, value)
   }
 
-  private async queryPalletMulti (params: StorageItem, value: any[]): Promise<any[]> {
+  private async queryPalletMulti (params: StorageItem, value: any): Promise<any[]> {
     const { storage, pallet } = params
     const query = await this.getPalletQuery(pallet)
         // @ts-ignore
@@ -77,9 +77,9 @@ export class SubsocialSubstrateApi {
     return isBoolean.valueOf()
   }
 
-  private async getReactionIdByAccount (accountId: AnyAccountId, structId: AnyPostId): Promise<ReactionId> {
-    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), structId ]);
-    return this.queryPallet({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
+  private async getReactionIdsByAccount (accountId: AnyAccountId, structIds: AnyPostId[]): Promise<ReactionId[]> {
+    const queryParams = structIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), id ]));
+    return this.queryPalletMulti({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
   }
 
   // ---------------------------------------------------------------------
@@ -225,6 +225,14 @@ export class SubsocialSubstrateApi {
     return getFirstOrUndefined(await this.findReactions([ id ]))
   }
 
+  async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<ReactionId | undefined> {
+    return getFirstOrUndefined(await this.getReactionIdsByAccount(accountId, [ postId ]))
+  }
+
+  async getPostReactionIdsByAccount (accountId: AnyAccountId, postIds: AnyPostId[]): Promise<ReactionId[]> {
+    return this.getReactionIdsByAccount(accountId, postIds)
+  }
+
   // ---------------------------------------------------------------------
   // Get id
 
@@ -273,10 +281,6 @@ export class SubsocialSubstrateApi {
 
   async isSpaceFollower (myAddress: AnyAccountId, spaceId: AnySpaceId): Promise<boolean> {
     return this.isBooleanByAccount({ pallet: 'spaceFollows', storage: 'spaceFollowedByAccount' }, myAddress, spaceId)
-  }
-
-  async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<ReactionId> {
-    return this.getReactionIdByAccount(accountId, postId)
   }
 
 }

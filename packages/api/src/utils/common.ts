@@ -54,7 +54,7 @@ export const getSharedPostId = (postData: any): PostId | undefined => {
 
   const ext = postData?.struct?.extension
   const sharedPostId = ext?.isSharedPost ? ext.asSharedPost : undefined
-  sharedPostId && log.debug('Shared post id:', sharedPostId.toString())
+  sharedPostId && log.debug('Shared post id:', sharedPostId.toHuman())
 
   return sharedPostId
 }

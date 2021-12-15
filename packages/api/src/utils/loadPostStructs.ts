@@ -177,13 +177,13 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     if (!withOwner) return
 
     const { post, ext } = postStruct
-    const ownerId = post.struct.created.account.toString()
+    const ownerId = post.struct.created.account.toHuman()
     const owner = ownerByIdMap.get(ownerId)
     postStruct.owner = owner
 
     if (!ext) return
 
-    const extOwnerId = ext.post.struct.created.account.toString()
+    const extOwnerId = ext.post.struct.created.account.toHuman()
     ext.owner = extOwnerId === ownerId
       ? owner
       : ownerByIdMap.get(extOwnerId)
