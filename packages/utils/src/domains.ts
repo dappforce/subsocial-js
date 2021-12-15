@@ -5,6 +5,6 @@ export const parseDomain = (domain: string) => {
 
   return {
       tld: parts.pop(),
-      nested: parts.join('')
+      domain: parts.join('')
   }
 }
