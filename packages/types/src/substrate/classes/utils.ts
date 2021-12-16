@@ -33,4 +33,6 @@ export class OptionOptionText extends Option<Option<Text>> {
   }
 }
 
-export class OptionIpfsCid extends OptionText {}
+export function OptionEntity<T> (value?: T): T | null {
+  return value || null
+}

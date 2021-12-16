@@ -6,7 +6,7 @@
     "packages/utils",
     "packages/definitions"
   ],
-  "version": "0.6.6-dev.9",
+  "version": "0.6.6-dev.12",
   "npmClient": "yarn",
   "useWorkspaces": true
 }
