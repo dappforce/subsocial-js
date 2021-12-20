@@ -1,79 +1,34 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Enum, Option, Struct } from '@polkadot/types';
 import { PostId, PostExtension as IPostExtension, Comment as IComment } from '@subsocial/definitions/interfaces';
+import { OptionEntity } from '.';
 import registry from '../registry';
 
-export class RegularPost extends Null {}
-export class SharedPost extends u64 {}
+export type RegularPost = null
+export type SharedPost = PostId | string
 
 type CommentType = {
-  parentId: Option<PostId>,
-  rootPostId: PostId
+  parentId?: PostId | string,
+  rootPostId: PostId | string
 }
 
-export class Comment extends Struct implements IComment {
-  constructor (value?: CommentType) {
-    super(
-      registry,
-      {
-        parentId: 'Option<u64>',
-        rootPostId: 'u64'
-      },
-      value
-    );
-  }
-
-  get parentId (): Option<PostId> {
-    return this.get('parentId') as Option<PostId>;
-  }
-
-  get rootPostId (): PostId {
-    return this.get('rootPostId') as PostId;
+export function Comment ({ parentId, rootPostId }: CommentType) {
+  return {
+    parentId: OptionEntity(parentId),
+    rootPostId
   }
 }
 
 export type PostExtensionEnum =
   RegularPost |
-  IComment |
+  CommentType |
   SharedPost;
 
 type PostExtensionEnumValue =
   { RegularPost: RegularPost } |
   { SharedPost: SharedPost } |
-  { Comment: IComment };
+  { Comment: CommentType };
 
-export class PostExtension extends Enum implements IPostExtension {
-  constructor (value?: PostExtensionEnumValue) {
-    super(
-      registry,
-      {
-        RegularPost,
-        Comment: Comment as any,
-        SharedPost
-      }, value);
-  }
-
-  get isComment (): boolean {
-    return this.type === 'Comment'
-  }
-
-  get asComment (): IComment {
-    return this.value as IComment;
-  }
-
-  get isRegularPost (): boolean {
-    return this.type === 'RegularPost'
-  }
-
-  get isSharedPost (): boolean {
-    return this.type === 'SharedPost'
-  }
-
-  get isSharedComment (): boolean {
-    return this.type === 'SharedComment'
-  }
-
-  get asSharedPost (): PostId {
-    return this.value as PostId;
-  }
+export function PostExtension (value?: PostExtensionEnumValue) {
+  return value
 }

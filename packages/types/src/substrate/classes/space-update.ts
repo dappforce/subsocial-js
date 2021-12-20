@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { SpacePermissions } from '@subsocial/definitions/interfaces';
-import { IpfsContent, OptionEntity } from '.';
+import { OptionEntity } from '.';
 
 export type SpaceUpdateType = {
   handle?: string;

@@ -1,7 +1,4 @@
-import { Null, Enum, Option, Text } from '@polkadot/types';
-import { Content as IContent } from '../interfaces';
 import { nonEmptyStr } from '@subsocial/utils'
-import registry from '../registry';
 import { IpfsCid } from '../..';
 
 export type None = null

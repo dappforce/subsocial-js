@@ -1,9 +1,10 @@
-import { AnyPostId, AnySpaceId, AnyAccountId, PostData, PostWithSomeDetails, ProfileData, SpaceData} from '@subsocial/types'
+import { PostData, PostWithSomeDetails, ProfileData, SpaceData} from '@subsocial/types/dto/sub'
 import { PostId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from './common'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
 import { AccountId } from '@polkadot/types/interfaces'
 import { isVisible, PostDetailsOpts } from '../filters';
+import { AnyPostId, AnySpaceId, AnyAccountId } from '@subsocial/types'
 
 export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,

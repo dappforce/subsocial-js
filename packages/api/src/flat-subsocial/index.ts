@@ -13,9 +13,9 @@ import {
 import { FindPostQuery, FindPostsQuery, FindPostsWithDetailsQuery, FindSpaceQuery } from '../filters'
 import { AnyAccountId } from '@subsocial/types'
 import { SubsocialApi } from '../subsocial'
-import { ProfileData, SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId } from './dto'
+import { ProfileData, SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId, ProfileStruct, SpaceStruct, PostStruct } from '@subsocial/types/dto'
 import { getFirstOrUndefined, idsToBns, idToBn } from '@subsocial/utils'
-import { flattenSpaceStructs, flattenPostStructs, flattenProfileStructs, ProfileStruct, SpaceStruct, PostStruct } from './flatteners'
+import { flattenSpaceStructs, flattenPostStructs, flattenProfileStructs } from './flatteners'
 
 export interface IFlatSubsocialApi {
   findProfile: (id: AnyAccountId) => Promise<ProfileData | undefined>

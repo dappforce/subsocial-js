@@ -4,12 +4,9 @@ import {
   PostData as OldPostData,
   PostWithSomeDetails as OldPostWithSomeDetails,
   PostWithAllDetails as OldPostWithAllDetails,
-  CommonContent,
-  PostContent,
-  SpaceContent,
-} from '@subsocial/types'
+} from '@subsocial/types/dto/sub'
+
 import {
-  EntityId,
   ProfileData,
   SpaceData,
   PostData,
@@ -17,9 +14,11 @@ import {
   PostWithAllDetails,
   PostWithSomeDetails,
   DerivedContent,
-} from './dto'
+} from '@subsocial/types/dto'
+
 import { flattenPostStruct, flattenProfileStruct, flattenSpaceStruct } from './flatteners'
 import { summarizeMd } from '@subsocial/utils'
+import { CommonContent, PostContent, SpaceContent } from '@subsocial/types/offchain'
 
 export function asCommentData (postData: PostData): CommentData {
   return postData as unknown as CommentData
