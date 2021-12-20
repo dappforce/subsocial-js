@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { SpaceId } from '@subsocial/definitions/interfaces';
-import { IpfsContent, OptionEntity } from '.';
+import { OptionEntity, OptionIpfsContent } from '.';
 
 export type PostUpdateType = {
   spaceId?: SpaceId | string;
-  content?: IpfsContent;
+  content?: string;
   hidden?: boolean
 };
 
-export const PostUpdate = ({ spaceId, content, hidden }: PostUpdateType) => {
-
+export function PostUpdate ({ spaceId, content, hidden }: PostUpdateType) {
   return {
     spaceId: OptionEntity(spaceId),
-    content: OptionEntity(content),
+    content: OptionIpfsContent(content),
     hidden: OptionEntity(hidden)
   }
 }

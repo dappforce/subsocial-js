@@ -4,7 +4,7 @@ import { IpfsContent, OptionEntity } from '.';
 
 export type SpaceUpdateType = {
   handle?: string;
-  content?: IpfsContent;
+  content?: string;
   hidden?: boolean;
   permissions?: SpacePermissions;
 };

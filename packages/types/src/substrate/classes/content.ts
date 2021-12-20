@@ -4,10 +4,10 @@ import { nonEmptyStr } from '@subsocial/utils'
 import registry from '../registry';
 import { IpfsCid } from '../..';
 
-export class None extends Null {}
-export class Raw extends Text {}
-export class IPFS extends Text {}
-export class Hyper extends Text {}
+export type None = null
+export type Raw = string
+export type IPFS = string
+export type Hyper = string
 
 export type ContentEnum =
   None |
@@ -15,67 +15,24 @@ export type ContentEnum =
   IPFS |
   Hyper
 
-type ContentEnumValue =
+export type ContentEnumValue =
   { None: None } |
   { Raw: Raw } |
   { IPFS: IPFS } |
   { Hyper: Hyper};
 
-export class Content extends Enum implements IContent {
-  constructor (value?: ContentEnumValue) {
-    super(
-      registry,
-      {
-        None,
-        Raw,
-        IPFS,
-        Hyper
-      }, value);
-  }
-
-  get isNone (): boolean {
-    return this.type === 'None'
-  }
-
-  get isRaw (): boolean {
-    return this.type === 'Raw'
-  }
-
-  get isIpfs (): boolean {
-    return this.type === 'IPFS'
-  }
-
-  get isHyper (): boolean {
-    return this.type === 'Hyper'
-  }
-
-  get asHyper (): Hyper {
-    return this.value as Hyper;
-  }
-
-  get asRaw (): Raw {
-    return this.value as Raw;
-  }
-
-  get asIpfs (): IPFS {
-    return this.value as IPFS
-  }
-}
-
-const createIpfsContent = (value: IpfsCid) => ({ IPFS: new Text(registry, value) })
-const createNoneContent = () => ({ None: new Null(registry) })
+const createIpfsContent = (value: IpfsCid) => ({ IPFS: value })
+const createNoneContent = () => ({ None: null })
 const createContent = (value?: IpfsContentValue) => nonEmptyStr(value)
   ? createIpfsContent(value)
   : createNoneContent()
 
 type IpfsContentValue = IpfsCid | null
 
-export class IpfsContent extends Content {
-  constructor (value?: IpfsContentValue) {
-    super(createContent(value))
-  }
+export function IpfsContent (value?: IpfsContentValue) {
+  return createContent(value)
 }
 
-export const OptionIpfsContent = (value?: IpfsContentValue) => {
+export function OptionIpfsContent (value?: IpfsContentValue) {
   return value ? createIpfsContent(value) : null
 }

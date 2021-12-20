@@ -1,9 +1,8 @@
-import { IpfsCid as RuntimeIpfsCid } from '@subsocial/types/substrate/interfaces';
+import { Content, IpfsCid as RuntimeIpfsCid } from '@subsocial/types/substrate/interfaces';
 import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid, ProfileContent } from '@subsocial/types/offchain';
 import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
-import { Content } from '@subsocial/types/substrate/classes';
 import { SubsocialContext, ContentResult, UseServerProps } from '../types';
 import { SocialAccountWithId } from '@subsocial/types/dto';
 

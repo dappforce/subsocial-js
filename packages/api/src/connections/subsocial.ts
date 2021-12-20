@@ -2,7 +2,7 @@ import { ApiPromise } from '@polkadot/api'
 import { FlatSubsocialApi } from '../flat-subsocial'
 import { SubsocialApi } from '../subsocial'
 import { SubsocialApiProps } from '../subsocial/basic'
-import { getApi } from './substrate'
+import { getSubstrateApi } from './substrate'
 
 let flatSubsocial!: FlatSubsocialApi 
 let subsocial!: SubsocialApi
@@ -24,7 +24,7 @@ type NewSubsocialApiProps = Omit<SubsocialApiProps, 'substrateApi'> & {
 export const newSubsocialApi = async ({ substrateNodeUrl, substrateApi: initApi, ...props }: NewSubsocialApiProps) => {
   if (!subsocial && !isLoadingSubsocial) {
     isLoadingSubsocial = true
-    const substrateApi = initApi || await getApi(substrateNodeUrl)
+    const substrateApi = initApi || await getSubstrateApi(substrateNodeUrl)
     subsocial = new SubsocialApi({ substrateApi, ...props })
     isLoadingSubsocial = false;
 
