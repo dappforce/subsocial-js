@@ -108,5 +108,5 @@ export const isValidIpfsCid = (cid: IpfsCid) => {
 
 export const resolveCidOfContent = (content?: Content) =>
   (isDef(content) && content.isIpfs)
-    ? content.asIpfs.toString()
+    ? content.asIpfs.toHuman()
     : undefined
