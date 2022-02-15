@@ -13,14 +13,14 @@ const needTypesVersion = 13
 let api: ApiPromise | undefined = undefined
 
 /** Get the current open connection to Substrate node. */
-export const getSubstrateApi = async (nodeUrl?: string, metadata?: Record<string, string>) => {
+export const getSubstrateApi = async (nodeUrl?: string) => {
   if (api) return api
 
   const rpcEndpoint = nodeUrl || 'ws://127.0.0.1:9944/';
   const provider = new WsProvider(rpcEndpoint);
 
   logger.info(`Connecting to Substrate node at ${rpcEndpoint}...`);
-  api = new ApiPromise({ provider, metadata })
+  api = new ApiPromise({ provider })
   await api.isReady
 
   const onchainMetadata = await api.rpc.state.getMetadata();

@@ -2,8 +2,8 @@
 /* eslint-disable */
 
 import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, i32, u16, u32, u64 } from '@polkadot/types';
-  import type { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
-  import type { AccountInfoWithTripleRefCount } from '@polkadot/types/interfaces/system';
+import type { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
+import type { AccountInfoWithTripleRefCount } from '@polkadot/types/interfaces/system';
 
 /** @name AccountInfo */
 export interface AccountInfo extends AccountInfoWithTripleRefCount {}
@@ -26,6 +26,7 @@ export interface Content extends Enum {
   readonly asIpfs: Text;
   readonly isHyper: boolean;
   readonly asHyper: Text;
+  readonly type: 'None' | 'Raw' | 'Ipfs' | 'Hyper';
 }
 
 /** @name Domain */
@@ -56,12 +57,14 @@ export interface EntityId extends Enum {
   readonly asSpace: SpaceId;
   readonly isPost: boolean;
   readonly asPost: PostId;
+  readonly type: 'Outer' | 'Account' | 'Space' | 'Post';
 }
 
 /** @name EntityStatus */
 export interface EntityStatus extends Enum {
   readonly isAllowed: boolean;
   readonly isBlocked: boolean;
+  readonly type: 'Allowed' | 'Blocked';
 }
 
 /** @name Faucet */
@@ -125,6 +128,7 @@ export interface PostExtension extends Enum {
   readonly asComment: Comment;
   readonly isSharedPost: boolean;
   readonly asSharedPost: PostId;
+  readonly type: 'RegularPost' | 'Comment' | 'SharedPost';
 }
 
 /** @name PostHistoryRecord */
@@ -176,6 +180,7 @@ export interface ReactionId extends u64 {}
 export interface ReactionKind extends Enum {
   readonly isUpvote: boolean;
   readonly isDownvote: boolean;
+  readonly type: 'Upvote' | 'Downvote';
 }
 
 /** @name Report */
@@ -299,6 +304,7 @@ export interface SpacePermission extends Enum {
   readonly isSuggestEntityStatus: boolean;
   readonly isUpdateEntityStatus: boolean;
   readonly isUpdateSpaceSettings: boolean;
+  readonly type: 'ManageRoles' | 'RepresentSpaceInternally' | 'RepresentSpaceExternally' | 'UpdateSpace' | 'CreateSubspaces' | 'UpdateOwnSubspaces' | 'DeleteOwnSubspaces' | 'HideOwnSubspaces' | 'UpdateAnySubspace' | 'DeleteAnySubspace' | 'HideAnySubspace' | 'CreatePosts' | 'UpdateOwnPosts' | 'DeleteOwnPosts' | 'HideOwnPosts' | 'UpdateAnyPost' | 'DeleteAnyPost' | 'HideAnyPost' | 'CreateComments' | 'UpdateOwnComments' | 'DeleteOwnComments' | 'HideOwnComments' | 'HideAnyComment' | 'Upvote' | 'Downvote' | 'Share' | 'OverrideSubspacePermissions' | 'OverridePostPermissions' | 'SuggestEntityStatus' | 'UpdateEntityStatus' | 'UpdateSpaceSettings';
 }
 
 /** @name SpacePermissions */
@@ -347,6 +353,7 @@ export interface User extends Enum {
   readonly asAccount: AccountId;
   readonly isSpace: boolean;
   readonly asSpace: SpaceId;
+  readonly type: 'Account' | 'Space';
 }
 
 /** @name WhoAndWhen */
