@@ -6,7 +6,7 @@ type EntityIds = {
   profileIds: string[];
 }
 
-export const extructEntityIdsFromActivities = (activities: Activity[]): EntityIds => {
+export const extractEntityIdsFromActivities = (activities: Activity[]): EntityIds => {
   const spaceIdsSet = new Set<string>();
   const postIdsSet = new Set<string>();
   const profileIdsSet = new Set<string>();
