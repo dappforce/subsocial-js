@@ -3,7 +3,9 @@ import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, CID } from '@subsocia
 import { newLogger, isEmptyArray, nonEmptyStr, isDef } from '@subsocial/utils';
 import { PostId, ReactionId, SocialAccount, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
-import { GenericAccountId } from '@polkadot/types'
+import { GenericAccountId } from '@polkadot/types';
+import { SubmittableResult } from '@polkadot/api';
+import BN from 'bn.js';
 
 const log = newLogger('Subsocial Api Utils');
 
@@ -110,3 +112,22 @@ export const resolveCidOfContent = (content?: Content) =>
   (isDef(content) && content.isIpfs)
     ? content.asIpfs.toHuman()
     : undefined
+
+
+export type ResultEventType = 'Created' | 'Updated';
+
+export function getNewIdsFromEvent (txResult: SubmittableResult, eventType: ResultEventType = 'Created'): BN[] {
+  const newIds: BN[] = []
+
+  txResult.events.find(event => {
+    const { event: { data, method } } = event
+    if (method.indexOf(eventType) >= 0) {
+      const [ /* owner */, ...ids ] = data.toArray()
+      newIds.push(...ids as unknown as BN[])
+      return true
+    }
+    return false
+  })
+
+  return newIds
+}

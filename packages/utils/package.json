@@ -19,11 +19,13 @@
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
+    "@subsocial/types": "^0.6.6-dev.20",
     "@polkadot/util-crypto": "^8.1.2",
     "@sindresorhus/slugify": "^1.1.0",
     "bignumber.js": "^9.0.1",
     "bn.js": "^5.1.1",
     "chalk": "^3.0.0",
+    "dayjs": "^1.10.7",
     "lodash.isempty": "^4.4.0",
     "lodash.memoize": "^4.1.2",
     "lodash.truncate": "^4.4.2",
