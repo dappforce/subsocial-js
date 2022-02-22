@@ -1,13 +1,10 @@
 {
   "imageShouldBeLessThan": "Image should be less than {limit} MB",
   "general": {
-    "title": "Subsocial",
-    "post": "Post",
-    "Post": "Post",
-    "space": "Space",
+    "title": "vSocial",
+    "post": "post",
+    "space": "space",
     "comment": "comment",
-    "edit": "Edit",
-    "new": "New",
     "profile": "profile",
     "seeMore": "See More",
     "seeLess": "See Less",
@@ -67,9 +64,9 @@
     "show": "Show",
     "view": "View",
     "makeVisible": "Make visible",
-    "hideComment": "Hide Comment",
-    "hidePost": "Hide Post",
-    "hideSpace": "Hide Space",
+    "hideComment": "Hide comment",
+    "hidePost": "Hide post",
+    "hideSpace": "Hide space",
     "upvote": "Upvote",
     "downvote": "Downvote",
     "writePost": "Write post",
@@ -151,6 +148,10 @@
         "EnableExtension": ". Enable extension with the button below.",
         "notLoginMessage": "To continue connect with <span>Polkadot Extension</span>. </br>Enable extension with the button below."
       }
+    },
+    "noToken": {
+      "message": "You need some tokens to continue.",
+      "button": "Get tokens"
     }
   },
   "snackbars": {
@@ -169,6 +170,8 @@
       "chooseSpace": "Choose a space for a new post",
       "newSpace": "New Space",
       "editSpace": "Edit Space",
+      "newPost": "New Post",
+      "editPost": "Edit Post",
       "newProfile": "New Profile",
       "editProfile": "Edit Profile"
     },
@@ -204,7 +207,9 @@
   },
   "generalMessages": {
     "hiddenPostBySpace": "This post is not visible because its space is hidden",
-    "hiddenMessage": "This {type} is unlisted and only you can see it",
+    "hiddenPost": "This post is unlisted and only you can see it",
+    "hiddenSpace": "This space is unlisted and only you can see it",
+    "hiddenComment": "This comment is unlisted and only you can see it",
     "emptyFeed": "Your feed is empty. Try to follow more spaces ;)",
     "createSpaceFirst": "Please create your space first",
     "dontHavePermission": "You do not have permission to edit this {type}"
