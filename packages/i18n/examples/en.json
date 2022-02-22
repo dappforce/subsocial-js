@@ -1,7 +1,6 @@
 {
   "imageShouldBeLessThan": "Image should be less than {limit} MB",
   "general": {
-    "title": "vSocial",
     "post": "post",
     "space": "space",
     "comment": "comment",
