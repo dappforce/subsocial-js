@@ -1,14 +1,13 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-declare module '@polkadot/api/types/submittable' {
-  import type { ApiTypes, AugmentedSubmittable, SubmittableExtrinsic, SubmittableExtrinsicFunction, SubmittableModuleExtrinsics } from '@polkadot/api/types';
-  import type { Bytes, Compact, Option, U8aFixed, Vec, bool, u128, u16, u32, u64, u8 } from '@polkadot/types';
-  import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
-  import type { AccountId32, Call, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
-  import type { PalletDomainsDomain, PalletDomainsDomainInnerLink, PalletFaucetsFaucetUpdate, PalletMultisigTimepoint, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletProfilesProfileUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletSpacesSpacesSettings, PalletUtilsContent, PalletUtilsUser, SpCoreChangesTrieChangesTrieConfiguration, SpCoreVoid, SpFinalityGrandpaEquivocationProof, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
-  import type { AnyNumber, ITuple } from '@polkadot/types/types';
+import type { ApiTypes } from '@polkadot/api-base/types';
+import type { Bytes, Compact, Option, U8aFixed, Vec, bool, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
+import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
+import type { AccountId32, Call, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
+import type { PalletDomainsDomain, PalletDomainsDomainInnerLink, PalletFaucetsFaucetUpdate, PalletMultisigTimepoint, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletProfilesProfileUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletSpacesSpacesSettings, PalletUtilsContent, PalletUtilsUser, SpCoreChangesTrieChangesTrieConfiguration, SpCoreVoid, SpFinalityGrandpaEquivocationProof, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
 
+declare module '@polkadot/api-base/types/submittable' {
   export interface AugmentedSubmittables<ApiType extends ApiTypes> {
     balances: {
       /**
@@ -874,9 +873,4 @@ declare module '@polkadot/api/types/submittable' {
       batchAll: AugmentedSubmittable<(calls: Vec<Call> | (Call | { callIndex?: any; args?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
     };
   } // AugmentedSubmittables
-
-  export interface SubmittableExtrinsics<ApiType extends ApiTypes> extends AugmentedSubmittables<ApiType> {
-    (extrinsic: Call | Extrinsic | Uint8Array | string): SubmittableExtrinsic<ApiType>;
-  } // SubmittableExtrinsics
-
 } // declare module

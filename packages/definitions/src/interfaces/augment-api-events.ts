@@ -1,13 +1,13 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-declare module '@polkadot/api/types/events' {
-  import type { ApiTypes, AugmentedEvent, ModuleEvents } from '@polkadot/api/types';
-  import type { Bytes, Null, Option, Result, U8aFixed, Vec, u128, u16, u32, u64 } from '@polkadot/types';
-  import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-  import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletDomainsDomain, PalletMultisigTimepoint, PalletReactionsReactionKind, PalletUtilsUser, SpFinalityGrandpaAppPublic, SpRuntimeDispatchError, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
-  import type { ITuple } from '@polkadot/types/types';
+import type { ApiTypes } from '@polkadot/api-base/types';
+import type { Bytes, Null, Option, Result, U8aFixed, Vec, u128, u16, u32, u64 } from '@polkadot/types-codec';
+import type { ITuple } from '@polkadot/types-codec/types';
+import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
+import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletDomainsDomain, PalletMultisigTimepoint, PalletReactionsReactionKind, PalletUtilsUser, SpFinalityGrandpaAppPublic, SpRuntimeDispatchError, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
 
+declare module '@polkadot/api-base/types/events' {
   export interface AugmentedEvents<ApiType extends ApiTypes> {
     balances: {
       /**
@@ -253,8 +253,4 @@ declare module '@polkadot/api/types/events' {
       Deposit: AugmentedEvent<ApiType, [u128]>;
     };
   } // AugmentedEvents
-
-  export interface DecoratedEvents<ApiType extends ApiTypes> extends AugmentedEvents<ApiType> {
-  } // DecoratedEvents
-
 } // declare module

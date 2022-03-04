@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, i32, u16, u32, u64 } from '@polkadot/types';
+import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, i32, u16, u32, u64 } from '@polkadot/types-codec';
 import type { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
 import type { AccountInfoWithTripleRefCount } from '@polkadot/types/interfaces/system';
 
@@ -29,12 +29,6 @@ export interface Content extends Enum {
   readonly type: 'None' | 'Raw' | 'Ipfs' | 'Hyper';
 }
 
-/** @name Domain */
-export interface Domain extends Struct {
-  readonly tld: Text;
-  readonly nested: Text;
-}
-
 /** @name DomainMeta */
 export interface DomainMeta extends Struct {
   readonly created: WhoAndWhen;
@@ -43,21 +37,22 @@ export interface DomainMeta extends Struct {
   readonly expiresAt: BlockNumber;
   readonly soldFor: Balance;
   readonly content: Content;
-  readonly innerValue: Option<EntityId>;
   readonly outerValue: Option<Text>;
+  readonly domainDeposit: Balance;
+  readonly outerValueDeposit: Balance;
 }
 
 /** @name EntityId */
 export interface EntityId extends Enum {
-  readonly isOuter: boolean;
-  readonly asOuter: Text;
+  readonly isContent: boolean;
+  readonly asContent: Content;
   readonly isAccount: boolean;
   readonly asAccount: AccountId;
   readonly isSpace: boolean;
   readonly asSpace: SpaceId;
   readonly isPost: boolean;
   readonly asPost: PostId;
-  readonly type: 'Outer' | 'Account' | 'Space' | 'Post';
+  readonly type: 'Content' | 'Account' | 'Space' | 'Post';
 }
 
 /** @name EntityStatus */

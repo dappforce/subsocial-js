@@ -1,13 +1,14 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-declare module '@polkadot/api/types/storage' {
-  import type { ApiTypes, AugmentedQuery, QueryableModuleStorage, QueryableStorageEntry } from '@polkadot/api/types';
-  import type { Bytes, Option, U8aFixed, Vec, bool, u128, u32, u64 } from '@polkadot/types';
-  import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-  import type { FrameSupportWeightsPerDispatchClassU64, FrameSystemAccountInfo, FrameSystemEventRecord, FrameSystemLastRuntimeUpgradeInfo, FrameSystemPhase, PalletBalancesAccountData, PalletBalancesBalanceLock, PalletBalancesReleases, PalletBalancesReserveData, PalletDomainsDomain, PalletDomainsDomainMeta, PalletFaucetsFaucet, PalletGrandpaStoredPendingChange, PalletGrandpaStoredState, PalletMultisigMultisig, PalletPostHistoryPostHistoryRecord, PalletPostsPost, PalletProfileHistoryProfileHistoryRecord, PalletProfilesSocialAccount, PalletProxyAnnouncement, PalletProxyProxyDefinition, PalletReactionsReaction, PalletRolesRole, PalletSchedulerReleases, PalletSchedulerScheduledV2, PalletSpaceHistorySpaceHistoryRecord, PalletSpacesSpace, PalletSpacesSpacesSettings, PalletTransactionPaymentReleases, PalletUtilsUser, SpRuntimeDigest } from '@polkadot/types/lookup';
-  import type { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
+import type { ApiTypes } from '@polkadot/api-base/types';
+import type { Bytes, Option, U8aFixed, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
+import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
+import type { FrameSupportWeightsPerDispatchClassU64, FrameSystemAccountInfo, FrameSystemEventRecord, FrameSystemLastRuntimeUpgradeInfo, FrameSystemPhase, PalletBalancesAccountData, PalletBalancesBalanceLock, PalletBalancesReleases, PalletBalancesReserveData, PalletDomainsDomain, PalletDomainsDomainMeta, PalletFaucetsFaucet, PalletGrandpaStoredPendingChange, PalletGrandpaStoredState, PalletMultisigMultisig, PalletPostHistoryPostHistoryRecord, PalletPostsPost, PalletProfileHistoryProfileHistoryRecord, PalletProfilesSocialAccount, PalletProxyAnnouncement, PalletProxyProxyDefinition, PalletReactionsReaction, PalletRolesRole, PalletSchedulerReleases, PalletSchedulerScheduledV2, PalletSpaceHistorySpaceHistoryRecord, PalletSpacesSpace, PalletSpacesSpacesSettings, PalletTransactionPaymentReleases, PalletUtilsUser, SpRuntimeDigest } from '@polkadot/types/lookup';
+import type { Observable } from '@polkadot/types/types';
 
+declare module '@polkadot/api-base/types/storage' {
   export interface AugmentedQueries<ApiType extends ApiTypes> {
     balances: {
       /**
@@ -332,8 +333,4 @@ declare module '@polkadot/api/types/storage' {
       treasuryAccount: AugmentedQuery<ApiType, () => Observable<AccountId32>, []>;
     };
   } // AugmentedQueries
-
-  export interface QueryableStorage<ApiType extends ApiTypes> extends AugmentedQueries<ApiType> {
-  } // QueryableStorage
-
 } // declare module

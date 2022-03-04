@@ -2,10 +2,10 @@
 /* eslint-disable */
 
 declare module '@polkadot/types/lookup' {
-  import type { BTreeSet, Bytes, Compact, Enum, Null, Option, Result, Struct, Text, U8aFixed, Vec, bool, i32, u128, u16, u32, u64, u8 } from '@polkadot/types';
+  import type { BTreeSet, Bytes, Compact, Enum, Null, Option, Result, Struct, Text, U8aFixed, Vec, bool, i32, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
+  import type { ITuple } from '@polkadot/types-codec/types';
   import type { AccountId32, Call, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
   import type { Event } from '@polkadot/types/interfaces/system';
-  import type { ITuple } from '@polkadot/types/types';
 
   /** @name FrameSystemAccountInfo (3) */
   export interface FrameSystemAccountInfo extends Struct {

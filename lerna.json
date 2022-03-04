@@ -7,7 +7,7 @@
     "packages/definitions",
     "packages/i18n"
   ],
-  "version": "0.6.6-dev.24",
+  "version": "0.6.6-dev.26",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

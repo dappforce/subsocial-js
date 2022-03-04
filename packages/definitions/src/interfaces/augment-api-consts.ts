@@ -1,12 +1,12 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-declare module '@polkadot/api/types/consts' {
-  import type { ApiTypes, AugmentedConst, QueryableModuleConsts } from '@polkadot/api/types';
-  import type { Vec, u128, u16, u32, u64, u8 } from '@polkadot/types';
-  import type { FrameSupportWeightsRuntimeDbWeight, FrameSupportWeightsWeightToFeeCoefficient, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, PalletPermissionsSpacePermissions, SpVersionRuntimeVersion } from '@polkadot/types/lookup';
+import type { ApiTypes } from '@polkadot/api-base/types';
+import type { Vec, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
+import type { FrameSupportWeightsRuntimeDbWeight, FrameSupportWeightsWeightToFeeCoefficient, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, PalletPermissionsSpacePermissions, SpVersionRuntimeVersion } from '@polkadot/types/lookup';
 
-  export interface AugmentedConsts<ApiType  extends ApiTypes> {
+declare module '@polkadot/api-base/types/consts' {
+  export interface AugmentedConsts<ApiType extends ApiTypes> {
     balances: {
       /**
        * The minimum amount required to keep an account open.
@@ -222,8 +222,4 @@ declare module '@polkadot/api/types/consts' {
       minHandleLen: u32 & AugmentedConst<ApiType>;
     };
   } // AugmentedConsts
-
-  export interface QueryableConsts<ApiType extends ApiTypes> extends AugmentedConsts<ApiType> {
-  } // QueryableConsts
-
 } // declare module
