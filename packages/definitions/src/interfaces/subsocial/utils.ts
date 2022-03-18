@@ -6,7 +6,7 @@ type BuildTypesProps = {
     types: Record<string, any>,
 }
 
-export const buildTypes = ({ min = 0, max, types }: BuildTypesProps): OverrideVersionedType => {
+export const buildTypes = ({ min = 0, max = 16, types }: BuildTypesProps): OverrideVersionedType => {
   return {
     minmax: [min, max], types
   }

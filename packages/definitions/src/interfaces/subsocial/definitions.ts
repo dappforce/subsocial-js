@@ -23,7 +23,7 @@ const convertToCamelCase = (obj: Record<string, any>) => {
     .replace(/Enum/g, '_enum'))
 }
 
-const specTypesArray = [
+const types = [
   accountInfo,
   common,
   spaces,
@@ -42,15 +42,12 @@ const specTypesArray = [
 
 export const typesBundle = {
   spec: {
-    subsocial_old: {
-      types: specTypesArray
-    },
-    subsocial_new: {
-      types: specTypesArray.map(convertToCamelCase)
+    subsocial: {
+      types
     }
   }
 }
 
 export default {
-    types: typesBundle.spec.subsocial_new.types.map(({ types }) => types).reduce((all, types) => Object.assign(all, types))
+    types: types.map(convertToCamelCase).map(({ types }) => types).reduce((all, types) => Object.assign(all, types))
 }
