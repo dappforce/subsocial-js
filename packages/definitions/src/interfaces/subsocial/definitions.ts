@@ -10,7 +10,8 @@ import faucet from './faucet';
 import history from './history';
 import moderation from './moderation';
 import system from './system'
-import domains from './domains'
+import { OverrideVersionedType } from '@polkadot/types/types';
+import score from './score'
 
 const convertToCamelCase = (obj: Record<string, any>) => {
   return JSON.parse(JSON.stringify(obj)
@@ -23,11 +24,16 @@ const convertToCamelCase = (obj: Record<string, any>) => {
     .replace(/Enum/g, '_enum'))
 }
 
-const types = [
+const v14Types = {
+  minmax: [17, undefined],
+  types: {}
+} as OverrideVersionedType
+
+export const types = [
   accountInfo,
   common,
   spaces,
-  // score,
+  score,
   system,
   posts,
   profiles,
@@ -37,7 +43,7 @@ const types = [
   faucet,
   history,
   moderation,
-  domains
+  v14Types
 ].flat()
 
 export const typesBundle = {

@@ -29,19 +29,6 @@ export interface Content extends Enum {
   readonly type: 'None' | 'Raw' | 'Ipfs' | 'Hyper';
 }
 
-/** @name DomainMeta */
-export interface DomainMeta extends Struct {
-  readonly created: WhoAndWhen;
-  readonly updated: Option<WhoAndWhen>;
-  readonly owner: AccountId;
-  readonly expiresAt: BlockNumber;
-  readonly soldFor: Balance;
-  readonly content: Content;
-  readonly outerValue: Option<Text>;
-  readonly domainDeposit: Balance;
-  readonly outerValueDeposit: Balance;
-}
-
 /** @name EntityId */
 export interface EntityId extends Enum {
   readonly isContent: boolean;
@@ -210,6 +197,20 @@ export interface RoleUpdate extends Struct {
   readonly disabled: Option<bool>;
   readonly content: Option<Content>;
   readonly permissions: Option<SpacePermissionSet>;
+}
+
+/** @name ScoringAction */
+export interface ScoringAction extends Enum {
+  readonly isUpvotePost: boolean;
+  readonly isDownvotePost: boolean;
+  readonly isSharePost: boolean;
+  readonly isCreateComment: boolean;
+  readonly isUpvoteComment: boolean;
+  readonly isDownvoteComment: boolean;
+  readonly isShareComment: boolean;
+  readonly isFollowSpace: boolean;
+  readonly isFollowAccount: boolean;
+  readonly type: 'UpvotePost' | 'DownvotePost' | 'SharePost' | 'CreateComment' | 'UpvoteComment' | 'DownvoteComment' | 'ShareComment' | 'FollowSpace' | 'FollowAccount';
 }
 
 /** @name SocialAccount */
