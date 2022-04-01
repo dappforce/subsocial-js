@@ -1,5 +1,5 @@
 import CID from 'cids'
-import { IpfsCid as RuntimeIpfsCid } from '../substrate/interfaces'
+import { IpfsCid as RuntimeIpfsCid } from '@subsocial/definitions/interfaces'
 
 export { CID }
 
@@ -19,7 +19,9 @@ export type Activity = {
   following_id?: string
   space_id?: string
   post_id?: string
-  comment_id?: string
+  comment_id?: string,
+  /* Balance */
+  amount?: string,
   /** Date of this activity. Example: "2020-12-03T19:22:36.000Z" */
   date: string
   aggregated: boolean

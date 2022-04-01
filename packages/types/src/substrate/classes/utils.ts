@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Option, Text, bool } from '@polkadot/types';
 import { nonEmptyStr } from '@subsocial/utils'
+import { SubstrateId } from '../../common';
 import registry from '../registry';
-import { SubstrateId } from '../..';
 
 export class OptionId<T extends SubstrateId> extends Option<u64> {
   constructor (value?: T) {
@@ -33,4 +33,6 @@ export class OptionOptionText extends Option<Option<Text>> {
   }
 }
 
-export class OptionIpfsCid extends OptionText {}
+export function OptionEntity<T> (value?: T): T | null {
+  return value || null
+}

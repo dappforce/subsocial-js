@@ -1,4 +1,4 @@
-export type SpacePermissionMap = {
+export type FlatSpacePermissionMap = {
   /// Create, update, delete, grant and revoke roles in this space.
   ManageRoles?: boolean,
 
@@ -62,13 +62,13 @@ export type SpacePermissionMap = {
   UpdateSpaceSettings?: boolean
 }
 
-export type SpacePermissionKey = keyof SpacePermissionMap
+export type FlatSpacePermissionKey = keyof FlatSpacePermissionMap
 
-export type SpacePermissions = {
-  nonePermissions?: SpacePermissionMap
-  everyonePermissions?: SpacePermissionMap
-  followerPermissions?: SpacePermissionMap
-  spaceOwnerPermissions?: SpacePermissionMap
+export type FlatSpacePermissions = {
+  nonePermissions?: FlatSpacePermissionMap
+  everyonePermissions?: FlatSpacePermissionMap
+  followerPermissions?: FlatSpacePermissionMap
+  spaceOwnerPermissions?: FlatSpacePermissionMap
 }
 
-export type SpacePermissionsKey = keyof SpacePermissions
+export type FlatSpacePermissionsKey = keyof FlatSpacePermissions

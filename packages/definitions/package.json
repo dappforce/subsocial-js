@@ -1,0 +1,34 @@
+{
+  "name": "@subsocial/definitions",
+  "version": "0.6.7",
+  "description": "Subsocial definitions using @polkadot/typegen to generate type definitions",
+  "main": "index.js",
+  "repository": "https://github.com/dappforce/subsocial-js/packages/definitions",
+  "author": "DappForce contributors",
+  "license": "GPL-3.0-only",
+  "publishConfig": {
+    "access": "public",
+    "directory": "src",
+    "registry": "https://registry.npmjs.org"
+  },
+  "bugs": {
+    "url": "https://github.com/dappforce/dappforce-subsocial-js/issues"
+  },
+  "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
+  "scripts": {
+    "build": "tsc && cp ./README.md ./build",
+    "generate": "yarn generate:defs && yarn generate:meta",
+    "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @subsocial/definitions/interfaces --input ./src/interfaces --endpoint ./subsocial.json",
+    "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @subsocial/definitions/interfaces --endpoint ./subsocial.json --output ./src/interfaces --strict",
+    "lint": "tsc --noEmit --pretty"
+  },
+  "dependencies": {
+    "@polkadot/api": "latest",
+    "lodash.camelcase": "^4.3.0"
+  },
+  "devDependencies": {
+    "@polkadot/typegen": "latest",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.2"
+  }
+}

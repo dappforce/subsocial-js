@@ -3,7 +3,9 @@ import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, CID } from '@subsocia
 import { newLogger, isEmptyArray, nonEmptyStr, isDef } from '@subsocial/utils';
 import { PostId, ReactionId, SocialAccount, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
-import { GenericAccountId } from '@polkadot/types'
+import { GenericAccountId } from '@polkadot/types';
+import { SubmittableResult } from '@polkadot/api';
+import BN from 'bn.js';
 
 const log = newLogger('Subsocial Api Utils');
 
@@ -45,6 +47,10 @@ export function asAccountId (id: AnyAccountId): GenericAccountId | undefined {
   }
 }
 
+export function isAccountId (id:AnyAccountId): boolean {
+  return !!asAccountId(id)
+}
+
 export const getSharedPostId = (postData: any): PostId | undefined => {
   if (!postData) return undefined;
 
@@ -69,7 +75,7 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
     const { isSharedPost, isComment } = ext
 
     if (isComment || ext.value instanceof Comment) {
-      return ext.asComment.root_post_id
+      return ext.asComment.rootPostId
     } else if (isSharedPost) {
       return ext.asSharedPost
     }
@@ -80,12 +86,14 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
 
 export const isIpfs = (content?: Content) => content && (content.isIpfs || (content as any).IPFS)
 
-export const asIpfsCid = (cid: IpfsCid): CID => {
+export const asIpfsCid = (cid: IpfsCid): CID | undefined => {
+  if (!cid) return undefined
+
   if (cid instanceof CID) {
     return cid
   } else if (typeof cid === 'string') {
     return new CID(cid)
-  } else if (typeof cid.toU8a === 'function') {
+  } else if (typeof cid?.toU8a === 'function') {
     return new CID(cid.toString())
   } else {
     throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsCid')
@@ -102,5 +110,24 @@ export const isValidIpfsCid = (cid: IpfsCid) => {
 
 export const resolveCidOfContent = (content?: Content) =>
   (isDef(content) && content.isIpfs)
-    ? content.asIpfs.toString()
+    ? content.asIpfs.toHuman()
     : undefined
+
+
+export type ResultEventType = 'Created' | 'Updated';
+
+export function getNewIdsFromEvent (txResult: SubmittableResult, eventType: ResultEventType = 'Created'): BN[] {
+  const newIds: BN[] = []
+
+  txResult.events.find(event => {
+    const { event: { data, method } } = event
+    if (method.indexOf(eventType) >= 0) {
+      const [ /* owner */, ...ids ] = data.toArray()
+      newIds.push(...ids as unknown as BN[])
+      return true
+    }
+    return false
+  })
+
+  return newIds
+}

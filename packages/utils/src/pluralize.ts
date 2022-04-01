@@ -4,11 +4,14 @@ import BN from 'bn.js';
 const ZERO = new BN(0);
 const ONE = new BN(1);
 
-export function pluralize (
+type Props = {
   count: number | BN | string,
   singularText: string,
-  pluralText?: string
-) {
+  pluralText?: string,
+  hideCount?: boolean
+}
+
+export function pluralize ({ count, singularText, pluralText, hideCount }: Props) {
   if (!count) {
     count = ZERO;
   } else if (typeof count === 'string') {
@@ -33,5 +36,7 @@ export function pluralize (
     ? singularText
     : plural();
 
-  return `${count.toNumber()} ${text}`;
+  const countMsg = hideCount ? '' : `${count.toNumber()} `
+
+  return `${countMsg}${text}`;
 }

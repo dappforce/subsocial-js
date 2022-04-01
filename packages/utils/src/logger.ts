@@ -2,11 +2,9 @@ import chalk, { Chalk } from 'chalk'
 import log, { LogLevel, setDefaultLevel } from 'loglevel'
 import prefix from 'loglevel-plugin-prefix'
 
-require('dotenv').config()
-
 type Levels = keyof LogLevel;
 
-const defaultLevel: Levels = (process.env.LOG_LEVEL || 'INFO').toUpperCase() as any
+const defaultLevel: Levels = (process?.env?.LOG_LEVEL || 'INFO').toUpperCase() as any
 
 setDefaultLevel(defaultLevel)
 
@@ -27,7 +25,7 @@ prefix.apply(log, {
   format(_level, _name, _time) {
     const now = new Date()
 
-    const date = now.getMonth() + '-' + now.getDay()
+    const date = `${now.getDate()}-${now.getMonth()}`
 
     const time = _time.toString()
 

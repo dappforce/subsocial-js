@@ -1,11 +1,10 @@
-import { AnyAccountId, AnyPostId, AnySpaceId } from '@subsocial/types/substrate/interfaces/utils';
-import { PostData, PostWithSomeDetails, ProfileData, SpaceData } from '@subsocial/types'
+import { PostData, PostWithSomeDetails, ProfileData, SpaceData} from '@subsocial/types/dto/sub'
 import { PostId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from './common'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
-import { PostDetailsOpts } from './types';
-import { isVisible } from './visibility-filter';
 import { AccountId } from '@polkadot/types/interfaces'
+import { isVisible, PostDetailsOpts } from '../filters';
+import { AnyPostId, AnySpaceId, AnyAccountId } from '@subsocial/types'
 
 export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
@@ -100,7 +99,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
 
     if (withSpace) {
-      const spaceId = post.struct.space_id.unwrapOr(undefined)
+      const spaceId = post.struct.spaceId.unwrapOr(undefined)
       spaceId && rememberRelatedIdAndMapToPostIndices(spaceId, i, postIndicesBySpaceIdMap, spaceIds)
     }
   })
@@ -118,7 +117,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
 
     if (withSpace) {
-      const spaceId = post.struct.space_id.unwrapOr(undefined)
+      const spaceId = post.struct.spaceId.unwrapOr(undefined)
       if (isDefined(spaceId)) {
         spaceIds.push(spaceId)
       } else {
@@ -134,7 +133,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     setExtOnPost({ post }, postIndicesByRootIdMap, extPostStructs)
 
     if (withSpace) {
-      const spaceId = post.struct.space_id.unwrapOr(undefined)
+      const spaceId = post.struct.spaceId.unwrapOr(undefined)
       spaceId && rememberRelatedIdAndMapToPostIndices(spaceId, i, postIndicesBySpaceIdMap, spaceIds)
     }
   })
@@ -179,13 +178,13 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     if (!withOwner) return
 
     const { post, ext } = postStruct
-    const ownerId = post.struct.created.account.toString()
+    const ownerId = post.struct.created.account.toHuman()
     const owner = ownerByIdMap.get(ownerId)
     postStruct.owner = owner
 
     if (!ext) return
 
-    const extOwnerId = ext.post.struct.created.account.toString()
+    const extOwnerId = ext.post.struct.created.account.toHuman()
     ext.owner = extOwnerId === ownerId
       ? owner
       : ownerByIdMap.get(extOwnerId)
@@ -205,19 +204,19 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
   }
 
   postStructs.forEach(post => {
-    const { post: { struct: { space_id } }, ext } = post
+    const { post: { struct: { spaceId: spaceIdOpt } }, ext } = post
     setOwnerOnPost(post)
 
     // Set a space if the post has space id:
-    setSpaceOnPost(post, space_id.unwrapOr(undefined))
+    setSpaceOnPost(post, spaceIdOpt.unwrapOr(undefined))
 
     // Set a space (from extension) on post and its extension if extension has space id:
-    const spaceId = ext?.post.struct.space_id.unwrapOr(undefined)
+    const spaceId = ext?.post.struct.spaceId.unwrapOr(undefined)
     setSpaceOnPost(post, spaceId, ext)
 
     if (!spaceId) {
       // Set a space (from root post) on post and its extension if extension does NOT have space id:
-      const spaceId = ext?.ext?.post.struct.space_id.unwrapOr(undefined)
+      const spaceId = ext?.ext?.post.struct.spaceId.unwrapOr(undefined)
       setSpaceOnPost(post, spaceId, ext)
     }
   })

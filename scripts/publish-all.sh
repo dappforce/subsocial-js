@@ -4,4 +4,5 @@
 ./scripts/publish-utils.sh
 ./scripts/publish-api.sh
 ./scripts/publish-config.sh
-./scripts/publish-examples.sh
+./scripts/publish-definitions.sh
+./scripts/publish-i18n.sh
