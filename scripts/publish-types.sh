@@ -2,4 +2,4 @@
 
 cd ./packages/types/build
 cp ../package.json .
-npm publish --access public --tag dev
+npm publish --access public 

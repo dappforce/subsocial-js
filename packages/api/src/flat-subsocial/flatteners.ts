@@ -113,7 +113,7 @@ export function flattenSpaceStruct (struct: Space): SpaceStruct {
   let handleField: CanHaveHandle = {}
   if (struct.handle.isSome) {
     handleField = {
-      handle: struct.handle.unwrap().toString()
+      handle: struct.handle.toHuman()?.toString()
     }
   }
 

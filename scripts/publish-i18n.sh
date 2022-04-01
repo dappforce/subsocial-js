@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd ./packages/i18n
-npm publish --access public --tag dev
+npm publish --access public 
