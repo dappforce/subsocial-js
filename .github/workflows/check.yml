@@ -22,9 +22,6 @@ jobs:
       - name: Install Yarn dependencies
         run: yarn install
 
-      - name: Build interfaces
-        run: yarn build:interfaces
-
       - name: Run tests
         run: yarn test
 
