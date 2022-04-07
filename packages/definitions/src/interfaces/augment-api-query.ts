@@ -2,10 +2,10 @@
 /* eslint-disable */
 
 import type { ApiTypes } from '@polkadot/api-base/types';
-import type { Bytes, Option, U8aFixed, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type { Bytes, Option, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-import type { FrameSupportWeightsPerDispatchClassU64, FrameSystemAccountInfo, FrameSystemEventRecord, FrameSystemLastRuntimeUpgradeInfo, FrameSystemPhase, PalletBalancesAccountData, PalletBalancesBalanceLock, PalletBalancesReleases, PalletBalancesReserveData, PalletDomainsDomain, PalletDomainsDomainMeta, PalletFaucetsFaucet, PalletGrandpaStoredPendingChange, PalletGrandpaStoredState, PalletMultisigMultisig, PalletPostHistoryPostHistoryRecord, PalletPostsPost, PalletProfileHistoryProfileHistoryRecord, PalletProfilesSocialAccount, PalletProxyAnnouncement, PalletProxyProxyDefinition, PalletReactionsReaction, PalletRolesRole, PalletSchedulerReleases, PalletSchedulerScheduledV2, PalletSpaceHistorySpaceHistoryRecord, PalletSpacesSpace, PalletSpacesSpacesSettings, PalletTransactionPaymentReleases, PalletUtilsUser, SpRuntimeDigest } from '@polkadot/types/lookup';
+import type { FrameSupportWeightsPerDispatchClassU64, FrameSystemAccountInfo, FrameSystemEventRecord, FrameSystemLastRuntimeUpgradeInfo, FrameSystemPhase, PalletBalancesAccountData, PalletBalancesBalanceLock, PalletBalancesReleases, PalletBalancesReserveData, PalletFaucetsFaucet, PalletGrandpaStoredPendingChange, PalletGrandpaStoredState, PalletPostHistoryPostHistoryRecord, PalletPostsPost, PalletProfileHistoryProfileHistoryRecord, PalletProfilesSocialAccount, PalletReactionsReaction, PalletRolesRole, PalletSchedulerReleases, PalletSchedulerScheduledV2, PalletSpaceHistorySpaceHistoryRecord, PalletSpacesSpace, PalletSpacesSpacesSettings, PalletTransactionPaymentReleases, PalletUtilsUser, SpRuntimeDigest } from '@polkadot/types/lookup';
 import type { Observable } from '@polkadot/types/types';
 
 declare module '@polkadot/api-base/types/storage' {
@@ -36,12 +36,6 @@ declare module '@polkadot/api-base/types/storage' {
        * The total units issued in the system.
        **/
       totalIssuance: AugmentedQuery<ApiType, () => Observable<u128>, []>;
-    };
-    domains: {
-      registeredDomains: AugmentedQuery<ApiType, (arg1: Bytes | string | Uint8Array, arg2: Bytes | string | Uint8Array) => Observable<Option<PalletDomainsDomainMeta>>, [Bytes, Bytes]>;
-      registeredDomainsByOwner: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<Vec<PalletDomainsDomain>>, [AccountId32]>;
-      reservedDomains: AugmentedQuery<ApiType, (arg: Bytes | string | Uint8Array) => Observable<bool>, [Bytes]>;
-      supportedTlds: AugmentedQuery<ApiType, (arg: Bytes | string | Uint8Array) => Observable<bool>, [Bytes]>;
     };
     dotsamaClaims: {
       eligibleAccounts: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<bool>, [AccountId32]>;
@@ -85,13 +79,6 @@ declare module '@polkadot/api-base/types/storage' {
        **/
       state: AugmentedQuery<ApiType, () => Observable<PalletGrandpaStoredState>, []>;
     };
-    multisig: {
-      calls: AugmentedQuery<ApiType, (arg: U8aFixed | string | Uint8Array) => Observable<Option<ITuple<[Bytes, AccountId32, u128]>>>, [U8aFixed]>;
-      /**
-       * The set of open multisig operations.
-       **/
-      multisigs: AugmentedQuery<ApiType, (arg1: AccountId32 | string | Uint8Array, arg2: U8aFixed | string | Uint8Array) => Observable<Option<PalletMultisigMultisig>>, [AccountId32, U8aFixed]>;
-    };
     postHistory: {
       editHistory: AugmentedQuery<ApiType, (arg: u64 | AnyNumber | Uint8Array) => Observable<Vec<PalletPostHistoryPostHistoryRecord>>, [u64]>;
     };
@@ -127,17 +114,6 @@ declare module '@polkadot/api-base/types/storage' {
     };
     profiles: {
       socialAccountById: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<Option<PalletProfilesSocialAccount>>, [AccountId32]>;
-    };
-    proxy: {
-      /**
-       * The announcements made by the proxy (key).
-       **/
-      announcements: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<ITuple<[Vec<PalletProxyAnnouncement>, u128]>>, [AccountId32]>;
-      /**
-       * The set of account proxies. Maps the account which has delegated to the accounts
-       * which are being delegated to, together with the amount held on deposit.
-       **/
-      proxies: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<ITuple<[Vec<PalletProxyProxyDefinition>, u128]>>, [AccountId32]>;
     };
     randomnessCollectiveFlip: {
       /**

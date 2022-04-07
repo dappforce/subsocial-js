@@ -2,10 +2,10 @@
 /* eslint-disable */
 
 import type { ApiTypes } from '@polkadot/api-base/types';
-import type { Bytes, Null, Option, Result, U8aFixed, Vec, u128, u16, u32, u64 } from '@polkadot/types-codec';
+import type { Bytes, Null, Option, Result, Vec, u128, u16, u32, u64 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletDomainsDomain, PalletMultisigTimepoint, PalletReactionsReactionKind, PalletUtilsUser, SpFinalityGrandpaAppPublic, SpRuntimeDispatchError, SubsocialRuntimeProxyType } from '@polkadot/types/lookup';
+import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletReactionsReactionKind, PalletUtilsUser, SpFinalityGrandpaAppPublic, SpRuntimeDispatchError } from '@polkadot/types/lookup';
 
 declare module '@polkadot/api-base/types/events' {
   export interface AugmentedEvents<ApiType extends ApiTypes> {
@@ -56,24 +56,6 @@ declare module '@polkadot/api-base/types/events' {
        **/
       Withdraw: AugmentedEvent<ApiType, [AccountId32, u128]>;
     };
-    domains: {
-      /**
-       * The domain name was successfully registered and stored.
-       **/
-      DomainRegistered: AugmentedEvent<ApiType, [AccountId32, PalletDomainsDomain, u128]>;
-      /**
-       * The domains list was successfully added to a reserved list.
-       **/
-      DomainsReserved: AugmentedEvent<ApiType, [u16]>;
-      /**
-       * The domain meta was successfully updated.
-       **/
-      DomainUpdated: AugmentedEvent<ApiType, [AccountId32, PalletDomainsDomain]>;
-      /**
-       * The list of top level domains was successfully added to the supported list.
-       **/
-      NewTldAdded: AugmentedEvent<ApiType, [u16]>;
-    };
     dotsamaClaims: {
       EligibleAccountsAdded: AugmentedEvent<ApiType, [u16]>;
       RewardsSenderRemoved: AugmentedEvent<ApiType, []>;
@@ -100,25 +82,6 @@ declare module '@polkadot/api-base/types/events' {
        **/
       Resumed: AugmentedEvent<ApiType, []>;
     };
-    multisig: {
-      /**
-       * A multisig operation has been approved by someone.
-       * \[approving, timepoint, multisig, call_hash\]
-       **/
-      MultisigApproval: AugmentedEvent<ApiType, [AccountId32, PalletMultisigTimepoint, AccountId32, U8aFixed]>;
-      /**
-       * A multisig operation has been cancelled. \[cancelling, timepoint, multisig, call_hash\]
-       **/
-      MultisigCancelled: AugmentedEvent<ApiType, [AccountId32, PalletMultisigTimepoint, AccountId32, U8aFixed]>;
-      /**
-       * A multisig operation has been executed. \[approving, timepoint, multisig, call_hash\]
-       **/
-      MultisigExecuted: AugmentedEvent<ApiType, [AccountId32, PalletMultisigTimepoint, AccountId32, U8aFixed, Result<Null, SpRuntimeDispatchError>]>;
-      /**
-       * A new multisig operation has begun. \[approving, multisig, call_hash\]
-       **/
-      NewMultisig: AugmentedEvent<ApiType, [AccountId32, AccountId32, U8aFixed]>;
-    };
     posts: {
       PostCreated: AugmentedEvent<ApiType, [AccountId32, u64]>;
       PostDeleted: AugmentedEvent<ApiType, [AccountId32, u64]>;
@@ -133,26 +96,6 @@ declare module '@polkadot/api-base/types/events' {
     profiles: {
       ProfileCreated: AugmentedEvent<ApiType, [AccountId32]>;
       ProfileUpdated: AugmentedEvent<ApiType, [AccountId32]>;
-    };
-    proxy: {
-      /**
-       * An announcement was placed to make a call in the future. \[real, proxy, call_hash\]
-       **/
-      Announced: AugmentedEvent<ApiType, [AccountId32, AccountId32, H256]>;
-      /**
-       * Anonymous account has been created by new proxy with given
-       * disambiguation index and proxy type. \[anonymous, who, proxy_type,
-       * disambiguation_index\]
-       **/
-      AnonymousCreated: AugmentedEvent<ApiType, [AccountId32, AccountId32, SubsocialRuntimeProxyType, u16]>;
-      /**
-       * A proxy was added. \[delegator, delegatee, proxy_type, delay\]
-       **/
-      ProxyAdded: AugmentedEvent<ApiType, [AccountId32, AccountId32, SubsocialRuntimeProxyType, u32]>;
-      /**
-       * A proxy was executed correctly, with the given \[result\].
-       **/
-      ProxyExecuted: AugmentedEvent<ApiType, [Result<Null, SpRuntimeDispatchError>]>;
     };
     reactions: {
       PostReactionCreated: AugmentedEvent<ApiType, [AccountId32, u64, u64, PalletReactionsReactionKind]>;

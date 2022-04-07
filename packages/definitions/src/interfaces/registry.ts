@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { FinalityGrandpaEquivocationPrecommit, FinalityGrandpaEquivocationPrevote, FinalityGrandpaPrecommit, FinalityGrandpaPrevote, FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchClass, FrameSupportWeightsDispatchInfo, FrameSupportWeightsPays, FrameSupportWeightsPerDispatchClassU32, FrameSupportWeightsPerDispatchClassU64, FrameSupportWeightsPerDispatchClassWeightsPerClass, FrameSupportWeightsRuntimeDbWeight, FrameSupportWeightsWeightToFeeCoefficient, FrameSystemAccountInfo, FrameSystemCall, FrameSystemError, FrameSystemEvent, FrameSystemEventRecord, FrameSystemExtensionsCheckGenesis, FrameSystemExtensionsCheckNonce, FrameSystemExtensionsCheckSpecVersion, FrameSystemExtensionsCheckTxVersion, FrameSystemExtensionsCheckWeight, FrameSystemLastRuntimeUpgradeInfo, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, FrameSystemLimitsWeightsPerClass, FrameSystemPhase, FrameSystemRawOrigin, PalletBalancesAccountData, PalletBalancesBalanceLock, PalletBalancesCall, PalletBalancesError, PalletBalancesEvent, PalletBalancesReasons, PalletBalancesReleases, PalletBalancesReserveData, PalletDomainsCall, PalletDomainsDomain, PalletDomainsDomainInnerLink, PalletDomainsDomainMeta, PalletDomainsError, PalletDomainsEvent, PalletDotsamaClaimsCall, PalletDotsamaClaimsEnsureAllowedToClaimTokens, PalletDotsamaClaimsError, PalletDotsamaClaimsEvent, PalletFaucetsCall, PalletFaucetsError, PalletFaucetsFaucet, PalletFaucetsFaucetUpdate, PalletFaucetsRawEvent, PalletGrandpaCall, PalletGrandpaError, PalletGrandpaEvent, PalletGrandpaStoredPendingChange, PalletGrandpaStoredState, PalletMultisigCall, PalletMultisigError, PalletMultisigEvent, PalletMultisigMultisig, PalletMultisigTimepoint, PalletPermissionsCall, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostHistoryPostHistoryRecord, PalletPostsCall, PalletPostsComment, PalletPostsError, PalletPostsPost, PalletPostsPostExtension, PalletPostsPostUpdate, PalletPostsRawEvent, PalletProfileFollowsCall, PalletProfileFollowsError, PalletProfileFollowsRawEvent, PalletProfileHistoryProfileHistoryRecord, PalletProfilesCall, PalletProfilesError, PalletProfilesProfile, PalletProfilesProfileUpdate, PalletProfilesRawEvent, PalletProfilesSocialAccount, PalletProxyAnnouncement, PalletProxyCall, PalletProxyError, PalletProxyEvent, PalletProxyProxyDefinition, PalletReactionsCall, PalletReactionsError, PalletReactionsRawEvent, PalletReactionsReaction, PalletReactionsReactionKind, PalletRolesCall, PalletRolesError, PalletRolesRawEvent, PalletRolesRole, PalletRolesRoleUpdate, PalletSchedulerCall, PalletSchedulerError, PalletSchedulerEvent, PalletSchedulerReleases, PalletSchedulerScheduledV2, PalletSpaceFollowsCall, PalletSpaceFollowsError, PalletSpaceFollowsRawEvent, PalletSpaceHistorySpaceHistoryRecord, PalletSpaceOwnershipCall, PalletSpaceOwnershipError, PalletSpaceOwnershipRawEvent, PalletSpacesCall, PalletSpacesError, PalletSpacesRawEvent, PalletSpacesSpace, PalletSpacesSpaceUpdate, PalletSpacesSpacesSettings, PalletSudoCall, PalletSudoError, PalletSudoEvent, PalletTimestampCall, PalletTransactionPaymentChargeTransactionPayment, PalletTransactionPaymentReleases, PalletUtilityCall, PalletUtilityError, PalletUtilityEvent, PalletUtilsContent, PalletUtilsError, PalletUtilsRawEvent, PalletUtilsUser, PalletUtilsWhoAndWhen, SpCoreChangesTrieChangesTrieConfiguration, SpCoreEcdsaSignature, SpCoreEd25519Public, SpCoreEd25519Signature, SpCoreSr25519Signature, SpCoreVoid, SpFinalityGrandpaAppPublic, SpFinalityGrandpaAppSignature, SpFinalityGrandpaEquivocation, SpFinalityGrandpaEquivocationProof, SpRuntimeArithmeticError, SpRuntimeDigest, SpRuntimeDigestChangesTrieSignal, SpRuntimeDigestDigestItem, SpRuntimeDispatchError, SpRuntimeMultiSignature, SpRuntimeTokenError, SpVersionRuntimeVersion, SubsocialRuntimeOriginCaller, SubsocialRuntimeProxyType, SubsocialRuntimeRuntime } from '@polkadot/types/lookup';
+import type { FinalityGrandpaEquivocationPrecommit, FinalityGrandpaEquivocationPrevote, FinalityGrandpaPrecommit, FinalityGrandpaPrevote, FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchClass, FrameSupportWeightsDispatchInfo, FrameSupportWeightsPays, FrameSupportWeightsPerDispatchClassU32, FrameSupportWeightsPerDispatchClassU64, FrameSupportWeightsPerDispatchClassWeightsPerClass, FrameSupportWeightsRuntimeDbWeight, FrameSupportWeightsWeightToFeeCoefficient, FrameSystemAccountInfo, FrameSystemCall, FrameSystemError, FrameSystemEvent, FrameSystemEventRecord, FrameSystemExtensionsCheckGenesis, FrameSystemExtensionsCheckNonce, FrameSystemExtensionsCheckSpecVersion, FrameSystemExtensionsCheckTxVersion, FrameSystemExtensionsCheckWeight, FrameSystemLastRuntimeUpgradeInfo, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, FrameSystemLimitsWeightsPerClass, FrameSystemPhase, FrameSystemRawOrigin, PalletBalancesAccountData, PalletBalancesBalanceLock, PalletBalancesCall, PalletBalancesError, PalletBalancesEvent, PalletBalancesReasons, PalletBalancesReleases, PalletBalancesReserveData, PalletDotsamaClaimsCall, PalletDotsamaClaimsEnsureAllowedToClaimTokens, PalletDotsamaClaimsError, PalletDotsamaClaimsEvent, PalletFaucetsCall, PalletFaucetsError, PalletFaucetsFaucet, PalletFaucetsFaucetUpdate, PalletFaucetsRawEvent, PalletGrandpaCall, PalletGrandpaError, PalletGrandpaEvent, PalletGrandpaStoredPendingChange, PalletGrandpaStoredState, PalletPermissionsCall, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostHistoryPostHistoryRecord, PalletPostsCall, PalletPostsComment, PalletPostsError, PalletPostsPost, PalletPostsPostExtension, PalletPostsPostUpdate, PalletPostsRawEvent, PalletProfileFollowsCall, PalletProfileFollowsError, PalletProfileFollowsRawEvent, PalletProfileHistoryProfileHistoryRecord, PalletProfilesCall, PalletProfilesError, PalletProfilesProfile, PalletProfilesProfileUpdate, PalletProfilesRawEvent, PalletProfilesSocialAccount, PalletReactionsCall, PalletReactionsError, PalletReactionsRawEvent, PalletReactionsReaction, PalletReactionsReactionKind, PalletRolesCall, PalletRolesError, PalletRolesRawEvent, PalletRolesRole, PalletRolesRoleUpdate, PalletSchedulerCall, PalletSchedulerError, PalletSchedulerEvent, PalletSchedulerReleases, PalletSchedulerScheduledV2, PalletSpaceFollowsCall, PalletSpaceFollowsError, PalletSpaceFollowsRawEvent, PalletSpaceHistorySpaceHistoryRecord, PalletSpaceOwnershipCall, PalletSpaceOwnershipError, PalletSpaceOwnershipRawEvent, PalletSpacesCall, PalletSpacesError, PalletSpacesRawEvent, PalletSpacesSpace, PalletSpacesSpaceUpdate, PalletSpacesSpacesSettings, PalletSudoCall, PalletSudoError, PalletSudoEvent, PalletTimestampCall, PalletTransactionPaymentChargeTransactionPayment, PalletTransactionPaymentReleases, PalletUtilityCall, PalletUtilityError, PalletUtilityEvent, PalletUtilsContent, PalletUtilsError, PalletUtilsRawEvent, PalletUtilsUser, PalletUtilsWhoAndWhen, SpCoreChangesTrieChangesTrieConfiguration, SpCoreEcdsaSignature, SpCoreEd25519Public, SpCoreEd25519Signature, SpCoreSr25519Signature, SpCoreVoid, SpFinalityGrandpaAppPublic, SpFinalityGrandpaAppSignature, SpFinalityGrandpaEquivocation, SpFinalityGrandpaEquivocationProof, SpRuntimeArithmeticError, SpRuntimeDigest, SpRuntimeDigestChangesTrieSignal, SpRuntimeDigestDigestItem, SpRuntimeDispatchError, SpRuntimeMultiSignature, SpRuntimeTokenError, SpVersionRuntimeVersion, SubsocialRuntimeOriginCaller, SubsocialRuntimeRuntime } from '@polkadot/types/lookup';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -42,12 +42,6 @@ declare module '@polkadot/types/types/registry' {
     PalletBalancesReasons: PalletBalancesReasons;
     PalletBalancesReleases: PalletBalancesReleases;
     PalletBalancesReserveData: PalletBalancesReserveData;
-    PalletDomainsCall: PalletDomainsCall;
-    PalletDomainsDomain: PalletDomainsDomain;
-    PalletDomainsDomainInnerLink: PalletDomainsDomainInnerLink;
-    PalletDomainsDomainMeta: PalletDomainsDomainMeta;
-    PalletDomainsError: PalletDomainsError;
-    PalletDomainsEvent: PalletDomainsEvent;
     PalletDotsamaClaimsCall: PalletDotsamaClaimsCall;
     PalletDotsamaClaimsEnsureAllowedToClaimTokens: PalletDotsamaClaimsEnsureAllowedToClaimTokens;
     PalletDotsamaClaimsError: PalletDotsamaClaimsError;
@@ -62,11 +56,6 @@ declare module '@polkadot/types/types/registry' {
     PalletGrandpaEvent: PalletGrandpaEvent;
     PalletGrandpaStoredPendingChange: PalletGrandpaStoredPendingChange;
     PalletGrandpaStoredState: PalletGrandpaStoredState;
-    PalletMultisigCall: PalletMultisigCall;
-    PalletMultisigError: PalletMultisigError;
-    PalletMultisigEvent: PalletMultisigEvent;
-    PalletMultisigMultisig: PalletMultisigMultisig;
-    PalletMultisigTimepoint: PalletMultisigTimepoint;
     PalletPermissionsCall: PalletPermissionsCall;
     PalletPermissionsSpacePermission: PalletPermissionsSpacePermission;
     PalletPermissionsSpacePermissions: PalletPermissionsSpacePermissions;
@@ -88,11 +77,6 @@ declare module '@polkadot/types/types/registry' {
     PalletProfilesProfileUpdate: PalletProfilesProfileUpdate;
     PalletProfilesRawEvent: PalletProfilesRawEvent;
     PalletProfilesSocialAccount: PalletProfilesSocialAccount;
-    PalletProxyAnnouncement: PalletProxyAnnouncement;
-    PalletProxyCall: PalletProxyCall;
-    PalletProxyError: PalletProxyError;
-    PalletProxyEvent: PalletProxyEvent;
-    PalletProxyProxyDefinition: PalletProxyProxyDefinition;
     PalletReactionsCall: PalletReactionsCall;
     PalletReactionsError: PalletReactionsError;
     PalletReactionsRawEvent: PalletReactionsRawEvent;
@@ -154,7 +138,6 @@ declare module '@polkadot/types/types/registry' {
     SpRuntimeTokenError: SpRuntimeTokenError;
     SpVersionRuntimeVersion: SpVersionRuntimeVersion;
     SubsocialRuntimeOriginCaller: SubsocialRuntimeOriginCaller;
-    SubsocialRuntimeProxyType: SubsocialRuntimeProxyType;
     SubsocialRuntimeRuntime: SubsocialRuntimeRuntime;
   } // InterfaceTypes
 } // declare module

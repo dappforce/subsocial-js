@@ -39,76 +39,6 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       VestingBalance: AugmentedError<ApiType>;
     };
-    domains: {
-      /**
-       * This domain is already held by another account.
-       **/
-      DomainAlreadyStored: AugmentedError<ApiType>;
-      /**
-       * The content stored in domain metadata was not changed.
-       **/
-      DomainContentNotChanged: AugmentedError<ApiType>;
-      /**
-       * The domain has expired.
-       **/
-      DomainHasExpired: AugmentedError<ApiType>;
-      /**
-       * Domain was not found by either custom domain name or top level domain.
-       **/
-      DomainNotFound: AugmentedError<ApiType>;
-      /**
-       * This domain cannot be registered yet, because it is reserved.
-       **/
-      DomainReserved: AugmentedError<ApiType>;
-      /**
-       * Cannot insert that many domains to a storage at once.
-       **/
-      DomainsInsertLimitReached: AugmentedError<ApiType>;
-      /**
-       * A new inner value is the same as the old one.
-       **/
-      InnerValueNotChanged: AugmentedError<ApiType>;
-      /**
-       * This inner value is not supported yet.
-       **/
-      InnerValueNotSupported: AugmentedError<ApiType>;
-      /**
-       * Lower than Second level domains are not allowed.
-       **/
-      LowerLevelDomainsNotAllowed: AugmentedError<ApiType>;
-      /**
-       * This account is not allowed to update the domain metadata.
-       **/
-      NotADomainOwner: AugmentedError<ApiType>;
-      /**
-       * A new outer value is the same as the old one.
-       **/
-      OuterValueNotChanged: AugmentedError<ApiType>;
-      /**
-       * Outer value exceeds its length limit.
-       **/
-      OuterValueOffLengthLimit: AugmentedError<ApiType>;
-      /**
-       * Cannot store a domain for that long period of time.
-       **/
-      TooBigReservationPeriod: AugmentedError<ApiType>;
-      /**
-       * The top level domain may contain only A-Z, 0-9 and hyphen characters.
-       **/
-      TopLevelDomainContainsInvalidChar: AugmentedError<ApiType>;
-      /**
-       * The top level domain length must be between 3 and 63 characters, inclusive.
-       **/
-      TopLevelDomainIsOffLengthLimits: AugmentedError<ApiType>;
-      /**
-       * This top level domain is not supported.
-       **/
-      TopLevelDomainNotSupported: AugmentedError<ApiType>;
-      /**
-       * Reservation period cannot be a zero value.
-       **/
-      ZeroReservationPeriod: AugmentedError<ApiType>;
-    };
     dotsamaClaims: {
       AccountNotEligible: AugmentedError<ApiType>;
       AddingTooManyAccountsAtOnce: AugmentedError<ApiType>;
@@ -166,64 +96,6 @@ declare module '@polkadot/api-base/types/errors' {
        * Cannot signal forced change so soon after last.
        **/
       TooSoon: AugmentedError<ApiType>;
-    };
-    multisig: {
-      /**
-       * Call is already approved by this signatory.
-       **/
-      AlreadyApproved: AugmentedError<ApiType>;
-      /**
-       * The data to be stored is already stored.
-       **/
-      AlreadyStored: AugmentedError<ApiType>;
-      /**
-       * The maximum weight information provided was too low.
-       **/
-      MaxWeightTooLow: AugmentedError<ApiType>;
-      /**
-       * Threshold must be 2 or greater.
-       **/
-      MinimumThreshold: AugmentedError<ApiType>;
-      /**
-       * Call doesn't need any (more) approvals.
-       **/
-      NoApprovalsNeeded: AugmentedError<ApiType>;
-      /**
-       * Multisig operation not found when attempting to cancel.
-       **/
-      NotFound: AugmentedError<ApiType>;
-      /**
-       * No timepoint was given, yet the multisig operation is already underway.
-       **/
-      NoTimepoint: AugmentedError<ApiType>;
-      /**
-       * Only the account that originally created the multisig is able to cancel it.
-       **/
-      NotOwner: AugmentedError<ApiType>;
-      /**
-       * The sender was contained in the other signatories; it shouldn't be.
-       **/
-      SenderInSignatories: AugmentedError<ApiType>;
-      /**
-       * The signatories were provided out of order; they should be ordered.
-       **/
-      SignatoriesOutOfOrder: AugmentedError<ApiType>;
-      /**
-       * There are too few signatories in the list.
-       **/
-      TooFewSignatories: AugmentedError<ApiType>;
-      /**
-       * There are too many signatories in the list.
-       **/
-      TooManySignatories: AugmentedError<ApiType>;
-      /**
-       * A timepoint was given, yet no multisig operation is underway.
-       **/
-      UnexpectedTimepoint: AugmentedError<ApiType>;
-      /**
-       * A different timepoint was given to the multisig operation that is underway.
-       **/
-      WrongTimepoint: AugmentedError<ApiType>;
     };
     posts: {
       /**
@@ -358,40 +230,6 @@ declare module '@polkadot/api-base/types/errors' {
        * Social account was not found by id.
        **/
       SocialAccountNotFound: AugmentedError<ApiType>;
-    };
-    proxy: {
-      /**
-       * Account is already a proxy.
-       **/
-      Duplicate: AugmentedError<ApiType>;
-      /**
-       * Call may not be made by proxy because it may escalate its privileges.
-       **/
-      NoPermission: AugmentedError<ApiType>;
-      /**
-       * Cannot add self as proxy.
-       **/
-      NoSelfProxy: AugmentedError<ApiType>;
-      /**
-       * Proxy registration not found.
-       **/
-      NotFound: AugmentedError<ApiType>;
-      /**
-       * Sender is not a proxy of the account to be proxied.
-       **/
-      NotProxy: AugmentedError<ApiType>;
-      /**
-       * There are too many proxies registered or too many announcements pending.
-       **/
-      TooMany: AugmentedError<ApiType>;
-      /**
-       * Announcement, if made at all, was made too recently.
-       **/
-      Unannounced: AugmentedError<ApiType>;
-      /**
-       * A call which is incompatible with the proxy type's filter was attempted.
-       **/
-      Unproxyable: AugmentedError<ApiType>;
     };
     reactions: {
       /**

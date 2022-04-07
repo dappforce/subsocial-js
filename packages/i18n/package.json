@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/i18n",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "Translations for Subsocial Dapps that support i18next libs",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
