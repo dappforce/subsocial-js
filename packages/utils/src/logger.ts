@@ -4,7 +4,7 @@ import prefix from 'loglevel-plugin-prefix'
 
 type Levels = keyof LogLevel;
 
-const defaultLevel: Levels = (process?.env?.LOG_LEVEL || 'INFO').toUpperCase() as any
+const defaultLevel: Levels = 'INFO'
 
 setDefaultLevel(defaultLevel)
 
@@ -40,8 +40,10 @@ prefix.apply(log, {
   }
 })
 
-export const newLogger = (name: string = 'Subsocial', level?: Levels) => { 
+export function newLogger (name: string = 'Subsocial', level?: Levels) { 
   const logger = log.getLogger(name)
   logger.setLevel(level || defaultLevel)
   return logger
 }
+
+newLogger.setDefaultLevel = setDefaultLevel
