@@ -22,28 +22,6 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       maxReserves: u32 & AugmentedConst<ApiType>;
     };
-    domains: {
-      /**
-       * The amount held on deposit for storing the domains structure.
-       **/
-      domainDeposit: u128 & AugmentedConst<ApiType>;
-      /**
-       * The maximum domains amount can be inserted to a storage at once.
-       **/
-      domainsInsertLimit: u32 & AugmentedConst<ApiType>;
-      /**
-       * The amount held on deposit per byte within the domains outer value.
-       **/
-      outerValueByteDeposit: u128 & AugmentedConst<ApiType>;
-      /**
-       * The length limit for the domains meta outer value.
-       **/
-      outerValueLimit: u16 & AugmentedConst<ApiType>;
-      /**
-       * The maximum amount of time the domain may be held for.
-       **/
-      reservationPeriodLimit: u32 & AugmentedConst<ApiType>;
-    };
     dotsamaClaims: {
       accountsSetLimit: u32 & AugmentedConst<ApiType>;
       initialClaimAmount: u128 & AugmentedConst<ApiType>;
@@ -54,71 +32,11 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       maxAuthorities: u32 & AugmentedConst<ApiType>;
     };
-    multisig: {
-      /**
-       * The base amount of currency needed to reserve for creating a multisig execution or to
-       * store a dispatch call for later.
-       * 
-       * This is held for an additional storage item whose value size is
-       * `4 + sizeof((BlockNumber, Balance, AccountId))` bytes and whose key size is
-       * `32 + sizeof(AccountId)` bytes.
-       **/
-      depositBase: u128 & AugmentedConst<ApiType>;
-      /**
-       * The amount of currency needed per unit threshold when creating a multisig execution.
-       * 
-       * This is held for adding 32 bytes more into a pre-existing storage value.
-       **/
-      depositFactor: u128 & AugmentedConst<ApiType>;
-      /**
-       * The maximum amount of signatories allowed in the multisig.
-       **/
-      maxSignatories: u16 & AugmentedConst<ApiType>;
-    };
     permissions: {
       defaultSpacePermissions: PalletPermissionsSpacePermissions & AugmentedConst<ApiType>;
     };
     posts: {
       maxCommentDepth: u32 & AugmentedConst<ApiType>;
-    };
-    proxy: {
-      /**
-       * The base amount of currency needed to reserve for creating an announcement.
-       * 
-       * This is held when a new storage item holding a `Balance` is created (typically 16
-       * bytes).
-       **/
-      announcementDepositBase: u128 & AugmentedConst<ApiType>;
-      /**
-       * The amount of currency needed per announcement made.
-       * 
-       * This is held for adding an `AccountId`, `Hash` and `BlockNumber` (typically 68 bytes)
-       * into a pre-existing storage value.
-       **/
-      announcementDepositFactor: u128 & AugmentedConst<ApiType>;
-      /**
-       * The maximum amount of time-delayed announcements that are allowed to be pending.
-       **/
-      maxPending: u32 & AugmentedConst<ApiType>;
-      /**
-       * The maximum amount of proxies allowed for a single account.
-       **/
-      maxProxies: u32 & AugmentedConst<ApiType>;
-      /**
-       * The base amount of currency needed to reserve for creating a proxy.
-       * 
-       * This is held for an additional storage item whose value size is
-       * `sizeof(Balance)` bytes and whose key size is `sizeof(AccountId)` bytes.
-       **/
-      proxyDepositBase: u128 & AugmentedConst<ApiType>;
-      /**
-       * The amount of currency needed per proxy added.
-       * 
-       * This is held for adding 32 bytes plus an instance of `ProxyType` more into a
-       * pre-existing storage value. Thus, when configuring `ProxyDepositFactor` one should take
-       * into account `32 + proxy_type.encode().len()` bytes of data.
-       **/
-      proxyDepositFactor: u128 & AugmentedConst<ApiType>;
     };
     roles: {
       maxUsersToProcessPerDeleteRole: u16 & AugmentedConst<ApiType>;
