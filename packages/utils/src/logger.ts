@@ -2,7 +2,7 @@ import chalk, { Chalk } from 'chalk'
 import log, { LogLevel, setDefaultLevel } from 'loglevel'
 import prefix from 'loglevel-plugin-prefix'
 
-type Levels = keyof LogLevel;
+export type Levels = keyof LogLevel;
 
 const defaultLevel: Levels = 'INFO'
 
@@ -46,4 +46,4 @@ export function newLogger (name: string = 'Subsocial', level?: Levels) {
   return logger
 }
 
-newLogger.setDefaultLevel = setDefaultLevel
+newLogger.setDefaultLevel = (logLevel?: Levels) => setDefaultLevel(logLevel || defaultLevel)

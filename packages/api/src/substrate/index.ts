@@ -72,13 +72,13 @@ export class SubsocialSubstrateApi {
   // TODO maybe pallet: 'posts' | 'spaces
   private async isBooleanByAccount (params: StorageItem, accountId: AnyAccountId, subjectId: SubstrateId): Promise<boolean> {
     const { storage, pallet } = params
-    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), subjectId ]);
+    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [accountId, subjectId ]);
     const isBoolean = await this.queryPallet({ pallet, storage }, queryParams) as bool
     return isBoolean.valueOf()
   }
 
   private async getReactionIdsByAccount (accountId: AnyAccountId, structIds: AnyPostId[]): Promise<ReactionId[]> {
-    const queryParams = structIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), id ]));
+    const queryParams = structIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ accountId, id ]));
     return this.queryPalletMulti({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
   }
 
