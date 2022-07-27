@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, i32, u16, u32, u64 } from '@polkadot/types-codec';
+import type { BTreeSet, Enum, Option, Struct, Text, Vec, bool, u16, u64 } from '@polkadot/types-codec';
 import type { AccountId, Balance, BlockNumber, Moment } from '@polkadot/types/interfaces/runtime';
 import type { AccountInfoWithTripleRefCount } from '@polkadot/types/interfaces/system';
 
@@ -89,18 +89,14 @@ export interface LookupSource extends AccountId {}
 export interface Post extends Struct {
   readonly id: PostId;
   readonly created: WhoAndWhen;
-  readonly updated: Option<WhoAndWhen>;
+  readonly updated: bool;
   readonly owner: AccountId;
   readonly extension: PostExtension;
   readonly spaceId: Option<SpaceId>;
   readonly content: Content;
   readonly hidden: bool;
-  readonly repliesCount: u16;
-  readonly hiddenRepliesCount: u16;
-  readonly sharesCount: u16;
   readonly upvotesCount: u16;
   readonly downvotesCount: u16;
-  readonly score: i32;
 }
 
 /** @name PostExtension */
@@ -113,12 +109,6 @@ export interface PostExtension extends Enum {
   readonly type: 'RegularPost' | 'Comment' | 'SharedPost';
 }
 
-/** @name PostHistoryRecord */
-export interface PostHistoryRecord extends Struct {
-  readonly edited: WhoAndWhen;
-  readonly oldData: PostUpdate;
-}
-
 /** @name PostId */
 export interface PostId extends u64 {}
 
@@ -127,24 +117,6 @@ export interface PostUpdate extends Struct {
   readonly spaceId: Option<SpaceId>;
   readonly content: Option<Content>;
   readonly hidden: Option<bool>;
-}
-
-/** @name Profile */
-export interface Profile extends Struct {
-  readonly created: WhoAndWhen;
-  readonly updated: Option<WhoAndWhen>;
-  readonly content: Content;
-}
-
-/** @name ProfileHistoryRecord */
-export interface ProfileHistoryRecord extends Struct {
-  readonly edited: WhoAndWhen;
-  readonly oldData: ProfileUpdate;
-}
-
-/** @name ProfileUpdate */
-export interface ProfileUpdate extends Struct {
-  readonly content: Option<Content>;
 }
 
 /** @name Reaction */
@@ -213,36 +185,16 @@ export interface ScoringAction extends Enum {
   readonly type: 'UpvotePost' | 'DownvotePost' | 'SharePost' | 'CreateComment' | 'UpvoteComment' | 'DownvoteComment' | 'ShareComment' | 'FollowSpace' | 'FollowAccount';
 }
 
-/** @name SocialAccount */
-export interface SocialAccount extends Struct {
-  readonly followersCount: u32;
-  readonly followingAccountsCount: u16;
-  readonly followingSpacesCount: u16;
-  readonly reputation: u32;
-  readonly profile: Option<Profile>;
-}
-
 /** @name Space */
 export interface Space extends Struct {
   readonly id: SpaceId;
   readonly created: WhoAndWhen;
-  readonly updated: Option<WhoAndWhen>;
+  readonly updated: bool;
   readonly owner: AccountId;
   readonly parentId: Option<SpaceId>;
-  readonly handle: Option<Text>;
   readonly content: Content;
   readonly hidden: bool;
-  readonly postsCount: u32;
-  readonly hiddenPostsCount: u32;
-  readonly followersCount: u32;
-  readonly score: i32;
   readonly permissions: Option<SpacePermissions>;
-}
-
-/** @name SpaceHistoryRecord */
-export interface SpaceHistoryRecord extends Struct {
-  readonly edited: WhoAndWhen;
-  readonly oldData: SpaceUpdate;
 }
 
 /** @name SpaceId */
@@ -330,7 +282,6 @@ export interface SpacesSettings extends Struct {
 /** @name SpaceUpdate */
 export interface SpaceUpdate extends Struct {
   readonly parentId: Option<Option<SpaceId>>;
-  readonly handle: Option<Option<Text>>;
   readonly content: Option<Content>;
   readonly hidden: Option<bool>;
   readonly permissions: Option<Option<SpacePermissions>>;

@@ -1,5 +1,4 @@
 import {
-  ProfileData as OldProfileData,
   SpaceData as OldSpaceData,
   PostData as OldPostData,
   PostWithSomeDetails as OldPostWithSomeDetails,
@@ -7,7 +6,6 @@ import {
 } from '@subsocial/types/dto/sub'
 
 import {
-  ProfileData,
   SpaceData,
   PostData,
   CommentData,
@@ -16,24 +14,12 @@ import {
   DerivedContent,
 } from '@subsocial/types/dto'
 
-import { flattenPostStruct, flattenProfileStruct, flattenSpaceStruct } from './flatteners'
+import { flattenPostStruct, flattenSpaceStruct } from './flatteners'
 import { summarizeMd } from '@subsocial/utils'
 import { CommonContent, PostContent, SpaceContent } from '@subsocial/types/offchain'
 
 export function asCommentData (postData: PostData): CommentData {
   return postData as unknown as CommentData
-}
-
-export function convertToNewProfileData (old: OldProfileData): ProfileData {
-  const struct = flattenProfileStruct(old.struct)
-  return { id: struct.id, struct, content: convertToDerivedContent(old.content!) }
-}
-
-export function convertToNewProfileDataArray (oldArr: OldProfileData[]): ProfileData[] {
-  return oldArr.map((old) => {
-    const struct = flattenProfileStruct(old.struct)
-    return { id: struct.id, struct, content: convertToDerivedContent(old.content!) }
-  })
 }
 
 export function convertToNewSpaceData (old: OldSpaceData): SpaceData {
@@ -62,7 +48,6 @@ export function convertToNewPostWithSomeDetailsArray (oldDataArr: OldPostWithSom
       id: post.id,
       post,
       ext: x.ext && convertToNewPostWithSomeDetails(x.ext),
-      owner: x.owner && convertToNewProfileData(x.owner),
       space: x.space && convertToNewSpaceData(x.space),
     }
   })

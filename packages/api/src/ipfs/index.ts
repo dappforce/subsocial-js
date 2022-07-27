@@ -1,33 +1,22 @@
 import { Content, IpfsCid as RuntimeIpfsCid } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid, ProfileContent } from '@subsocial/types/offchain';
+import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid } from '@subsocial/types/offchain';
 import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
 import { SubsocialContext, ContentResult, UseServerProps } from '../types';
-import { SocialAccountWithId } from '@subsocial/types/dto';
-
-/** Return IPFS cid by social account struct */
-export function getIpfsCidOfSocialAccount (struct: SocialAccountWithId): string | undefined {
-  const profile = struct?.profile
-  if (profile && profile.isSome) {
-    return getIpfsCidOfStruct(profile.unwrap())
-  }
-  return undefined
-}
 
 type HasContentField = {
   content: Content
 }
 
-type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
+type HasIpfsCidSomewhere = HasContentField
 
 /** Try to resolve a corresponding IPFS CID of a given struct. */
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
   if (isIpfs((struct as HasContentField).content)) {
     return (struct as HasContentField).content.asIpfs.toHuman()
-  } else if ((struct as SocialAccountWithId).profile) {
-    return getIpfsCidOfSocialAccount(struct as SocialAccountWithId)
   }
+
   return undefined
 }
 
@@ -207,21 +196,6 @@ export class SubsocialIpfsApi {
     return this.getContentArray(cids, 'comment')
   }
 
-  /**
-   * Find and load an array of off-chain information about profiles from IPFS by a given array of `cids`.
-   *
-   * Profile information only exists if there is a corresponding JSON file that represents the profiles' content on
-   * IPFS.
-   *
-   * @param cids - An array of IPFS content ids of desired profiles.
-   *
-   * @returns An array of data about desired profiles from IPFS. If no corresponding profiles to given array of `cids`,
-   * an empty array is returned.
-   */
-  async findProfiles (cids: IpfsCid[]): Promise<ContentResult<ProfileContent>> {
-    return this.getContentArray(cids, 'account')
-  }
-
   // ---------------------------------------------------------------------
   // Find single
 
@@ -269,21 +243,6 @@ export class SubsocialIpfsApi {
    */
   async findComment (cid: IpfsCid): Promise<CommentContent | undefined> {
     return this.getContent<CommentContent>(cid, 'comment')
-  }
-
-  /**
-   * Find and load off-chain information about a profile from IPFS by a given `cid`.
-   *
-   * Profile information only exists if there is a corresponding JSON file that represents the profile's content on
-   * IPFS.
-   *
-   * @param cid - IPFS content id of a desired profile.
-   *
-   * @returns Data about a desired profile from IPFS. If no corresponding profiles to given `id`, `undefined` is
-   * returned.
-   */
-  async findProfile (cid: IpfsCid): Promise<ProfileContent | undefined> {
-    return this.getContent<ProfileContent>(cid, 'account')
   }
 
   // ---------------------------------------------------------------------

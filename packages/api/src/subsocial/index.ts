@@ -3,14 +3,13 @@ import { FindStructsFns, loadAndSetPostRelatedStructs } from '../utils/loadPostS
 import { PostWithSomeDetails, PostWithAllDetails } from '@subsocial/types/dto/sub';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } from '../filters';
-import { AnySpaceId, AnyPostId } from '@subsocial/types';
+import { AnySpaceId, AnyPostId, AnyAccountId } from '@subsocial/types';
 
 export class SubsocialApi extends BasicSubsocialApi {
 
   private structFinders: FindStructsFns = {
     findSpaces: this.findPublicSpaces.bind(this),
     findPosts: this.findPublicPosts.bind(this),
-    findProfiles: this.findProfiles.bind(this)
   }
 
   async findAllSpaces (ids: AnySpaceId[]) {
@@ -115,6 +114,11 @@ export class SubsocialApi extends BasicSubsocialApi {
     return this.findPostsWithAllDetails({ ids, visibility: 'onlyUnlisted' })
   }
 
+  async findProfileSpaces (accountIds: AnyAccountId[]) {
+    const spaceIds = await this.substrate.profileSpaceIdsByAccounts(accountIds)
+    return this.findAllSpaces(spaceIds)
+  }
+
   // Functions that return a single element
 
   /**
@@ -203,5 +207,9 @@ export class SubsocialApi extends BasicSubsocialApi {
 
   async findUnlistedPostWithAllDetails (id: AnyPostId) {
     return getFirstOrUndefined(await this.findUnlistedPostsWithAllDetails([ id ]))
+  }
+
+  async findProfileSpace (accountId: AnyAccountId) {
+    return getFirstOrUndefined(await this.findProfileSpaces([ accountId ]))
   }
 }

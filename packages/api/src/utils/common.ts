@@ -1,7 +1,7 @@
 import { Comment } from '@subsocial/types/substrate/classes';
 import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, CID } from '@subsocial/types';
 import { newLogger, isEmptyArray, nonEmptyStr, isDef } from '@subsocial/utils';
-import { PostId, ReactionId, SocialAccount, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
+import { PostId, ReactionId, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { GenericAccountId } from '@polkadot/types';
 import { SubmittableResult } from '@polkadot/api';
@@ -11,7 +11,7 @@ const log = newLogger('Subsocial Api Utils');
 
 export type SupportedSubstrateId = SubstrateId | AnyAccountId | ReactionId
 
-export type SupportedSubstrateResult = CommonStruct | SocialAccount | Reaction
+export type SupportedSubstrateResult = CommonStruct | Reaction
 
 type AnyId = SupportedSubstrateId | IpfsCid
 
@@ -92,9 +92,9 @@ export const asIpfsCid = (cid: IpfsCid): CID | undefined => {
   if (cid instanceof CID) {
     return cid
   } else if (typeof cid === 'string') {
-    return new CID(cid)
+    return CID.parse(cid)
   } else if (typeof cid?.toU8a === 'function') {
-    return new CID(cid.toString())
+    return CID.parse(cid.toString())
   } else {
     throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsCid')
   }

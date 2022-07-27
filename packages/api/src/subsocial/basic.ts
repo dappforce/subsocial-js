@@ -1,8 +1,7 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
-import { SpaceData, CommonData, PostData, ProfileData } from '@subsocial/types/dto/sub';
-import { SocialAccountWithId } from '@subsocial/types/dto';
-import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
-import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types';
+import { SpaceData, CommonData, PostData } from '@subsocial/types/dto/sub';
+import { SpaceContent, CommonContent, IpfsCid, PostContent } from '@subsocial/types/offchain';
+import { AnySpaceId, AnyPostId, CommonStruct, AnyAccountId } from '@subsocial/types';
 import { Space, Post } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from '../ipfs';
@@ -94,20 +93,6 @@ export class BasicSubsocialApi {
       withContentOnly: filter.withContentOnly
     })
   }
-  /** Find and load an array of profiles */
-  async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
-    const findStructs = this.substrate.findSocialAccounts.bind(this.substrate)
-    const findContents = this.ipfs.findProfiles.bind(this.ipfs)
-
-    const profiles = await this.findDataArray<AnyAccountId, SocialAccountWithId, ProfileContent>(
-      ids, findStructs, findContents
-    ) as ProfileData[]
-
-    return profiles.map(x => {
-      const profile = x.struct.profile.unwrapOr(undefined)
-      return { ...x, profile }
-    })
-  }
 
   // ---------------------------------------------------------------------
   // Single
@@ -118,9 +103,5 @@ export class BasicSubsocialApi {
   /** Find and load single post */
   async findPost ({ id, visibility }: FindPostQuery): Promise<PostData | undefined> {
     return getFirstOrUndefined(await this.findPosts({ ids: [ id ], visibility }))
-  }
-  /** Find and load single profile */
-  async findProfile (id: AnyAccountId): Promise<ProfileData | undefined> {
-    return getFirstOrUndefined(await this.findProfiles([ id ]))
   }
 }

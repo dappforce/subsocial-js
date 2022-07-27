@@ -5,6 +5,62 @@ import type { ApiTypes } from '@polkadot/api-base/types';
 
 declare module '@polkadot/api-base/types/errors' {
   export interface AugmentedErrors<ApiType extends ApiTypes> {
+    accountFollows: {
+      /**
+       * Account can not follow itself.
+       **/
+      AccountCannotFollowItself: AugmentedError<ApiType>;
+      /**
+       * Account can not unfollow itself.
+       **/
+      AccountCannotUnfollowItself: AugmentedError<ApiType>;
+      /**
+       * Account (Alice) is already a follower of another account (Bob).
+       **/
+      AlreadyAccountFollower: AugmentedError<ApiType>;
+      /**
+       * Social account that is being followed was not found by id.
+       **/
+      FollowedAccountNotFound: AugmentedError<ApiType>;
+      /**
+       * Follower social account was not found by id.
+       **/
+      FollowerAccountNotFound: AugmentedError<ApiType>;
+      /**
+       * Account (Alice) is not a follower of another account (Bob).
+       **/
+      NotAccountFollower: AugmentedError<ApiType>;
+    };
+    authorship: {
+      /**
+       * The uncle is genesis.
+       **/
+      GenesisUncle: AugmentedError<ApiType>;
+      /**
+       * The uncle parent not in the chain.
+       **/
+      InvalidUncleParent: AugmentedError<ApiType>;
+      /**
+       * The uncle isn't recent enough to be included.
+       **/
+      OldUncle: AugmentedError<ApiType>;
+      /**
+       * The uncle is too high in chain.
+       **/
+      TooHighUncle: AugmentedError<ApiType>;
+      /**
+       * Too many uncles.
+       **/
+      TooManyUncles: AugmentedError<ApiType>;
+      /**
+       * The uncle is already included.
+       **/
+      UncleAlreadyIncluded: AugmentedError<ApiType>;
+      /**
+       * Uncles already set in the block.
+       **/
+      UnclesAlreadySet: AugmentedError<ApiType>;
+    };
     balances: {
       /**
        * Beneficiary account must pre-exist
@@ -39,63 +95,213 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       VestingBalance: AugmentedError<ApiType>;
     };
-    dotsamaClaims: {
-      AccountNotEligible: AugmentedError<ApiType>;
-      AddingTooManyAccountsAtOnce: AugmentedError<ApiType>;
-      NoRewardsSenderSet: AugmentedError<ApiType>;
-      RewardsSenderHasInsufficientBalance: AugmentedError<ApiType>;
-      TokensAlreadyClaimed: AugmentedError<ApiType>;
+    collatorSelection: {
+      /**
+       * User is already a candidate
+       **/
+      AlreadyCandidate: AugmentedError<ApiType>;
+      /**
+       * User is already an Invulnerable
+       **/
+      AlreadyInvulnerable: AugmentedError<ApiType>;
+      /**
+       * Account has no associated validator ID
+       **/
+      NoAssociatedValidatorId: AugmentedError<ApiType>;
+      /**
+       * User is not a candidate
+       **/
+      NotCandidate: AugmentedError<ApiType>;
+      /**
+       * Permission issue
+       **/
+      Permission: AugmentedError<ApiType>;
+      /**
+       * Too few candidates
+       **/
+      TooFewCandidates: AugmentedError<ApiType>;
+      /**
+       * Too many candidates
+       **/
+      TooManyCandidates: AugmentedError<ApiType>;
+      /**
+       * Unknown error
+       **/
+      Unknown: AugmentedError<ApiType>;
+      /**
+       * Validator ID is not yet registered
+       **/
+      ValidatorNotRegistered: AugmentedError<ApiType>;
     };
-    faucets: {
-      DripLimitCannotExceedPeriodLimit: AugmentedError<ApiType>;
-      DripLimitReached: AugmentedError<ApiType>;
-      FaucetAlreadyAdded: AugmentedError<ApiType>;
-      FaucetDisabled: AugmentedError<ApiType>;
-      FaucetNotFound: AugmentedError<ApiType>;
-      NoFaucetsProvided: AugmentedError<ApiType>;
-      NoFreeBalanceOnFaucet: AugmentedError<ApiType>;
-      NotEnoughFreeBalanceOnFaucet: AugmentedError<ApiType>;
-      NotFaucetOwner: AugmentedError<ApiType>;
-      NothingToUpdate: AugmentedError<ApiType>;
-      NoUpdatesProvided: AugmentedError<ApiType>;
-      PeriodLimitReached: AugmentedError<ApiType>;
-      RecipientEqualsFaucet: AugmentedError<ApiType>;
-      ZeroDripAmountProvided: AugmentedError<ApiType>;
-      ZeroDripLimitProvided: AugmentedError<ApiType>;
-      ZeroPeriodLimitProvided: AugmentedError<ApiType>;
-      ZeroPeriodProvided: AugmentedError<ApiType>;
+    cumulusXcm: {
     };
-    grandpa: {
+    dmpQueue: {
       /**
-       * Attempt to signal GRANDPA change with one already pending.
+       * The amount of weight given is possibly not enough for executing the message.
        **/
-      ChangePending: AugmentedError<ApiType>;
+      OverLimit: AugmentedError<ApiType>;
       /**
-       * A given equivocation report is valid but already previously reported.
+       * The message index given is unknown.
        **/
-      DuplicateOffenceReport: AugmentedError<ApiType>;
+      Unknown: AugmentedError<ApiType>;
+    };
+    domains: {
       /**
-       * An equivocation proof provided as part of an equivocation report is invalid.
+       * This domain is already held by another account.
        **/
-      InvalidEquivocationProof: AugmentedError<ApiType>;
+      DomainAlreadyOwned: AugmentedError<ApiType>;
       /**
-       * A key ownership proof provided as part of an equivocation report is invalid.
+       * This domain label may contain only a-z, 0-9 and hyphen characters.
        **/
-      InvalidKeyOwnershipProof: AugmentedError<ApiType>;
+      DomainContainsInvalidChar: AugmentedError<ApiType>;
       /**
-       * Attempt to signal GRANDPA pause when the authority set isn't live
-       * (either paused or already pending pause).
+       * The content stored in a domain metadata was not changed.
        **/
-      PauseFailed: AugmentedError<ApiType>;
+      DomainContentNotChanged: AugmentedError<ApiType>;
       /**
-       * Attempt to signal GRANDPA resume when the authority set isn't paused
-       * (either live or already pending resume).
+       * This domain has expired.
        **/
-      ResumeFailed: AugmentedError<ApiType>;
+      DomainHasExpired: AugmentedError<ApiType>;
       /**
-       * Cannot signal forced change so soon after last.
+       * This domain cannot be registered yet, because this word is reserved.
        **/
-      TooSoon: AugmentedError<ApiType>;
+      DomainIsReserved: AugmentedError<ApiType>;
+      /**
+       * This domain label length must be between `MinDomainLength` and 63 characters, inclusive.
+       **/
+      DomainIsTooShort: AugmentedError<ApiType>;
+      /**
+       * Domain was not found by the domain name.
+       **/
+      DomainNotFound: AugmentedError<ApiType>;
+      /**
+       * A new inner value is the same as the old one.
+       **/
+      InnerValueNotChanged: AugmentedError<ApiType>;
+      /**
+       * This account is not allowed to update the domain metadata.
+       **/
+      NotDomainOwner: AugmentedError<ApiType>;
+      /**
+       * A new outer value is the same as the old one.
+       **/
+      OuterValueNotChanged: AugmentedError<ApiType>;
+      /**
+       * Lower than the second-level domains are not allowed.
+       **/
+      SubdomainsNotAllowed: AugmentedError<ApiType>;
+      /**
+       * Top-level domain must be specified.
+       **/
+      TldNotSpecified: AugmentedError<ApiType>;
+      /**
+       * Top-level domain is not supported.
+       **/
+      TldNotSupported: AugmentedError<ApiType>;
+      /**
+       * Cannot store a domain for such a long period of time.
+       **/
+      TooBigRegistrationPeriod: AugmentedError<ApiType>;
+      /**
+       * Cannot register more than `MaxDomainsPerAccount` domains.
+       **/
+      TooManyDomainsPerAccount: AugmentedError<ApiType>;
+      /**
+       * Reservation period cannot be a zero value.
+       **/
+      ZeroReservationPeriod: AugmentedError<ApiType>;
+    };
+    parachainSystem: {
+      /**
+       * The inherent which supplies the host configuration did not run this block
+       **/
+      HostConfigurationNotAvailable: AugmentedError<ApiType>;
+      /**
+       * No code upgrade has been authorized.
+       **/
+      NothingAuthorized: AugmentedError<ApiType>;
+      /**
+       * No validation function upgrade is currently scheduled.
+       **/
+      NotScheduled: AugmentedError<ApiType>;
+      /**
+       * Attempt to upgrade validation function while existing upgrade pending
+       **/
+      OverlappingUpgrades: AugmentedError<ApiType>;
+      /**
+       * Polkadot currently prohibits this parachain from upgrading its validation function
+       **/
+      ProhibitedByPolkadot: AugmentedError<ApiType>;
+      /**
+       * The supplied validation function has compiled into a blob larger than Polkadot is
+       * willing to run
+       **/
+      TooBig: AugmentedError<ApiType>;
+      /**
+       * The given code upgrade has not been authorized.
+       **/
+      Unauthorized: AugmentedError<ApiType>;
+      /**
+       * The inherent which supplies the validation data did not run this block
+       **/
+      ValidationDataNotAvailable: AugmentedError<ApiType>;
+    };
+    polkadotXcm: {
+      /**
+       * The location is invalid since it already has a subscription from us.
+       **/
+      AlreadySubscribed: AugmentedError<ApiType>;
+      /**
+       * The given location could not be used (e.g. because it cannot be expressed in the
+       * desired version of XCM).
+       **/
+      BadLocation: AugmentedError<ApiType>;
+      /**
+       * The version of the `Versioned` value used is not able to be interpreted.
+       **/
+      BadVersion: AugmentedError<ApiType>;
+      /**
+       * Could not re-anchor the assets to declare the fees for the destination chain.
+       **/
+      CannotReanchor: AugmentedError<ApiType>;
+      /**
+       * The destination `MultiLocation` provided cannot be inverted.
+       **/
+      DestinationNotInvertible: AugmentedError<ApiType>;
+      /**
+       * The assets to be sent are empty.
+       **/
+      Empty: AugmentedError<ApiType>;
+      /**
+       * The message execution fails the filter.
+       **/
+      Filtered: AugmentedError<ApiType>;
+      /**
+       * Origin is invalid for sending.
+       **/
+      InvalidOrigin: AugmentedError<ApiType>;
+      /**
+       * The referenced subscription could not be found.
+       **/
+      NoSubscription: AugmentedError<ApiType>;
+      /**
+       * There was some other issue (i.e. not to do with routing) in sending the message. Perhaps
+       * a lack of space for buffering the message.
+       **/
+      SendFailure: AugmentedError<ApiType>;
+      /**
+       * Too many assets have been attempted for transfer.
+       **/
+      TooManyAssets: AugmentedError<ApiType>;
+      /**
+       * The desired destination was unreachable, generally because there is a no way of routing
+       * to it.
+       **/
+      Unreachable: AugmentedError<ApiType>;
+      /**
+       * The message's weight could not be determined.
+       **/
+      UnweighableMessage: AugmentedError<ApiType>;
     };
     posts: {
       /**
@@ -107,9 +313,9 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       CannotMoveToSameSpace: AugmentedError<ApiType>;
       /**
-       * Cannot share a post that that is sharing another post.
+       * Cannot share a post that is sharing another post.
        **/
-      CannotShareSharingPost: AugmentedError<ApiType>;
+      CannotShareSharedPost: AugmentedError<ApiType>;
       /**
        * Cannot update space id of a comment.
        **/
@@ -161,7 +367,7 @@ declare module '@polkadot/api-base/types/errors' {
       /**
        * This post's extension is not a `SharedPost`.
        **/
-      NotASharingPost: AugmentedError<ApiType>;
+      NotASharedPost: AugmentedError<ApiType>;
       /**
        * This post's extension is not a `Comment`.
        **/
@@ -171,7 +377,7 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       NoUpdatesForPost: AugmentedError<ApiType>;
       /**
-       * Original post not found when sharing.
+       * Cannot share, because the original post was not found.
        **/
       OriginalPostNotFound: AugmentedError<ApiType>;
       /**
@@ -187,45 +393,11 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       UnknownParentComment: AugmentedError<ApiType>;
     };
-    profileFollows: {
-      /**
-       * Account can not follow itself.
-       **/
-      AccountCannotFollowItself: AugmentedError<ApiType>;
-      /**
-       * Account can not unfollow itself.
-       **/
-      AccountCannotUnfollowItself: AugmentedError<ApiType>;
-      /**
-       * Account (Alice) is already a follower of another account (Bob).
-       **/
-      AlreadyAccountFollower: AugmentedError<ApiType>;
-      /**
-       * Social account that is being followed was not found by id.
-       **/
-      FollowedAccountNotFound: AugmentedError<ApiType>;
-      /**
-       * Follower social account was not found by id.
-       **/
-      FollowerAccountNotFound: AugmentedError<ApiType>;
-      /**
-       * Account (Alice) is not a follower of another account (Bob).
-       **/
-      NotAccountFollower: AugmentedError<ApiType>;
-    };
     profiles: {
       /**
-       * Account has no profile yet.
+       * There is no space set as profile.
        **/
-      AccountHasNoProfile: AugmentedError<ApiType>;
-      /**
-       * Nothing to update in a profile.
-       **/
-      NoUpdatesForProfile: AugmentedError<ApiType>;
-      /**
-       * Profile is already created for this account.
-       **/
-      ProfileAlreadyCreated: AugmentedError<ApiType>;
+      NoSpaceSetAsProfile: AugmentedError<ApiType>;
       /**
        * Social account was not found by id.
        **/
@@ -310,23 +482,27 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       TooManyUsersToDeleteRole: AugmentedError<ApiType>;
     };
-    scheduler: {
+    session: {
       /**
-       * Failed to schedule a call
+       * Registered duplicate key.
        **/
-      FailedToSchedule: AugmentedError<ApiType>;
+      DuplicatedKey: AugmentedError<ApiType>;
       /**
-       * Cannot find the scheduled call.
+       * Invalid ownership proof.
        **/
-      NotFound: AugmentedError<ApiType>;
+      InvalidProof: AugmentedError<ApiType>;
       /**
-       * Reschedule failed because it does not change scheduled time.
+       * Key setting account is not live, so it's impossible to associate keys.
        **/
-      RescheduleNoChange: AugmentedError<ApiType>;
+      NoAccount: AugmentedError<ApiType>;
       /**
-       * Given target block number is in the past.
+       * No associated validator ID for account.
        **/
-      TargetBlockNumberInPast: AugmentedError<ApiType>;
+      NoAssociatedValidatorId: AugmentedError<ApiType>;
+      /**
+       * No keys are associated with this account.
+       **/
+      NoKeys: AugmentedError<ApiType>;
     };
     spaceFollows: {
       /**
@@ -370,10 +546,6 @@ declare module '@polkadot/api-base/types/errors' {
     };
     spaces: {
       /**
-       * Handles are disabled in `PalletSettings`.
-       **/
-      HandlesAreDisabled: AugmentedError<ApiType>;
-      /**
        * User has no permission to create subspaces within this space.
        **/
       NoPermissionToCreateSubspaces: AugmentedError<ApiType>;
@@ -394,10 +566,6 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       NoUpdatesForSpacesSettings: AugmentedError<ApiType>;
       /**
-       * Space handle is not unique.
-       **/
-      SpaceHandleIsNotUnique: AugmentedError<ApiType>;
-      /**
        * Space is at root level, no `parent_id` specified.
        **/
       SpaceIsAtRoot: AugmentedError<ApiType>;
@@ -405,6 +573,10 @@ declare module '@polkadot/api-base/types/errors' {
        * Space was not found by id.
        **/
       SpaceNotFound: AugmentedError<ApiType>;
+      /**
+       * There are too many spaces created by this account already
+       **/
+      TooManySpacesPerAccount: AugmentedError<ApiType>;
     };
     sudo: {
       /**
@@ -413,6 +585,10 @@ declare module '@polkadot/api-base/types/errors' {
       RequireSudo: AugmentedError<ApiType>;
     };
     system: {
+      /**
+       * The origin filter prevent the call to be dispatched.
+       **/
+      CallFiltered: AugmentedError<ApiType>;
       /**
        * Failed to extract the runtime version from the new runtime.
        * 
@@ -444,47 +620,50 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       TooManyCalls: AugmentedError<ApiType>;
     };
-    utils: {
+    vesting: {
       /**
-       * Account is blocked in a given space.
+       * Amount being transferred is too low to create a vesting schedule.
        **/
-      AccountIsBlocked: AugmentedError<ApiType>;
+      AmountLow: AugmentedError<ApiType>;
       /**
-       * Content is blocked in a given space.
+       * The account already has `MaxVestingSchedules` count of schedules and thus
+       * cannot add another one. Consider merging existing schedules in order to add another.
        **/
-      ContentIsBlocked: AugmentedError<ApiType>;
+      AtMaxVestingSchedules: AugmentedError<ApiType>;
       /**
-       * Content type is `None`.
+       * Failed to create a new schedule because some parameter was invalid.
        **/
-      ContentIsEmpty: AugmentedError<ApiType>;
+      InvalidScheduleParams: AugmentedError<ApiType>;
       /**
-       * Space handle contains invalid characters.
+       * The account given is not vesting.
        **/
-      HandleContainsInvalidChars: AugmentedError<ApiType>;
+      NotVesting: AugmentedError<ApiType>;
       /**
-       * Space handle is too long.
+       * An index was out of bounds of the vesting schedules.
        **/
-      HandleIsTooLong: AugmentedError<ApiType>;
+      ScheduleIndexOutOfBounds: AugmentedError<ApiType>;
+    };
+    xcmpQueue: {
       /**
-       * Space handle is too short.
+       * Bad overweight index.
        **/
-      HandleIsTooShort: AugmentedError<ApiType>;
+      BadOverweightIndex: AugmentedError<ApiType>;
       /**
-       * `Hyper` content type is not yet supported.
+       * Bad XCM data.
        **/
-      HypercoreContentTypeNotSupported: AugmentedError<ApiType>;
+      BadXcm: AugmentedError<ApiType>;
       /**
-       * IPFS CID is invalid.
+       * Bad XCM origin.
        **/
-      InvalidIpfsCid: AugmentedError<ApiType>;
+      BadXcmOrigin: AugmentedError<ApiType>;
       /**
-       * Post is blocked in a given space.
+       * Failed to send XCM message.
        **/
-      PostIsBlocked: AugmentedError<ApiType>;
+      FailedToSend: AugmentedError<ApiType>;
       /**
-       * `Raw` content type is not yet supported.
+       * Provided weight is possibly not enough to execute the message.
        **/
-      RawContentTypeNotSupported: AugmentedError<ApiType>;
+      WeightOverLimit: AugmentedError<ApiType>;
     };
   } // AugmentedErrors
 } // declare module

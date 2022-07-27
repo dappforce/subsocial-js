@@ -1,4 +1,4 @@
-import CID from 'cids'
+import { CID } from 'ipfs-http-client'
 import { IpfsCid as RuntimeIpfsCid } from '@subsocial/definitions/interfaces'
 
 export { CID }
@@ -7,7 +7,6 @@ export type CommonContent =
   CommentContent |
   PostContent |
   SpaceContent |
-  ProfileContent |
   SharedPostContent
 
 export type Activity = {
@@ -70,12 +69,6 @@ export type PostContent = CommonPostContent & {
 }
 
 export type CommentContent = CommonPostContent
-
-export type ProfileContent = {
-  name: string
-  avatar: string
-  about: string
-}
 
 export type IpfsCid = string | CID | RuntimeIpfsCid
 

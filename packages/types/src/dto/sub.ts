@@ -1,7 +1,6 @@
-import { Space, Post, Profile } from '../substrate/interfaces';
-import { CommonContent, SpaceContent, PostContent, CommentContent, ProfileContent } from '../offchain'
+import { Space, Post } from '../substrate/interfaces';
+import { CommonContent, SpaceContent, PostContent, CommentContent } from '../offchain'
 import { CommonStruct } from '../common';
-import { SocialAccountWithId } from '.';
 
 export type CommonData<S extends CommonStruct, C extends CommonContent> = {
   struct: S
@@ -11,22 +10,20 @@ export type CommonData<S extends CommonStruct, C extends CommonContent> = {
 export type SpaceData = CommonData<Space, SpaceContent>
 export type PostData = CommonData<Post, PostContent>
 export type CommentData = CommonData<Post, CommentContent>
-export type ProfileData = CommonData<SocialAccountWithId, ProfileContent> & {
-  profile?: Profile
-}
 
-export type AnySubsocialData = SpaceData | PostData | CommentData | ProfileData;
+export type AnySubsocialData = SpaceData | PostData | CommentData;
 
 export type PostWithSomeDetails = {
   post: PostData
   ext?: Exclude<PostWithSomeDetails, 'ext'>
-  owner?: ProfileData
+  // owner?: ProfileData
   space?: SpaceData
 }
 
-export type PostWithOwner = Exclude<PostWithSomeDetails, 'owner'> & {
-  owner: ProfileData
-}
+export type PostWithOwner = Exclude<PostWithSomeDetails, 'owner'> 
+// & {
+//   owner: ProfileData
+// }
 
 export type PostWithSpace = Exclude<PostWithSomeDetails, 'space'> & {
   space: SpaceData

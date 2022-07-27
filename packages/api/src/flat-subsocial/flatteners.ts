@@ -2,7 +2,7 @@ import { Option } from '@polkadot/types/codec'
 import { Post, Space, SpacePermissionSet, SpacePermissions } from '@subsocial/types/substrate/interfaces'
 import { notEmptyObj } from '@subsocial/utils'
 import { FlatSpacePermissionKey, FlatSpacePermissionMap, FlatSpacePermissions, FlatSpacePermissionsKey } from '@subsocial/types/substrate/rpc'
-import { CanBeUpdated, CanHaveContent, CanHaveHandle, CanHaveParentId, CanHaveSpaceId, CommentExtension, CommentStruct, CommonContent, EntityData, EntityId, FlatPostExtension, FlatSuperCommon, HasId, HasOwner, PostStruct, ProfileStruct, PublicProfileStruct, SharedPostExtension, SharedPostStruct, SpaceOrPostStruct, SpaceStruct, SuperCommonStruct, FlatSpaceOrPost, SocialAccountWithId } from '@subsocial/types/dto'
+import { CanHaveContent, CanHaveParentId, CanHaveSpaceId, CommentExtension, CommentStruct, CommonContent, EntityData, EntityId, FlatPostExtension, FlatSuperCommon, HasId, HasOwner, PostStruct, SharedPostExtension, SharedPostStruct, SpaceOrPostStruct, SpaceStruct, SuperCommonStruct, FlatSpaceOrPost } from '@subsocial/types/dto'
 
 type EntityDataWithField<S extends {}> = EntityData<HasId & S, CommonContent> | (HasId & S)
 
@@ -29,22 +29,6 @@ export const getUniqueContentIds = (entities: EntityDataWithField<CanHaveContent
 export const getUniqueSpaceIds = (entities: EntityDataWithField<CanHaveSpaceId>[]) =>
   getUniqueIds(entities, 'spaceId')
 
-function getUpdatedFields ({ updated }: SuperCommonStruct): CanBeUpdated {
-  const maybeUpdated = updated.unwrapOr(undefined)
-  let res: CanBeUpdated = {
-    isUpdated: updated.isSome,
-  }
-  if (maybeUpdated) {
-    res = {
-      ...res,
-      updatedByAccount: maybeUpdated.account.toHuman(),
-      updatedAtBlock: maybeUpdated.block.toNumber(),
-      updatedAtTime: maybeUpdated.time.toNumber()
-    }
-  }
-  return res
-}
-
 function getContentFields ({ content }: SuperCommonStruct): CanHaveContent {
   let res: CanHaveContent = {}
   if (content.isIpfs) {
@@ -64,7 +48,7 @@ export function flattenCommonFields (struct: SuperCommonStruct): FlatSuperCommon
     createdAtBlock: created.block.toNumber(),
     createdAtTime: created.time.toNumber(),
 
-    ...getUpdatedFields(struct),
+    isUpdated: struct.updated.toHuman(),
     ...getContentFields(struct),
   }
 }
@@ -97,10 +81,7 @@ export const flattenPermisions = (permissions?: SpacePermissions) => {
   return flatPermissions
 }
 
-export function flattenSpaceStruct (struct: Space): SpaceStruct {
-  const postsCount = struct.postsCount.toNumber()
-  const hiddenPostsCount = struct.hiddenPostsCount.toNumber()
-  const visiblePostsCount = postsCount - hiddenPostsCount
+export function flattenSpaceStruct (struct: Space,): SpaceStruct {
   const flatPermissions = flattenPermisions(struct.permissions.unwrapOr(undefined))
 
   let parentField: CanHaveParentId = {}
@@ -110,27 +91,13 @@ export function flattenSpaceStruct (struct: Space): SpaceStruct {
     }
   }
 
-  let handleField: CanHaveHandle = {}
-  if (struct.handle.isSome) {
-    handleField = {
-      handle: struct.handle.toHuman()?.toString()
-    }
-  }
-
 
   return {
     ...flattenSpaceOrPostStruct(struct),
     ...parentField,
-    ...handleField,
-
     ...flatPermissions,
     canFollowerCreatePosts: !!flatPermissions.followerPermissions?.CreatePosts, //TODO: check CreatePosts permissions in follower set
     canEveryoneCreatePosts: !!flatPermissions.everyonePermissions?.CreatePosts, //TODO: check CreatePosts permissions in everyone set
-    postsCount,
-    hiddenPostsCount,
-    visiblePostsCount,
-    followersCount: struct.followersCount.toNumber(),
-    score: struct.score.toNumber()
   }
 }
 
@@ -139,12 +106,13 @@ export function flattenSpaceStructs (structs: Space[]): SpaceStruct[] {
 }
 
 function flattenPostExtension (struct: Post): FlatPostExtension {
-  const { isSharedPost, isComment } = struct.extension
+  const { isSharedPost, isComment, isRegularPost } = struct.extension
   let normExt: FlatPostExtension = {}
 
   if (isSharedPost) {
+    const originalPostId = struct.extension.asSharedPost
     const sharedPost: SharedPostExtension = {
-      sharedPostId: struct.extension.asSharedPost.toString()
+      originalPostId: originalPostId.toString()
     }
     normExt = sharedPost
   } else if (isComment) {
@@ -162,9 +130,6 @@ function flattenPostExtension (struct: Post): FlatPostExtension {
 }
 
 export function flattenPostStruct (struct: Post): PostStruct {
-  const repliesCount = struct.repliesCount.toNumber()
-  const hiddenRepliesCount = struct.hiddenRepliesCount.toNumber()
-  const visibleRepliesCount = repliesCount - hiddenRepliesCount
   const { isRegularPost, isSharedPost, isComment } = struct.extension
   const extensionFields = flattenPostExtension(struct)
 
@@ -180,14 +145,8 @@ export function flattenPostStruct (struct: Post): PostStruct {
     ...spaceField,
     ...extensionFields,
 
-    repliesCount,
-    hiddenRepliesCount,
-    visibleRepliesCount,
-
-    sharesCount: struct.sharesCount.toNumber(),
     upvotesCount: struct.upvotesCount.toNumber(),
     downvotesCount: struct.downvotesCount.toNumber(),
-    score: struct.score.toNumber(),
 
     isRegularPost,
     isSharedPost,
@@ -209,34 +168,4 @@ export function asCommentStruct (post: PostStruct): CommentStruct {
   if (!post.isComment) throw new Error('Not a comment')
 
   return post as CommentStruct
-}
-
-export function asPublicProfileStruct (profile: ProfileStruct): PublicProfileStruct {
-  if (!profile.hasProfile) throw new Error('Account has no profile')
-
-  return profile as PublicProfileStruct
-}
-
-export function flattenProfileStruct (struct: SocialAccountWithId): ProfileStruct {
-  const profile = struct.profile?.unwrapOr(undefined)
-  const hasProfile = struct.profile?.isSome
-  const maybeProfile: Partial<FlatSuperCommon> = profile
-    ? flattenCommonFields(profile)
-    : {}
-
-  return {
-    id: struct.id.toString(),
-
-    followersCount: struct.followersCount.toNumber(),
-    followingAccountsCount: struct.followingAccountsCount.toNumber(),
-    followingSpacesCount: struct.followingSpacesCount.toNumber(),
-    reputation: struct.reputation.toNumber(),
-
-    hasProfile,
-    ...maybeProfile
-  }
-}
-
-export function flattenProfileStructs (accounts: SocialAccountWithId[]): ProfileStruct[] {
-  return accounts.map(flattenProfileStruct)
 }

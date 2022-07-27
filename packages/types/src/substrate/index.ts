@@ -4,7 +4,7 @@ export type PalletName =
   | 'domains'
   | 'permissions'
   | 'posts'
-  | 'profileFollows'
+  | 'accountFollows'
   | 'profiles'
   | 'reactions'
   | 'roles'

@@ -1,4 +1,4 @@
-import { PostData, PostWithSomeDetails, ProfileData, SpaceData} from '@subsocial/types/dto/sub'
+import { PostData, PostWithSomeDetails, SpaceData} from '@subsocial/types/dto/sub'
 import { PostId, SpaceId } from '@subsocial/types/substrate/interfaces'
 import { getPostIdFromExtension } from './common'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
@@ -9,14 +9,15 @@ import { AnyPostId, AnySpaceId, AnyAccountId } from '@subsocial/types'
 export type FindStructsFns = {
   findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
   findSpaces: (ids: AnySpaceId[]) => Promise<SpaceData[]>
-  findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
+  // TODO: Resolve this
+  // findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
 }
 
 async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts) {
   const { withSpace, withOwner } = opts || {}
-  const { findSpaces, findPosts, findProfiles } = finders
+  const { findSpaces, findPosts, /* findProfiles */ } = finders
 
-  const ownerByIdMap = new Map<string, ProfileData>()
+  // const ownerByIdMap = new Map<string, ProfileData>()
   const spaceByIdMap = new Map<string, SpaceData>()
   const postByIdMap = new Map<string, PostData>()
   posts.forEach(x => postByIdMap.set(x.struct.id.toString(), x))
@@ -138,15 +139,16 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
   })
 
+  // TODO: resolve profile space
   // Load related owners
-  if (withOwner) {
-    const owners = await findProfiles(ownerIds)
+  // if (withOwner) {
+  //   const owners = await findProfiles(ownerIds)
 
-    owners.forEach(owner => {
-      const ownerId = owner.profile?.created.account.toString()
-      ownerId && ownerByIdMap.set(ownerId, owner)
-    })
-  }
+  //   owners.forEach(owner => {
+  //     const ownerId = owner.profile?.created.account.toString()
+  //     ownerId && ownerByIdMap.set(ownerId, owner)
+  //   })
+  // }
 
   // Load related spaces
   if (withSpace) {
@@ -161,7 +163,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   return {
     postStructs,
     spaceByIdMap,
-    ownerByIdMap
+    // ownerByIdMap
   }
 }
 
@@ -170,25 +172,25 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
   const { withSpace, withOwner, visibility } = opts || {}
   const {
     spaceByIdMap,
-    ownerByIdMap,
+    // ownerByIdMap,
     postStructs
   } = await loadRelatedStructs(posts, finders, opts)
 
-  const setOwnerOnPost = (postStruct: PostWithSomeDetails) => {
-    if (!withOwner) return
+  // const setOwnerOnPost = (postStruct: PostWithSomeDetails) => {
+  //   if (!withOwner) return
 
-    const { post, ext } = postStruct
-    const ownerId = post.struct.created.account.toHuman()
-    const owner = ownerByIdMap.get(ownerId)
-    postStruct.owner = owner
+  //   const { post, ext } = postStruct
+  //   const ownerId = post.struct.created.account.toHuman()
+  //   const owner = ownerByIdMap.get(ownerId)
+  //   postStruct.owner = owner
 
-    if (!ext) return
+  //   if (!ext) return
 
-    const extOwnerId = ext.post.struct.created.account.toHuman()
-    ext.owner = extOwnerId === ownerId
-      ? owner
-      : ownerByIdMap.get(extOwnerId)
-  }
+  //   const extOwnerId = ext.post.struct.created.account.toHuman()
+  //   ext.owner = extOwnerId === ownerId
+  //     ? owner
+  //     : ownerByIdMap.get(extOwnerId)
+  // }
 
   const setSpaceOnPost = (post: PostWithSomeDetails, spaceId?: SpaceId, ext?: PostWithSomeDetails) => {
     if (!withSpace || !spaceId) return
@@ -205,7 +207,7 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
 
   postStructs.forEach(post => {
     const { post: { struct: { spaceId: spaceIdOpt } }, ext } = post
-    setOwnerOnPost(post)
+    // setOwnerOnPost(post)
 
     // Set a space if the post has space id:
     setSpaceOnPost(post, spaceIdOpt.unwrapOr(undefined))

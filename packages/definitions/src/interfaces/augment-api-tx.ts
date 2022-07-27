@@ -2,13 +2,24 @@
 /* eslint-disable */
 
 import type { ApiTypes } from '@polkadot/api-base/types';
-import type { Bytes, Compact, Option, Vec, bool, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
+import type { Bytes, Compact, Option, Vec, bool, u128, u16, u32, u64 } from '@polkadot/types-codec';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
-import type { AccountId32, Call, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
-import type { PalletFaucetsFaucetUpdate, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletProfilesProfileUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletSpacesSpacesSettings, PalletUtilsContent, PalletUtilsUser, SpCoreChangesTrieChangesTrieConfiguration, SpCoreVoid, SpFinalityGrandpaEquivocationProof } from '@polkadot/types/lookup';
+import type { AccountId32, Call, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
+import type { CumulusPrimitivesParachainInherentParachainInherentData, PalletDomainsInnerValue, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletVestingVestingInfo, SpRuntimeHeader, SubsocialParachainRuntimeOriginCaller, SubsocialParachainRuntimeSessionKeys, SubsocialSupportContent, SubsocialSupportUser, SubsocialSupportWhoAndWhen, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
 
 declare module '@polkadot/api-base/types/submittable' {
   export interface AugmentedSubmittables<ApiType extends ApiTypes> {
+    accountFollows: {
+      followAccount: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32]>;
+      forceFollowAccount: AugmentedSubmittable<(follower: AccountId32 | string | Uint8Array, following: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, AccountId32]>;
+      unfollowAccount: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32]>;
+    };
+    authorship: {
+      /**
+       * Provide a set of uncles.
+       **/
+      setUncles: AugmentedSubmittable<(newUncles: Vec<SpRuntimeHeader> | (SpRuntimeHeader | { parentHash?: any; number?: any; stateRoot?: any; extrinsicsRoot?: any; digest?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<SpRuntimeHeader>]>;
+    };
     balances: {
       /**
        * Exactly as `transfer`, except the origin must be root and the source account may be
@@ -29,28 +40,17 @@ declare module '@polkadot/api-base/types/submittable' {
        * Set the balances of a given account.
        * 
        * This will alter `FreeBalance` and `ReservedBalance` in storage. it will
-       * also decrease the total issuance of the system (`TotalIssuance`).
+       * also alter the total issuance of the system (`TotalIssuance`) appropriately.
        * If the new free or reserved balance is below the existential deposit,
        * it will reset the account nonce (`frame_system::AccountNonce`).
        * 
        * The dispatch origin for this call is `root`.
-       * 
-       * # <weight>
-       * - Independent of the arguments.
-       * - Contains a limited number of reads and writes.
-       * ---------------------
-       * - Base Weight:
-       * - Creating: 27.56 µs
-       * - Killing: 35.11 µs
-       * - DB Weight: 1 Read, 1 Write to `who`
-       * # </weight>
        **/
       setBalance: AugmentedSubmittable<(who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, newFree: Compact<u128> | AnyNumber | Uint8Array, newReserved: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, Compact<u128>, Compact<u128>]>;
       /**
        * Transfer some liquid free balance to another account.
        * 
        * `transfer` will set the `FreeBalance` of the sender and receiver.
-       * It will decrease the total issuance of the system by the `TransferFee`.
        * If the sender's account is below the existential deposit as a result
        * of the transfer, the account will be reaped.
        * 
@@ -71,8 +71,6 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `transfer_keep_alive` works the same way as `transfer`, but has an additional check
        * that the transfer will not kill the origin account.
        * ---------------------------------
-       * - Base Weight: 73.64 µs, worst case scenario (account created, account removed)
-       * - DB Weight: 1 Read and 1 Write to destination account
        * - Origin account is already in memory, so no DB operations for them.
        * # </weight>
        **/
@@ -104,74 +102,258 @@ declare module '@polkadot/api-base/types/submittable' {
        * 99% of the time you want [`transfer`] instead.
        * 
        * [`transfer`]: struct.Pallet.html#method.transfer
-       * # <weight>
-       * - Cheaper than transfer because account cannot be killed.
-       * - Base Weight: 51.4 µs
-       * - DB Weight: 1 Read and 1 Write to dest (sender is in overlay already)
-       * #</weight>
        **/
       transferKeepAlive: AugmentedSubmittable<(dest: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, Compact<u128>]>;
     };
-    dotsamaClaims: {
-      addEligibleAccounts: AugmentedSubmittable<(eligibleAccounts: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<AccountId32>]>;
-      claimTokens: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
-      setRewardsSender: AugmentedSubmittable<(rewardsSenderOpt: Option<AccountId32> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<AccountId32>]>;
-    };
-    faucets: {
-      addFaucet: AugmentedSubmittable<(faucet: AccountId32 | string | Uint8Array, period: u32 | AnyNumber | Uint8Array, periodLimit: u128 | AnyNumber | Uint8Array, dripLimit: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, u32, u128, u128]>;
-      drip: AugmentedSubmittable<(recipient: AccountId32 | string | Uint8Array, amount: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, u128]>;
-      removeFaucets: AugmentedSubmittable<(faucets: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<AccountId32>]>;
-      updateFaucet: AugmentedSubmittable<(faucet: AccountId32 | string | Uint8Array, update: PalletFaucetsFaucetUpdate | { enabled?: any; period?: any; periodLimit?: any; dripLimit?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, PalletFaucetsFaucetUpdate]>;
-    };
-    grandpa: {
+    collatorSelection: {
       /**
-       * Note that the current authority set of the GRANDPA finality gadget has
-       * stalled. This will trigger a forced authority set change at the beginning
-       * of the next session, to be enacted `delay` blocks after that. The delay
-       * should be high enough to safely assume that the block signalling the
-       * forced change will not be re-orged (e.g. 1000 blocks). The GRANDPA voters
-       * will start the new authority set using the given finalized block as base.
-       * Only callable by root.
-       **/
-      noteStalled: AugmentedSubmittable<(delay: u32 | AnyNumber | Uint8Array, bestFinalizedBlockNumber: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, u32]>;
-      /**
-       * Report voter equivocation/misbehavior. This method will verify the
-       * equivocation proof and validate the given key ownership proof
-       * against the extracted offender. If both are valid, the offence
-       * will be reported.
-       **/
-      reportEquivocation: AugmentedSubmittable<(equivocationProof: SpFinalityGrandpaEquivocationProof | { setId?: any; equivocation?: any } | string | Uint8Array, keyOwnerProof: SpCoreVoid | null) => SubmittableExtrinsic<ApiType>, [SpFinalityGrandpaEquivocationProof, SpCoreVoid]>;
-      /**
-       * Report voter equivocation/misbehavior. This method will verify the
-       * equivocation proof and validate the given key ownership proof
-       * against the extracted offender. If both are valid, the offence
-       * will be reported.
+       * Deregister `origin` as a collator candidate. Note that the collator can only leave on
+       * session change. The `CandidacyBond` will be unreserved immediately.
        * 
-       * This extrinsic must be called unsigned and it is expected that only
-       * block authors will call it (validated in `ValidateUnsigned`), as such
-       * if the block author is defined it will be defined as the equivocation
-       * reporter.
+       * This call will fail if the total number of candidates would drop below `MinCandidates`.
+       * 
+       * This call is not available to `Invulnerable` collators.
        **/
-      reportEquivocationUnsigned: AugmentedSubmittable<(equivocationProof: SpFinalityGrandpaEquivocationProof | { setId?: any; equivocation?: any } | string | Uint8Array, keyOwnerProof: SpCoreVoid | null) => SubmittableExtrinsic<ApiType>, [SpFinalityGrandpaEquivocationProof, SpCoreVoid]>;
+      leaveIntent: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Register this account as a collator candidate. The account must (a) already have
+       * registered session keys and (b) be able to reserve the `CandidacyBond`.
+       * 
+       * This call is not available to `Invulnerable` collators.
+       **/
+      registerAsCandidate: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Set the candidacy bond amount.
+       **/
+      setCandidacyBond: AugmentedSubmittable<(bond: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u128]>;
+      /**
+       * Set the ideal number of collators (not including the invulnerables).
+       * If lowering this number, then the number of running collators could be higher than this figure.
+       * Aside from that edge case, there should be no other way to have more collators than the desired number.
+       **/
+      setDesiredCandidates: AugmentedSubmittable<(max: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
+       * Set the list of invulnerable (fixed) collators.
+       **/
+      setInvulnerables: AugmentedSubmittable<(updated: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<AccountId32>]>;
     };
-    permissions: {
+    dmpQueue: {
+      /**
+       * Service a single overweight message.
+       * 
+       * - `origin`: Must pass `ExecuteOverweightOrigin`.
+       * - `index`: The index of the overweight message to service.
+       * - `weight_limit`: The amount of weight that message execution may take.
+       * 
+       * Errors:
+       * - `Unknown`: Message of `index` is unknown.
+       * - `OverLimit`: Message execution may use greater than `weight_limit`.
+       * 
+       * Events:
+       * - `OverweightServiced`: On success.
+       **/
+      serviceOverweight: AugmentedSubmittable<(index: u64 | AnyNumber | Uint8Array, weightLimit: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, u64]>;
+    };
+    domains: {
+      /**
+       * Registers a domain ([full_domain]) using root on behalf of a [target] with [content],
+       * and set the domain to expire in [expires_in] number of blocks.
+       **/
+      forceRegisterDomain: AugmentedSubmittable<(target: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, fullDomain: Bytes | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, expiresIn: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, Bytes, SubsocialSupportContent, u32]>;
+      /**
+       * Sets the domain inner_value to be one of subsocial account, space, or post.
+       **/
+      forceSetInnerValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<PalletDomainsInnerValue> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, Option<PalletDomainsInnerValue>]>;
+      /**
+       * Registers a domain ([full_domain]) using origin with [content],
+       * and set the domain to expire in [expires_in] number of blocks.
+       * [full_domain] is a full domain name including a dot (.) and TLD.
+       * Example of a [full_domain]: `mytoken.ksm`
+       **/
+      registerDomain: AugmentedSubmittable<(fullDomain: Bytes | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, expiresIn: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, SubsocialSupportContent, u32]>;
+      /**
+       * Mark set of domains as not reservable by users.
+       **/
+      reserveWords: AugmentedSubmittable<(words: Vec<Bytes> | (Bytes | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Bytes>]>;
+      /**
+       * Sets the domain content to be an outside link.
+       **/
+      setDomainContent: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, newContent: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, SubsocialSupportContent]>;
+      /**
+       * Sets the domain inner_value to be one of Subsocial account, space, or post.
+       **/
+      setInnerValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<PalletDomainsInnerValue> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, Option<PalletDomainsInnerValue>]>;
+      /**
+       * Sets the domain outer_value to be a custom string.
+       **/
+      setOuterValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<Bytes> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, Option<Bytes>]>;
+      /**
+       * Add support for a set of top-level domains.
+       **/
+      supportTlds: AugmentedSubmittable<(tlds: Vec<Bytes> | (Bytes | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Bytes>]>;
+    };
+    parachainSystem: {
+      authorizeUpgrade: AugmentedSubmittable<(codeHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H256]>;
+      enactAuthorizedUpgrade: AugmentedSubmittable<(code: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
+      /**
+       * Set the current validation data.
+       * 
+       * This should be invoked exactly once per block. It will panic at the finalization
+       * phase if the call was not invoked.
+       * 
+       * The dispatch origin for this call must be `Inherent`
+       * 
+       * As a side effect, this function upgrades the current validation function
+       * if the appropriate time has come.
+       **/
+      setValidationData: AugmentedSubmittable<(data: CumulusPrimitivesParachainInherentParachainInherentData | { validationData?: any; relayChainState?: any; downwardMessages?: any; horizontalMessages?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CumulusPrimitivesParachainInherentParachainInherentData]>;
+      sudoSendUpwardMessage: AugmentedSubmittable<(message: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
+    };
+    polkadotXcm: {
+      /**
+       * Execute an XCM message from a local, signed, origin.
+       * 
+       * An event is deposited indicating whether `msg` could be executed completely or only
+       * partially.
+       * 
+       * No more than `max_weight` will be used in its attempted execution. If this is less than the
+       * maximum amount of weight that the message could take to be executed, then no execution
+       * attempt will be made.
+       * 
+       * NOTE: A successful return to this does *not* imply that the `msg` was executed successfully
+       * to completion; only that *some* of it was executed.
+       **/
+      execute: AugmentedSubmittable<(message: XcmVersionedXcm | { V0: any } | { V1: any } | { V2: any } | string | Uint8Array, maxWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedXcm, u64]>;
+      /**
+       * Set a safe XCM version (the version that XCM should be encoded with if the most recent
+       * version a destination can accept is unknown).
+       * 
+       * - `origin`: Must be Root.
+       * - `maybe_xcm_version`: The default XCM encoding version, or `None` to disable.
+       **/
+      forceDefaultXcmVersion: AugmentedSubmittable<(maybeXcmVersion: Option<u32> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u32>]>;
+      /**
+       * Ask a location to notify us regarding their XCM version and any changes to it.
+       * 
+       * - `origin`: Must be Root.
+       * - `location`: The location to which we should subscribe for XCM version notifications.
+       **/
+      forceSubscribeVersionNotify: AugmentedSubmittable<(location: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation]>;
+      /**
+       * Require that a particular destination should no longer notify us regarding any XCM
+       * version changes.
+       * 
+       * - `origin`: Must be Root.
+       * - `location`: The location to which we are currently subscribed for XCM version
+       * notifications which we no longer desire.
+       **/
+      forceUnsubscribeVersionNotify: AugmentedSubmittable<(location: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation]>;
+      /**
+       * Extoll that a particular destination can be communicated with through a particular
+       * version of XCM.
+       * 
+       * - `origin`: Must be Root.
+       * - `location`: The destination that is being described.
+       * - `xcm_version`: The latest version of XCM that `location` supports.
+       **/
+      forceXcmVersion: AugmentedSubmittable<(location: XcmV1MultiLocation | { parents?: any; interior?: any } | string | Uint8Array, xcmVersion: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmV1MultiLocation, u32]>;
+      /**
+       * Transfer some assets from the local chain to the sovereign account of a destination
+       * chain and forward a notification XCM.
+       * 
+       * Fee payment on the destination side is made from the asset in the `assets` vector of
+       * index `fee_asset_item`, up to enough to pay for `weight_limit` of weight. If more weight
+       * is needed than `weight_limit`, then the operation will fail and the assets send may be
+       * at risk.
+       * 
+       * - `origin`: Must be capable of withdrawing the `assets` and executing XCM.
+       * - `dest`: Destination context for the assets. Will typically be `X2(Parent, Parachain(..))` to send
+       * from parachain to parachain, or `X1(Parachain(..))` to send from relay to parachain.
+       * - `beneficiary`: A beneficiary location for the assets in the context of `dest`. Will generally be
+       * an `AccountId32` value.
+       * - `assets`: The assets to be withdrawn. This should include the assets used to pay the fee on the
+       * `dest` side.
+       * - `fee_asset_item`: The index into `assets` of the item which should be used to pay
+       * fees.
+       * - `weight_limit`: The remote-side weight limit, if any, for the XCM fee purchase.
+       **/
+      limitedReserveTransferAssets: AugmentedSubmittable<(dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, beneficiary: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, assets: XcmVersionedMultiAssets | { V0: any } | { V1: any } | string | Uint8Array, feeAssetItem: u32 | AnyNumber | Uint8Array, weightLimit: XcmV2WeightLimit | { Unlimited: any } | { Limited: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, XcmVersionedMultiLocation, XcmVersionedMultiAssets, u32, XcmV2WeightLimit]>;
+      /**
+       * Teleport some assets from the local chain to some destination chain.
+       * 
+       * Fee payment on the destination side is made from the asset in the `assets` vector of
+       * index `fee_asset_item`, up to enough to pay for `weight_limit` of weight. If more weight
+       * is needed than `weight_limit`, then the operation will fail and the assets send may be
+       * at risk.
+       * 
+       * - `origin`: Must be capable of withdrawing the `assets` and executing XCM.
+       * - `dest`: Destination context for the assets. Will typically be `X2(Parent, Parachain(..))` to send
+       * from parachain to parachain, or `X1(Parachain(..))` to send from relay to parachain.
+       * - `beneficiary`: A beneficiary location for the assets in the context of `dest`. Will generally be
+       * an `AccountId32` value.
+       * - `assets`: The assets to be withdrawn. The first item should be the currency used to to pay the fee on the
+       * `dest` side. May not be empty.
+       * - `fee_asset_item`: The index into `assets` of the item which should be used to pay
+       * fees.
+       * - `weight_limit`: The remote-side weight limit, if any, for the XCM fee purchase.
+       **/
+      limitedTeleportAssets: AugmentedSubmittable<(dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, beneficiary: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, assets: XcmVersionedMultiAssets | { V0: any } | { V1: any } | string | Uint8Array, feeAssetItem: u32 | AnyNumber | Uint8Array, weightLimit: XcmV2WeightLimit | { Unlimited: any } | { Limited: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, XcmVersionedMultiLocation, XcmVersionedMultiAssets, u32, XcmV2WeightLimit]>;
+      /**
+       * Transfer some assets from the local chain to the sovereign account of a destination
+       * chain and forward a notification XCM.
+       * 
+       * Fee payment on the destination side is made from the asset in the `assets` vector of
+       * index `fee_asset_item`. The weight limit for fees is not provided and thus is unlimited,
+       * with all fees taken as needed from the asset.
+       * 
+       * - `origin`: Must be capable of withdrawing the `assets` and executing XCM.
+       * - `dest`: Destination context for the assets. Will typically be `X2(Parent, Parachain(..))` to send
+       * from parachain to parachain, or `X1(Parachain(..))` to send from relay to parachain.
+       * - `beneficiary`: A beneficiary location for the assets in the context of `dest`. Will generally be
+       * an `AccountId32` value.
+       * - `assets`: The assets to be withdrawn. This should include the assets used to pay the fee on the
+       * `dest` side.
+       * - `fee_asset_item`: The index into `assets` of the item which should be used to pay
+       * fees.
+       **/
+      reserveTransferAssets: AugmentedSubmittable<(dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, beneficiary: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, assets: XcmVersionedMultiAssets | { V0: any } | { V1: any } | string | Uint8Array, feeAssetItem: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, XcmVersionedMultiLocation, XcmVersionedMultiAssets, u32]>;
+      send: AugmentedSubmittable<(dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, message: XcmVersionedXcm | { V0: any } | { V1: any } | { V2: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, XcmVersionedXcm]>;
+      /**
+       * Teleport some assets from the local chain to some destination chain.
+       * 
+       * Fee payment on the destination side is made from the asset in the `assets` vector of
+       * index `fee_asset_item`. The weight limit for fees is not provided and thus is unlimited,
+       * with all fees taken as needed from the asset.
+       * 
+       * - `origin`: Must be capable of withdrawing the `assets` and executing XCM.
+       * - `dest`: Destination context for the assets. Will typically be `X2(Parent, Parachain(..))` to send
+       * from parachain to parachain, or `X1(Parachain(..))` to send from relay to parachain.
+       * - `beneficiary`: A beneficiary location for the assets in the context of `dest`. Will generally be
+       * an `AccountId32` value.
+       * - `assets`: The assets to be withdrawn. The first item should be the currency used to to pay the fee on the
+       * `dest` side. May not be empty.
+       * - `fee_asset_item`: The index into `assets` of the item which should be used to pay
+       * fees.
+       **/
+      teleportAssets: AugmentedSubmittable<(dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, beneficiary: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, assets: XcmVersionedMultiAssets | { V0: any } | { V1: any } | string | Uint8Array, feeAssetItem: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, XcmVersionedMultiLocation, XcmVersionedMultiAssets, u32]>;
     };
     posts: {
-      createPost: AugmentedSubmittable<(spaceIdOpt: Option<u64> | null | object | string | Uint8Array, extension: PalletPostsPostExtension | { RegularPost: any } | { Comment: any } | { SharedPost: any } | string | Uint8Array, content: PalletUtilsContent | { None: any } | { Raw: any } | { IPFS: any } | { Hyper: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u64>, PalletPostsPostExtension, PalletUtilsContent]>;
+      createPost: AugmentedSubmittable<(spaceIdOpt: Option<u64> | null | object | string | Uint8Array, extension: PalletPostsPostExtension | { RegularPost: any } | { Comment: any } | { SharedPost: any } | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u64>, PalletPostsPostExtension, SubsocialSupportContent]>;
+      forceCreatePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, owner: AccountId32 | string | Uint8Array, extension: PalletPostsPostExtension | { RegularPost: any } | { Comment: any } | { SharedPost: any } | string | Uint8Array, spaceId: Option<u64> | null | object | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, hidden: bool | boolean | Uint8Array, upvotesCount: u32 | AnyNumber | Uint8Array, downvotesCount: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, SubsocialSupportWhoAndWhen, AccountId32, PalletPostsPostExtension, Option<u64>, SubsocialSupportContent, bool, u32, u32]>;
+      forceSetNextPostId: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
       movePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, newSpaceId: Option<u64> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, Option<u64>]>;
       updatePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, update: PalletPostsPostUpdate | { spaceId?: any; content?: any; hidden?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletPostsPostUpdate]>;
     };
-    profileFollows: {
-      followAccount: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32]>;
-      unfollowAccount: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32]>;
-    };
     profiles: {
-      createProfile: AugmentedSubmittable<(content: PalletUtilsContent | { None: any } | { Raw: any } | { IPFS: any } | { Hyper: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletUtilsContent]>;
-      updateProfile: AugmentedSubmittable<(update: PalletProfilesProfileUpdate | { content?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletProfilesProfileUpdate]>;
+      forceSetSpaceAsProfile: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array, spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, u64]>;
+      setSpaceAsProfile: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      unsetSpaceAsProfile: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
     };
     reactions: {
       createPostReaction: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, kind: PalletReactionsReactionKind | 'Upvote' | 'Downvote' | number | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletReactionsReactionKind]>;
       deletePostReaction: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, reactionId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, u64]>;
+      forceCreatePostReaction: AugmentedSubmittable<(who: AccountId32 | string | Uint8Array, postId: u64 | AnyNumber | Uint8Array, reactionId: u64 | AnyNumber | Uint8Array, created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, reactionKind: PalletReactionsReactionKind | 'Upvote' | 'Downvote' | number | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, u64, u64, SubsocialSupportWhoAndWhen, PalletReactionsReactionKind]>;
+      forceSetNextReactionId: AugmentedSubmittable<(reactionId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
       updatePostReaction: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, reactionId: u64 | AnyNumber | Uint8Array, newKind: PalletReactionsReactionKind | 'Upvote' | 'Downvote' | number | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, u64, PalletReactionsReactionKind]>;
     };
     roles: {
@@ -183,100 +365,72 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * Only the space owner or a user with `ManageRoles` permission can call this dispatch.
        **/
-      createRole: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, timeToLive: Option<u32> | null | object | string | Uint8Array, content: PalletUtilsContent | { None: any } | { Raw: any } | { IPFS: any } | { Hyper: any } | string | Uint8Array, permissions: Vec<PalletPermissionsSpacePermission> | (PalletPermissionsSpacePermission | 'ManageRoles' | 'RepresentSpaceInternally' | 'RepresentSpaceExternally' | 'UpdateSpace' | 'CreateSubspaces' | 'UpdateOwnSubspaces' | 'DeleteOwnSubspaces' | 'HideOwnSubspaces' | 'UpdateAnySubspace' | 'DeleteAnySubspace' | 'HideAnySubspace' | 'CreatePosts' | 'UpdateOwnPosts' | 'DeleteOwnPosts' | 'HideOwnPosts' | 'UpdateAnyPost' | 'DeleteAnyPost' | 'HideAnyPost' | 'CreateComments' | 'UpdateOwnComments' | 'DeleteOwnComments' | 'HideOwnComments' | 'HideAnyComment' | 'Upvote' | 'Downvote' | 'Share' | 'OverrideSubspacePermissions' | 'OverridePostPermissions' | 'SuggestEntityStatus' | 'UpdateEntityStatus' | 'UpdateSpaceSettings' | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Option<u32>, PalletUtilsContent, Vec<PalletPermissionsSpacePermission>]>;
+      createRole: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, timeToLive: Option<u32> | null | object | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissions: Vec<PalletPermissionsSpacePermission> | (PalletPermissionsSpacePermission | 'ManageRoles' | 'RepresentSpaceInternally' | 'RepresentSpaceExternally' | 'UpdateSpace' | 'CreateSubspaces' | 'UpdateOwnSubspaces' | 'DeleteOwnSubspaces' | 'HideOwnSubspaces' | 'UpdateAnySubspace' | 'DeleteAnySubspace' | 'HideAnySubspace' | 'CreatePosts' | 'UpdateOwnPosts' | 'DeleteOwnPosts' | 'HideOwnPosts' | 'UpdateAnyPost' | 'DeleteAnyPost' | 'HideAnyPost' | 'CreateComments' | 'UpdateOwnComments' | 'DeleteOwnComments' | 'HideOwnComments' | 'HideAnyComment' | 'Upvote' | 'Downvote' | 'Share' | 'OverrideSubspacePermissions' | 'OverridePostPermissions' | 'SuggestEntityStatus' | 'UpdateEntityStatus' | 'UpdateSpaceSettings' | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Option<u32>, SubsocialSupportContent, Vec<PalletPermissionsSpacePermission>]>;
       /**
        * Delete a given role and clean all associated storage items.
        * Only the space owner or a user with `ManageRoles` permission can call this dispatch.
        **/
       deleteRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      forceCreateRole: AugmentedSubmittable<(created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, roleId: u64 | AnyNumber | Uint8Array, spaceId: u64 | AnyNumber | Uint8Array, disabled: bool | boolean | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissions: Vec<PalletPermissionsSpacePermission> | (PalletPermissionsSpacePermission | 'ManageRoles' | 'RepresentSpaceInternally' | 'RepresentSpaceExternally' | 'UpdateSpace' | 'CreateSubspaces' | 'UpdateOwnSubspaces' | 'DeleteOwnSubspaces' | 'HideOwnSubspaces' | 'UpdateAnySubspace' | 'DeleteAnySubspace' | 'HideAnySubspace' | 'CreatePosts' | 'UpdateOwnPosts' | 'DeleteOwnPosts' | 'HideOwnPosts' | 'UpdateAnyPost' | 'DeleteAnyPost' | 'HideAnyPost' | 'CreateComments' | 'UpdateOwnComments' | 'DeleteOwnComments' | 'HideOwnComments' | 'HideAnyComment' | 'Upvote' | 'Downvote' | 'Share' | 'OverrideSubspacePermissions' | 'OverridePostPermissions' | 'SuggestEntityStatus' | 'UpdateEntityStatus' | 'UpdateSpaceSettings' | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [SubsocialSupportWhoAndWhen, u64, u64, bool, SubsocialSupportContent, Vec<PalletPermissionsSpacePermission>]>;
+      forceGrantRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array, users: Vec<SubsocialSupportUser> | (SubsocialSupportUser | { Account: any } | { Space: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Vec<SubsocialSupportUser>]>;
+      forceSetNextRoleId: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
       /**
        * Grant a given role to a list of users.
        * Only the space owner or a user with `ManageRoles` permission can call this dispatch.
        **/
-      grantRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array, users: Vec<PalletUtilsUser> | (PalletUtilsUser | { Account: any } | { Space: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Vec<PalletUtilsUser>]>;
+      grantRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array, users: Vec<SubsocialSupportUser> | (SubsocialSupportUser | { Account: any } | { Space: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Vec<SubsocialSupportUser>]>;
       /**
        * Revoke a given role from a list of users.
        * Only the space owner or a user with `ManageRoles` permission can call this dispatch.
        **/
-      revokeRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array, users: Vec<PalletUtilsUser> | (PalletUtilsUser | { Account: any } | { Space: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Vec<PalletUtilsUser>]>;
+      revokeRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array, users: Vec<SubsocialSupportUser> | (SubsocialSupportUser | { Account: any } | { Space: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Vec<SubsocialSupportUser>]>;
       /**
        * Update an existing role by a given id.
        * Only the space owner or a user with `ManageRoles` permission can call this dispatch.
        **/
       updateRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array, update: PalletRolesRoleUpdate | { disabled?: any; content?: any; permissions?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletRolesRoleUpdate]>;
     };
-    scheduler: {
+    session: {
       /**
-       * Cancel an anonymously scheduled task.
+       * Removes any session key(s) of the function caller.
+       * 
+       * This doesn't take effect until the next session.
+       * 
+       * The dispatch origin of this function must be Signed and the account must be either be
+       * convertible to a validator ID using the chain's typical addressing system (this usually
+       * means being a controller account) or directly convertible into a validator ID (which
+       * usually means being a stash account).
        * 
        * # <weight>
-       * - S = Number of already scheduled calls
-       * - Base Weight: 22.15 + 2.869 * S µs
-       * - DB Weight:
-       * - Read: Agenda
-       * - Write: Agenda, Lookup
-       * - Will use base weight of 100 which should be good for up to 30 scheduled calls
+       * - Complexity: `O(1)` in number of key types. Actual cost depends on the number of length
+       * of `T::Keys::key_ids()` which is fixed.
+       * - DbReads: `T::ValidatorIdOf`, `NextKeys`, `origin account`
+       * - DbWrites: `NextKeys`, `origin account`
+       * - DbWrites per key id: `KeyOwner`
        * # </weight>
        **/
-      cancel: AugmentedSubmittable<(when: u32 | AnyNumber | Uint8Array, index: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, u32]>;
+      purgeKeys: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       /**
-       * Cancel a named scheduled task.
+       * Sets the session key(s) of the function caller to `keys`.
+       * Allows an account to set its session key prior to becoming a validator.
+       * This doesn't take effect until the next session.
+       * 
+       * The dispatch origin of this function must be signed.
        * 
        * # <weight>
-       * - S = Number of already scheduled calls
-       * - Base Weight: 24.91 + 2.907 * S µs
-       * - DB Weight:
-       * - Read: Agenda, Lookup
-       * - Write: Agenda, Lookup
-       * - Will use base weight of 100 which should be good for up to 30 scheduled calls
+       * - Complexity: `O(1)`. Actual cost depends on the number of length of
+       * `T::Keys::key_ids()` which is fixed.
+       * - DbReads: `origin account`, `T::ValidatorIdOf`, `NextKeys`
+       * - DbWrites: `origin account`, `NextKeys`
+       * - DbReads per key id: `KeyOwner`
+       * - DbWrites per key id: `KeyOwner`
        * # </weight>
        **/
-      cancelNamed: AugmentedSubmittable<(id: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
-      /**
-       * Anonymously schedule a task.
-       * 
-       * # <weight>
-       * - S = Number of already scheduled calls
-       * - Base Weight: 22.29 + .126 * S µs
-       * - DB Weight:
-       * - Read: Agenda
-       * - Write: Agenda
-       * - Will use base weight of 25 which should be good for up to 30 scheduled calls
-       * # </weight>
-       **/
-      schedule: AugmentedSubmittable<(when: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Option<ITuple<[u32, u32]>>, u8, Call]>;
-      /**
-       * Anonymously schedule a task after a delay.
-       * 
-       * # <weight>
-       * Same as [`schedule`].
-       * # </weight>
-       **/
-      scheduleAfter: AugmentedSubmittable<(after: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Option<ITuple<[u32, u32]>>, u8, Call]>;
-      /**
-       * Schedule a named task.
-       * 
-       * # <weight>
-       * - S = Number of already scheduled calls
-       * - Base Weight: 29.6 + .159 * S µs
-       * - DB Weight:
-       * - Read: Agenda, Lookup
-       * - Write: Agenda, Lookup
-       * - Will use base weight of 35 which should be good for more than 30 scheduled calls
-       * # </weight>
-       **/
-      scheduleNamed: AugmentedSubmittable<(id: Bytes | string | Uint8Array, when: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u32, Option<ITuple<[u32, u32]>>, u8, Call]>;
-      /**
-       * Schedule a named task after a delay.
-       * 
-       * # <weight>
-       * Same as [`schedule_named`](Self::schedule_named).
-       * # </weight>
-       **/
-      scheduleNamedAfter: AugmentedSubmittable<(id: Bytes | string | Uint8Array, after: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u32, Option<ITuple<[u32, u32]>>, u8, Call]>;
+      setKeys: AugmentedSubmittable<(keys: SubsocialParachainRuntimeSessionKeys | { aura?: any } | string | Uint8Array, proof: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialParachainRuntimeSessionKeys, Bytes]>;
     };
     spaceFollows: {
       followSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      forceFollowSpace: AugmentedSubmittable<(follower: AccountId32 | string | Uint8Array, spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, u64]>;
       unfollowSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
     };
     spaceOwnership: {
@@ -285,10 +439,10 @@ declare module '@polkadot/api-base/types/submittable' {
       transferSpaceOwnership: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, transferTo: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, AccountId32]>;
     };
     spaces: {
-      createSpace: AugmentedSubmittable<(parentIdOpt: Option<u64> | null | object | string | Uint8Array, handleOpt: Option<Bytes> | null | object | string | Uint8Array, content: PalletUtilsContent | { None: any } | { Raw: any } | { IPFS: any } | { Hyper: any } | string | Uint8Array, permissionsOpt: Option<PalletPermissionsSpacePermissions> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u64>, Option<Bytes>, PalletUtilsContent, Option<PalletPermissionsSpacePermissions>]>;
-      forceUnreserveHandle: AugmentedSubmittable<(handle: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
-      updateSettings: AugmentedSubmittable<(newSettings: PalletSpacesSpacesSettings | { handlesEnabled?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [PalletSpacesSpacesSettings]>;
-      updateSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, update: PalletSpacesSpaceUpdate | { parentId?: any; handle?: any; content?: any; hidden?: any; permissions?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletSpacesSpaceUpdate]>;
+      createSpace: AugmentedSubmittable<(parentIdOpt: Option<u64> | null | object | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissionsOpt: Option<PalletPermissionsSpacePermissions> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u64>, SubsocialSupportContent, Option<PalletPermissionsSpacePermissions>]>;
+      forceCreateSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, owner: AccountId32 | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, hidden: bool | boolean | Uint8Array, permissionsOpt: Option<PalletPermissionsSpacePermissions> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, SubsocialSupportWhoAndWhen, AccountId32, SubsocialSupportContent, bool, Option<PalletPermissionsSpacePermissions>]>;
+      forceSetNextSpaceId: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      updateSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, update: PalletSpacesSpaceUpdate | { parentId?: any; content?: any; hidden?: any; permissions?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletSpacesSpaceUpdate]>;
     };
     sudo: {
       /**
@@ -355,24 +509,10 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * **NOTE:** We rely on the Root origin to provide us the number of subkeys under
        * the prefix we are removing to accurately calculate the weight of this function.
-       * 
-       * # <weight>
-       * - `O(P)` where `P` amount of keys with prefix `prefix`
-       * - `P` storage deletions.
-       * - Base Weight: 0.834 * P µs
-       * - Writes: Number of subkeys + 1
-       * # </weight>
        **/
       killPrefix: AugmentedSubmittable<(prefix: Bytes | string | Uint8Array, subkeys: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u32]>;
       /**
        * Kill some items from storage.
-       * 
-       * # <weight>
-       * - `O(IK)` where `I` length of `keys` and `K` length of one key
-       * - `I` storage deletions.
-       * - Base Weight: .378 * i µs
-       * - Writes: Number of items
-       * # </weight>
        **/
       killStorage: AugmentedSubmittable<(keys: Vec<Bytes> | (Bytes | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Bytes>]>;
       /**
@@ -385,26 +525,8 @@ declare module '@polkadot/api-base/types/submittable' {
       remark: AugmentedSubmittable<(remark: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
       /**
        * Make some on-chain remark and emit event.
-       * 
-       * # <weight>
-       * - `O(b)` where b is the length of the remark.
-       * - 1 event.
-       * # </weight>
        **/
       remarkWithEvent: AugmentedSubmittable<(remark: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
-      /**
-       * Set the new changes trie configuration.
-       * 
-       * # <weight>
-       * - `O(1)`
-       * - 1 storage write or delete (codec `O(1)`).
-       * - 1 call to `deposit_log`: Uses `append` API, so O(1)
-       * - Base Weight: 7.218 µs
-       * - DB Weight:
-       * - Writes: Changes Trie, System Digest
-       * # </weight>
-       **/
-      setChangesTrieConfig: AugmentedSubmittable<(changesTrieConfig: Option<SpCoreChangesTrieChangesTrieConfiguration> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<SpCoreChangesTrieChangesTrieConfiguration>]>;
       /**
        * Set the new runtime code.
        * 
@@ -434,25 +556,10 @@ declare module '@polkadot/api-base/types/submittable' {
       setCodeWithoutChecks: AugmentedSubmittable<(code: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
       /**
        * Set the number of pages in the WebAssembly environment's heap.
-       * 
-       * # <weight>
-       * - `O(1)`
-       * - 1 storage write.
-       * - Base Weight: 1.405 µs
-       * - 1 write to HEAP_PAGES
-       * - 1 digest item
-       * # </weight>
        **/
       setHeapPages: AugmentedSubmittable<(pages: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
       /**
        * Set some items of storage.
-       * 
-       * # <weight>
-       * - `O(I)` where `I` length of `items`
-       * - `I` storage writes (`O(1)`).
-       * - Base Weight: 0.568 * i µs
-       * - Writes: Number of items
-       * # </weight>
        **/
       setStorage: AugmentedSubmittable<(items: Vec<ITuple<[Bytes, Bytes]>> | ([Bytes | string | Uint8Array, Bytes | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>, [Vec<ITuple<[Bytes, Bytes]>>]>;
     };
@@ -533,6 +640,216 @@ declare module '@polkadot/api-base/types/submittable' {
        * # </weight>
        **/
       batchAll: AugmentedSubmittable<(calls: Vec<Call> | (Call | { callIndex?: any; args?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
+      /**
+       * Dispatches a function call with a provided origin.
+       * 
+       * The dispatch origin for this call must be _Root_.
+       * 
+       * # <weight>
+       * - O(1).
+       * - Limited storage reads.
+       * - One DB write (event).
+       * - Weight of derivative `call` execution + T::WeightInfo::dispatch_as().
+       * # </weight>
+       **/
+      dispatchAs: AugmentedSubmittable<(asOrigin: SubsocialParachainRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | string | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialParachainRuntimeOriginCaller, Call]>;
+      /**
+       * Send a batch of dispatch calls.
+       * Unlike `batch`, it allows errors and won't interrupt.
+       * 
+       * May be called from any origin.
+       * 
+       * - `calls`: The calls to be dispatched from the same origin. The number of call must not
+       * exceed the constant: `batched_calls_limit` (available in constant metadata).
+       * 
+       * If origin is root then call are dispatch without checking origin filter. (This includes
+       * bypassing `frame_system::Config::BaseCallFilter`).
+       * 
+       * # <weight>
+       * - Complexity: O(C) where C is the number of calls to be batched.
+       * # </weight>
+       **/
+      forceBatch: AugmentedSubmittable<(calls: Vec<Call> | (Call | { callIndex?: any; args?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
+    };
+    vesting: {
+      /**
+       * Force a vested transfer.
+       * 
+       * The dispatch origin for this call must be _Root_.
+       * 
+       * - `source`: The account whose funds should be transferred.
+       * - `target`: The account that should be transferred the vested funds.
+       * - `schedule`: The vesting schedule attached to the transfer.
+       * 
+       * Emits `VestingCreated`.
+       * 
+       * NOTE: This will unlock all schedules through the current block.
+       * 
+       * # <weight>
+       * - `O(1)`.
+       * - DbWeight: 4 Reads, 4 Writes
+       * - Reads: Vesting Storage, Balances Locks, Target Account, Source Account
+       * - Writes: Vesting Storage, Balances Locks, Target Account, Source Account
+       * # </weight>
+       **/
+      forceVestedTransfer: AugmentedSubmittable<(source: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, target: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, schedule: PalletVestingVestingInfo | { locked?: any; perBlock?: any; startingBlock?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, MultiAddress, PalletVestingVestingInfo]>;
+      /**
+       * Merge two vesting schedules together, creating a new vesting schedule that unlocks over
+       * the highest possible start and end blocks. If both schedules have already started the
+       * current block will be used as the schedule start; with the caveat that if one schedule
+       * is finished by the current block, the other will be treated as the new merged schedule,
+       * unmodified.
+       * 
+       * NOTE: If `schedule1_index == schedule2_index` this is a no-op.
+       * NOTE: This will unlock all schedules through the current block prior to merging.
+       * NOTE: If both schedules have ended by the current block, no new schedule will be created
+       * and both will be removed.
+       * 
+       * Merged schedule attributes:
+       * - `starting_block`: `MAX(schedule1.starting_block, scheduled2.starting_block,
+       * current_block)`.
+       * - `ending_block`: `MAX(schedule1.ending_block, schedule2.ending_block)`.
+       * - `locked`: `schedule1.locked_at(current_block) + schedule2.locked_at(current_block)`.
+       * 
+       * The dispatch origin for this call must be _Signed_.
+       * 
+       * - `schedule1_index`: index of the first schedule to merge.
+       * - `schedule2_index`: index of the second schedule to merge.
+       **/
+      mergeSchedules: AugmentedSubmittable<(schedule1Index: u32 | AnyNumber | Uint8Array, schedule2Index: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, u32]>;
+      /**
+       * Unlock any vested funds of the sender account.
+       * 
+       * The dispatch origin for this call must be _Signed_ and the sender must have funds still
+       * locked under this pallet.
+       * 
+       * Emits either `VestingCompleted` or `VestingUpdated`.
+       * 
+       * # <weight>
+       * - `O(1)`.
+       * - DbWeight: 2 Reads, 2 Writes
+       * - Reads: Vesting Storage, Balances Locks, [Sender Account]
+       * - Writes: Vesting Storage, Balances Locks, [Sender Account]
+       * # </weight>
+       **/
+      vest: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Create a vested transfer.
+       * 
+       * The dispatch origin for this call must be _Signed_.
+       * 
+       * - `target`: The account receiving the vested funds.
+       * - `schedule`: The vesting schedule attached to the transfer.
+       * 
+       * Emits `VestingCreated`.
+       * 
+       * NOTE: This will unlock all schedules through the current block.
+       * 
+       * # <weight>
+       * - `O(1)`.
+       * - DbWeight: 3 Reads, 3 Writes
+       * - Reads: Vesting Storage, Balances Locks, Target Account, [Sender Account]
+       * - Writes: Vesting Storage, Balances Locks, Target Account, [Sender Account]
+       * # </weight>
+       **/
+      vestedTransfer: AugmentedSubmittable<(target: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, schedule: PalletVestingVestingInfo | { locked?: any; perBlock?: any; startingBlock?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, PalletVestingVestingInfo]>;
+      /**
+       * Unlock any vested funds of a `target` account.
+       * 
+       * The dispatch origin for this call must be _Signed_.
+       * 
+       * - `target`: The account whose vested funds should be unlocked. Must have funds still
+       * locked under this pallet.
+       * 
+       * Emits either `VestingCompleted` or `VestingUpdated`.
+       * 
+       * # <weight>
+       * - `O(1)`.
+       * - DbWeight: 3 Reads, 3 Writes
+       * - Reads: Vesting Storage, Balances Locks, Target Account
+       * - Writes: Vesting Storage, Balances Locks, Target Account
+       * # </weight>
+       **/
+      vestOther: AugmentedSubmittable<(target: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress]>;
+    };
+    xcmpQueue: {
+      /**
+       * Resumes all XCM executions for the XCMP queue.
+       * 
+       * Note that this function doesn't change the status of the in/out bound channels.
+       * 
+       * - `origin`: Must pass `ControllerOrigin`.
+       **/
+      resumeXcmExecution: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Services a single overweight XCM.
+       * 
+       * - `origin`: Must pass `ExecuteOverweightOrigin`.
+       * - `index`: The index of the overweight XCM to service
+       * - `weight_limit`: The amount of weight that XCM execution may take.
+       * 
+       * Errors:
+       * - `BadOverweightIndex`: XCM under `index` is not found in the `Overweight` storage map.
+       * - `BadXcm`: XCM under `index` cannot be properly decoded into a valid XCM format.
+       * - `WeightOverLimit`: XCM execution may use greater `weight_limit`.
+       * 
+       * Events:
+       * - `OverweightServiced`: On success.
+       **/
+      serviceOverweight: AugmentedSubmittable<(index: u64 | AnyNumber | Uint8Array, weightLimit: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, u64]>;
+      /**
+       * Suspends all XCM executions for the XCMP queue, regardless of the sender's origin.
+       * 
+       * - `origin`: Must pass `ControllerOrigin`.
+       **/
+      suspendXcmExecution: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Overwrites the number of pages of messages which must be in the queue after which we drop any further
+       * messages from the channel.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.drop_threshold`
+       **/
+      updateDropThreshold: AugmentedSubmittable<(updated: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
+       * Overwrites the number of pages of messages which the queue must be reduced to before it signals that
+       * message sending may recommence after it has been suspended.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.resume_threshold`
+       **/
+      updateResumeThreshold: AugmentedSubmittable<(updated: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
+       * Overwrites the number of pages of messages which must be in the queue for the other side to be told to
+       * suspend their sending.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.suspend_value`
+       **/
+      updateSuspendThreshold: AugmentedSubmittable<(updated: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
+       * Overwrites the amount of remaining weight under which we stop processing messages.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.threshold_weight`
+       **/
+      updateThresholdWeight: AugmentedSubmittable<(updated: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      /**
+       * Overwrites the speed to which the available weight approaches the maximum weight.
+       * A lower number results in a faster progression. A value of 1 makes the entire weight available initially.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.weight_restrict_decay`.
+       **/
+      updateWeightRestrictDecay: AugmentedSubmittable<(updated: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      /**
+       * Overwrite the maximum amount of weight any individual message may consume.
+       * Messages above this weight go into the overweight queue and may only be serviced explicitly.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.xcmp_max_individual_weight`.
+       **/
+      updateXcmpMaxIndividualWeight: AugmentedSubmittable<(updated: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
     };
   } // AugmentedSubmittables
 } // declare module

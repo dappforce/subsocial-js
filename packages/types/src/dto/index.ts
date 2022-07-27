@@ -1,9 +1,8 @@
 import BN from 'bn.js'
 import { FlatSpacePermissions } from '../substrate'
-import { Content, SocialAccount, WhoAndWhen } from '../substrate/interfaces'
-import { Option } from '@polkadot/types/codec'
+import { Content, WhoAndWhen } from '../substrate/interfaces'
 import { GenericAccountId } from '@polkadot/types/generic'
-import { bool } from '@polkadot/types/primitive'
+import { Bool, bool } from '@polkadot/types/primitive'
 
 import * as content from '../offchain'
 
@@ -47,9 +46,6 @@ export type HasCreated = {
 
 export type CanBeUpdated = {
   isUpdated?: boolean
-  updatedByAccount?: string
-  updatedAtBlock?: number
-  updatedAtTime?: number
 }
 
 export type CanBeHidden = {
@@ -70,34 +66,14 @@ export type FlatSpaceOrPost =
 
 /** Flat space struct. */
 export type SpaceStruct = FlatSpaceOrPost & CanHaveParentId & CanHaveHandle & FlatSpacePermissions & {
-  postsCount: number
-  hiddenPostsCount: number
-
-  // TODO maybe we do not need `visiblePostsCount` field here.
-  // It can be easily calculated as (postsCount - hiddenPostsCount)
-  visiblePostsCount: number
-
   canFollowerCreatePosts: boolean
   canEveryoneCreatePosts: boolean
-
-  followersCount: number
-  score: number
-  // permissions?: SpacePermissions
 }
 
 /** Flat post struct. */
 export type PostStruct = FlatSpaceOrPost & CanHaveSpaceId & {
-  repliesCount: number
-  hiddenRepliesCount: number
-
-  // TODO maybe we do not need `visibleRepliesCount` field here.
-  // It can be easily calculated as (repliesCount - hiddenRepliesCount)
-  visibleRepliesCount: number
-
-  sharesCount: number
   upvotesCount: number
   downvotesCount: number
-  score: number
 
   isRegularPost: boolean
   isSharedPost: boolean
@@ -110,7 +86,7 @@ export type CommentExtension = {
 }
 
 export type SharedPostExtension = {
-  sharedPostId: Id
+  originalPostId: Id
 }
 
 export type FlatPostExtension = {} | CommentExtension | SharedPostExtension
@@ -119,24 +95,9 @@ export type SharedPostStruct = PostStruct & SharedPostExtension
 
 export type CommentStruct = PostStruct & CommentExtension
 
-type SocialAccountStruct = HasId & {
-  followersCount: number
-  followingAccountsCount: number
-  followingSpacesCount: number
-  reputation: number
-  hasProfile: boolean
-}
-
-// TODO rename to SocialAccount or AnonProfileStruct?
-/** Flat representation of a social account that does not have a profile content. */
-export type ProfileStruct = SocialAccountStruct & Partial<FlatSuperCommon>
-
-/** Flat representation of a social account that created a profile content. */
-export type PublicProfileStruct = SocialAccountStruct & FlatSuperCommon
-
 export type SuperCommonStruct = {
   created: WhoAndWhen
-  updated: Option<WhoAndWhen>
+  updated: Bool
   content: Content
 }
 
@@ -165,7 +126,7 @@ export type SummarizedContent = {
 export type DerivedContent<C extends content.CommonContent> = C & SummarizedContent
 
 export type CommonContent = content.CommonContent & SummarizedContent
-export type ProfileContent = DerivedContent<content.ProfileContent>
+// export type ProfileContent = DerivedContent<content.ProfileContent>
 export type SpaceContent = DerivedContent<content.SpaceContent>
 export type PostContent = DerivedContent<content.PostContent>
 export type CommentContent = DerivedContent<content.CommentContent>
@@ -181,14 +142,13 @@ export type EntityData<S extends HasId, C extends CommonContent> = {
   content?: C
 }
 
-export type ProfileData = EntityData<ProfileStruct, ProfileContent>
+// export type ProfileData = EntityData<ProfileStruct, ProfileContent>
 export type SpaceData = EntityData<SpaceStruct, SpaceContent>
 export type PostData = EntityData<PostStruct, PostContent>
 export type CommentData = EntityData<CommentStruct, CommentContent>
 export type SharedPostData = EntityData<SharedPostStruct, SharedPostContent>
 
 export type AnySubsocialData =
-  ProfileData |
   SpaceData |
   PostData |
   CommentData |
@@ -196,9 +156,10 @@ export type AnySubsocialData =
 
 type PostExtensionData = Exclude<PostWithSomeDetails, 'ext'>
 
-export type SpaceWithSomeDetails = SpaceData & {
-  owner?: ProfileData
-}
+export type SpaceWithSomeDetails = SpaceData
+// & {
+//   owner?: ProfileData
+// }
 
 export type PostWithSomeDetails = {
   id: EntityId
@@ -207,12 +168,12 @@ export type PostWithSomeDetails = {
   post: PostData
 
   ext?: PostExtensionData
-  owner?: ProfileData
+  // owner?: ProfileData
   space?: SpaceData
 }
 
 export type PostWithAllDetails = Omit<PostWithSomeDetails, 'owner' | 'space'> & {
-  owner: ProfileData
+  // owner: ProfileData
   space: SpaceData
 }
 
@@ -221,8 +182,4 @@ export type ReactionType = 'Upvote' | 'Downvote'
 export enum ReactionEnum {
   Upvote = 'Upvote',
   Downvote = 'Downvote'
-}
-
-export type SocialAccountWithId = SocialAccount &  {
-  id: AccountId
 }
