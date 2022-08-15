@@ -78,8 +78,7 @@ jobs:
         run: |
            cd ./packages/api/build     
            cp ../package.json .
-           yarn publish --verbose --access public --tag ${{ env.RELEASE_TAG }}
-
+           yarn publish --verbose --access public #--tag ${{ env.RELEASE_TAG }}
           
       # Push changes to origin
       - name: Push changes to repository
@@ -88,16 +87,16 @@ jobs:
         run: |
           git push origin && git push --tags
 
-
       # Read version changelog
       - id: get-changelog
         name: Get release version changelog
+        if: startsWith(github.event.inputs.release-level, 'pre') != true
         uses: superfaceai/release-changelog-action@v1
         with:
           path-to-changelog: CHANGELOG.md
           version: ${{ env.NEW_VERSION }}
           operation: read
-
+          
       # Update release documentation
       - name: Update GitHub release documentation
         uses: softprops/action-gh-release@v1
@@ -107,3 +106,13 @@ jobs:
           prerelease: ${{ startsWith(github.event.inputs.release-level, 'pre') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      # Trigger Daily test for released version (excluding pre and rc)
+      - name: Trigger Daily Test
+        if: startsWith(github.event.inputs.release-level, 'pre') != true
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GH_BOT_PAT }}
+          repository: superfaceai/superface-daily
+          event-type: on-demand-test          
