@@ -36,13 +36,40 @@ jobs:
           git config --global user.email "bot@submsocial.network"
           git config --global user.name "GitHub Actions release workflow"
 
-      - name: API Bump release version
+      - name: Bump release version
         if: startsWith(github.event.inputs.release-level, 'pre') != true
         run: |
-          cd ./packages/api/build
-          cp ../package.json .                
           echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+
+          # Bump api
+          cd ./packages/api/build
+          cp ../package.json .
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+          cp package.json ../package.json
+
+          # Bump definitions
+          cd ../../definitions/build/
+          cp ../package.json .
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+          cp package.json ../package.json
+
+          # Bump types
+          cd ../../types/build/
+          cp ../package.json .
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+          cp package.json ../package.json
+
+          # Bump utils
+          cd ../../utils/build/
+          cp ../package.json .
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=blatest" >> $GITHUB_ENV
+          cp package.json ../package.json
+
         env:
           RELEASE_LEVEL: ${{ github.event.inputs.release-level }}
 
