@@ -51,7 +51,7 @@ jobs:
         run: |
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
-        eprepatchprepatchnv:
+        env:
           RELEASE_LEVEL: ${{ github.event.inputs.release-level }}
 
       - name: API Bump pre-release version
@@ -61,7 +61,7 @@ jobs:
           cp ../package.json .                
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV        
-        eprepatchprepatchnv:
+        env:
           RELEASE_LEVEL: ${{ github.event.inputs.release-level }}
 
 
