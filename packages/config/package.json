@@ -1,13 +1,11 @@
 {
-  "name": "@subsocial/api",
-  "version": "0.6.12-parachain.5",
-  "description": "JavaScript API for Subsocial blockchain.",
+  "name": "@subsocial/config",
+  "version": "0.6.11",
+  "description": "JavaScript config files for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
-  "main": "index.js",
   "publishConfig": {
     "access": "public",
-    "directory": " build",
     "registry": "https://registry.npmjs.org"
   },
   "repository": {
@@ -18,15 +16,13 @@
     "url": "https://github.com/dappforce/dappforce-subsocial-js/issues"
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
-  "dependencies": {
-    "@polkadot/api": "latest",
-    "@subsocial/types": "0.6.12-parachain.5",
-    "@subsocial/utils": "0.6.12-parachain.5",
-    "axios": "^0.24.0"
-  },
   "scripts": {
-    "build": "tsc && cp ./README.md ./build",
-    "build:watch": "tsc --watch"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "eslint": "^7.12.1"
   },
   "keywords": [
     "dappforce",
@@ -34,7 +30,6 @@
     "substrate",
     "polkadot",
     "kusama",
-    "ipfs"
-  ],
-  "gitHead": "fb1408775bb4a66b694a32090f9d7115b6c68f70"
+    "eslint"
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/types",
-  "version": "0.6.12-parachain.1",
+  "version": "0.6.12-parachain.5",
   "description": "JavaScript type definitions for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "index.js",
@@ -22,8 +22,8 @@
     "@polkadot/types": "latest",
     "@polkadot/types-known": "latest",
     "@polkadot/types-support": "latest",
-    "@subsocial/utils": "0.6.12-parachain.1",
-    "@subsocial/definitions": "0.6.12-parachain.1",
+    "@subsocial/utils": "0.6.12-parachain.5",
+    "@subsocial/definitions": "0.6.12-parachain.5",
     "ipfs-http-client": "56.0.3"
   },
   "scripts": {

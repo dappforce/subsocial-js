@@ -106,7 +106,7 @@ export class SubsocialSubstrateApi {
     }, spaceId)
   }
 
-  async sharesCountByPostIdId (postId: AnyPostId) {
+  async sharesCountByPostId (postId: AnyPostId) {
     return this.getStorageLength({
       pallet: 'posts',
       storage: 'sharedPostIdsByOriginalPostId',
@@ -114,7 +114,7 @@ export class SubsocialSubstrateApi {
     }, postId)
   }
 
-  async repliesCountByPostIdId (postId: AnyPostId) {
+  async repliesCountByPostId (postId: AnyPostId) {
     return this.getStorageLength({
       pallet: 'posts',
       storage: 'replyIdsByPostId',

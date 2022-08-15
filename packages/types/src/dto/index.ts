@@ -66,6 +66,8 @@ export type FlatSpaceOrPost =
 
 /** Flat space struct. */
 export type SpaceStruct = FlatSpaceOrPost & CanHaveParentId & CanHaveHandle & FlatSpacePermissions & {
+  postsCount?: number
+
   canFollowerCreatePosts: boolean
   canEveryoneCreatePosts: boolean
 }
@@ -74,6 +76,9 @@ export type SpaceStruct = FlatSpaceOrPost & CanHaveParentId & CanHaveHandle & Fl
 export type PostStruct = FlatSpaceOrPost & CanHaveSpaceId & {
   upvotesCount: number
   downvotesCount: number
+
+  repliesCount?: number
+  sharesCount?: number
 
   isRegularPost: boolean
   isSharedPost: boolean

@@ -84,17 +84,8 @@ export const flattenPermisions = (permissions?: SpacePermissions) => {
 export function flattenSpaceStruct (struct: Space,): SpaceStruct {
   const flatPermissions = flattenPermisions(struct.permissions.unwrapOr(undefined))
 
-  let parentField: CanHaveParentId = {}
-  if (struct.parentId.isSome) {
-    parentField = {
-      parentId: struct.parentId.unwrap().toString()
-    }
-  }
-
-
   return {
     ...flattenSpaceOrPostStruct(struct),
-    ...parentField,
     ...flatPermissions,
     canFollowerCreatePosts: !!flatPermissions.followerPermissions?.CreatePosts, //TODO: check CreatePosts permissions in follower set
     canEveryoneCreatePosts: !!flatPermissions.everyonePermissions?.CreatePosts, //TODO: check CreatePosts permissions in everyone set
