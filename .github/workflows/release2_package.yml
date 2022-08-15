@@ -119,11 +119,11 @@ jobs:
            yarn publish --verbose --access public 
 
            # publish utils
-           cd ../../packages/utils/build
+           cd ../../utils/build
            yarn publish --verbose --access public
 
            # publish types
-           cd ../../packages/types/build
+           cd ../../types/build
            yarn publish --verbose --access public
 
       # Push changes to origin
