@@ -1,6 +1,6 @@
 {
   "name": "@oap75/utils",
-  "version": "3.0.1-beta.1",
+  "version": "3.0.2-beta.0",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "index.js",
