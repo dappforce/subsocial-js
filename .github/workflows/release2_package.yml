@@ -60,21 +60,21 @@ jobs:
           cp package.json ../package.json
 
           # Bump definitions
-          cd packages/definitions/build/
+          cd ../../definitions/build/
           cp ../package.json .
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV          
           cp package.json ../package.json          
 
           # Bump types
-          cd packages/types/build/
+          cd ../../types/build/
           cp ../package.json .
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
           cp package.json ../package.json    
 
           # Bump utils
-          cd packages/utils/build/
+          cd ../../utils/build/
           cp ../package.json .
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
@@ -115,15 +115,15 @@ jobs:
            yarn publish --verbose --access public 
           
            # publish definitions
-           cd ./packages/definitions/build
+           cd ../../definitions/build
            yarn publish --verbose --access public 
 
            # publish utils
-           cd ./packages/utils/build
+           cd ../../packages/utils/build
            yarn publish --verbose --access public
 
            # publish types
-           cd ./packages/types/build
+           cd ../../packages/types/build
            yarn publish --verbose --access public
 
       # Push changes to origin
