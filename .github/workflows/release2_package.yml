@@ -36,7 +36,7 @@ jobs:
           git config --global user.email "bot@submsocial.network"
           git config --global user.name "GitHub Actions release workflow"
 
-      - name: Bump release version
+      - name: API Bump release version
         if: startsWith(github.event.inputs.release-level, 'pre') != true
         run: |
           cd ./packages/api/build
@@ -47,14 +47,21 @@ jobs:
           RELEASE_LEVEL: ${{ github.event.inputs.release-level }}
 
       - name: Bump pre-release version
+        if: startsWith(github.event.inputs.release-level, 'pre')
+        run: |
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=beta" >> $GITHUB_ENV
+        eprepatchprepatchnv:
+          RELEASE_LEVEL: ${{ github.event.inputs.release-level }}
+
+      - name: API Bump pre-release version
         if: startsWith(github.event.inputs.release-level, 'pre') 
         run: |
           cd ./packages/api/build
           cp ../package.json .                
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV        
-          cat package.json 
-        env:
+        eprepatchprepatchnv:
           RELEASE_LEVEL: ${{ github.event.inputs.release-level }}
 
 
