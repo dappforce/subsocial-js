@@ -7,11 +7,14 @@ on:
         required: true
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+
     strategy:
       matrix:
         node-version: [ 14.x ]
+
     steps:
+      - uses: actions/checkout@v3            
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}          
