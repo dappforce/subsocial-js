@@ -51,6 +51,7 @@ jobs:
         run: |
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
+          cat package.json          
         env:
           RELEASE_LEVEL: ${{ github.event.inputs.release-level }}
 
@@ -61,6 +62,7 @@ jobs:
           cp ../package.json .                
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV        
+          cat package.json
         env:
           RELEASE_LEVEL: ${{ github.event.inputs.release-level }}
 
