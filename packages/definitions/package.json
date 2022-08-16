@@ -1,6 +1,6 @@
 {
   "name": "@oap75/definitions",
-  "version": "3.2.0",
+  "version": "3.2.1-beta.0",
   "description": "Subsocial definitions using @polkadot/typegen to generate type definitions",
   "main": "index.js",
   "repository": "https://github.com/dappforce/subsocial-js/packages/definitions",
