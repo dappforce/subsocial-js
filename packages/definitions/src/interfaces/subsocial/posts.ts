@@ -6,7 +6,7 @@ const v0 = buildTypes({
         Post: {
             id: "PostId",
             created: "WhoAndWhen",
-            updated: "bool",
+            edited: "bool",
             owner: "AccountId",
             extension: "PostExtension",
             space_id: "Option<SpaceId>",

@@ -1,7 +1,7 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
 import { AnyAccountId, AnySpaceId, AnyPostId, AnyReactionId, SubstrateId, PalletName } from '@subsocial/types';
-import { Space, SpaceId, Post, PostId, Reaction, ReactionId } from '@subsocial/types/substrate/interfaces';
+import { Space, SpaceId, Post, PostId, Reaction, ReactionId, Role, SpacePermission, RoleId, User } from '@subsocial/types/substrate/interfaces';
 import registry from '@subsocial/types/substrate/registry';
 import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, parseDomain, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
@@ -9,6 +9,7 @@ import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '
 import { visibilityFilter } from '../filters';
 import { SubsocialContext } from '../types';
 import BN from 'bn.js'
+import { SpacePermissionKey } from './types';
 
 const U64_BYTES_SIZE = 8
 const ACCOUNT32_BYTES_SIZE = 32
@@ -311,6 +312,41 @@ export class SubsocialSubstrateApi {
 
   async isSpaceFollower (myAddress: AnyAccountId, spaceId: AnySpaceId): Promise<boolean> {
     return this.isBooleanByAccount({ pallet: 'spaceFollows', storage: 'spaceFollowedByAccount' }, myAddress, spaceId)
+  }
+
+  // ---------------------------------------------------------------------
+  // Roles
+
+  async getAccountsWithAnyRoleInSpace (spaceId: AnySpaceId): Promise<string[]> {
+    const api = await this.api
+
+    const roleIdsCodec = await api.query.roles.roleIdsBySpaceId(spaceId) as unknown as RoleId[]
+    const roleIds = getUniqueIds(roleIdsCodec.map(x => x.toString()))
+    const usersArrays = await api.query.roles.usersByRoleId.multi(roleIds) as unknown as User[][]
+
+    return usersArrays.flatMap(users => users.filter(x => x.isAccount).map(x => x.asAccount.toString()))
+  }
+
+  async getSpaceIdsWithRolesByAccount (accountId: AnyAccountId) {
+    const api = await this.api
+
+    const roleIdsByUserInSpace = await api.query.roles
+      .roleIdsByUserInSpace.entries({ Account: accountId })
+
+    return roleIdsByUserInSpace.map(([[_, spaceId]]) => spaceId.toString())
+  }
+
+  async getSpacePermissionsByAccount (accountId: AnyAccountId, spaceId: AnySpaceId): Promise<SpacePermissionKey[]> {
+    const api = await this.api
+
+    const roleIdsInSpace = await api.query.roles
+      .roleIdsByUserInSpace({ Account: accountId }, spaceId) as unknown as RoleId[]
+    const setRolesIdsInSpace = getUniqueIds(roleIdsInSpace.map(x => x.toString()))
+
+    const roles = await api.query.roles.roleById.multi(setRolesIdsInSpace)
+
+    const permissions = roles.flatMap(x => (x.toHuman() as any)?.permissions)
+    return getUniqueIds(permissions)
   }
 
 }

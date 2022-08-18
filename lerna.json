@@ -7,7 +7,7 @@
     "packages/definitions",
     "packages/i18n"
   ],
-  "version": "0.6.12-parachain.5",
+  "version": "0.6.12-parachain.9",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

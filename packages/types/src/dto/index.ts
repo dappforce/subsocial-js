@@ -102,7 +102,7 @@ export type CommentStruct = PostStruct & CommentExtension
 
 export type SuperCommonStruct = {
   created: WhoAndWhen
-  updated: Bool
+  edited: Bool
   content: Content
 }
 

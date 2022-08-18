@@ -4,7 +4,7 @@ const v0 = buildTypes({ types: {
         Space: {
             id: "SpaceId",
             created: "WhoAndWhen",
-            updated: "bool",
+            edited: "bool",
             owner: "AccountId",
             parent_id: "Option<SpaceId>",
             content: "Content",

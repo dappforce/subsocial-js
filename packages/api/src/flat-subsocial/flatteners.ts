@@ -48,7 +48,7 @@ export function flattenCommonFields (struct: SuperCommonStruct): FlatSuperCommon
     createdAtBlock: created.block.toNumber(),
     createdAtTime: created.time.toNumber(),
 
-    isUpdated: struct.updated.toHuman(),
+    isUpdated: struct.edited.toHuman(),
     ...getContentFields(struct),
   }
 }

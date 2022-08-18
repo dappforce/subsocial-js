@@ -89,7 +89,7 @@ export interface LookupSource extends AccountId {}
 export interface Post extends Struct {
   readonly id: PostId;
   readonly created: WhoAndWhen;
-  readonly updated: bool;
+  readonly edited: bool;
   readonly owner: AccountId;
   readonly extension: PostExtension;
   readonly spaceId: Option<SpaceId>;
@@ -189,7 +189,7 @@ export interface ScoringAction extends Enum {
 export interface Space extends Struct {
   readonly id: SpaceId;
   readonly created: WhoAndWhen;
-  readonly updated: bool;
+  readonly edited: bool;
   readonly owner: AccountId;
   readonly parentId: Option<SpaceId>;
   readonly content: Content;
