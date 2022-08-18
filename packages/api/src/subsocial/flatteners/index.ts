@@ -1,8 +1,8 @@
 import { Option } from '@polkadot/types/codec'
-import { Post, Space, SpacePermissionSet, SpacePermissions } from '@subsocial/types/substrate/interfaces'
+import { Post, Space, SpacePermissionSet, SpacePermissions as BlockchainSpacePermissions } from '@subsocial/definitions/interfaces'
 import { notEmptyObj } from '@subsocial/utils'
-import { FlatSpacePermissionKey, FlatSpacePermissionMap, FlatSpacePermissions, FlatSpacePermissionsKey } from '@subsocial/types/substrate/rpc'
-import { CanHaveContent, CanHaveParentId, CanHaveSpaceId, CommentExtension, CommentStruct, CommonContent, EntityData, EntityId, FlatPostExtension, FlatSuperCommon, HasId, HasOwner, PostStruct, SharedPostExtension, SharedPostStruct, SpaceOrPostStruct, SpaceStruct, SuperCommonStruct, FlatSpaceOrPost } from '@subsocial/types/dto'
+import { SpacePermissionKey, SpacePermissionMap, SpacePermissions, SpacePermissionsKey } from '../../types'
+import { CanHaveContent, CanHaveSpaceId, CommentExtension, CommentStruct, CommonContent, EntityData, EntityId, FlatPostExtension, FlatSuperCommon, HasId, HasOwner, PostStruct, SharedPostExtension, SharedPostStruct, SpaceOrPostStruct, SpaceStruct, SuperCommonStruct, FlatSpaceOrPost } from '../../types/'
 
 type EntityDataWithField<S extends {}> = EntityData<HasId & S, CommonContent> | (HasId & S)
 
@@ -62,19 +62,19 @@ function flattenSpaceOrPostStruct (struct: SpaceOrPostStruct): FlatSpaceOrPost {
   }
 }
 
-export const flattenPermisions = (permissions?: SpacePermissions) => {
-  const flatPermissions: FlatSpacePermissions = {}
+export const flattenPermisions = (permissions?: BlockchainSpacePermissions) => {
+  const flatPermissions: SpacePermissions = {}
 
   if (permissions) {
     for (const [ key, value ] of permissions) {
       const permissionSet = (value as Option<SpacePermissionSet>).unwrapOr(undefined)
-      const permission: FlatSpacePermissionMap = {}
+      const permission: SpacePermissionMap = {}
 
       permissionSet?.forEach(x => {
-        permission[x.toString() as FlatSpacePermissionKey] = true
+        permission[x.toString() as SpacePermissionKey] = true
       })
 
-      flatPermissions[`${key}Permissions` as FlatSpacePermissionsKey] = permission
+      flatPermissions[`${key}Permissions` as SpacePermissionsKey] = permission
     }
   }
 

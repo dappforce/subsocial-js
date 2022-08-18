@@ -1,5 +1,5 @@
 import { nonEmptyStr } from '@subsocial/utils'
-import { IpfsCid } from '../..';
+import { IpfsCid } from '../../types';
 
 export type None = null
 export type Raw = string

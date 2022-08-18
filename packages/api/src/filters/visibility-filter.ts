@@ -1,4 +1,4 @@
-import { Space, Post } from '@subsocial/types/substrate/interfaces'
+import { Space, Post } from '@subsocial/definitions/interfaces'
 import { Visibility } from './types'
 
 type StructWithHidden = Space | Post

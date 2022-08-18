@@ -1,10 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { newLogger } from '@subsocial/utils';
-import registry from '@subsocial/types/substrate/registry';
 import { formatBalance } from '@polkadot/util';
-import { typesBundle } from '@subsocial/types'
-import { ChainProperties } from '@polkadot/types/interfaces'
-import { Text, U32 } from '@polkadot/types';
 
 const logger = newLogger('SubstrateConnection');
 
@@ -18,18 +14,11 @@ export const getSubstrateApi = async (nodeUrl?: string) => {
   const provider = new WsProvider(rpcEndpoint);
 
   logger.info(`Connecting to Substrate node at ${rpcEndpoint}...`);
-  api = new ApiPromise({ provider, typesBundle })
-  await api.isReady
-
-  const properties = await api.rpc.system.properties() as ChainProperties
-  const tokenSymbol = properties.tokenSymbol.unwrapOr(undefined)?.map((x: Text) => x.toString());
-  const tokenDecimals = properties.tokenDecimals.unwrapOr(undefined)?.map((x: U32) => x.toNumber());
-
-  registry.setChainProperties(properties)
+  api = await ApiPromise.create({ provider })
 
   formatBalance.setDefaults({
-    decimals: tokenDecimals,
-    unit: tokenSymbol
+    decimals: api.registry.chainDecimals,
+    unit: api.registry.chainTokens
   });
 
   return api

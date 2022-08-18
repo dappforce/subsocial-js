@@ -1,16 +1,12 @@
 import { ApiPromise } from '@polkadot/api'
-import { FlatSubsocialApi } from '../flat-subsocial'
 import { SubsocialApi } from '../subsocial'
-import { SubsocialApiProps } from '../subsocial/basic'
+import { BasicSubsocialApi } from '../subsocial/basic'
+import { SubsocialApiProps } from '../subsocial/inner'
 import { getSubstrateApi } from './substrate'
 
-let flatSubsocial!: FlatSubsocialApi 
-let subsocial!: SubsocialApi
+let subsocial!: SubsocialApi 
+let basicSubsocial!: BasicSubsocialApi
 let isLoadingSubsocial = false
-
-type Api = SubsocialApi & {
-  api: ApiPromise
-}
 
 type NewSubsocialApiProps = Omit<SubsocialApiProps, 'substrateApi'> & {
   substrateNodeUrl: string,
@@ -21,29 +17,24 @@ type NewSubsocialApiProps = Omit<SubsocialApiProps, 'substrateApi'> & {
  * Create a new or return existing connection to Subsocial API
  * (includes Substrate and IPFS connections).
  */
-export const newSubsocialApi = async ({ substrateNodeUrl, substrateApi: initApi, ...props }: NewSubsocialApiProps) => {
+export const newBasicSubsocialApi = async ({ substrateNodeUrl, substrateApi: initApi, ...props }: NewSubsocialApiProps) => {
   if (!subsocial && !isLoadingSubsocial) {
     isLoadingSubsocial = true
     const substrateApi = initApi || await getSubstrateApi(substrateNodeUrl)
-    subsocial = new SubsocialApi({ substrateApi, ...props })
+    basicSubsocial = new BasicSubsocialApi({ substrateApi, ...props })
     isLoadingSubsocial = false;
-
-    (subsocial as any).api = substrateApi
   }
-  return subsocial as Api
+  return basicSubsocial
 }
 
 /**
  * Create a new or return existing connection to Flat Subsocial API
  * (with wrapper which return flat structs).
  */
-export const newFlatSubsocialApi = async (props: NewSubsocialApiProps) => {
-  if (flatSubsocial) return flatSubsocial
+export const newSubsocialApi = async (props: NewSubsocialApiProps) => {
+  if (subsocial) return subsocial
 
-  const subsocial = await newSubsocialApi(props)
-  flatSubsocial = new FlatSubsocialApi(subsocial)
-  return flatSubsocial
+  basicSubsocial = await newBasicSubsocialApi(props)
+  subsocial = new SubsocialApi(basicSubsocial)
+  return subsocial
 }
-
-export const createSubsocialApiResolver = (context: NewSubsocialApiProps) => () => newSubsocialApi(context)
-export const createFlatSubsocialApiResolver = (context: NewSubsocialApiProps) => () => newFlatSubsocialApi(context)

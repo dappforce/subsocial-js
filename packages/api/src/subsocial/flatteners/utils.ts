@@ -3,7 +3,7 @@ import {
   PostData as OldPostData,
   PostWithSomeDetails as OldPostWithSomeDetails,
   PostWithAllDetails as OldPostWithAllDetails,
-} from '@subsocial/types/dto/sub'
+} from '../types'
 
 import {
   SpaceData,
@@ -12,11 +12,11 @@ import {
   PostWithAllDetails,
   PostWithSomeDetails,
   DerivedContent,
-} from '@subsocial/types/dto'
+} from '../../types'
 
-import { flattenPostStruct, flattenSpaceStruct } from './flatteners'
+import { flattenPostStruct, flattenSpaceStruct } from '.'
 import { summarizeMd } from '@subsocial/utils'
-import { CommonContent, PostContent, SpaceContent } from '@subsocial/types/offchain'
+import { IpfsCommonContent, IpfsPostContent, IpfsSpaceContent } from '../../types/ipfs'
 
 export function asCommentData (postData: PostData): CommentData {
   return postData as unknown as CommentData
@@ -79,12 +79,12 @@ export function isPublic (data?: SpaceOrPostData) {
   return !isUnlisted(data)
 }
 
-type MaybeSpaceContent = Pick<SpaceContent, 'about'>
+type MaybeSpaceContent = Pick<IpfsSpaceContent, 'about'>
 
-type MaybePostContent = Pick<PostContent, 'body' | 'title'>
+type MaybePostContent = Pick<IpfsPostContent, 'body' | 'title'>
 
 export function convertToDerivedContent
-  <T extends CommonContent = CommonContent>
+  <T extends IpfsCommonContent = IpfsCommonContent>
   (content?: T): DerivedContent<T> | undefined
 {
   if (!content) return undefined

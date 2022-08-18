@@ -1,15 +1,14 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
-import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
-import { AnyAccountId, AnySpaceId, AnyPostId, AnyReactionId, SubstrateId, PalletName } from '@subsocial/types';
-import { Space, SpaceId, Post, PostId, Reaction, ReactionId, Role, SpacePermission, RoleId, User } from '@subsocial/types/substrate/interfaces';
-import registry from '@subsocial/types/substrate/registry';
-import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, parseDomain, pluralize } from '@subsocial/utils';
+import { bool, GenericAccountId, Tuple } from '@polkadot/types';
+import { Space, SpaceId, Post, PostId, Reaction, ReactionId, RoleId, User } from '@subsocial/definitions/interfaces';
+import { getFirstOrUndefined, isEmptyArray, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '../filters';
 import { visibilityFilter } from '../filters';
-import { SubsocialContext } from '../types';
+import { PalletName, SubsocialContext, SpacePermissionKey } from '../types';
 import BN from 'bn.js'
-import { SpacePermissionKey } from './types';
+import { AnyAccountId, SubstrateId, AnyPostId, AnySpaceId, AnyReactionId } from '../subsocial/types';
+import registry from '../utils/registry';
 
 const U64_BYTES_SIZE = 8
 const ACCOUNT32_BYTES_SIZE = 32

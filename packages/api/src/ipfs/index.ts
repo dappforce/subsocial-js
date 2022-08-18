@@ -1,9 +1,10 @@
-import { Content, IpfsCid as RuntimeIpfsCid } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid } from '@subsocial/types/offchain';
+import { Content, IpfsCid as RuntimeIpfsCid } from '@subsocial/definitions/interfaces';
+import { IpfsCommonContent, IpfsSpaceContent, IpfsPostContent, IpfsCommentContent, IpfsCid } from '../types/ipfs';
 import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
 import { SubsocialContext, ContentResult, UseServerProps } from '../types';
+import { CID } from 'ipfs-http-client';
 
 type HasContentField = {
   content: Content
@@ -103,7 +104,7 @@ export class SubsocialIpfsApi {
   }
 
   /** Return object with contents from IPFS by cids array */
-  async getContentArrayFromIpfs<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+  async getContentArrayFromIpfs<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
       const ipfsCids = this.getUniqueCids(cids, contentName)
 
@@ -126,7 +127,7 @@ export class SubsocialIpfsApi {
   }
 
   /** Return object with contents from IPFS through offchain by cids array */
-  async getContentArrayFromOffchain<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+  async getContentArrayFromOffchain<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
 
       const res = this.useServer?.httpRequestMethod === 'get'
@@ -147,7 +148,7 @@ export class SubsocialIpfsApi {
     }
   }
 
-  async getContentArray<T extends CommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+  async getContentArray<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     return this.useServer
       ? this.getContentArrayFromOffchain(cids, contentName)
       : this.getContentArrayFromIpfs(cids, contentName)
@@ -163,7 +164,7 @@ export class SubsocialIpfsApi {
    * @returns An array of data about desired spaces from IPFS. If no corresponding spaces to given array of `cids`, an
    * empty array is returned.
    */
-  async findSpaces (cids: IpfsCid[]): Promise<ContentResult<SpaceContent>> {
+  async findSpaces (cids: IpfsCid[]): Promise<ContentResult<IpfsSpaceContent>> {
     return this.getContentArray(cids, 'space')
   }
 
@@ -177,7 +178,7 @@ export class SubsocialIpfsApi {
    * @returns An array of data about desired posts from IPFS. If no corresponding posts to given array of `cids`, an
    * empty array is returned.
    */
-  async findPosts (cids: IpfsCid[]): Promise<ContentResult<PostContent>> {
+  async findPosts (cids: IpfsCid[]): Promise<ContentResult<IpfsPostContent>> {
     return this.getContentArray(cids, 'post')
   }
 
@@ -192,14 +193,14 @@ export class SubsocialIpfsApi {
    * @returns An array of data about desired comments from IPFS. If no corresponding comments to given array of `cids`,
    * an empty array is returned.
    */
-  async findComments (cids: IpfsCid[]): Promise<ContentResult<CommentContent>> {
+  async findComments (cids: IpfsCid[]): Promise<ContentResult<IpfsCommentContent>> {
     return this.getContentArray(cids, 'comment')
   }
 
   // ---------------------------------------------------------------------
   // Find single
 
-  async getContent<T extends CommonContent> (cid: IpfsCid, contentName?: string): Promise<T | undefined> {
+  async getContent<T extends IpfsCommonContent> (cid: IpfsCid, contentName?: string): Promise<T | undefined> {
     const content = await this.getContentArray<T>([ cid ], contentName)
     return content[cid.toString()]
   }
@@ -213,8 +214,8 @@ export class SubsocialIpfsApi {
    *
    * @returns Data about a desired space from IPFS. If no corresponding space to given `id`, `undefined` is returned.
    */
-  async findSpace (cid: IpfsCid): Promise<SpaceContent | undefined> {
-    return this.getContent<SpaceContent>(cid, 'space')
+  async findSpace (cid: IpfsCid): Promise<IpfsSpaceContent | undefined> {
+    return this.getContent<IpfsSpaceContent>(cid, 'space')
   }
 
   /**
@@ -226,8 +227,8 @@ export class SubsocialIpfsApi {
    *
    * @returns Data about a desired post from IPFS. If no corresponding post to given `id`, `undefined` is returned.
    */
-  async findPost (cid: IpfsCid): Promise<PostContent | undefined> {
-    return this.getContent<PostContent>(cid, 'post')
+  async findPost (cid: IpfsCid): Promise<IpfsPostContent | undefined> {
+    return this.getContent<IpfsPostContent>(cid, 'post')
   }
 
   /**
@@ -241,8 +242,8 @@ export class SubsocialIpfsApi {
    * @returns Data about a desired comment from IPFS. If no corresponding comments to given `id`, `undefined` is
    * returned.
    */
-  async findComment (cid: IpfsCid): Promise<CommentContent | undefined> {
-    return this.getContent<CommentContent>(cid, 'comment')
+  async findComment (cid: IpfsCid): Promise<IpfsCommentContent | undefined> {
+    return this.getContent<IpfsCommentContent>(cid, 'comment')
   }
 
   // ---------------------------------------------------------------------
@@ -264,7 +265,7 @@ export class SubsocialIpfsApi {
   }
 
   /** Add and pin content in IPFS */
-  async saveContent (content: CommonContent): Promise<RuntimeIpfsCid | undefined> {
+  async saveContent (content: IpfsCommonContent): Promise<RuntimeIpfsCid | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
 
@@ -308,21 +309,21 @@ export class SubsocialIpfsApi {
   }
 
   /** Add and pin space content in IPFS */
-  async saveSpace (content: SpaceContent): Promise<RuntimeIpfsCid | undefined> {
+  async saveSpace (content: IpfsSpaceContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved space with hash: ${hash}`)
     return hash;
   }
 
   /** Add and pin post content in IPFS */
-  async savePost (content: PostContent): Promise<RuntimeIpfsCid | undefined> {
+  async savePost (content: IpfsPostContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved post with hash: ${hash}`)
     return hash;
   }
 
   /** Add and pin comment content in IPFS */
-  async saveComment (content: CommentContent): Promise<RuntimeIpfsCid | undefined> {
+  async saveComment (content: IpfsCommentContent): Promise<RuntimeIpfsCid | undefined> {
     const hash = await this.saveContent(content)
     log.debug(`Saved comment with hash: ${hash}`)
     return hash;

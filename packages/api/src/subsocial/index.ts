@@ -1,215 +1,139 @@
-import { BasicSubsocialApi } from './basic';
-import { FindStructsFns, loadAndSetPostRelatedStructs } from '../utils/loadPostStructs';
-import { PostWithSomeDetails, PostWithAllDetails } from '@subsocial/types/dto/sub';
-import { getFirstOrUndefined } from '@subsocial/utils';
-import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } from '../filters';
-import { AnySpaceId, AnyPostId, AnyAccountId } from '@subsocial/types';
+import {
+  convertToNewPostDataArray,
+  convertToNewPostWithAllDetails,
+  convertToNewPostWithAllDetailsArray,
+  convertToNewSpaceData,
+  convertToNewSpaceDataArray,
+  convertToNewPostData,
+  convertToNewPostWithSomeDetails,
+  convertToNewPostWithSomeDetailsArray,
+} from './flatteners/utils'
+import { FindPostQuery, FindPostsQuery, FindPostsWithDetailsQuery, FindSpaceQuery } from '../filters'
+import { BasicSubsocialApi } from './basic'
+import { SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId, SpaceStruct, PostStruct } from '../types'
+import { getFirstOrUndefined, idsToBns, idToBn } from '@subsocial/utils'
+import { flattenSpaceStructs, flattenPostStructs } from './flatteners'
 
-export class SubsocialApi extends BasicSubsocialApi {
+export interface ISubsocialApi {
+  findSpace: (query: FindSpaceQuery) => Promise<SpaceData | undefined>
+  findPublicSpaces: (ids: AnyId[]) => Promise<SpaceData[]>
+  findUnlistedSpaces: (ids: AnyId[]) => Promise<SpaceData[]>
 
-  private structFinders: FindStructsFns = {
-    findSpaces: this.findPublicSpaces.bind(this),
-    findPosts: this.findPublicPosts.bind(this),
+  findSpaceStructs: (ids: AnyId[]) => Promise<SpaceStruct[]>
+  findPostStructs: (ids: AnyId[]) => Promise<PostStruct[]>
+
+  findSpaceStruct: (id: AnyId) => Promise<SpaceStruct | undefined>
+  findPostStruct: (id: AnyId) => Promise<PostStruct | undefined>
+
+  findPost: (query: FindPostQuery) => Promise<PostData | undefined>
+  findPublicPosts: (ids: AnyId[]) => Promise<PostData[]>
+  findPostWithSomeDetails: (query: FindPostQuery) => Promise<PostWithSomeDetails | undefined>
+  findPostWithAllDetails: (id: AnyId) => Promise<PostWithAllDetails | undefined>
+  findPostsWithAllDetails: (query: FindPostsQuery) => Promise<PostWithAllDetails[]>
+  findPublicPostsWithSomeDetails: (query: FindPostsWithDetailsQuery) => Promise<PostWithSomeDetails[]>
+  findPublicPostsWithAllDetails: (ids: AnyId[]) => Promise<PostWithAllDetails[]>
+  findUnlistedPostsWithAllDetails: (ids: AnyId[]) => Promise<PostWithAllDetails[]>
+}
+
+export class SubsocialApi implements ISubsocialApi {
+  private _subsocial: BasicSubsocialApi
+
+  constructor (subsocial: BasicSubsocialApi) {
+    this._subsocial = subsocial
   }
 
-  async findAllSpaces (ids: AnySpaceId[]) {
-    return this.findSpaces({ ids })
+  get subsocial() {
+    return this._subsocial 
   }
 
-  /**
-   * Find and load an array of information about public spaces from Subsocial blockchain and IPFS by a given array of
-   * space `ids`.
-   *
-   * Space is considered public if it meets the next conditions:
-   * - The `hidden` field on its' blockchain structure is `false`.
-   * - And there is a corresponding JSON file that represents the space's content on IPFS.
-   *
-   * @param ids - An array of ids of desired spaces.
-   *
-   * @returns An array of data about desired spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * spaces to given array of `ids`, an empty array is returned.
-   */  
-  async findPublicSpaces (ids: AnySpaceId[]) {
-    return this.findSpaces({ ids, visibility: 'onlyPublic', withContentOnly: true })
+  get blockchain() {
+    return this._subsocial.substrate
   }
 
-  /**
-   * Find and load an array of information about unlisted spaces from Subsocial blockchain and IPFS by a given array of
-   * space `ids`.
-   *
-   * Space is considered unlisted if it meets either of these conditions:
-   * - The `hidden` field on it's blockchain structure is `true`.
-   * - Or there is no corresponding JSON file that represents the space's content on IPFS.
-   *
-   * @param ids - An array of ids of desired spaces.
-   *
-   * @returns An array of data about desired spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * spaces to given array of `ids`, an empty array is returned.
-   */    
-  async findUnlistedSpaces (ids: AnySpaceId[]) {
-    return this.findSpaces({ ids, visibility: 'onlyUnlisted' })
+  get substrateApi() {
+    return this._subsocial.substrate.api
   }
 
-  async findAllPosts (ids: AnySpaceId[]) {
-    return this.findPosts({ ids })
+  public async findSpaceStructs (ids: AnyId[]): Promise<SpaceStruct[]> {
+    const structs = await this.subsocial.substrate.findSpaces({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
+    return flattenSpaceStructs(structs)
   }
 
-  /**
-   * Find and load an array of information about public posts from Subsocial blockchain and IPFS by a given array of
-   * post `ids`.
-   *
-   * Post is considered public if it meets the next conditions:
-   * - The `hidden` field on its' blockchain structure is `false`.
-   * - And there is a corresponding JSON file that represents the post's content on IPFS.
-   *
-   * @param ids - An array of ids of desired posts.
-   *
-   * @returns An array of data about desired posts aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * posts to given array of `ids`, an empty array is returned.
-   */    
-  async findPublicPosts (ids: AnySpaceId[]) {
-    return this.findPosts({ ids, visibility: 'onlyPublic', withContentOnly: true })
+  public async findPostStructs (ids: AnyId[]): Promise<PostStruct[]> {
+    const structs = await this.subsocial.substrate.findPosts({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
+    return flattenPostStructs(structs)
   }
 
-  /**
-   * Find and load an array of information about unlisted posts from Subsocial blockchain and IPFS by a given array of
-   * post `ids`.
-   *
-   * Post is considered unlisted if it meets either of these conditions:
-   * - The `hidden` field on it's blockchain structure is `true`.
-   * - Or there is no corresponding JSON file that represents the post's content on IPFS.
-   *
-   * @param ids - An array of ids of desired posts
-   *
-   * @returns An array of data about desired posts aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * posts to given array of `ids`, an empty array is returned.
-   */  
-  async findUnlistedPosts (ids: AnySpaceId[]) {
-    return this.findPosts({ ids, visibility: 'onlyUnlisted' })
+  public async findSpaceStruct (id: AnyId): Promise<SpaceStruct | undefined> {
+    return getFirstOrUndefined(await this.findSpaceStructs([ id ]))
   }
 
-  /** Find and load posts with their extension and owner's profile (if defined). */
-  async findPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
-    const posts = await this.findPosts(filter)
-    return loadAndSetPostRelatedStructs(posts, this.structFinders, filter)
+  public async findPostStruct (id: AnyId): Promise<PostStruct | undefined> {
+    return getFirstOrUndefined(await this.findPostStructs([ id ]))
   }
 
-  async findPublicPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
-    return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyPublic' })
+  public async findSpace (query: FindSpaceQuery) {
+    const old =  await this.subsocial.findSpace(query)
+    return !old ? old: convertToNewSpaceData(old)
   }
 
-  async findUnlistedPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
-    return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyUnlisted' })
+  public async findPublicSpaces (ids: AnyId[]) {
+    return convertToNewSpaceDataArray(
+       await this.subsocial.findPublicSpaces(idsToBns(ids))
+    )
   }
 
-  async findPostsWithAllDetails ({ ids, visibility }: FindPostsQuery): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<PostWithAllDetails[]>
+  public async findUnlistedSpaces (ids: AnyId[]) {
+    return convertToNewSpaceDataArray(
+       await this.subsocial.findUnlistedSpaces(idsToBns(ids))
+    )
   }
 
-  async findPublicPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithAllDetails({ ids, visibility: 'onlyPublic' })
+  public async findPost (query: FindPostQuery) {
+    const old =  await this.subsocial.findPost(query)
+    return !old ? old: convertToNewPostData(old)
   }
 
-  async findUnlistedPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithAllDetails({ ids, visibility: 'onlyUnlisted' })
+  public async findPublicPosts (ids: AnyId[]) {
+    return convertToNewPostDataArray(
+       await this.subsocial.findPublicPosts(idsToBns(ids))
+    )
   }
 
-  async findProfileSpaces (accountIds: AnyAccountId[]) {
-    const spaceIds = await this.substrate.profileSpaceIdsByAccounts(accountIds)
-    return this.findAllSpaces(spaceIds)
+  public async findPostWithSomeDetails (query: FindPostQuery) {
+    return convertToNewPostWithSomeDetails(
+       await this.subsocial.findPostWithSomeDetails(query)
+    )
   }
 
-  // Functions that return a single element
-
-  /**
-   * Find and load information about a public space from Subsocial blockchain and IPFS using space id.
-   *
-   * Space is considered public if it meets these conditions:
-   * - The `hidden` field on it's blockchain structure is `false`.
-   * - And there is a corresponding JSON file that represents the space's content on IPFS.
-   *
-   * @param id - Id of desired space.
-   *
-   * @returns Data about desired space aggregated from blockchain and IPFS. If no corresponding space to given id,
-   * `undefined` is returned.
-   */  
-  async findPublicSpace (id: AnySpaceId) {
-    return getFirstOrUndefined(await this.findPublicSpaces([ id ]))
+  public async findPostWithAllDetails (id: AnyId) {
+    return convertToNewPostWithAllDetails(
+       await this.subsocial.findPostWithAllDetails(idToBn(id))
+    )
   }
 
-  /**
-   * Find and load information about an unlisted space from blockchain and from IPFS by a given space id.
-   *
-   * Space is considered unlisted if it meets either of these conditions:
-   * - The `hidden` field on it's blockchain structure is `true`.
-   * - Or there is no corresponding JSON file that represents the space's content on IPFS.
-   *
-   * @param id - Id of desired space.
-   *
-   * @returns Data about a desired space aggregated from blockchain and IPFS. If no corresponding space to given id,
-   * `undefined` is returned.
-   */
-  async findUnlistedSpace (id: AnySpaceId) {
-    return getFirstOrUndefined(await this.findUnlistedSpaces([ id ]))
+  public async findPostsWithAllDetails (query: FindPostsQuery) {
+    return convertToNewPostWithAllDetailsArray(
+       await this.subsocial.findPostsWithAllDetails(query)
+    )
   }
 
-  /**
-   * Find and load information about a public post from Subsocial blockchain and IPFS using post id.
-   *
-   * Post is considered public if it meets the next conditions:
-   * - The `hidden` field on it's blockchain structure is `false`.
-   * - And there is a corresponding JSON file that represents the post's content on IPFS.
-   *
-   * @param id - Id of desired post.
-   *
-   * @returns Data about desired post aggregated from blockchain and IPFS. If no corresponding post to given id,
-   * `undefined` is returned.
-   */  
-  async findPublicPost (id: AnySpaceId) {
-    return getFirstOrUndefined(await this.findPublicPosts([ id ]))
+  public async findPublicPostsWithSomeDetails (query: FindPostsWithDetailsQuery) {
+    return convertToNewPostWithSomeDetailsArray(
+       await this.subsocial.findPublicPostsWithSomeDetails(query)
+    )
   }
 
-  /**
-   * Find and load information about an unlisted post from blockchain and from IPFS by a given post id.
-   *
-   * Post is considered unlisted if it meets either of these conditions:
-   * - The `hidden` field on it's blockchain structure is `true`.
-   * - Or there is no corresponding JSON file that represents the post's content on IPFS.
-   *
-   * @param id - Id of desired post.
-   *
-   * @returns Data about desired post aggregated from blockchain and IPFS. If no corresponding post to given id,
-   * `undefined` is returned.
-   */  
-  async findUnlistedPost (id: AnySpaceId) {
-    return getFirstOrUndefined(await this.findUnlistedPosts([ id ]))
+  public async findPublicPostsWithAllDetails (ids: AnyId[]) {
+    return convertToNewPostWithAllDetailsArray(
+       await this.subsocial.findPublicPostsWithAllDetails(idsToBns(ids))
+    )
   }
 
-  async findPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
-    return getFirstOrUndefined(await this.findPostsWithSomeDetails({ ids: [ id ], ...opts }))
+  public async findUnlistedPostsWithAllDetails (ids: AnyId[]) {
+    return convertToNewPostWithAllDetailsArray(
+       await this.subsocial.findUnlistedPostsWithAllDetails(idsToBns(ids))
+    )
   }
-
-  async findPublicPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
-    return getFirstOrUndefined(await this.findPublicPostsWithSomeDetails({ ids: [ id ], ...opts }))
-  }
-
-  async findUnlistedPostWithSomeDetails ({ id, ...opts }: FindPostWithDetailsQuery) {
-    return getFirstOrUndefined(await this.findUnlistedPostsWithSomeDetails({ ids: [ id ], ...opts }))
-  }
-
-  async findPostWithAllDetails (id: AnyPostId) {
-    return getFirstOrUndefined(await this.findPostsWithAllDetails({ ids: [ id ] }))
-  }
-
-  async findPublicPostWithAllDetails (id: AnyPostId) {
-    return getFirstOrUndefined(await this.findPublicPostsWithAllDetails([ id ]))
-  }
-
-  async findUnlistedPostWithAllDetails (id: AnyPostId) {
-    return getFirstOrUndefined(await this.findUnlistedPostsWithAllDetails([ id ]))
-  }
-
-  async findProfileSpace (accountId: AnyAccountId) {
-    return getFirstOrUndefined(await this.findProfileSpaces([ accountId ]))
-  }
+  
 }

@@ -1,11 +1,13 @@
-import { Comment } from '@subsocial/types/substrate/classes';
-import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, CID } from '@subsocial/types';
+import { Comment } from '../substrate/wrappers';
+import { SubstrateId, AnyAccountId, CommonStruct } from '../subsocial/types';
 import { newLogger, isEmptyArray, nonEmptyStr, isDef } from '@subsocial/utils';
-import { PostId, ReactionId, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
-import registry from '@subsocial/types/substrate/registry';
+import { PostId, ReactionId, Reaction, Post, Content } from '@subsocial/definitions/interfaces';
 import { GenericAccountId } from '@polkadot/types';
 import { SubmittableResult } from '@polkadot/api';
 import BN from 'bn.js';
+import registry from './registry';
+import { IpfsCid } from '../types';
+import { CID } from 'ipfs-http-client';
 
 const log = newLogger('Subsocial Api Utils');
 

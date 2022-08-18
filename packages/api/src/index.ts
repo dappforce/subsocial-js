@@ -6,7 +6,7 @@
  * @category API
  */
 
-export * from './subsocial'
+export * from './subsocial/basic'
 export * from './substrate'
 export * from './ipfs'
 export * from './utils'

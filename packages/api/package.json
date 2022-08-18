@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/api",
-  "version": "0.6.12-parachain.9",
+  "version": "0.7.0-beta.0",
   "description": "JavaScript API for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -20,9 +20,12 @@
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
     "@polkadot/api": "latest",
-    "@subsocial/types": "0.6.12-parachain.9",
-    "@subsocial/utils": "0.6.12-parachain.9",
-    "@subsocial/definitions": "0.6.12-parachain.9",
+    "@subsocial/utils": "0.7.0-beta.0",
+    "@subsocial/definitions": "0.7.0-beta.0",
+    "@polkadot/types": "latest",
+    "@polkadot/types-known": "latest",
+    "@polkadot/types-support": "latest",
+    "ipfs-http-client": "56.0.3",
     "axios": "^0.24.0"
   },
   "scripts": {
