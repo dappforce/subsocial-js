@@ -1,6 +1,6 @@
 import { InnerSubsocialApi } from './inner';
 import { FindStructsFns, loadAndSetPostRelatedStructs } from '../utils/loadPostStructs';
-import { PostWithSomeDetails, PostWithAllDetails, AnySpaceId, AnyPostId, AnyAccountId } from './types';
+import { RawPostWithSomeDetails, RawPostWithAllDetails, AnySpaceId, AnyPostId, AnyAccountId } from '../types';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } from '../filters';
 
@@ -89,28 +89,28 @@ export class BasicSubsocialApi extends InnerSubsocialApi {
   }
 
   /** Find and load posts with their extension and owner's profile (if defined). */
-  async findPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
+  async findPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<RawPostWithSomeDetails[]> {
     const posts = await this.findPosts(filter)
     return loadAndSetPostRelatedStructs(posts, this.structFinders, filter)
   }
 
-  async findPublicPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
+  async findPublicPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<RawPostWithSomeDetails[]> {
     return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyPublic' })
   }
 
-  async findUnlistedPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<PostWithSomeDetails[]> {
+  async findUnlistedPostsWithSomeDetails (filter: FindPostsWithDetailsQuery): Promise<RawPostWithSomeDetails[]> {
     return this.findPostsWithSomeDetails({ ...filter, visibility: 'onlyUnlisted' })
   }
 
-  async findPostsWithAllDetails ({ ids, visibility }: FindPostsQuery): Promise<PostWithAllDetails[]> {
-    return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<PostWithAllDetails[]>
+  async findPostsWithAllDetails ({ ids, visibility }: FindPostsQuery): Promise<RawPostWithAllDetails[]> {
+    return this.findPostsWithSomeDetails({ ids, withSpace: true, withOwner: true, visibility }) as Promise<RawPostWithAllDetails[]>
   }
 
-  async findPublicPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
+  async findPublicPostsWithAllDetails (ids: AnyPostId[]): Promise<RawPostWithAllDetails[]> {
     return this.findPostsWithAllDetails({ ids, visibility: 'onlyPublic' })
   }
 
-  async findUnlistedPostsWithAllDetails (ids: AnyPostId[]): Promise<PostWithAllDetails[]> {
+  async findUnlistedPostsWithAllDetails (ids: AnyPostId[]): Promise<RawPostWithAllDetails[]> {
     return this.findPostsWithAllDetails({ ids, visibility: 'onlyUnlisted' })
   }
 

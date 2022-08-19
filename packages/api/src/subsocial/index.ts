@@ -13,6 +13,8 @@ import { BasicSubsocialApi } from './basic'
 import { SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId, SpaceStruct, PostStruct } from '../types'
 import { getFirstOrUndefined, idsToBns, idToBn } from '@subsocial/utils'
 import { flattenSpaceStructs, flattenPostStructs } from './flatteners'
+import { CreateSubsocialApiProps, SubsocialApiProps } from '../types'
+import { getSubstrateApi } from '../connections'
 
 export interface ISubsocialApi {
   findSpace: (query: FindSpaceQuery) => Promise<SpaceData | undefined>
@@ -36,31 +38,45 @@ export interface ISubsocialApi {
 }
 
 export class SubsocialApi implements ISubsocialApi {
-  private _subsocial: BasicSubsocialApi
+  private _base: BasicSubsocialApi
 
-  constructor (subsocial: BasicSubsocialApi) {
-    this._subsocial = subsocial
+  constructor (props: SubsocialApiProps) {
+    this._base = new BasicSubsocialApi(props)
   }
 
+  static async create ({ substrateNodeUrl, ...props }: CreateSubsocialApiProps) {
+    const substrateApi = await getSubstrateApi(substrateNodeUrl)
+    return new SubsocialApi({ substrateApi, ...props })
+  }
+
+  /** @deprecated */
   get subsocial() {
-    return this._subsocial 
+    return this._base 
+  }
+
+  get base () {
+    return this._base 
   }
 
   get blockchain() {
-    return this._subsocial.substrate
+    return this._base.substrate
+  }
+
+  get ipfs() {
+    return this._base.ipfs
   }
 
   get substrateApi() {
-    return this._subsocial.substrate.api
+    return this._base.substrate.api
   }
 
   public async findSpaceStructs (ids: AnyId[]): Promise<SpaceStruct[]> {
-    const structs = await this.subsocial.substrate.findSpaces({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
+    const structs = await this.base.substrate.findSpaces({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
     return flattenSpaceStructs(structs)
   }
 
   public async findPostStructs (ids: AnyId[]): Promise<PostStruct[]> {
-    const structs = await this.subsocial.substrate.findPosts({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
+    const structs = await this.base.substrate.findPosts({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
     return flattenPostStructs(structs)
   }
 
@@ -73,66 +89,66 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   public async findSpace (query: FindSpaceQuery) {
-    const old =  await this.subsocial.findSpace(query)
+    const old =  await this.base.findSpace(query)
     return !old ? old: convertToNewSpaceData(old)
   }
 
   public async findPublicSpaces (ids: AnyId[]) {
     return convertToNewSpaceDataArray(
-       await this.subsocial.findPublicSpaces(idsToBns(ids))
+       await this.base.findPublicSpaces(idsToBns(ids))
     )
   }
 
   public async findUnlistedSpaces (ids: AnyId[]) {
     return convertToNewSpaceDataArray(
-       await this.subsocial.findUnlistedSpaces(idsToBns(ids))
+       await this.base.findUnlistedSpaces(idsToBns(ids))
     )
   }
 
   public async findPost (query: FindPostQuery) {
-    const old =  await this.subsocial.findPost(query)
+    const old =  await this.base.findPost(query)
     return !old ? old: convertToNewPostData(old)
   }
 
   public async findPublicPosts (ids: AnyId[]) {
     return convertToNewPostDataArray(
-       await this.subsocial.findPublicPosts(idsToBns(ids))
+       await this.base.findPublicPosts(idsToBns(ids))
     )
   }
 
   public async findPostWithSomeDetails (query: FindPostQuery) {
     return convertToNewPostWithSomeDetails(
-       await this.subsocial.findPostWithSomeDetails(query)
+       await this.base.findPostWithSomeDetails(query)
     )
   }
 
   public async findPostWithAllDetails (id: AnyId) {
     return convertToNewPostWithAllDetails(
-       await this.subsocial.findPostWithAllDetails(idToBn(id))
+       await this.base.findPostWithAllDetails(idToBn(id))
     )
   }
 
   public async findPostsWithAllDetails (query: FindPostsQuery) {
     return convertToNewPostWithAllDetailsArray(
-       await this.subsocial.findPostsWithAllDetails(query)
+       await this.base.findPostsWithAllDetails(query)
     )
   }
 
   public async findPublicPostsWithSomeDetails (query: FindPostsWithDetailsQuery) {
     return convertToNewPostWithSomeDetailsArray(
-       await this.subsocial.findPublicPostsWithSomeDetails(query)
+       await this.base.findPublicPostsWithSomeDetails(query)
     )
   }
 
   public async findPublicPostsWithAllDetails (ids: AnyId[]) {
     return convertToNewPostWithAllDetailsArray(
-       await this.subsocial.findPublicPostsWithAllDetails(idsToBns(ids))
+       await this.base.findPublicPostsWithAllDetails(idsToBns(ids))
     )
   }
 
   public async findUnlistedPostsWithAllDetails (ids: AnyId[]) {
     return convertToNewPostWithAllDetailsArray(
-       await this.subsocial.findUnlistedPostsWithAllDetails(idsToBns(ids))
+       await this.base.findUnlistedPostsWithAllDetails(idsToBns(ids))
     )
   }
   

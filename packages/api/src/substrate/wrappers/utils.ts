@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
 import { u64, Null, Option, Text, bool } from '@polkadot/types';
 import { nonEmptyStr } from '@subsocial/utils'
-import { SubstrateId } from '../../subsocial/types';
+import { SubstrateId } from '../../types';
 import registry from '../../utils/registry';
 
 export class OptionId<T extends SubstrateId> extends Option<u64> {

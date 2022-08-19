@@ -4,7 +4,7 @@ import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/util
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
 import { SubsocialContext, ContentResult, UseServerProps } from '../types';
-import { CID } from 'ipfs-http-client';
+import { CID, create, IPFSHTTPClient } from 'ipfs-http-client';
 
 type HasContentField = {
   content: Content
@@ -29,18 +29,17 @@ export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): string[] {
 }
 
 type IpfsUrl = string
-type IpfsNodeEndpoint = 'cat' | 'version' | 'dag/get'
 
 export type SubsocialIpfsProps = SubsocialContext & {
   ipfsNodeUrl: IpfsUrl,
-  offchainUrl: string
+  offchainUrl?: string
 }
 
 /** Aggregated API to work with IPFS: get the content of the spaces of posts and profiles. */
 export class SubsocialIpfsApi {
 
   /** IPFS node readonly gateway */
-  private ipfsNodeUrl!: IpfsUrl // IPFS Node ReadOnly Gateway
+  private _client!: IPFSHTTPClient
 
   /** Offchain gateway */
   private offchainUrl!: string
@@ -50,9 +49,12 @@ export class SubsocialIpfsApi {
   constructor (props: SubsocialIpfsProps) {
     const { ipfsNodeUrl, offchainUrl, useServer } = props;
 
-    this.ipfsNodeUrl = `${ipfsNodeUrl}/api/v0`
-    this.offchainUrl = `${offchainUrl}/v1`
-    this.useServer = useServer
+    this._client = create({ url: `${ipfsNodeUrl}/api/v0` })
+
+    if (offchainUrl) {
+      this.offchainUrl = `${offchainUrl}/v1`
+      this.useServer = useServer
+    }
 
     this.testConnection()
   }
@@ -63,28 +65,15 @@ export class SubsocialIpfsApi {
 
     try {
       // Test IPFS Node connection by requesting its version
-      const res = await this.ipfsNodeRequest('version')
-      log.info('Connected to IPFS Node with version ', res.data.version)
+      const res = await this._client.version()
+      log.info('Connected to IPFS Node with version ', JSON.stringify(res))
     } catch (err: any) {
       log.error('Failed to connect to IPFS node:', err.stack)
     }
   }
 
-  // ---------------------------------------------------------------------
-  // IPFS Request wrapper
-
-  /** Makes a request to the IPFS node */
-  private async ipfsNodeRequest (endpoint: IpfsNodeEndpoint, cid?: CID): Promise<AxiosResponse<any>> {
-    const config: AxiosRequestConfig = {
-      method: 'GET',
-      url: `${this.ipfsNodeUrl}/${endpoint}`
-    };
-
-    if (typeof cid !== undefined) {
-      config.url += `?arg=${cid}`
-    }
-
-    return axios(config)
+  get client () {
+    return this._client
   }
 
   // ---------------------------------------------------------------------
@@ -111,14 +100,14 @@ export class SubsocialIpfsApi {
       const content: ContentResult<T> = {}
 
       const getFormatedContent = async (cid: CID) => {
-        const res = await this.ipfsNodeRequest('dag/get', cid)
+        const res = await this._client.dag.get(cid)
         const cidStr = cid.toString()
-        content[cidStr] = res.data
+        content[cidStr] = res.value
       }
 
       const loadContentFns = ipfsCids.map(getFormatedContent);
       await Promise.all(loadContentFns);
-      log.debug(`Loaded ${pluralize({ count: cids.length,singularText: contentName })}`)
+      log.debug(`Loaded ${pluralize({ count: cids.length, singularText: contentName })}`)
       return content
     } catch (err) {
       console.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)

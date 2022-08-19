@@ -1,17 +1,14 @@
 import {
-  SpaceData as OldSpaceData,
-  PostData as OldPostData,
-  PostWithSomeDetails as OldPostWithSomeDetails,
-  PostWithAllDetails as OldPostWithAllDetails,
-} from '../types'
-
-import {
   SpaceData,
   PostData,
   CommentData,
   PostWithAllDetails,
   PostWithSomeDetails,
   DerivedContent,
+  RawSpaceData,
+  RawPostData,
+  RawPostWithSomeDetails,
+  RawPostWithAllDetails,
 } from '../../types'
 
 import { flattenPostStruct, flattenSpaceStruct } from '.'
@@ -22,26 +19,26 @@ export function asCommentData (postData: PostData): CommentData {
   return postData as unknown as CommentData
 }
 
-export function convertToNewSpaceData (old: OldSpaceData): SpaceData {
-  const struct = flattenSpaceStruct(old.struct)
-  return { id: struct.id, struct, content: convertToDerivedContent(old.content!) }
+export function convertToNewSpaceData (Raw: RawSpaceData): SpaceData {
+  const struct = flattenSpaceStruct(Raw.struct)
+  return { id: struct.id, struct, content: convertToDerivedContent(Raw.content!) }
 }
 
-export function convertToNewSpaceDataArray (old: OldSpaceData[]): SpaceData[] {
-  return old.map(convertToNewSpaceData)
+export function convertToNewSpaceDataArray (Raw: RawSpaceData[]): SpaceData[] {
+  return Raw.map(convertToNewSpaceData)
 }
 
-export function convertToNewPostData (old: OldPostData): PostData {
-  const struct = flattenPostStruct(old.struct)
-  return { id: struct.id, struct, content: convertToDerivedContent(old.content!) }
+export function convertToNewPostData (Raw: RawPostData): PostData {
+  const struct = flattenPostStruct(Raw.struct)
+  return { id: struct.id, struct, content: convertToDerivedContent(Raw.content!) }
 }
 
-export function convertToNewPostDataArray (old: OldPostData[]): PostData[] {
-  return old.map(convertToNewPostData)
+export function convertToNewPostDataArray (Raw: RawPostData[]): PostData[] {
+  return Raw.map(convertToNewPostData)
 }
 
-export function convertToNewPostWithSomeDetailsArray (oldDataArr: OldPostWithSomeDetails[]): PostWithSomeDetails[] {
-  return oldDataArr.map(x => {
+export function convertToNewPostWithSomeDetailsArray (RawDataArr: RawPostWithSomeDetails[]): PostWithSomeDetails[] {
+  return RawDataArr.map(x => {
     const post = convertToNewPostData(x.post)
 
     return {
@@ -53,16 +50,16 @@ export function convertToNewPostWithSomeDetailsArray (oldDataArr: OldPostWithSom
   })
 }
 
-export function convertToNewPostWithAllDetailsArray (oldDataArr: OldPostWithAllDetails[]): PostWithAllDetails[] {
-  return convertToNewPostWithSomeDetailsArray(oldDataArr as OldPostWithAllDetails[]) as PostWithAllDetails[]
+export function convertToNewPostWithAllDetailsArray (RawDataArr: RawPostWithAllDetails[]): PostWithAllDetails[] {
+  return convertToNewPostWithSomeDetailsArray(RawDataArr as RawPostWithAllDetails[]) as PostWithAllDetails[]
 }
 
-export function convertToNewPostWithSomeDetails (oldData?: OldPostWithSomeDetails): PostWithSomeDetails | undefined {
-  return !oldData ? undefined : convertToNewPostWithSomeDetailsArray([ oldData ])[0]
+export function convertToNewPostWithSomeDetails (RawData?: RawPostWithSomeDetails): PostWithSomeDetails | undefined {
+  return !RawData ? undefined : convertToNewPostWithSomeDetailsArray([ RawData ])[0]
 }
 
-export function convertToNewPostWithAllDetails (oldData?: OldPostWithAllDetails): PostWithAllDetails | undefined {
-  return !oldData ? undefined : convertToNewPostWithAllDetailsArray([ oldData ])[0]
+export function convertToNewPostWithAllDetails (RawData?: RawPostWithAllDetails): PostWithAllDetails | undefined {
+  return !RawData ? undefined : convertToNewPostWithAllDetailsArray([ RawData ])[0]
 }
 
 type SpaceOrPostData = PostData | SpaceData

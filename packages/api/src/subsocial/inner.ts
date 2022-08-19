@@ -1,6 +1,5 @@
-import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { IpfsSpaceContent, IpfsCommonContent, IpfsCid, IpfsPostContent } from '../types/ipfs';
-import { AnySpaceId, AnyPostId, CommonStruct, AnyAccountId, SpaceData, CommonData, PostData } from './types';
+import { AnySpaceId, AnyPostId, CommonStruct,SubsocialApiProps, RawCommonData, RawPostData, RawSpaceData } from '../types';
 import { Space, Post } from '@subsocial/definitions/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from '../ipfs';
@@ -8,14 +7,7 @@ import { SubsocialSubstrateApi } from '../substrate';
 import { getUniqueIds, SupportedSubstrateId } from '../utils/common';
 import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery } from '../filters';
 import { contentFilter } from '../filters/content-filter';
-import { SubsocialContext, ContentResult } from '../types';
-
-
-export type SubsocialApiProps = SubsocialContext & {
-  substrateApi: SubstrateApi,
-  ipfsNodeUrl: string,
-  offchainUrl: string
-}
+import { ContentResult } from '../types';
 
 /** Using this class, you can get all the data of posts, spaces and profiles from blockchain storages and ipfs */
 export class InnerSubsocialApi {
@@ -52,7 +44,7 @@ export class InnerSubsocialApi {
     ids: Id[],
     findStructs: (ids: Id[]) => Promise<Struct[]>,
     findContents: (cids: IpfsCid[]) => Promise<ContentResult<Content>>
-  ): Promise<CommonData<Struct, Content>[]> {
+  ): Promise<RawCommonData<Struct, Content>[]> {
 
     const structs = await findStructs(ids)
     const cids = getUniqueIds(getCidsOfStructs(structs))
@@ -68,7 +60,7 @@ export class InnerSubsocialApi {
   // ---------------------------------------------------------------------
   // Multiple
   /** Find and load an array of spaces */
-  async findSpaces (filter: FindSpacesQuery): Promise<SpaceData[]> {
+  async findSpaces (filter: FindSpacesQuery): Promise<RawSpaceData[]> {
     const findStructs = this.substrate.findSpaces.bind(this.substrate, filter);
     const findContents = this.ipfs.findSpaces.bind(this.ipfs);
     const spaces = await this.findDataArray<AnySpaceId, Space, IpfsSpaceContent>(
@@ -80,7 +72,7 @@ export class InnerSubsocialApi {
     })
   }
   /** Find and load an array of posts */
-  async findPosts (filter: FindPostsQuery): Promise<PostData[]> {
+  async findPosts (filter: FindPostsQuery): Promise<RawPostData[]> {
     const findStructs = this.substrate.findPosts.bind(this.substrate, filter)
     const findContents = this.ipfs.findPosts.bind(this.ipfs)
     const posts = await this.findDataArray<AnyPostId, Post, IpfsPostContent>(
@@ -96,11 +88,11 @@ export class InnerSubsocialApi {
   // ---------------------------------------------------------------------
   // Single
   /** Find and load single space */
-  async findSpace ({ id, visibility }: FindSpaceQuery): Promise<SpaceData | undefined> {
+  async findSpace ({ id, visibility }: FindSpaceQuery): Promise<RawSpaceData | undefined> {
     return getFirstOrUndefined(await this.findSpaces({ ids: [ id ], visibility }))
   }
   /** Find and load single post */
-  async findPost ({ id, visibility }: FindPostQuery): Promise<PostData | undefined> {
+  async findPost ({ id, visibility }: FindPostQuery): Promise<RawPostData | undefined> {
     return getFirstOrUndefined(await this.findPosts({ ids: [ id ], visibility }))
   }
 }

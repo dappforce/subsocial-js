@@ -7,8 +7,9 @@ import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '
 import { visibilityFilter } from '../filters';
 import { PalletName, SubsocialContext, SpacePermissionKey } from '../types';
 import BN from 'bn.js'
-import { AnyAccountId, SubstrateId, AnyPostId, AnySpaceId, AnyReactionId } from '../subsocial/types';
+import { AnyAccountId, SubstrateId, AnyPostId, AnySpaceId, AnyReactionId } from '../types';
 import registry from '../utils/registry';
+import { getSubstrateApi } from '../connections';
 
 const U64_BYTES_SIZE = 8
 const ACCOUNT32_BYTES_SIZE = 32
@@ -22,19 +23,21 @@ type StorageSizeProps = StorageItem & {
   itemBytesSize: number
 }
 
-type SubstrateApiProps = SubsocialContext & {
+type SubstrateApiProps = {
   api: SubstrateApi
 }
 
 export class SubsocialSubstrateApi {
 
   private _api: SubstrateApi // Polkadot API (connected)
-  // private context?: SubsocialContextProps TODO use when need
 
   constructor ({ api }: SubstrateApiProps) {
     this._api = api
-    // this.context = context
-    logger.info('Initialized')
+  }
+
+  static async create (substrateNodeUrl: string) {
+    const api = await getSubstrateApi(substrateNodeUrl)
+    return new SubsocialSubstrateApi({ api })
   }
 
   getPalletQuery = async (pallet: PalletName) => {
