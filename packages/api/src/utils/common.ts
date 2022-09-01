@@ -123,7 +123,7 @@ export function getNewIdsFromEvent (txResult: SubmittableResult, eventType: Resu
   txResult.events.find(event => {
     const { event: { data, method } } = event
     if (method.indexOf(eventType) >= 0) {
-      const [ /* owner */, ...ids ] = data.toArray()
+      const [ /* owner */, ...ids ] = data
       newIds.push(...ids as unknown as BN[])
       return true
     }

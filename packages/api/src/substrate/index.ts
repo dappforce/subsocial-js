@@ -5,7 +5,7 @@ import { getFirstOrUndefined, isEmptyArray, newLogger, pluralize } from '@subsoc
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '../filters';
 import { visibilityFilter } from '../filters';
-import { PalletName, SubsocialContext, SpacePermissionKey } from '../types';
+import { PalletName, SpacePermissionKey } from '../types';
 import BN from 'bn.js'
 import { AnyAccountId, SubstrateId, AnyPostId, AnySpaceId, AnyReactionId } from '../types';
 import registry from '../utils/registry';
@@ -335,7 +335,7 @@ export class SubsocialSubstrateApi {
     const roleIdsByUserInSpace = await api.query.roles
       .roleIdsByUserInSpace.entries({ Account: accountId })
 
-    return roleIdsByUserInSpace.map(([[_, spaceId]]) => spaceId.toString())
+    return roleIdsByUserInSpace.map(([key]) => key.args[1].toString())
   }
 
   async getSpacePermissionsByAccount (accountId: AnyAccountId, spaceId: AnySpaceId): Promise<SpacePermissionKey[]> {

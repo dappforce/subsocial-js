@@ -1,15 +1,22 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { ApiTypes } from '@polkadot/api-base/types';
-import type { BTreeMap, Bytes, Option, Vec, bool, u128, u16, u32, u64 } from '@polkadot/types-codec';
+// import type lookup before we augment - in some environments
+// this is required to allow for ambient/previous definitions
+import '@polkadot/api-base/types/storage';
+
+import type { ApiTypes, AugmentedQuery, QueryableStorageEntry } from '@polkadot/api-base/types';
+import type { BTreeMap, Bytes, Option, Vec, bool, i64, u128, u16, u32, u64 } from '@polkadot/types-codec';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
 import type { CumulusPalletDmpQueueConfigData, CumulusPalletDmpQueuePageIndexData, CumulusPalletParachainSystemRelayStateSnapshotMessagingStateSnapshot, CumulusPalletXcmpQueueInboundChannelDetails, CumulusPalletXcmpQueueOutboundChannelDetails, CumulusPalletXcmpQueueQueueConfigData, FrameSupportWeightsPerDispatchClassU64, FrameSystemAccountInfo, FrameSystemEventRecord, FrameSystemLastRuntimeUpgradeInfo, FrameSystemPhase, PalletAuthorshipUncleEntryItem, PalletBalancesAccountData, PalletBalancesBalanceLock, PalletBalancesReleases, PalletBalancesReserveData, PalletCollatorSelectionCandidateInfo, PalletDomainsDomainMeta, PalletDomainsInnerValue, PalletPostsPost, PalletReactionsReaction, PalletRolesRole, PalletSpacesSpace, PalletTransactionPaymentReleases, PalletVestingReleases, PalletVestingVestingInfo, PolkadotCorePrimitivesOutboundHrmpMessage, PolkadotPrimitivesV2AbridgedHostConfiguration, PolkadotPrimitivesV2PersistedValidationData, PolkadotPrimitivesV2UpgradeRestriction, SpConsensusAuraSr25519AppSr25519Public, SpCoreCryptoKeyTypeId, SpRuntimeDigest, SpTrieStorageProof, SubsocialParachainRuntimeSessionKeys, SubsocialSupportUser } from '@polkadot/types/lookup';
 import type { Observable } from '@polkadot/types/types';
 
+export type __AugmentedQuery<ApiType extends ApiTypes> = AugmentedQuery<ApiType, () => unknown>;
+export type __QueryableStorageEntry<ApiType extends ApiTypes> = QueryableStorageEntry<ApiType>;
+
 declare module '@polkadot/api-base/types/storage' {
-  export interface AugmentedQueries<ApiType extends ApiTypes> {
+  interface AugmentedQueries<ApiType extends ApiTypes> {
     accountFollows: {
       accountFollowedByAccount: AugmentedQuery<ApiType, (arg: ITuple<[AccountId32, AccountId32]> | [AccountId32 | string | Uint8Array, AccountId32 | string | Uint8Array]) => Observable<bool>, [ITuple<[AccountId32, AccountId32]>]>;
       accountFollowers: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<Vec<AccountId32>>, [AccountId32]>;
@@ -160,6 +167,20 @@ declare module '@polkadot/api-base/types/storage' {
       registeredDomains: AugmentedQuery<ApiType, (arg: Bytes | string | Uint8Array) => Observable<Option<PalletDomainsDomainMeta>>, [Bytes]>;
       reservedWords: AugmentedQuery<ApiType, (arg: Bytes | string | Uint8Array) => Observable<bool>, [Bytes]>;
       supportedTlds: AugmentedQuery<ApiType, (arg: Bytes | string | Uint8Array) => Observable<bool>, [Bytes]>;
+    };
+    energy: {
+      /**
+       * Energy credited to each account.
+       **/
+      energyBalance: AugmentedQuery<ApiType, (arg: AccountId32 | string | Uint8Array) => Observable<u128>, [AccountId32]>;
+      /**
+       * Total energy generated.
+       **/
+      totalEnergy: AugmentedQuery<ApiType, () => Observable<u128>, []>;
+      /**
+       * The current value coefficient.
+       **/
+      valueCoefficient: AugmentedQuery<ApiType, () => Observable<i64>, []>;
     };
     parachainInfo: {
       parachainId: AugmentedQuery<ApiType, () => Observable<u32>, []>;

@@ -1,14 +1,22 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { ApiTypes } from '@polkadot/api-base/types';
-import type { Bytes, Compact, Option, Vec, bool, u128, u16, u32, u64 } from '@polkadot/types-codec';
-import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
+// import type lookup before we augment - in some environments
+// this is required to allow for ambient/previous definitions
+import '@polkadot/api-base/types/submittable';
+
+import type { ApiTypes, AugmentedSubmittable, SubmittableExtrinsic, SubmittableExtrinsicFunction } from '@polkadot/api-base/types';
+import type { BTreeSet, Bytes, Compact, Option, Vec, bool, i64, u128, u16, u32, u64 } from '@polkadot/types-codec';
+import type { AnyNumber, IMethod, ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, Call, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
 import type { CumulusPrimitivesParachainInherentParachainInherentData, PalletDomainsInnerValue, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletVestingVestingInfo, SpRuntimeHeader, SubsocialParachainRuntimeOriginCaller, SubsocialParachainRuntimeSessionKeys, SubsocialSupportContent, SubsocialSupportUser, SubsocialSupportWhoAndWhen, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
 
+export type __AugmentedSubmittable = AugmentedSubmittable<() => unknown>;
+export type __SubmittableExtrinsic<ApiType extends ApiTypes> = SubmittableExtrinsic<ApiType>;
+export type __SubmittableExtrinsicFunction<ApiType extends ApiTypes> = SubmittableExtrinsicFunction<ApiType>;
+
 declare module '@polkadot/api-base/types/submittable' {
-  export interface AugmentedSubmittables<ApiType extends ApiTypes> {
+  interface AugmentedSubmittables<ApiType extends ApiTypes> {
     accountFollows: {
       followAccount: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32]>;
       forceFollowAccount: AugmentedSubmittable<(follower: AccountId32 | string | Uint8Array, following: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, AccountId32]>;
@@ -163,7 +171,7 @@ declare module '@polkadot/api-base/types/submittable' {
       /**
        * Sets the domain inner_value to be one of subsocial account, space, or post.
        **/
-      forceSetInnerValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<PalletDomainsInnerValue> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, Option<PalletDomainsInnerValue>]>;
+      forceSetInnerValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<PalletDomainsInnerValue> | null | Uint8Array | PalletDomainsInnerValue | { Account: any } | { Space: any } | { Post: any } | string) => SubmittableExtrinsic<ApiType>, [Bytes, Option<PalletDomainsInnerValue>]>;
       /**
        * Registers a domain ([full_domain]) using origin with [content],
        * and set the domain to expire in [expires_in] number of blocks.
@@ -182,15 +190,25 @@ declare module '@polkadot/api-base/types/submittable' {
       /**
        * Sets the domain inner_value to be one of Subsocial account, space, or post.
        **/
-      setInnerValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<PalletDomainsInnerValue> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, Option<PalletDomainsInnerValue>]>;
+      setInnerValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<PalletDomainsInnerValue> | null | Uint8Array | PalletDomainsInnerValue | { Account: any } | { Space: any } | { Post: any } | string) => SubmittableExtrinsic<ApiType>, [Bytes, Option<PalletDomainsInnerValue>]>;
       /**
        * Sets the domain outer_value to be a custom string.
        **/
-      setOuterValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<Bytes> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, Option<Bytes>]>;
+      setOuterValue: AugmentedSubmittable<(domain: Bytes | string | Uint8Array, valueOpt: Option<Bytes> | null | Uint8Array | Bytes | string) => SubmittableExtrinsic<ApiType>, [Bytes, Option<Bytes>]>;
       /**
        * Add support for a set of top-level domains.
        **/
       supportTlds: AugmentedSubmittable<(tlds: Vec<Bytes> | (Bytes | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Bytes>]>;
+    };
+    energy: {
+      /**
+       * Generate energy for a target account by burning balance from the caller.
+       **/
+      generateEnergy: AugmentedSubmittable<(target: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, burnAmount: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, u128]>;
+      /**
+       * Updates the value coefficient. Only callable by the `UpdateOrigin`.
+       **/
+      updateValueCoefficient: AugmentedSubmittable<(newCoefficient: i64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [i64]>;
     };
     parachainSystem: {
       authorizeUpgrade: AugmentedSubmittable<(codeHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H256]>;
@@ -231,7 +249,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `origin`: Must be Root.
        * - `maybe_xcm_version`: The default XCM encoding version, or `None` to disable.
        **/
-      forceDefaultXcmVersion: AugmentedSubmittable<(maybeXcmVersion: Option<u32> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u32>]>;
+      forceDefaultXcmVersion: AugmentedSubmittable<(maybeXcmVersion: Option<u32> | null | Uint8Array | u32 | AnyNumber) => SubmittableExtrinsic<ApiType>, [Option<u32>]>;
       /**
        * Ask a location to notify us regarding their XCM version and any changes to it.
        * 
@@ -338,21 +356,23 @@ declare module '@polkadot/api-base/types/submittable' {
       teleportAssets: AugmentedSubmittable<(dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, beneficiary: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, assets: XcmVersionedMultiAssets | { V0: any } | { V1: any } | string | Uint8Array, feeAssetItem: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, XcmVersionedMultiLocation, XcmVersionedMultiAssets, u32]>;
     };
     posts: {
-      createPost: AugmentedSubmittable<(spaceIdOpt: Option<u64> | null | object | string | Uint8Array, extension: PalletPostsPostExtension | { RegularPost: any } | { Comment: any } | { SharedPost: any } | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u64>, PalletPostsPostExtension, SubsocialSupportContent]>;
-      forceCreatePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, owner: AccountId32 | string | Uint8Array, extension: PalletPostsPostExtension | { RegularPost: any } | { Comment: any } | { SharedPost: any } | string | Uint8Array, spaceId: Option<u64> | null | object | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, hidden: bool | boolean | Uint8Array, upvotesCount: u32 | AnyNumber | Uint8Array, downvotesCount: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, SubsocialSupportWhoAndWhen, AccountId32, PalletPostsPostExtension, Option<u64>, SubsocialSupportContent, bool, u32, u32]>;
+      createPost: AugmentedSubmittable<(spaceIdOpt: Option<u64> | null | Uint8Array | u64 | AnyNumber, extension: PalletPostsPostExtension | { RegularPost: any } | { Comment: any } | { SharedPost: any } | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u64>, PalletPostsPostExtension, SubsocialSupportContent]>;
+      forceCreatePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, owner: AccountId32 | string | Uint8Array, extension: PalletPostsPostExtension | { RegularPost: any } | { Comment: any } | { SharedPost: any } | string | Uint8Array, spaceIdOpt: Option<u64> | null | Uint8Array | u64 | AnyNumber, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, hidden: bool | boolean | Uint8Array, upvotesCount: u32 | AnyNumber | Uint8Array, downvotesCount: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, SubsocialSupportWhoAndWhen, AccountId32, PalletPostsPostExtension, Option<u64>, SubsocialSupportContent, bool, u32, u32]>;
+      forceRemovePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
       forceSetNextPostId: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
-      movePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, newSpaceId: Option<u64> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, Option<u64>]>;
+      movePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, newSpaceId: Option<u64> | null | Uint8Array | u64 | AnyNumber) => SubmittableExtrinsic<ApiType>, [u64, Option<u64>]>;
       updatePost: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, update: PalletPostsPostUpdate | { spaceId?: any; content?: any; hidden?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletPostsPostUpdate]>;
     };
     profiles: {
-      forceSetSpaceAsProfile: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array, spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, u64]>;
-      setSpaceAsProfile: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
-      unsetSpaceAsProfile: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      forceSetSpaceAsProfile: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array, spaceIdOpt: Option<u64> | null | Uint8Array | u64 | AnyNumber) => SubmittableExtrinsic<ApiType>, [AccountId32, Option<u64>]>;
+      resetProfile: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      setProfile: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
     };
     reactions: {
       createPostReaction: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, kind: PalletReactionsReactionKind | 'Upvote' | 'Downvote' | number | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletReactionsReactionKind]>;
       deletePostReaction: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, reactionId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, u64]>;
       forceCreatePostReaction: AugmentedSubmittable<(who: AccountId32 | string | Uint8Array, postId: u64 | AnyNumber | Uint8Array, reactionId: u64 | AnyNumber | Uint8Array, created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, reactionKind: PalletReactionsReactionKind | 'Upvote' | 'Downvote' | number | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, u64, u64, SubsocialSupportWhoAndWhen, PalletReactionsReactionKind]>;
+      forceDeletePostReaction: AugmentedSubmittable<(reactionId: u64 | AnyNumber | Uint8Array, postId: u64 | AnyNumber | Uint8Array, who: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, u64, AccountId32]>;
       forceSetNextReactionId: AugmentedSubmittable<(reactionId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
       updatePostReaction: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, reactionId: u64 | AnyNumber | Uint8Array, newKind: PalletReactionsReactionKind | 'Upvote' | 'Downvote' | number | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, u64, PalletReactionsReactionKind]>;
     };
@@ -365,13 +385,13 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * Only the space owner or a user with `ManageRoles` permission can call this dispatch.
        **/
-      createRole: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, timeToLive: Option<u32> | null | object | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissions: Vec<PalletPermissionsSpacePermission> | (PalletPermissionsSpacePermission | 'ManageRoles' | 'RepresentSpaceInternally' | 'RepresentSpaceExternally' | 'UpdateSpace' | 'CreateSubspaces' | 'UpdateOwnSubspaces' | 'DeleteOwnSubspaces' | 'HideOwnSubspaces' | 'UpdateAnySubspace' | 'DeleteAnySubspace' | 'HideAnySubspace' | 'CreatePosts' | 'UpdateOwnPosts' | 'DeleteOwnPosts' | 'HideOwnPosts' | 'UpdateAnyPost' | 'DeleteAnyPost' | 'HideAnyPost' | 'CreateComments' | 'UpdateOwnComments' | 'DeleteOwnComments' | 'HideOwnComments' | 'HideAnyComment' | 'Upvote' | 'Downvote' | 'Share' | 'OverrideSubspacePermissions' | 'OverridePostPermissions' | 'SuggestEntityStatus' | 'UpdateEntityStatus' | 'UpdateSpaceSettings' | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Option<u32>, SubsocialSupportContent, Vec<PalletPermissionsSpacePermission>]>;
+      createRole: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, timeToLive: Option<u32> | null | Uint8Array | u32 | AnyNumber, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissions: Vec<PalletPermissionsSpacePermission> | (PalletPermissionsSpacePermission | 'ManageRoles' | 'RepresentSpaceInternally' | 'RepresentSpaceExternally' | 'UpdateSpace' | 'CreateSubspaces' | 'UpdateOwnSubspaces' | 'DeleteOwnSubspaces' | 'HideOwnSubspaces' | 'UpdateAnySubspace' | 'DeleteAnySubspace' | 'HideAnySubspace' | 'CreatePosts' | 'UpdateOwnPosts' | 'DeleteOwnPosts' | 'HideOwnPosts' | 'UpdateAnyPost' | 'DeleteAnyPost' | 'HideAnyPost' | 'CreateComments' | 'UpdateOwnComments' | 'DeleteOwnComments' | 'HideOwnComments' | 'HideAnyComment' | 'Upvote' | 'Downvote' | 'Share' | 'OverrideSubspacePermissions' | 'OverridePostPermissions' | 'SuggestEntityStatus' | 'UpdateEntityStatus' | 'UpdateSpaceSettings' | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Option<u32>, SubsocialSupportContent, Vec<PalletPermissionsSpacePermission>]>;
       /**
        * Delete a given role and clean all associated storage items.
        * Only the space owner or a user with `ManageRoles` permission can call this dispatch.
        **/
       deleteRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
-      forceCreateRole: AugmentedSubmittable<(created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, roleId: u64 | AnyNumber | Uint8Array, spaceId: u64 | AnyNumber | Uint8Array, disabled: bool | boolean | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissions: Vec<PalletPermissionsSpacePermission> | (PalletPermissionsSpacePermission | 'ManageRoles' | 'RepresentSpaceInternally' | 'RepresentSpaceExternally' | 'UpdateSpace' | 'CreateSubspaces' | 'UpdateOwnSubspaces' | 'DeleteOwnSubspaces' | 'HideOwnSubspaces' | 'UpdateAnySubspace' | 'DeleteAnySubspace' | 'HideAnySubspace' | 'CreatePosts' | 'UpdateOwnPosts' | 'DeleteOwnPosts' | 'HideOwnPosts' | 'UpdateAnyPost' | 'DeleteAnyPost' | 'HideAnyPost' | 'CreateComments' | 'UpdateOwnComments' | 'DeleteOwnComments' | 'HideOwnComments' | 'HideAnyComment' | 'Upvote' | 'Downvote' | 'Share' | 'OverrideSubspacePermissions' | 'OverridePostPermissions' | 'SuggestEntityStatus' | 'UpdateEntityStatus' | 'UpdateSpaceSettings' | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [SubsocialSupportWhoAndWhen, u64, u64, bool, SubsocialSupportContent, Vec<PalletPermissionsSpacePermission>]>;
+      forceCreateRole: AugmentedSubmittable<(created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, roleId: u64 | AnyNumber | Uint8Array, spaceId: u64 | AnyNumber | Uint8Array, disabled: bool | boolean | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissions: BTreeSet<PalletPermissionsSpacePermission>) => SubmittableExtrinsic<ApiType>, [SubsocialSupportWhoAndWhen, u64, u64, bool, SubsocialSupportContent, BTreeSet<PalletPermissionsSpacePermission>]>;
       forceGrantRole: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array, users: Vec<SubsocialSupportUser> | (SubsocialSupportUser | { Account: any } | { Space: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u64, Vec<SubsocialSupportUser>]>;
       forceSetNextRoleId: AugmentedSubmittable<(roleId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
       /**
@@ -439,10 +459,10 @@ declare module '@polkadot/api-base/types/submittable' {
       transferSpaceOwnership: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, transferTo: AccountId32 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, AccountId32]>;
     };
     spaces: {
-      createSpace: AugmentedSubmittable<(parentIdOpt: Option<u64> | null | object | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissionsOpt: Option<PalletPermissionsSpacePermissions> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<u64>, SubsocialSupportContent, Option<PalletPermissionsSpacePermissions>]>;
-      forceCreateSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, owner: AccountId32 | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, hidden: bool | boolean | Uint8Array, permissionsOpt: Option<PalletPermissionsSpacePermissions> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, SubsocialSupportWhoAndWhen, AccountId32, SubsocialSupportContent, bool, Option<PalletPermissionsSpacePermissions>]>;
+      createSpace: AugmentedSubmittable<(content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, permissionsOpt: Option<PalletPermissionsSpacePermissions> | null | Uint8Array | PalletPermissionsSpacePermissions | { none?: any; everyone?: any; follower?: any; spaceOwner?: any } | string) => SubmittableExtrinsic<ApiType>, [SubsocialSupportContent, Option<PalletPermissionsSpacePermissions>]>;
+      forceCreateSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, created: SubsocialSupportWhoAndWhen | { account?: any; block?: any; time?: any } | string | Uint8Array, owner: AccountId32 | string | Uint8Array, content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array, hidden: bool | boolean | Uint8Array, permissionsOpt: Option<PalletPermissionsSpacePermissions> | null | Uint8Array | PalletPermissionsSpacePermissions | { none?: any; everyone?: any; follower?: any; spaceOwner?: any } | string) => SubmittableExtrinsic<ApiType>, [u64, SubsocialSupportWhoAndWhen, AccountId32, SubsocialSupportContent, bool, Option<PalletPermissionsSpacePermissions>]>;
       forceSetNextSpaceId: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
-      updateSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, update: PalletSpacesSpaceUpdate | { parentId?: any; content?: any; hidden?: any; permissions?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletSpacesSpaceUpdate]>;
+      updateSpace: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array, update: PalletSpacesSpaceUpdate | { content?: any; hidden?: any; permissions?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletSpacesSpaceUpdate]>;
     };
     sudo: {
       /**
@@ -470,7 +490,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - Weight of derivative `call` execution + 10,000.
        * # </weight>
        **/
-      sudo: AugmentedSubmittable<(call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Call]>;
+      sudo: AugmentedSubmittable<(call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Call]>;
       /**
        * Authenticates the sudo key and dispatches a function call with `Signed` origin from
        * a given account.
@@ -484,7 +504,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - Weight of derivative `call` execution + 10,000.
        * # </weight>
        **/
-      sudoAs: AugmentedSubmittable<(who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, Call]>;
+      sudoAs: AugmentedSubmittable<(who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, Call]>;
       /**
        * Authenticates the sudo key and dispatches a function call with `Root` origin.
        * This function does not check the weight of the call, and instead allows the
@@ -497,7 +517,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - The weight of this call is defined by the caller.
        * # </weight>
        **/
-      sudoUncheckedWeight: AugmentedSubmittable<(call: Call | { callIndex?: any; args?: any } | string | Uint8Array, weight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Call, u64]>;
+      sudoUncheckedWeight: AugmentedSubmittable<(call: Call | IMethod | string | Uint8Array, weight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Call, u64]>;
     };
     system: {
       /**
@@ -600,7 +620,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * The dispatch origin for this call must be _Signed_.
        **/
-      asDerivative: AugmentedSubmittable<(index: u16 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u16, Call]>;
+      asDerivative: AugmentedSubmittable<(index: u16 | AnyNumber | Uint8Array, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u16, Call]>;
       /**
        * Send a batch of dispatch calls.
        * 
@@ -622,7 +642,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * and the error of the failed call. If all were successful, then the `BatchCompleted`
        * event is deposited.
        **/
-      batch: AugmentedSubmittable<(calls: Vec<Call> | (Call | { callIndex?: any; args?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
+      batch: AugmentedSubmittable<(calls: Vec<Call> | (Call | IMethod | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
       /**
        * Send a batch of dispatch calls and atomically execute them.
        * The whole transaction will rollback and fail if any of the calls failed.
@@ -639,7 +659,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - Complexity: O(C) where C is the number of calls to be batched.
        * # </weight>
        **/
-      batchAll: AugmentedSubmittable<(calls: Vec<Call> | (Call | { callIndex?: any; args?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
+      batchAll: AugmentedSubmittable<(calls: Vec<Call> | (Call | IMethod | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
       /**
        * Dispatches a function call with a provided origin.
        * 
@@ -652,7 +672,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - Weight of derivative `call` execution + T::WeightInfo::dispatch_as().
        * # </weight>
        **/
-      dispatchAs: AugmentedSubmittable<(asOrigin: SubsocialParachainRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | string | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialParachainRuntimeOriginCaller, Call]>;
+      dispatchAs: AugmentedSubmittable<(asOrigin: SubsocialParachainRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | string | Uint8Array, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialParachainRuntimeOriginCaller, Call]>;
       /**
        * Send a batch of dispatch calls.
        * Unlike `batch`, it allows errors and won't interrupt.
@@ -669,7 +689,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - Complexity: O(C) where C is the number of calls to be batched.
        * # </weight>
        **/
-      forceBatch: AugmentedSubmittable<(calls: Vec<Call> | (Call | { callIndex?: any; args?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
+      forceBatch: AugmentedSubmittable<(calls: Vec<Call> | (Call | IMethod | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
     };
     vesting: {
       /**

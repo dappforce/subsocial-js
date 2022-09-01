@@ -1,5 +1,7 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { formatBalance } from '@polkadot/util';
+import '@subsocial/definitions/interfaces/types-lookup'
+import '@subsocial/definitions/interfaces/augment-api'
 
 let api: ApiPromise | undefined = undefined
 

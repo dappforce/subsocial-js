@@ -1,10 +1,16 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { ApiTypes } from '@polkadot/api-base/types';
+// import type lookup before we augment - in some environments
+// this is required to allow for ambient/previous definitions
+import '@polkadot/api-base/types/errors';
+
+import type { ApiTypes, AugmentedError } from '@polkadot/api-base/types';
+
+export type __AugmentedError<ApiType extends ApiTypes> = AugmentedError<ApiType>;
 
 declare module '@polkadot/api-base/types/errors' {
-  export interface AugmentedErrors<ApiType extends ApiTypes> {
+  interface AugmentedErrors<ApiType extends ApiTypes> {
     accountFollows: {
       /**
        * Account can not follow itself.
@@ -211,6 +217,20 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       ZeroReservationPeriod: AugmentedError<ApiType>;
     };
+    energy: {
+      /**
+       * Value too low to create account due to existential deposit
+       **/
+      BalanceBelowExistentialDeposit: AugmentedError<ApiType>;
+      /**
+       * Not enough native balance to burn and generate energy.
+       **/
+      NotEnoughBalance: AugmentedError<ApiType>;
+      /**
+       * Value coefficient is not a positive number.
+       **/
+      ValueCoefficientIsNotPositive: AugmentedError<ApiType>;
+    };
     parachainSystem: {
       /**
        * The inherent which supplies the host configuration did not run this block
@@ -381,6 +401,11 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       OriginalPostNotFound: AugmentedError<ApiType>;
       /**
+       * `force_create_post` failed, because this post already exists.
+       * Consider removing the post with `force_remove_post` first.
+       **/
+      PostAlreadyExists: AugmentedError<ApiType>;
+      /**
        * Root post should have a space id.
        **/
       PostHasNoSpaceId: AugmentedError<ApiType>;
@@ -429,6 +454,11 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       NotReactionOwner: AugmentedError<ApiType>;
       /**
+       * `force_create_post_reaction` failed, because reaction already exists.
+       * Consider removing reaction first with `force_delete_post_reaction`.
+       **/
+      ReactionAlreadyExists: AugmentedError<ApiType>;
+      /**
        * There is no reaction by account on this post/comment.
        **/
       ReactionByAccountNotFound: AugmentedError<ApiType>;
@@ -436,6 +466,10 @@ declare module '@polkadot/api-base/types/errors' {
        * Reaction was not found by id.
        **/
       ReactionNotFound: AugmentedError<ApiType>;
+      /**
+       * Reaction not found on post by provided [post_id] and [reaction_id].
+       **/
+      ReactionNotFoundOnPost: AugmentedError<ApiType>;
       /**
        * New reaction kind is the same as old one on this post/comment.
        **/
@@ -517,10 +551,6 @@ declare module '@polkadot/api-base/types/errors' {
        * Account is not a space follower.
        **/
       NotSpaceFollower: AugmentedError<ApiType>;
-      /**
-       * Social account was not found by id.
-       **/
-      SocialAccountNotFound: AugmentedError<ApiType>;
     };
     spaceOwnership: {
       /**
@@ -530,7 +560,7 @@ declare module '@polkadot/api-base/types/errors' {
       /**
        * The current space owner cannot transfer ownership to themself.
        **/
-      CannotTranferToCurrentOwner: AugmentedError<ApiType>;
+      CannotTransferToCurrentOwner: AugmentedError<ApiType>;
       /**
        * There is no pending ownership transfer for a given space.
        **/

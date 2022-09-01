@@ -1,67 +1,73 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { ApiTypes } from '@polkadot/api-base/types';
-import type { Bytes, Null, Option, Result, U8aFixed, Vec, u128, u32, u64, u8 } from '@polkadot/types-codec';
+// import type lookup before we augment - in some environments
+// this is required to allow for ambient/previous definitions
+import '@polkadot/api-base/types/events';
+
+import type { ApiTypes, AugmentedEvent } from '@polkadot/api-base/types';
+import type { Bytes, Null, Option, Result, U8aFixed, Vec, i64, u128, u32, u64, u8 } from '@polkadot/types-codec';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
 import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletReactionsReactionKind, SpRuntimeDispatchError, SubsocialSupportUser, XcmV1MultiLocation, XcmV2Response, XcmV2TraitsError, XcmV2TraitsOutcome, XcmV2Xcm, XcmVersionedMultiAssets, XcmVersionedMultiLocation } from '@polkadot/types/lookup';
 
+export type __AugmentedEvent<ApiType extends ApiTypes> = AugmentedEvent<ApiType>;
+
 declare module '@polkadot/api-base/types/events' {
-  export interface AugmentedEvents<ApiType extends ApiTypes> {
+  interface AugmentedEvents<ApiType extends ApiTypes> {
     accountFollows: {
-      AccountFollowed: AugmentedEvent<ApiType, [AccountId32, AccountId32]>;
-      AccountUnfollowed: AugmentedEvent<ApiType, [AccountId32, AccountId32]>;
+      AccountFollowed: AugmentedEvent<ApiType, [follower: AccountId32, account: AccountId32], { follower: AccountId32, account: AccountId32 }>;
+      AccountUnfollowed: AugmentedEvent<ApiType, [follower: AccountId32, account: AccountId32], { follower: AccountId32, account: AccountId32 }>;
     };
     balances: {
       /**
        * A balance was set by root.
        **/
-      BalanceSet: AugmentedEvent<ApiType, [AccountId32, u128, u128]>;
+      BalanceSet: AugmentedEvent<ApiType, [who: AccountId32, free: u128, reserved: u128], { who: AccountId32, free: u128, reserved: u128 }>;
       /**
        * Some amount was deposited (e.g. for transaction fees).
        **/
-      Deposit: AugmentedEvent<ApiType, [AccountId32, u128]>;
+      Deposit: AugmentedEvent<ApiType, [who: AccountId32, amount: u128], { who: AccountId32, amount: u128 }>;
       /**
        * An account was removed whose balance was non-zero but below ExistentialDeposit,
        * resulting in an outright loss.
        **/
-      DustLost: AugmentedEvent<ApiType, [AccountId32, u128]>;
+      DustLost: AugmentedEvent<ApiType, [account: AccountId32, amount: u128], { account: AccountId32, amount: u128 }>;
       /**
        * An account was created with some free balance.
        **/
-      Endowed: AugmentedEvent<ApiType, [AccountId32, u128]>;
+      Endowed: AugmentedEvent<ApiType, [account: AccountId32, freeBalance: u128], { account: AccountId32, freeBalance: u128 }>;
       /**
        * Some balance was reserved (moved from free to reserved).
        **/
-      Reserved: AugmentedEvent<ApiType, [AccountId32, u128]>;
+      Reserved: AugmentedEvent<ApiType, [who: AccountId32, amount: u128], { who: AccountId32, amount: u128 }>;
       /**
        * Some balance was moved from the reserve of the first account to the second account.
        * Final argument indicates the destination balance type.
        **/
-      ReserveRepatriated: AugmentedEvent<ApiType, [AccountId32, AccountId32, u128, FrameSupportTokensMiscBalanceStatus]>;
+      ReserveRepatriated: AugmentedEvent<ApiType, [from: AccountId32, to: AccountId32, amount: u128, destinationStatus: FrameSupportTokensMiscBalanceStatus], { from: AccountId32, to: AccountId32, amount: u128, destinationStatus: FrameSupportTokensMiscBalanceStatus }>;
       /**
        * Some amount was removed from the account (e.g. for misbehavior).
        **/
-      Slashed: AugmentedEvent<ApiType, [AccountId32, u128]>;
+      Slashed: AugmentedEvent<ApiType, [who: AccountId32, amount: u128], { who: AccountId32, amount: u128 }>;
       /**
        * Transfer succeeded.
        **/
-      Transfer: AugmentedEvent<ApiType, [AccountId32, AccountId32, u128]>;
+      Transfer: AugmentedEvent<ApiType, [from: AccountId32, to: AccountId32, amount: u128], { from: AccountId32, to: AccountId32, amount: u128 }>;
       /**
        * Some balance was unreserved (moved from reserved to free).
        **/
-      Unreserved: AugmentedEvent<ApiType, [AccountId32, u128]>;
+      Unreserved: AugmentedEvent<ApiType, [who: AccountId32, amount: u128], { who: AccountId32, amount: u128 }>;
       /**
        * Some amount was withdrawn from the account (e.g. for transaction fees).
        **/
-      Withdraw: AugmentedEvent<ApiType, [AccountId32, u128]>;
+      Withdraw: AugmentedEvent<ApiType, [who: AccountId32, amount: u128], { who: AccountId32, amount: u128 }>;
     };
     collatorSelection: {
-      CandidateAdded: AugmentedEvent<ApiType, [AccountId32, u128]>;
-      CandidateRemoved: AugmentedEvent<ApiType, [AccountId32]>;
-      NewCandidacyBond: AugmentedEvent<ApiType, [u128]>;
-      NewDesiredCandidates: AugmentedEvent<ApiType, [u32]>;
-      NewInvulnerables: AugmentedEvent<ApiType, [Vec<AccountId32>]>;
+      CandidateAdded: AugmentedEvent<ApiType, [accountId: AccountId32, deposit: u128], { accountId: AccountId32, deposit: u128 }>;
+      CandidateRemoved: AugmentedEvent<ApiType, [accountId: AccountId32], { accountId: AccountId32 }>;
+      NewCandidacyBond: AugmentedEvent<ApiType, [bondAmount: u128], { bondAmount: u128 }>;
+      NewDesiredCandidates: AugmentedEvent<ApiType, [desiredCandidates: u32], { desiredCandidates: u32 }>;
+      NewInvulnerables: AugmentedEvent<ApiType, [invulnerables: Vec<AccountId32>], { invulnerables: Vec<AccountId32> }>;
     };
     cumulusXcm: {
       /**
@@ -84,63 +90,78 @@ declare module '@polkadot/api-base/types/events' {
       /**
        * Downward message executed with the given outcome.
        **/
-      ExecutedDownward: AugmentedEvent<ApiType, [U8aFixed, XcmV2TraitsOutcome]>;
+      ExecutedDownward: AugmentedEvent<ApiType, [messageId: U8aFixed, outcome: XcmV2TraitsOutcome], { messageId: U8aFixed, outcome: XcmV2TraitsOutcome }>;
       /**
        * Downward message is invalid XCM.
        **/
-      InvalidFormat: AugmentedEvent<ApiType, [U8aFixed]>;
+      InvalidFormat: AugmentedEvent<ApiType, [messageId: U8aFixed], { messageId: U8aFixed }>;
       /**
        * Downward message is overweight and was placed in the overweight queue.
        **/
-      OverweightEnqueued: AugmentedEvent<ApiType, [U8aFixed, u64, u64]>;
+      OverweightEnqueued: AugmentedEvent<ApiType, [messageId: U8aFixed, overweightIndex: u64, requiredWeight: u64], { messageId: U8aFixed, overweightIndex: u64, requiredWeight: u64 }>;
       /**
        * Downward message from the overweight queue was executed.
        **/
-      OverweightServiced: AugmentedEvent<ApiType, [u64, u64]>;
+      OverweightServiced: AugmentedEvent<ApiType, [overweightIndex: u64, weightUsed: u64], { overweightIndex: u64, weightUsed: u64 }>;
       /**
        * Downward message is unsupported version of XCM.
        **/
-      UnsupportedVersion: AugmentedEvent<ApiType, [U8aFixed]>;
+      UnsupportedVersion: AugmentedEvent<ApiType, [messageId: U8aFixed], { messageId: U8aFixed }>;
       /**
        * The weight limit for handling downward messages was reached.
        **/
-      WeightExhausted: AugmentedEvent<ApiType, [U8aFixed, u64, u64]>;
+      WeightExhausted: AugmentedEvent<ApiType, [messageId: U8aFixed, remainingWeight: u64, requiredWeight: u64], { messageId: U8aFixed, remainingWeight: u64, requiredWeight: u64 }>;
     };
     domains: {
       /**
        * The domain meta was successfully updated.
        **/
-      DomainMetaUpdated: AugmentedEvent<ApiType, [AccountId32, Bytes]>;
+      DomainMetaUpdated: AugmentedEvent<ApiType, [who: AccountId32, domain: Bytes], { who: AccountId32, domain: Bytes }>;
       /**
        * The domain name was successfully registered.
        **/
-      DomainRegistered: AugmentedEvent<ApiType, [AccountId32, Bytes]>;
+      DomainRegistered: AugmentedEvent<ApiType, [who: AccountId32, domain: Bytes], { who: AccountId32, domain: Bytes }>;
       /**
        * Added support for new TLDs (top-level domains).
        **/
-      NewTldsSupported: AugmentedEvent<ApiType, [u32]>;
+      NewTldsSupported: AugmentedEvent<ApiType, [count: u32], { count: u32 }>;
       /**
        * New words have been reserved.
        **/
-      NewWordsReserved: AugmentedEvent<ApiType, [u32]>;
+      NewWordsReserved: AugmentedEvent<ApiType, [count: u32], { count: u32 }>;
+    };
+    energy: {
+      /**
+       * An account was removed whose balance was non-zero but below
+       * ExistentialDeposit, resulting in an outright loss.
+       **/
+      DustLost: AugmentedEvent<ApiType, [account: AccountId32, amount: u128], { account: AccountId32, amount: u128 }>;
+      /**
+       * Energy have been generated to an account.
+       **/
+      EnergyGenerated: AugmentedEvent<ApiType, [generator: AccountId32, receiver: AccountId32, balanceBurned: u128], { generator: AccountId32, receiver: AccountId32, balanceBurned: u128 }>;
+      /**
+       * Energy value coefficient has been updated.
+       **/
+      ValueCoefficientUpdated: AugmentedEvent<ApiType, [newCoefficient: i64], { newCoefficient: i64 }>;
     };
     parachainSystem: {
       /**
        * Downward messages were processed using the given weight.
        **/
-      DownwardMessagesProcessed: AugmentedEvent<ApiType, [u64, H256]>;
+      DownwardMessagesProcessed: AugmentedEvent<ApiType, [weightUsed: u64, dmqHead: H256], { weightUsed: u64, dmqHead: H256 }>;
       /**
        * Some downward messages have been received and will be processed.
        **/
-      DownwardMessagesReceived: AugmentedEvent<ApiType, [u32]>;
+      DownwardMessagesReceived: AugmentedEvent<ApiType, [count: u32], { count: u32 }>;
       /**
        * An upgrade has been authorized.
        **/
-      UpgradeAuthorized: AugmentedEvent<ApiType, [H256]>;
+      UpgradeAuthorized: AugmentedEvent<ApiType, [codeHash: H256], { codeHash: H256 }>;
       /**
        * The validation function was applied as of the contained relay chain block number.
        **/
-      ValidationFunctionApplied: AugmentedEvent<ApiType, [u32]>;
+      ValidationFunctionApplied: AugmentedEvent<ApiType, [relayChainBlockNum: u32], { relayChainBlockNum: u32 }>;
       /**
        * The relay-chain aborted the upgrade process.
        **/
@@ -269,64 +290,61 @@ declare module '@polkadot/api-base/types/events' {
       VersionChangeNotified: AugmentedEvent<ApiType, [XcmV1MultiLocation, u32]>;
     };
     posts: {
-      PostCreated: AugmentedEvent<ApiType, [AccountId32, u64]>;
-      PostDeleted: AugmentedEvent<ApiType, [AccountId32, u64]>;
-      PostMoved: AugmentedEvent<ApiType, [AccountId32, u64, Option<u64>, Option<u64>]>;
-      PostShared: AugmentedEvent<ApiType, [AccountId32, u64, u64]>;
-      PostUpdated: AugmentedEvent<ApiType, [AccountId32, u64]>;
+      PostCreated: AugmentedEvent<ApiType, [account: AccountId32, postId: u64], { account: AccountId32, postId: u64 }>;
+      PostMoved: AugmentedEvent<ApiType, [account: AccountId32, postId: u64, fromSpace: Option<u64>, toSpace: Option<u64>], { account: AccountId32, postId: u64, fromSpace: Option<u64>, toSpace: Option<u64> }>;
+      PostUpdated: AugmentedEvent<ApiType, [account: AccountId32, postId: u64], { account: AccountId32, postId: u64 }>;
     };
     profiles: {
       /**
-       * Space was successfully assigned as a profile.
+       * Profile's space id was updated for this account.
        **/
-      SpaceAsProfileAssigned: AugmentedEvent<ApiType, [AccountId32, u64]>;
+      ProfileUpdated: AugmentedEvent<ApiType, [account: AccountId32, spaceId: Option<u64>], { account: AccountId32, spaceId: Option<u64> }>;
     };
     reactions: {
-      PostReactionCreated: AugmentedEvent<ApiType, [AccountId32, u64, u64, PalletReactionsReactionKind]>;
-      PostReactionDeleted: AugmentedEvent<ApiType, [AccountId32, u64, u64, PalletReactionsReactionKind]>;
-      PostReactionUpdated: AugmentedEvent<ApiType, [AccountId32, u64, u64, PalletReactionsReactionKind]>;
+      PostReactionCreated: AugmentedEvent<ApiType, [account: AccountId32, postId: u64, reactionId: u64, reactionKind: PalletReactionsReactionKind], { account: AccountId32, postId: u64, reactionId: u64, reactionKind: PalletReactionsReactionKind }>;
+      PostReactionDeleted: AugmentedEvent<ApiType, [account: AccountId32, postId: u64, reactionId: u64, reactionKind: PalletReactionsReactionKind], { account: AccountId32, postId: u64, reactionId: u64, reactionKind: PalletReactionsReactionKind }>;
+      PostReactionUpdated: AugmentedEvent<ApiType, [account: AccountId32, postId: u64, reactionId: u64, reactionKind: PalletReactionsReactionKind], { account: AccountId32, postId: u64, reactionId: u64, reactionKind: PalletReactionsReactionKind }>;
     };
     roles: {
-      RoleCreated: AugmentedEvent<ApiType, [AccountId32, u64, u64]>;
-      RoleDeleted: AugmentedEvent<ApiType, [AccountId32, u64]>;
-      RoleGranted: AugmentedEvent<ApiType, [Option<AccountId32>, u64, Vec<SubsocialSupportUser>]>;
-      RoleRevoked: AugmentedEvent<ApiType, [AccountId32, u64, Vec<SubsocialSupportUser>]>;
-      RoleUpdated: AugmentedEvent<ApiType, [AccountId32, u64]>;
+      RoleCreated: AugmentedEvent<ApiType, [account: AccountId32, spaceId: u64, roleId: u64], { account: AccountId32, spaceId: u64, roleId: u64 }>;
+      RoleDeleted: AugmentedEvent<ApiType, [account: AccountId32, roleId: u64], { account: AccountId32, roleId: u64 }>;
+      RoleGranted: AugmentedEvent<ApiType, [account: AccountId32, roleId: u64, users: Vec<SubsocialSupportUser>], { account: AccountId32, roleId: u64, users: Vec<SubsocialSupportUser> }>;
+      RoleRevoked: AugmentedEvent<ApiType, [account: AccountId32, roleId: u64, users: Vec<SubsocialSupportUser>], { account: AccountId32, roleId: u64, users: Vec<SubsocialSupportUser> }>;
+      RoleUpdated: AugmentedEvent<ApiType, [account: AccountId32, roleId: u64], { account: AccountId32, roleId: u64 }>;
     };
     session: {
       /**
        * New session has happened. Note that the argument is the session index, not the
        * block number as the type might suggest.
        **/
-      NewSession: AugmentedEvent<ApiType, [u32]>;
+      NewSession: AugmentedEvent<ApiType, [sessionIndex: u32], { sessionIndex: u32 }>;
     };
     spaceFollows: {
-      SpaceFollowed: AugmentedEvent<ApiType, [AccountId32, u64]>;
-      SpaceUnfollowed: AugmentedEvent<ApiType, [AccountId32, u64]>;
+      SpaceFollowed: AugmentedEvent<ApiType, [follower: AccountId32, spaceId: u64], { follower: AccountId32, spaceId: u64 }>;
+      SpaceUnfollowed: AugmentedEvent<ApiType, [follower: AccountId32, spaceId: u64], { follower: AccountId32, spaceId: u64 }>;
     };
     spaceOwnership: {
-      SpaceOwnershipTransferAccepted: AugmentedEvent<ApiType, [AccountId32, u64]>;
-      SpaceOwnershipTransferCreated: AugmentedEvent<ApiType, [AccountId32, u64, AccountId32]>;
-      SpaceOwnershipTransferRejected: AugmentedEvent<ApiType, [AccountId32, u64]>;
+      SpaceOwnershipTransferAccepted: AugmentedEvent<ApiType, [account: AccountId32, spaceId: u64], { account: AccountId32, spaceId: u64 }>;
+      SpaceOwnershipTransferCreated: AugmentedEvent<ApiType, [currentOwner: AccountId32, spaceId: u64, newOwner: AccountId32], { currentOwner: AccountId32, spaceId: u64, newOwner: AccountId32 }>;
+      SpaceOwnershipTransferRejected: AugmentedEvent<ApiType, [account: AccountId32, spaceId: u64], { account: AccountId32, spaceId: u64 }>;
     };
     spaces: {
-      SpaceCreated: AugmentedEvent<ApiType, [AccountId32, u64]>;
-      SpaceDeleted: AugmentedEvent<ApiType, [AccountId32, u64]>;
-      SpaceUpdated: AugmentedEvent<ApiType, [AccountId32, u64]>;
+      SpaceCreated: AugmentedEvent<ApiType, [account: AccountId32, spaceId: u64], { account: AccountId32, spaceId: u64 }>;
+      SpaceUpdated: AugmentedEvent<ApiType, [account: AccountId32, spaceId: u64], { account: AccountId32, spaceId: u64 }>;
     };
     sudo: {
       /**
        * The \[sudoer\] just switched identity; the old key is supplied if one existed.
        **/
-      KeyChanged: AugmentedEvent<ApiType, [Option<AccountId32>]>;
+      KeyChanged: AugmentedEvent<ApiType, [oldSudoer: Option<AccountId32>], { oldSudoer: Option<AccountId32> }>;
       /**
        * A sudo just took place. \[result\]
        **/
-      Sudid: AugmentedEvent<ApiType, [Result<Null, SpRuntimeDispatchError>]>;
+      Sudid: AugmentedEvent<ApiType, [sudoResult: Result<Null, SpRuntimeDispatchError>], { sudoResult: Result<Null, SpRuntimeDispatchError> }>;
       /**
        * A sudo just took place. \[result\]
        **/
-      SudoAsDone: AugmentedEvent<ApiType, [Result<Null, SpRuntimeDispatchError>]>;
+      SudoAsDone: AugmentedEvent<ApiType, [sudoResult: Result<Null, SpRuntimeDispatchError>], { sudoResult: Result<Null, SpRuntimeDispatchError> }>;
     };
     system: {
       /**
@@ -336,23 +354,23 @@ declare module '@polkadot/api-base/types/events' {
       /**
        * An extrinsic failed.
        **/
-      ExtrinsicFailed: AugmentedEvent<ApiType, [SpRuntimeDispatchError, FrameSupportWeightsDispatchInfo]>;
+      ExtrinsicFailed: AugmentedEvent<ApiType, [dispatchError: SpRuntimeDispatchError, dispatchInfo: FrameSupportWeightsDispatchInfo], { dispatchError: SpRuntimeDispatchError, dispatchInfo: FrameSupportWeightsDispatchInfo }>;
       /**
        * An extrinsic completed successfully.
        **/
-      ExtrinsicSuccess: AugmentedEvent<ApiType, [FrameSupportWeightsDispatchInfo]>;
+      ExtrinsicSuccess: AugmentedEvent<ApiType, [dispatchInfo: FrameSupportWeightsDispatchInfo], { dispatchInfo: FrameSupportWeightsDispatchInfo }>;
       /**
        * An account was reaped.
        **/
-      KilledAccount: AugmentedEvent<ApiType, [AccountId32]>;
+      KilledAccount: AugmentedEvent<ApiType, [account: AccountId32], { account: AccountId32 }>;
       /**
        * A new account was created.
        **/
-      NewAccount: AugmentedEvent<ApiType, [AccountId32]>;
+      NewAccount: AugmentedEvent<ApiType, [account: AccountId32], { account: AccountId32 }>;
       /**
        * On on-chain remark happened.
        **/
-      Remarked: AugmentedEvent<ApiType, [AccountId32, H256]>;
+      Remarked: AugmentedEvent<ApiType, [sender: AccountId32, hash_: H256], { sender: AccountId32, hash_: H256 }>;
     };
     utility: {
       /**
@@ -367,11 +385,11 @@ declare module '@polkadot/api-base/types/events' {
        * Batch of dispatches did not complete fully. Index of first failing dispatch given, as
        * well as the error.
        **/
-      BatchInterrupted: AugmentedEvent<ApiType, [u32, SpRuntimeDispatchError]>;
+      BatchInterrupted: AugmentedEvent<ApiType, [index: u32, error: SpRuntimeDispatchError], { index: u32, error: SpRuntimeDispatchError }>;
       /**
        * A call was dispatched.
        **/
-      DispatchedAs: AugmentedEvent<ApiType, [Result<Null, SpRuntimeDispatchError>]>;
+      DispatchedAs: AugmentedEvent<ApiType, [result: Result<Null, SpRuntimeDispatchError>], { result: Result<Null, SpRuntimeDispatchError> }>;
       /**
        * A single item within a Batch of dispatches has completed with no error.
        **/
@@ -379,18 +397,18 @@ declare module '@polkadot/api-base/types/events' {
       /**
        * A single item within a Batch of dispatches has completed with error.
        **/
-      ItemFailed: AugmentedEvent<ApiType, [SpRuntimeDispatchError]>;
+      ItemFailed: AugmentedEvent<ApiType, [error: SpRuntimeDispatchError], { error: SpRuntimeDispatchError }>;
     };
     vesting: {
       /**
        * An \[account\] has become fully vested.
        **/
-      VestingCompleted: AugmentedEvent<ApiType, [AccountId32]>;
+      VestingCompleted: AugmentedEvent<ApiType, [account: AccountId32], { account: AccountId32 }>;
       /**
        * The amount vested has been updated. This could indicate a change in funds available.
        * The balance given is the amount which is left unvested (and thus locked).
        **/
-      VestingUpdated: AugmentedEvent<ApiType, [AccountId32, u128]>;
+      VestingUpdated: AugmentedEvent<ApiType, [account: AccountId32, unvested: u128], { account: AccountId32, unvested: u128 }>;
     };
     xcmpQueue: {
       /**
