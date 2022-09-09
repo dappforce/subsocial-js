@@ -23,12 +23,12 @@ export type CreateSubsocialApiProps = Omit<SubsocialApiProps, 'substrateApi'> & 
   substrateNodeUrl: string,
 }
 
-export type SubstrateId = SpaceId | PostId | BN;
+export type SubstrateId = SpaceId | PostId | BN | string;
 export type CommonStruct = Space | Post;
 export type AnyAccountId = AccountId | string;
-export type AnySpaceId = SpaceId | BN;
-export type AnyPostId = PostId | BN;
-export type AnyReactionId = ReactionId | BN;
+export type AnySpaceId = SpaceId | BN | string;
+export type AnyPostId = PostId | BN | string;
+export type AnyReactionId = ReactionId | BN | string;
 
 type CidAsStr = string
 

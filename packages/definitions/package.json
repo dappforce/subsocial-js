@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/definitions",
-  "version": "0.7.0-beta.6",
+  "version": "0.7.0-ipfs.0",
   "description": "Subsocial definitions using @polkadot/typegen to generate type definitions",
   "main": "index.js",
   "repository": "https://github.com/dappforce/subsocial-js/packages/definitions",

@@ -9,6 +9,9 @@ import {
   RawPostData,
   RawPostWithSomeDetails,
   RawPostWithAllDetails,
+  PostStruct,
+  SharedPostStruct,
+  CommentStruct,
 } from '../../types'
 
 import { flattenPostStruct, flattenSpaceStruct } from '.'
@@ -94,4 +97,16 @@ export function convertToDerivedContent
     ...content,
     ...summarizeMd(md)
   }
+}
+
+export function asSharedPostStruct (post: PostStruct): SharedPostStruct {
+  if (!post.isSharedPost) throw new Error('Not a shared post')
+
+  return post as SharedPostStruct
+}
+
+export function asCommentStruct (post: PostStruct): CommentStruct {
+  if (!post.isComment) throw new Error('Not a comment')
+
+  return post as CommentStruct
 }

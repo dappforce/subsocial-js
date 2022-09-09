@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/config",
-  "version": "0.7.0-beta.6",
+  "version": "0.7.0-ipfs.0",
   "description": "JavaScript config files for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",

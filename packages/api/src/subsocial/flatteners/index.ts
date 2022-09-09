@@ -62,7 +62,7 @@ function flattenSpaceOrPostStruct (struct: SpaceOrPostStruct): FlatSpaceOrPost {
   }
 }
 
-export const flattenPermisions = (permissions?: BlockchainSpacePermissions) => {
+export const flattenPermissions = (permissions?: BlockchainSpacePermissions) => {
   const flatPermissions: SpacePermissions = {}
 
   if (permissions) {
@@ -82,7 +82,7 @@ export const flattenPermisions = (permissions?: BlockchainSpacePermissions) => {
 }
 
 export function flattenSpaceStruct (struct: Space,): SpaceStruct {
-  const flatPermissions = flattenPermisions(struct.permissions.unwrapOr(undefined))
+  const flatPermissions = flattenPermissions(struct.permissions.unwrapOr(undefined))
 
   return {
     ...flattenSpaceOrPostStruct(struct),
@@ -147,16 +147,4 @@ export function flattenPostStruct (struct: Post): PostStruct {
 
 export function flattenPostStructs (structs: Post[]): PostStruct[] {
   return structs.map(flattenPostStruct)
-}
-
-export function asSharedPostStruct (post: PostStruct): SharedPostStruct {
-  if (!post.isSharedPost) throw new Error('Not a shared post')
-
-  return post as SharedPostStruct
-}
-
-export function asCommentStruct (post: PostStruct): CommentStruct {
-  if (!post.isComment) throw new Error('Not a comment')
-
-  return post as CommentStruct
 }

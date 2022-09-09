@@ -1,16 +1,30 @@
 import { Content, IpfsCid as RuntimeIpfsCid } from '@subsocial/definitions/interfaces';
-import { IpfsCommonContent, IpfsSpaceContent, IpfsPostContent, IpfsCommentContent, IpfsCid } from '../types/ipfs';
-import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { IpfsCommonContent, IpfsCommentContent, IpfsCid, ImportCandidate } from '../types/ipfs';
+import { newLogger, pluralize, isEmptyArray } from '@subsocial/utils';
+import axios, {  } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
-import { SubsocialContext, ContentResult, UseServerProps } from '../types';
-import { CID, create, IPFSHTTPClient } from 'ipfs-http-client';
+import { SubsocialContext, ContentResult, UseServerProps, CommonContent } from '../types';
+import { create, IPFSHTTPClient } from 'ipfs-http-client';
+import * as dagCBOR from '@ipld/dag-cbor'
+import { u8aToHex } from '@polkadot/util'
+import { AnyJson } from '@polkadot/types-codec/types'
 
 type HasContentField = {
   content: Content
 }
 
 type HasIpfsCidSomewhere = HasContentField
+
+enum CID_KIND {
+  CBOR = 113,
+  UNIXFS = 112
+}
+
+
+type CrustAuthProps = {
+  publicAddress: string
+  signedAddress: Uint8Array
+}
 
 /** Try to resolve a corresponding IPFS CID of a given struct. */
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
@@ -28,10 +42,25 @@ export function getCidsOfStructs (structs: HasIpfsCidSomewhere[]): string[] {
     .filter(cid => typeof cid !== 'undefined') as string[]
 }
 
+  /** Return unique cids from cids array */
+const getUniqueCids = (cids: IpfsCid[]) => {
+  const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
+
+  if (isEmptyArray(ipfsCids)) {
+    log.debug(`No content to load from IPFS: no cids provided`)
+    return []
+  }
+
+  return ipfsCids
+}
+
 type IpfsUrl = string
 
 export type SubsocialIpfsProps = SubsocialContext & {
   ipfsNodeUrl: IpfsUrl,
+  ipfsClusterUrl?: string
+  crustAuthToken?: string
+  headers?: Record<string, any>
   offchainUrl?: string
 }
 
@@ -41,71 +70,119 @@ export class SubsocialIpfsApi {
   /** IPFS node readonly gateway */
   private _client!: IPFSHTTPClient
 
+  private _ipfsNodeUrl: string
+
   /** Offchain gateway */
   private offchainUrl!: string
   private useServer?: UseServerProps
 
-  /** Sets values for ptivate fields from props and trying to make a test connection */
-  constructor (props: SubsocialIpfsProps) {
-    const { ipfsNodeUrl, offchainUrl, useServer } = props;
+  private ipfsApiUrl!: string
+  private ipfsClusterUrl: string | undefined
+  private customHeaders: Record<string, any> | undefined
+  private crustAuthToken: string | undefined
+
+  constructor({ ipfsNodeUrl, ipfsClusterUrl, crustAuthToken, headers: customHeaders, offchainUrl, useServer }: SubsocialIpfsProps) {
+    let headers: Record<string, string> | undefined = undefined
+
+    this.customHeaders = customHeaders
+
+    this.ipfsApiUrl = ipfsNodeUrl
+    this.ipfsClusterUrl = ipfsClusterUrl
+
+    if (crustAuthToken) {
+      this.crustAuthToken = crustAuthToken
+
+      headers = {
+        authorization: 'Basic ' + crustAuthToken,
+        ...customHeaders
+      }
+    }
+
+    this._client = create({
+      url: ipfsNodeUrl + '/api/v0',
+      headers,
+    })
 
     this._client = create({ url: `${ipfsNodeUrl}/api/v0` })
+    this._ipfsNodeUrl = ipfsNodeUrl
 
     if (offchainUrl) {
       this.offchainUrl = `${offchainUrl}/v1`
       this.useServer = useServer
     }
-
-    this.testConnection()
   }
 
-  /** Trying to make a test connection  */
-  private async testConnection () {
-    if (this.useServer) return
+  static generateCrustAuthToken (auth: CrustAuthProps) {
+    const sig = u8aToHex(auth.signedAddress)
 
-    try {
-      // Test IPFS Node connection by requesting its version
-      const res = await this._client.version()
-      log.info('Connected to IPFS Node with version ', JSON.stringify(res))
-    } catch (err: any) {
-      log.error('Failed to connect to IPFS node:', err.stack)
-    }
+    const authHeaderRaw = `sub-${auth.publicAddress}:${sig}`
+    const authToken = Buffer.from(authHeaderRaw).toString('base64')
+
+    return authToken
   }
 
   get client () {
     return this._client
   }
+  
 
   // ---------------------------------------------------------------------
-  // Find multiple
+  // Main interfaces
 
-  /** Return unique cids from cids array */
-  getUniqueCids (cids: IpfsCid[], contentName?: string) {
-    contentName = nonEmptyStr(contentName) ? `${contentName  } content` : 'content'
-    const ipfsCids = getUniqueIds(cids.map(asIpfsCid))
-
-    if (isEmptyArray(ipfsCids)) {
-      log.debug(`No ${contentName} to load from IPFS: no cids provided`)
-      return []
-    }
-
-    return ipfsCids
+  async getContentArray<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+    return this.useServer
+      ? this.getContentArrayFromOffchain(cids, contentName)
+      : this.getContentArrayFromIpfs(cids, contentName)
   }
+
+  async getContent<T extends IpfsCommonContent> (cid: IpfsCid, contentName?: string): Promise<T | undefined> {
+    const content = await this.getContentArray<T>([ cid ], contentName)
+    return content[cid.toString()]
+  }
+
+  async saveContent (content?: AnyJson | IpfsCommentContent) {
+    return this.useServer
+      ? this.saveContentToOffchain(content as IpfsCommentContent)
+      : this.saveContentToIpfs(content)
+  }
+
+  async saveFile (file: Blob | File) {
+    return this.useServer
+    ? this.saveFileToIpfs(file)
+    : this.saveFileToOffchain(file)
+  }
+
+  // --------------------------------------------------------------------
+  // IPFS functionality
 
   /** Return object with contents from IPFS by cids array */
   async getContentArrayFromIpfs<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
-      const ipfsCids = this.getUniqueCids(cids, contentName)
+      const ipfsCids = getUniqueCids(cids)
 
       const content: ContentResult<T> = {}
 
-      const getFormatedContent = async (cid: CID) => {
-        const res = await this._client.dag.get(cid)
+      const loadContentFns = ipfsCids.map(async cid => {
+      
+        const isCbor = cid.code === CID_KIND.CBOR
+        const res = await axios.get(
+          `${this._ipfsNodeUrl}/ipfs/${cid.toV1()}?timeout=5000ms${isCbor ? '&format=raw' : ''}`, { 
+          responseType: 'arraybuffer',
+        })
+      
+        const data = new Uint8Array(res.data)
         const cidStr = cid.toString()
-        content[cidStr] = res.value
-      }
 
-      const loadContentFns = ipfsCids.map(getFormatedContent);
+              
+        if (isCbor) {
+          content[cidStr] = dagCBOR.decode(data)
+        }
+      
+        if (cid.code == CID_KIND.UNIXFS) {
+          content[cidStr] = JSON.parse(String.fromCharCode(...data))
+        }
+      });
+
       await Promise.all(loadContentFns);
       log.debug(`Loaded ${pluralize({ count: cids.length, singularText: contentName })}`)
       return content
@@ -115,7 +192,55 @@ export class SubsocialIpfsApi {
     }
   }
 
-  /** Return object with contents from IPFS through offchain by cids array */
+  /** Pin content in IPFS */
+  async pinContent(cid: IpfsCid) {
+    const data = JSON.stringify({
+      cid: cid.toString(),
+    })
+
+    const res = await axios.post(this.ipfsClusterUrl + '/pins/', data, {
+      headers: {
+        Authorization: 'Bearer ' + this.crustAuthToken,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (res.status === 200) {
+      log.debug(`CID ${cid.toString()} was pinned to ${this.ipfsClusterUrl}`)
+    }
+  }
+
+  /** Unpin content in IPFS */
+  async unpinContentFromIpfs(cid: IpfsCid) {
+    const res = await axios.delete(this.ipfsClusterUrl + '/pins/' + cid.toString(), {
+      headers: {
+        Authorization: 'Bearer ' + this.crustAuthToken,
+        'Content-Type': 'application/json',
+        ...this.customHeaders
+      },
+    })
+
+    if (res.status === 200) {
+      log.debug(`CID ${cid.toString()} was unpinned from ${this.ipfsClusterUrl}`)
+    }
+  }
+
+  /** Add content in IPFS via Offchain */
+  async saveContentToIpfs(content: AnyJson | CommonContent) {
+    const data = await this.client.add(JSON.stringify(content))
+    return data.cid.toV1().toString()
+  }
+
+  /** Add file in IPFS */
+  async saveFileToIpfs(file: ImportCandidate) {
+    const data = await this.client.add(file)
+    return data.cid.toV1().toString()
+  }
+
+  // ---------------------------------------------------------------------
+  // Offchain functionality
+
+  /** @deprecated Return object with contents from IPFS through offchain by cids array */
   async getContentArrayFromOffchain<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     try {
 
@@ -137,107 +262,7 @@ export class SubsocialIpfsApi {
     }
   }
 
-  async getContentArray<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
-    return this.useServer
-      ? this.getContentArrayFromOffchain(cids, contentName)
-      : this.getContentArrayFromIpfs(cids, contentName)
-  }
-
-  /**
-   * Find and load an array of off-chain information about spaces from IPFS by a given array of `cids`.
-   *
-   * Space information only exists if there is a corresponding JSON file that represents the spaces' content on IPFS.
-   *
-   * @param cids - An array of IPFS content ids of desired spaces.
-   *
-   * @returns An array of data about desired spaces from IPFS. If no corresponding spaces to given array of `cids`, an
-   * empty array is returned.
-   */
-  async findSpaces (cids: IpfsCid[]): Promise<ContentResult<IpfsSpaceContent>> {
-    return this.getContentArray(cids, 'space')
-  }
-
-  /**
-   * Find and load an array of off-chain information about posts from IPFS by a given array of `cids`.
-   *
-   * Post information only exists if there is a corresponding JSON file that represents the posts' content on IPFS.
-   *
-   * @param cids - An array of IPFS content ids of desired posts.
-   *
-   * @returns An array of data about desired posts from IPFS. If no corresponding posts to given array of `cids`, an
-   * empty array is returned.
-   */
-  async findPosts (cids: IpfsCid[]): Promise<ContentResult<IpfsPostContent>> {
-    return this.getContentArray(cids, 'post')
-  }
-
-  /**
-   * Find and load an array of off-chain information about comments from IPFS by a given array of `cids`.
-   *
-   * Comment information only exists if there is a corresponding JSON file that represents the comments' content on
-   * IPFS.
-   *
-   * @param cids - An array of IPFS content ids of desired comments.
-   *
-   * @returns An array of data about desired comments from IPFS. If no corresponding comments to given array of `cids`,
-   * an empty array is returned.
-   */
-  async findComments (cids: IpfsCid[]): Promise<ContentResult<IpfsCommentContent>> {
-    return this.getContentArray(cids, 'comment')
-  }
-
-  // ---------------------------------------------------------------------
-  // Find single
-
-  async getContent<T extends IpfsCommonContent> (cid: IpfsCid, contentName?: string): Promise<T | undefined> {
-    const content = await this.getContentArray<T>([ cid ], contentName)
-    return content[cid.toString()]
-  }
-
-  /**
-   * Find and load off-chain information about a space from IPFS by a given `cid`.
-   *
-   * Space information only exists if there is a corresponding JSON file that represents the space's content on IPFS.
-   *
-   * @param cid - IPFS content id of a desired space.
-   *
-   * @returns Data about a desired space from IPFS. If no corresponding space to given `id`, `undefined` is returned.
-   */
-  async findSpace (cid: IpfsCid): Promise<IpfsSpaceContent | undefined> {
-    return this.getContent<IpfsSpaceContent>(cid, 'space')
-  }
-
-  /**
-   * Find and load off-chain information about a post from IPFS by a given `cid`.
-   *
-   * Post information only exists if there is a corresponding JSON file that represents the post's content on IPFS.
-   *
-   * @param cid - IPFS content id of a desired post.
-   *
-   * @returns Data about a desired post from IPFS. If no corresponding post to given `id`, `undefined` is returned.
-   */
-  async findPost (cid: IpfsCid): Promise<IpfsPostContent | undefined> {
-    return this.getContent<IpfsPostContent>(cid, 'post')
-  }
-
-  /**
-   * Find and load off-chain information about a comment from IPFS by a given `cid`.
-   *
-   * Comment information only exists if there is a corresponding JSON file that represents the comment's content on
-   * IPFS.
-   *
-   * @param cid - IPFS content id of a desired comment.
-   *
-   * @returns Data about a desired comment from IPFS. If no corresponding comments to given `id`, `undefined` is
-   * returned.
-   */
-  async findComment (cid: IpfsCid): Promise<IpfsCommentContent | undefined> {
-    return this.getContent<IpfsCommentContent>(cid, 'comment')
-  }
-
-  // ---------------------------------------------------------------------
-  // Remove
-  /** Unpin content in IPFS */
+  /** @deprecated Unpin content in IPFS via Offchain */
   async removeContent (cid: IpfsCid) {
     try {
       const res = await axios.delete(`${this.offchainUrl}/ipfs/pins/${cid}`);
@@ -253,13 +278,13 @@ export class SubsocialIpfsApi {
     }
   }
 
-  /** Add and pin content in IPFS */
-  async saveContent (content: IpfsCommonContent): Promise<RuntimeIpfsCid | undefined> {
+  /** Add and pin content in IPFS via Offchain */
+  async saveContentToOffchain (content: IpfsCommonContent): Promise<RuntimeIpfsCid | undefined> {
     try {
       const res = await axios.post(`${this.offchainUrl}/ipfs/add`, content);
 
       if (res.status !== 200) {
-        log.error(`${this.saveContent.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
+        log.error(`${this.saveContentToOffchain.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
         return undefined
       }
 
@@ -270,8 +295,8 @@ export class SubsocialIpfsApi {
     }
   }
 
-  /** Add and pit file in IPFS */
-  async saveFile (file: File | Blob) {
+  /** Add and pit file in IPFS via Offchain */
+  async saveFileToOffchain (file: File | Blob) {
     if (typeof window === 'undefined') {
       throw new Error('This function works only in a browser')
     }
@@ -286,7 +311,7 @@ export class SubsocialIpfsApi {
       })
 
       if (res.status !== 200) {
-        log.error(`${this.saveFile.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
+        log.error(`${this.saveFileToOffchain.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
         return undefined
       }
 
@@ -295,27 +320,6 @@ export class SubsocialIpfsApi {
       log.error('Failed to add file to IPFS from client side via offchain: ', error)
       return undefined;
     }
-  }
-
-  /** Add and pin space content in IPFS */
-  async saveSpace (content: IpfsSpaceContent): Promise<RuntimeIpfsCid | undefined> {
-    const hash = await this.saveContent(content)
-    log.debug(`Saved space with hash: ${hash}`)
-    return hash;
-  }
-
-  /** Add and pin post content in IPFS */
-  async savePost (content: IpfsPostContent): Promise<RuntimeIpfsCid | undefined> {
-    const hash = await this.saveContent(content)
-    log.debug(`Saved post with hash: ${hash}`)
-    return hash;
-  }
-
-  /** Add and pin comment content in IPFS */
-  async saveComment (content: IpfsCommentContent): Promise<RuntimeIpfsCid | undefined> {
-    const hash = await this.saveContent(content)
-    log.debug(`Saved comment with hash: ${hash}`)
-    return hash;
   }
 }
 

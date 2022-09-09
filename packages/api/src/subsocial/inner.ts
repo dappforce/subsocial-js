@@ -62,7 +62,7 @@ export class InnerSubsocialApi {
   /** Find and load an array of spaces */
   async findSpaces (filter: FindSpacesQuery): Promise<RawSpaceData[]> {
     const findStructs = this.substrate.findSpaces.bind(this.substrate, filter);
-    const findContents = this.ipfs.findSpaces.bind(this.ipfs);
+    const findContents = this.ipfs.getContentArray.bind(this.ipfs);
     const spaces = await this.findDataArray<AnySpaceId, Space, IpfsSpaceContent>(
       filter.ids, findStructs, findContents
     )
@@ -74,7 +74,7 @@ export class InnerSubsocialApi {
   /** Find and load an array of posts */
   async findPosts (filter: FindPostsQuery): Promise<RawPostData[]> {
     const findStructs = this.substrate.findPosts.bind(this.substrate, filter)
-    const findContents = this.ipfs.findPosts.bind(this.ipfs)
+    const findContents = this.ipfs.getContentArray.bind(this.ipfs)
     const posts = await this.findDataArray<AnyPostId, Post, IpfsPostContent>(
       filter.ids, findStructs, findContents
     )

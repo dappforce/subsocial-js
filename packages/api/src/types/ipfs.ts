@@ -47,3 +47,31 @@ export type Counts = {
   spacesCount: number
   activitiesCount: number
 }
+
+export type ImportCandidate =
+  | ToFile
+  | ToDirectory
+  | ToContent
+
+export interface ToFile {
+  path?: string
+  content: ToContent
+}
+
+export interface ToDirectory {
+  path: string
+  content?: undefined
+}
+
+/**
+ * File content in arbitrary (supported) representation. It is used in input
+ * positions and is usually normalized to `Blob` in browser contexts and
+ * `AsyncIterable<Uint8Array>` in node.
+ */
+export type ToContent =
+  | string
+  | InstanceType<typeof String>
+  | ArrayBufferView
+  | ArrayBuffer
+  | Blob
+  | ReadableStream<Uint8Array>
