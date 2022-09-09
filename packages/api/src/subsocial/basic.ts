@@ -1,7 +1,7 @@
 import { InnerSubsocialApi } from './inner';
 import { FindStructsFns, loadAndSetPostRelatedStructs } from '../utils/loadPostStructs';
 import { RawPostWithSomeDetails, RawPostWithAllDetails, AnySpaceId, AnyPostId, AnyAccountId } from '../types';
-import { getFirstOrUndefined } from '@subsocial/utils';
+import { bnsToIds, getFirstOrUndefined } from '@subsocial/utils';
 import { FindPostsQuery, FindPostsWithDetailsQuery, FindPostWithDetailsQuery } from '../filters';
 
 export class BasicSubsocialApi extends InnerSubsocialApi {
@@ -116,7 +116,7 @@ export class BasicSubsocialApi extends InnerSubsocialApi {
 
   async findProfileSpaces (accountIds: AnyAccountId[]) {
     const spaceIds = await this.substrate.profileSpaceIdsByAccounts(accountIds)
-    return this.findAllSpaces(spaceIds)
+    return this.findAllSpaces(bnsToIds(spaceIds))
   }
 
   // Functions that return a single element
