@@ -56,11 +56,12 @@ const getUniqueCids = (cids: IpfsCid[]) => {
 
 type IpfsUrl = string
 
+type Headers = Record<string, any> 
+
 export type SubsocialIpfsProps = SubsocialContext & {
   ipfsNodeUrl: IpfsUrl,
-  ipfsClusterUrl?: string
-  crustAuthToken?: string
-  headers?: Record<string, any>
+  ipfsAdminNodeUrl?: IpfsUrl,
+  ipfsClusterUrl?: IpfsUrl
   offchainUrl?: string
 }
 
@@ -76,34 +77,24 @@ export class SubsocialIpfsApi {
   private offchainUrl!: string
   private useServer?: UseServerProps
 
-  private ipfsApiUrl!: string
   private ipfsClusterUrl: string | undefined
-  private customHeaders: Record<string, any> | undefined
+  private writeHeaders: Headers | undefined
+  private pinHeaders: Headers | undefined
   private crustAuthToken: string | undefined
 
-  constructor({ ipfsNodeUrl, ipfsClusterUrl, crustAuthToken, headers: customHeaders, offchainUrl, useServer }: SubsocialIpfsProps) {
-    let headers: Record<string, string> | undefined = undefined
-
-    this.customHeaders = customHeaders
-
-    this.ipfsApiUrl = ipfsNodeUrl
+  constructor({ 
+    ipfsNodeUrl,
+    ipfsAdminNodeUrl,
+    ipfsClusterUrl,
+    offchainUrl,
+    useServer
+  }: SubsocialIpfsProps) {
     this.ipfsClusterUrl = ipfsClusterUrl
 
-    if (crustAuthToken) {
-      this.crustAuthToken = crustAuthToken
-
-      headers = {
-        authorization: 'Basic ' + crustAuthToken,
-        ...customHeaders
-      }
-    }
-
     this._client = create({
-      url: ipfsNodeUrl + '/api/v0',
-      headers,
+      url: ipfsAdminNodeUrl || ipfsNodeUrl + '/api/v0',
     })
 
-    this._client = create({ url: `${ipfsNodeUrl}/api/v0` })
     this._ipfsNodeUrl = ipfsNodeUrl
 
     if (offchainUrl) {
@@ -129,6 +120,14 @@ export class SubsocialIpfsApi {
   // ---------------------------------------------------------------------
   // Main interfaces
 
+  setWriteHeaders (headers: Headers) {
+    this.writeHeaders = headers
+  }
+
+  setPinHeaders (headers: Headers) {
+    this.pinHeaders = headers
+  }
+
   async getContentArray<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
     return this.useServer
       ? this.getContentArrayFromOffchain(cids, contentName)
@@ -148,8 +147,8 @@ export class SubsocialIpfsApi {
 
   async saveFile (file: Blob | File) {
     return this.useServer
-    ? this.saveFileToIpfs(file)
-    : this.saveFileToOffchain(file)
+    ? this.saveFileToOffchain(file)
+    : this.saveFileToIpfs(file)
   }
 
   // --------------------------------------------------------------------
@@ -199,10 +198,7 @@ export class SubsocialIpfsApi {
     })
 
     const res = await axios.post(this.ipfsClusterUrl + '/pins/', data, {
-      headers: {
-        Authorization: 'Bearer ' + this.crustAuthToken,
-        'Content-Type': 'application/json',
-      },
+      headers: this.pinHeaders,
     })
 
     if (res.status === 200) {
@@ -213,11 +209,7 @@ export class SubsocialIpfsApi {
   /** Unpin content in IPFS */
   async unpinContentFromIpfs(cid: IpfsCid) {
     const res = await axios.delete(this.ipfsClusterUrl + '/pins/' + cid.toString(), {
-      headers: {
-        Authorization: 'Bearer ' + this.crustAuthToken,
-        'Content-Type': 'application/json',
-        ...this.customHeaders
-      },
+      headers: this.pinHeaders,
     })
 
     if (res.status === 200) {
@@ -227,13 +219,13 @@ export class SubsocialIpfsApi {
 
   /** Add content in IPFS via Offchain */
   async saveContentToIpfs(content: AnyJson | CommonContent) {
-    const data = await this.client.add(JSON.stringify(content))
+    const data = await this.client.add(JSON.stringify(content), { headers: this.writeHeaders })
     return data.cid.toV1().toString()
   }
 
   /** Add file in IPFS */
   async saveFileToIpfs(file: ImportCandidate) {
-    const data = await this.client.add(file)
+    const data = await this.client.add(file, { headers: this.writeHeaders })
     return data.cid.toV1().toString()
   }
 
