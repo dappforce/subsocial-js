@@ -1,31 +1,31 @@
-import { PostData, PostWithSomeDetails, ProfileData, SpaceData} from '@subsocial/types/dto/sub'
-import { PostId, SpaceId } from '@subsocial/types/substrate/interfaces'
+import { RawPostData, RawPostWithSomeDetails, RawSpaceData, AnyPostId, AnySpaceId, AnyAccountId } from '../types'
+import { PostId, SpaceId } from '@subsocial/definitions/interfaces'
 import { getPostIdFromExtension } from './common'
 import { nonEmptyStr, notDefined, isDefined } from '@subsocial/utils'
 import { AccountId } from '@polkadot/types/interfaces'
 import { isVisible, PostDetailsOpts } from '../filters';
-import { AnyPostId, AnySpaceId, AnyAccountId } from '@subsocial/types'
+import {  } from '../types'
 
 export type FindStructsFns = {
-  findPosts: (ids: AnyPostId[]) => Promise<PostData[]>,
-  findSpaces: (ids: AnySpaceId[]) => Promise<SpaceData[]>
-  findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
+  findPosts: (ids: AnyPostId[]) => Promise<RawPostData[]>,
+  findSpaces: (ids: AnySpaceId[]) => Promise<RawSpaceData[]>
+  findProfileSpaces: (ids: AnyAccountId[]) => Promise<RawSpaceData[]>
 }
 
-async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts) {
+async function loadRelatedStructs (posts: RawPostData[], finders: FindStructsFns, opts?: PostDetailsOpts) {
   const { withSpace, withOwner } = opts || {}
-  const { findSpaces, findPosts, findProfiles } = finders
+  const { findSpaces, findPosts, findProfileSpaces } = finders
 
-  const ownerByIdMap = new Map<string, ProfileData>()
-  const spaceByIdMap = new Map<string, SpaceData>()
-  const postByIdMap = new Map<string, PostData>()
+  const ownerByIdMap = new Map<string, RawSpaceData>()
+  const spaceByIdMap = new Map<string, RawSpaceData>()
+  const postByIdMap = new Map<string, RawPostData>()
   posts.forEach(x => postByIdMap.set(x.struct.id.toString(), x))
 
-  const postStructs: PostWithSomeDetails[] = []
-  const extPostStructs: PostWithSomeDetails[] = []
+  const postStructs: RawPostWithSomeDetails[] = []
+  const extPostStructs: RawPostWithSomeDetails[] = []
 
-  const rootPosts: PostData[] = []
-  const extPosts: PostData[] = []
+  const rootPosts: RawPostData[] = []
+  const extPosts: RawPostData[] = []
 
   const rootIds: PostId[] = []
   const extIds: PostId[] = []
@@ -46,7 +46,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   const postIndicesBySpaceIdMap = new Map<string, number[]>()
 
   // Post id can be either extension or root post
-  const rememberPostIdAndMapToPostIndices = (post: PostData, postIndex: number, resultIndicesByPostIdMap: Map<string, number[]>, posts: PostData[], postIds: PostId[]) => {
+  const rememberPostIdAndMapToPostIndices = (post: RawPostData, postIndex: number, resultIndicesByPostIdMap: Map<string, number[]>, posts: RawPostData[], postIds: PostId[]) => {
     const extId = getPostIdFromExtension(post)
     const extIdStr = extId?.toString()
     if (extId && nonEmptyStr(extIdStr)) {
@@ -79,7 +79,7 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
   }
 
-  function setExtOnPost (ext: PostWithSomeDetails, resultIndicesByPostIdMap: Map<string, number[]>, postStructs: PostWithSomeDetails[]) {
+  function setExtOnPost (ext: RawPostWithSomeDetails, resultIndicesByPostIdMap: Map<string, number[]>, postStructs: RawPostWithSomeDetails[]) {
     const extId = ext.post.struct.id.toString()
     postByIdMap.set(extId, ext.post)
     const idxs = resultIndicesByPostIdMap.get(extId) || []
@@ -138,12 +138,13 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
     }
   })
 
+  // TODO: resolve profile space
   // Load related owners
   if (withOwner) {
-    const owners = await findProfiles(ownerIds)
+    const owners = await findProfileSpaces(ownerIds)
 
     owners.forEach(owner => {
-      const ownerId = owner.profile?.created.account.toString()
+      const ownerId = owner.struct.owner.toString()
       ownerId && ownerByIdMap.set(ownerId, owner)
     })
   }
@@ -165,8 +166,8 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   }
 }
 
-/** Load post structs and related structs like owner profile, space, root post if required. */
-export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: FindStructsFns, opts?: PostDetailsOpts): Promise<PostWithSomeDetails[]> {
+/** @deprecated Load post structs and related structs like owner profile, space, root post if required. */
+export async function loadAndSetPostRelatedStructs (posts: RawPostData[], finders: FindStructsFns, opts?: PostDetailsOpts): Promise<RawPostWithSomeDetails[]> {
   const { withSpace, withOwner, visibility } = opts || {}
   const {
     spaceByIdMap,
@@ -174,7 +175,7 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
     postStructs
   } = await loadRelatedStructs(posts, finders, opts)
 
-  const setOwnerOnPost = (postStruct: PostWithSomeDetails) => {
+  const setOwnerOnPost = (postStruct: RawPostWithSomeDetails) => {
     if (!withOwner) return
 
     const { post, ext } = postStruct
@@ -190,7 +191,7 @@ export async function loadAndSetPostRelatedStructs (posts: PostData[], finders: 
       : ownerByIdMap.get(extOwnerId)
   }
 
-  const setSpaceOnPost = (post: PostWithSomeDetails, spaceId?: SpaceId, ext?: PostWithSomeDetails) => {
+  const setSpaceOnPost = (post: RawPostWithSomeDetails, spaceId?: SpaceId, ext?: RawPostWithSomeDetails) => {
     if (!withSpace || !spaceId) return
 
     const space = spaceByIdMap.get(spaceId.toString())
