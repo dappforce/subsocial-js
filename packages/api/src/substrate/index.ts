@@ -1,7 +1,7 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { bool, GenericAccountId, Tuple } from '@polkadot/types';
 import { Space, SpaceId, Post, PostId, Reaction, ReactionId, RoleId, User } from '@subsocial/definitions/interfaces';
-import { getFirstOrUndefined, isEmptyArray, newLogger, pluralize } from '@subsocial/utils';
+import { getFirstOrUndefined, idToBn, isEmptyArray, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '../filters';
 import { visibilityFilter } from '../filters';
@@ -86,7 +86,7 @@ export class SubsocialSubstrateApi {
   }
 
   async getReactionIdsByAccount (accountId: AnyAccountId, structIds: AnyPostId[]): Promise<ReactionId[]> {
-    const queryParams = structIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ accountId, id ]));
+    const queryParams = structIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ accountId, idToBn(id) ]));
     return this.queryPalletMulti({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
   }
 

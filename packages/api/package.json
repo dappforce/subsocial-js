@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/api",
-  "version": "0.7.0-ipfs.4",
+  "version": "0.7.0-dev.7",
   "description": "JavaScript API for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
@@ -24,8 +24,8 @@
     "@polkadot/types": "latest",
     "@polkadot/types-known": "latest",
     "@polkadot/types-support": "latest",
-    "@subsocial/definitions": "0.7.0-ipfs.4",
-    "@subsocial/utils": "0.7.0-ipfs.4",
+    "@subsocial/definitions": "0.7.0-dev.7",
+    "@subsocial/utils": "0.7.0-dev.7",
     "axios": "^0.24.0",
     "ipfs-http-client": "56.0.3"
   },

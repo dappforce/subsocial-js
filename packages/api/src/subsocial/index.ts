@@ -58,14 +58,17 @@ export class SubsocialApi implements ISubsocialApi {
     return this._base 
   }
 
+   /** Accessors for private field {@link _base.substrate}*/
   get blockchain() {
     return this._base.substrate
   }
 
+  /** Accessors for private field {@link _base.ipfs}*/
   get ipfs() {
     return this._base.ipfs
   }
 
+   /** Accessors for private field {@link _base.substrate.api}*/
   get substrateApi() {
     return this._base.substrate.api
   }

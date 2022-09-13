@@ -23,11 +23,11 @@ export class InnerSubsocialApi {
     this._substrate = new SubsocialSubstrateApi({ api: substrateApi, ...context })
     this._ipfs = new SubsocialIpfsApi({ ipfsNodeUrl, offchainUrl, ...context })
   }
-  /** Accessors for privat field {@link _substrate}*/
+  /** Accessors for private field {@link _substrate}*/
   public get substrate (): SubsocialSubstrateApi {
     return this._substrate
   }
-  /** Accessors for privat field {@link _ipfs}*/
+  /** Accessors for private field {@link _ipfs}*/
   public get ipfs (): SubsocialIpfsApi {
     return this._ipfs
   }
