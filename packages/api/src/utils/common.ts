@@ -1,17 +1,18 @@
-import { Comment } from '@subsocial/types/substrate/classes';
-import { IpfsCid, SubstrateId, AnyAccountId, CommonStruct, CID } from '@subsocial/types';
+import { Comment } from '../substrate/wrappers';
 import { newLogger, isEmptyArray, nonEmptyStr, isDef } from '@subsocial/utils';
-import { PostId, ReactionId, SocialAccount, Reaction, Post, Content } from '@subsocial/types/substrate/interfaces';
-import registry from '@subsocial/types/substrate/registry';
+import { PostId, ReactionId, Reaction, Post, Content } from '@subsocial/definitions/interfaces';
 import { GenericAccountId } from '@polkadot/types';
 import { SubmittableResult } from '@polkadot/api';
 import BN from 'bn.js';
+import registry from './registry';
+import { AnyAccountId, CommonStruct, IpfsCid, SubstrateId } from '../types';
+import { CID } from 'ipfs-http-client';
 
 const log = newLogger('Subsocial Api Utils');
 
 export type SupportedSubstrateId = SubstrateId | AnyAccountId | ReactionId
 
-export type SupportedSubstrateResult = CommonStruct | SocialAccount | Reaction
+export type SupportedSubstrateResult = CommonStruct | Reaction
 
 type AnyId = SupportedSubstrateId | IpfsCid
 
@@ -92,9 +93,9 @@ export const asIpfsCid = (cid: IpfsCid): CID | undefined => {
   if (cid instanceof CID) {
     return cid
   } else if (typeof cid === 'string') {
-    return new CID(cid)
+    return CID.parse(cid)
   } else if (typeof cid?.toU8a === 'function') {
-    return new CID(cid.toString())
+    return CID.parse(cid.toString())
   } else {
     throw new Error('Wrong type of IPFS CID. Valid types are: string | CID | IpfsCid')
   }
@@ -122,7 +123,7 @@ export function getNewIdsFromEvent (txResult: SubmittableResult, eventType: Resu
   txResult.events.find(event => {
     const { event: { data, method } } = event
     if (method.indexOf(eventType) >= 0) {
-      const [ /* owner */, ...ids ] = data.toArray()
+      const [ /* owner */, ...ids ] = data
       newIds.push(...ids as unknown as BN[])
       return true
     }

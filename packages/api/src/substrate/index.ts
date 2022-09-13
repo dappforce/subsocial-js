@@ -1,34 +1,43 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
-import { bool, GenericAccountId, Option, Tuple } from '@polkadot/types';
-import { AccountId } from '@polkadot/types/interfaces';
-import { AnyAccountId, AnySpaceId, AnyPostId, AnyReactionId, SubstrateId, PalletName } from '@subsocial/types';
-import { Space, SpaceId, Post, PostId, Reaction, ReactionId } from '@subsocial/types/substrate/interfaces';
-import registry from '@subsocial/types/substrate/registry';
-import { getFirstOrUndefined, isEmptyArray, isEmptyStr, newLogger, parseDomain, pluralize } from '@subsocial/utils';
+import { bool, GenericAccountId, Tuple } from '@polkadot/types';
+import { Space, SpaceId, Post, PostId, Reaction, ReactionId, RoleId, User } from '@subsocial/definitions/interfaces';
+import { getFirstOrUndefined, idToBn, isEmptyArray, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery } from '../filters';
-import { SocialAccountWithId } from '@subsocial/types/dto';
 import { visibilityFilter } from '../filters';
-import { SubsocialContext } from '../types';
+import { PalletName, SpacePermissionKey } from '../types';
+import BN from 'bn.js'
+import { AnyAccountId, SubstrateId, AnyPostId, AnySpaceId, AnyReactionId } from '../types';
+import registry from '../utils/registry';
+import { getSubstrateApi } from '../connections';
+
+const U64_BYTES_SIZE = 8
+const ACCOUNT32_BYTES_SIZE = 32
 
 type StorageItem = {
   pallet: PalletName,
   storage: string
 }
 
-type SubstrateApiProps = SubsocialContext & {
+type StorageSizeProps = StorageItem & {
+  itemBytesSize: number
+}
+
+type SubstrateApiProps = {
   api: SubstrateApi
 }
 
 export class SubsocialSubstrateApi {
 
   private _api: SubstrateApi // Polkadot API (connected)
-  // private context?: SubsocialContextProps TODO use when need
 
   constructor ({ api }: SubstrateApiProps) {
     this._api = api
-    // this.context = context
-    logger.info('Initialized')
+  }
+
+  static async create (substrateNodeUrl: string) {
+    const api = await getSubstrateApi(substrateNodeUrl)
+    return new SubsocialSubstrateApi({ api })
   }
 
   getPalletQuery = async (pallet: PalletName) => {
@@ -69,17 +78,67 @@ export class SubsocialSubstrateApi {
     return query[storage as any].multi(value)
   }
 
-  // TODO maybe pallet: 'posts' | 'spaces
   private async isBooleanByAccount (params: StorageItem, accountId: AnyAccountId, subjectId: SubstrateId): Promise<boolean> {
     const { storage, pallet } = params
-    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), subjectId ]);
+    const queryParams = new Tuple(registry, [ GenericAccountId, 'u64' ], [accountId, subjectId ]);
     const isBoolean = await this.queryPallet({ pallet, storage }, queryParams) as bool
     return isBoolean.valueOf()
   }
 
-  private async getReactionIdsByAccount (accountId: AnyAccountId, structIds: AnyPostId[]): Promise<ReactionId[]> {
-    const queryParams = structIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ asAccountId(accountId), id ]));
+  async getReactionIdsByAccount (accountId: AnyAccountId, structIds: AnyPostId[]): Promise<ReactionId[]> {
+    const queryParams = structIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ accountId, idToBn(id) ]));
     return this.queryPalletMulti({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
+  }
+
+  // ---------------------------------------------------------------------
+  // Counter
+  private async getStorageLength (params: StorageSizeProps, value?: any): Promise<BN> {
+    const { storage, pallet, itemBytesSize } = params
+    const query = await this.getPalletQuery(pallet)
+    // @ts-ignore
+    const storageSize = await query[storage].size(value)
+    
+    return storageSize.subn(1).divn(itemBytesSize)
+  }
+
+  async postsCountBySpaceId (spaceId: AnySpaceId) {
+    return this.getStorageLength({
+      pallet: 'posts',
+      storage: 'postIdsBySpaceId',
+      itemBytesSize: U64_BYTES_SIZE
+    }, spaceId)
+  }
+
+  async sharesCountByPostId (postId: AnyPostId) {
+    return this.getStorageLength({
+      pallet: 'posts',
+      storage: 'sharedPostIdsByOriginalPostId',
+      itemBytesSize: U64_BYTES_SIZE
+    }, postId)
+  }
+
+  async repliesCountByPostId (postId: AnyPostId) {
+    return this.getStorageLength({
+      pallet: 'posts',
+      storage: 'replyIdsByPostId',
+      itemBytesSize: U64_BYTES_SIZE
+    }, postId)
+  }
+
+  async accountFollowersCountByAccountId (accountId: AnyAccountId) {
+    return this.getStorageLength({
+      pallet: 'accountFollows',
+      storage: 'accountFollowers',
+      itemBytesSize: ACCOUNT32_BYTES_SIZE
+    }, accountId)
+  }
+
+  async accountsFollowedCountByAccount (accountId: AnyAccountId) {
+    return this.getStorageLength({
+      pallet: 'accountFollows',
+      storage: 'accountsFollowedByAccount',
+      itemBytesSize: ACCOUNT32_BYTES_SIZE
+    }, accountId)
   }
 
   // ---------------------------------------------------------------------
@@ -151,20 +210,6 @@ export class SubsocialSubstrateApi {
   }
 
   /**
-   * Find and load an array of information about social profiles from Subsocial blockchain by a given array of account
-   * `ids`.
-   *
-   * @param ids - An array of account ids of desired profiles.
-   *
-   * @returns An array of data about desired profiles from Subsocial blockchain. If no corresponding profiles to given
-   * array of `ids`, an empty array is returned.
-   */
-  async findSocialAccounts (ids: AnyAccountId[]): Promise<SocialAccountWithId[]> {
-    const accountIds = ids.map(id => asAccountId(id)).filter(x => typeof x !== 'undefined') as AccountId[]
-    return this.findStructs({ pallet: 'profiles', storage: 'socialAccountById' }, accountIds);
-  }
-
-  /**
    * Find and load an array of information about reactions from Subsocial blockchain by a given array of `ids`.
    *
    * @param ids - An array of ids of desired reactions.
@@ -202,18 +247,6 @@ export class SubsocialSubstrateApi {
   }
 
   /**
-   * Find and load information about a profile from Subsocial blockchain by a given `id`.
-   *
-   * @param id - Account id of desired profile.
-   *
-   * @returns Data about desired profile from Subsocial blockchain. If no corresponding profile to given `id`,
-   * `undefined` is returned.
-   */
-  async findSocialAccount (id: AnyAccountId): Promise<SocialAccountWithId | undefined> {
-    return getFirstOrUndefined(await this.findSocialAccounts([ id ]))
-  }
-
-  /**
    * Find and load information about a reaction from Subsocial blockchain by a given `id`.
    *
    * @param id - Id of desired reaction.
@@ -244,14 +277,6 @@ export class SubsocialSubstrateApi {
     return this.queryPosts('nextPostId')
   }
 
-  async getSpaceIdByHandle (handle: string): Promise<SpaceId | undefined> {
-    if (isEmptyStr(handle)) {
-      return undefined
-    }
-    const idOpt = await this.querySpaces('spaceIdByHandle', handle) as Option<SpaceId>
-    return idOpt.unwrapOr(undefined)
-  }
-
   async getReplyIdsByPostId (id: AnyPostId): Promise<PostId[]> {
     return this.queryPosts('replyIdsByPostId', id);
   }
@@ -268,6 +293,14 @@ export class SubsocialSubstrateApi {
     return this.queryPosts('postIdsBySpaceId', id)
   }
 
+  async profileSpaceIdByAccount (accountId: AnyAccountId): Promise<SpaceId> {
+    return this.queryProfiles('profileSpaceIdByAccount', accountId)
+  }
+
+  async profileSpaceIdsByAccounts (accountIds: AnyAccountId[]): Promise<SpaceId[]> {
+    return this.queryPalletMulti({ pallet: 'profiles', storage: 'profileSpaceIdByAccount'}, accountIds)
+  }
+
   // ---------------------------------------------------------------------
   // Is boolean
 
@@ -275,12 +308,47 @@ export class SubsocialSubstrateApi {
     const followedAccountId = asAccountId(followedAddress)
     const myAccountId = asAccountId(myAddress)
     const queryParams = new Tuple(registry, [ GenericAccountId, GenericAccountId ], [ myAccountId, followedAccountId ]);
-    const isFollow = await this.queryPallet({ pallet: 'profileFollows', storage: 'accountFollowedByAccount' }, queryParams) as bool
+    const isFollow = await this.queryPallet({ pallet: 'accountFollows', storage: 'accountFollowedByAccount' }, queryParams) as bool
     return isFollow.valueOf()
   }
 
   async isSpaceFollower (myAddress: AnyAccountId, spaceId: AnySpaceId): Promise<boolean> {
     return this.isBooleanByAccount({ pallet: 'spaceFollows', storage: 'spaceFollowedByAccount' }, myAddress, spaceId)
+  }
+
+  // ---------------------------------------------------------------------
+  // Roles
+
+  async getAccountsWithAnyRoleInSpace (spaceId: AnySpaceId): Promise<string[]> {
+    const api = await this.api
+
+    const roleIdsCodec = await api.query.roles.roleIdsBySpaceId(spaceId) as unknown as RoleId[]
+    const roleIds = getUniqueIds(roleIdsCodec.map(x => x.toString()))
+    const usersArrays = await api.query.roles.usersByRoleId.multi(roleIds) as unknown as User[][]
+
+    return usersArrays.flatMap(users => users.filter(x => x.isAccount).map(x => x.asAccount.toString()))
+  }
+
+  async getSpaceIdsWithRolesByAccount (accountId: AnyAccountId) {
+    const api = await this.api
+
+    const roleIdsByUserInSpace = await api.query.roles
+      .roleIdsByUserInSpace.entries({ Account: accountId })
+
+    return roleIdsByUserInSpace.map(([key]) => key.args[1].toString())
+  }
+
+  async getSpacePermissionsByAccount (accountId: AnyAccountId, spaceId: AnySpaceId): Promise<SpacePermissionKey[]> {
+    const api = await this.api
+
+    const roleIdsInSpace = await api.query.roles
+      .roleIdsByUserInSpace({ Account: accountId }, spaceId) as unknown as RoleId[]
+    const setRolesIdsInSpace = getUniqueIds(roleIdsInSpace.map(x => x.toString()))
+
+    const roles = await api.query.roles.roleById.multi(setRolesIdsInSpace)
+
+    const permissions = roles.flatMap(x => (x.toHuman() as any)?.permissions)
+    return getUniqueIds(permissions)
   }
 
 }

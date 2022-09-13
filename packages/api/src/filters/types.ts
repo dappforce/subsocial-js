@@ -1,4 +1,4 @@
-import { AnyPostId, AnySpaceId } from '@subsocial/types'
+import { AnyPostId, AnySpaceId } from "../types"
 
 /** 
  * The four visible state filters correspond to the next conditions:

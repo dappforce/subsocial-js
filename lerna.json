@@ -2,12 +2,10 @@
   "lerna": "2.11.0",
   "packages": [
     "packages/api",
-    "packages/types",
     "packages/utils",
-    "packages/definitions",
-    "packages/i18n"
+    "packages/definitions"
   ],
-  "version": "0.6.9",
+  "version": "0.7.0-dev.7",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

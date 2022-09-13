@@ -1,11 +1,9 @@
 import BN from 'bn.js'
-import { FlatSpacePermissions } from '../substrate'
-import { Content, SocialAccount, WhoAndWhen } from '../substrate/interfaces'
-import { Option } from '@polkadot/types/codec'
+import { Content, WhoAndWhen } from '@subsocial/definitions/interfaces'
 import { GenericAccountId } from '@polkadot/types/generic'
-import { bool } from '@polkadot/types/primitive'
+import { Bool, bool } from '@polkadot/types/primitive'
 
-import * as content from '../offchain'
+import * as content from './ipfs'
 
 type Id = string
 
@@ -47,9 +45,6 @@ export type HasCreated = {
 
 export type CanBeUpdated = {
   isUpdated?: boolean
-  updatedByAccount?: string
-  updatedAtBlock?: number
-  updatedAtTime?: number
 }
 
 export type CanBeHidden = {
@@ -69,35 +64,20 @@ export type FlatSpaceOrPost =
   CanBeHidden
 
 /** Flat space struct. */
-export type SpaceStruct = FlatSpaceOrPost & CanHaveParentId & CanHaveHandle & FlatSpacePermissions & {
-  postsCount: number
-  hiddenPostsCount: number
-
-  // TODO maybe we do not need `visiblePostsCount` field here.
-  // It can be easily calculated as (postsCount - hiddenPostsCount)
-  visiblePostsCount: number
+export type SpaceStruct = FlatSpaceOrPost & CanHaveParentId & CanHaveHandle & SpacePermissions & {
+  postsCount?: number
 
   canFollowerCreatePosts: boolean
   canEveryoneCreatePosts: boolean
-
-  followersCount: number
-  score: number
-  // permissions?: SpacePermissions
 }
 
 /** Flat post struct. */
 export type PostStruct = FlatSpaceOrPost & CanHaveSpaceId & {
-  repliesCount: number
-  hiddenRepliesCount: number
-
-  // TODO maybe we do not need `visibleRepliesCount` field here.
-  // It can be easily calculated as (repliesCount - hiddenRepliesCount)
-  visibleRepliesCount: number
-
-  sharesCount: number
   upvotesCount: number
   downvotesCount: number
-  score: number
+
+  repliesCount?: number
+  sharesCount?: number
 
   isRegularPost: boolean
   isSharedPost: boolean
@@ -110,7 +90,7 @@ export type CommentExtension = {
 }
 
 export type SharedPostExtension = {
-  sharedPostId: Id
+  originalPostId: Id
 }
 
 export type FlatPostExtension = {} | CommentExtension | SharedPostExtension
@@ -119,24 +99,9 @@ export type SharedPostStruct = PostStruct & SharedPostExtension
 
 export type CommentStruct = PostStruct & CommentExtension
 
-type SocialAccountStruct = HasId & {
-  followersCount: number
-  followingAccountsCount: number
-  followingSpacesCount: number
-  reputation: number
-  hasProfile: boolean
-}
-
-// TODO rename to SocialAccount or AnonProfileStruct?
-/** Flat representation of a social account that does not have a profile content. */
-export type ProfileStruct = SocialAccountStruct & Partial<FlatSuperCommon>
-
-/** Flat representation of a social account that created a profile content. */
-export type PublicProfileStruct = SocialAccountStruct & FlatSuperCommon
-
 export type SuperCommonStruct = {
   created: WhoAndWhen
-  updated: Option<WhoAndWhen>
+  edited: Bool
   content: Content
 }
 
@@ -162,14 +127,13 @@ export type SummarizedContent = {
   isShowMore: boolean
 }
 
-export type DerivedContent<C extends content.CommonContent> = C & SummarizedContent
+export type DerivedContent<C extends content.IpfsCommonContent> = C & SummarizedContent
 
-export type CommonContent = content.CommonContent & SummarizedContent
-export type ProfileContent = DerivedContent<content.ProfileContent>
-export type SpaceContent = DerivedContent<content.SpaceContent>
-export type PostContent = DerivedContent<content.PostContent>
-export type CommentContent = DerivedContent<content.CommentContent>
-export type SharedPostContent = DerivedContent<content.SharedPostContent>
+export type CommonContent = content.IpfsCommonContent & SummarizedContent
+export type SpaceContent = DerivedContent<content.IpfsSpaceContent>
+export type PostContent = DerivedContent<content.IpfsPostContent>
+export type CommentContent = DerivedContent<content.IpfsCommentContent>
+export type SharedPostContent = DerivedContent<content.IpfsSharedPostContent>
 
 export type EntityData<S extends HasId, C extends CommonContent> = {
 
@@ -181,14 +145,12 @@ export type EntityData<S extends HasId, C extends CommonContent> = {
   content?: C
 }
 
-export type ProfileData = EntityData<ProfileStruct, ProfileContent>
 export type SpaceData = EntityData<SpaceStruct, SpaceContent>
 export type PostData = EntityData<PostStruct, PostContent>
 export type CommentData = EntityData<CommentStruct, CommentContent>
 export type SharedPostData = EntityData<SharedPostStruct, SharedPostContent>
 
 export type AnySubsocialData =
-  ProfileData |
   SpaceData |
   PostData |
   CommentData |
@@ -196,8 +158,9 @@ export type AnySubsocialData =
 
 type PostExtensionData = Exclude<PostWithSomeDetails, 'ext'>
 
-export type SpaceWithSomeDetails = SpaceData & {
-  owner?: ProfileData
+export type SpaceWithSomeDetails = SpaceData
+& {
+  owner?: SpaceData
 }
 
 export type PostWithSomeDetails = {
@@ -207,12 +170,12 @@ export type PostWithSomeDetails = {
   post: PostData
 
   ext?: PostExtensionData
-  owner?: ProfileData
+  owner?: SpaceData
   space?: SpaceData
 }
 
 export type PostWithAllDetails = Omit<PostWithSomeDetails, 'owner' | 'space'> & {
-  owner: ProfileData
+  owner: SpaceData
   space: SpaceData
 }
 
@@ -223,6 +186,77 @@ export enum ReactionEnum {
   Downvote = 'Downvote'
 }
 
-export type SocialAccountWithId = SocialAccount &  {
-  id: AccountId
+export type SpacePermissionMap = {
+  /// Create, update, delete, grant and revoke roles in this space.
+  ManageRoles?: boolean
+
+  /// Act on behalf of this space within this space.
+  RepresentSpaceInternally?: boolean
+  /// Act on behalf of this space outside of this space.
+  RepresentSpaceExternally?: boolean
+
+   /// Update this space.
+  UpdateSpace?: boolean
+
+  // Related to subspaces in this space:
+  CreateSubspaces?: boolean
+  UpdateOwnSubspaces?: boolean
+  DeleteOwnSubspaces?: boolean
+  HideOwnSubspaces?: boolean
+
+  UpdateAnySubspace?: boolean
+  DeleteAnySubspace?: boolean
+  HideAnySubspace?: boolean
+
+  // Related to posts in this space:
+  CreatePosts?: boolean
+  UpdateOwnPosts?: boolean
+  DeleteOwnPosts?: boolean
+  HideOwnPosts?: boolean
+
+  UpdateAnyPost?: boolean
+  DeleteAnyPost?: boolean
+  HideAnyPost?: boolean
+
+  CreateComments?: boolean
+  UpdateOwnComments?: boolean
+  DeleteOwnComments?: boolean
+  HideOwnComments?: boolean
+
+  // NOTE: It was made on purpose that it's not possible to update or delete not own comments.
+  // Instead it's possible to allow to hide and block comments.
+  HideAnyComment?: boolean
+
+  /// Upvote any post or comment in this space.
+  Upvote?: boolean
+  /// Downvote any post or comment in this space.
+  Downvote?: boolean
+  /// Share any post or comment from this space to another outer space.
+  Share?: boolean
+
+  /// Override permissions per subspace in this space.
+  OverrideSubspacePermissions?: boolean
+  /// Override permissions per post in this space.
+  OverridePostPermissions?: boolean
+
+  // Related to moderation pallet
+  /// Suggest new entity status in space (whether it's blocked or allowed)
+  SuggestEntityStatus?: boolean
+  /// Update entity status in space
+  UpdateEntityStatus?: boolean
+
+  // Related to Space settings
+  /// Update collection of space settings in different pallets
+  UpdateSpaceSettings?: boolean
 }
+
+export type SpacePermissionKey = keyof SpacePermissionMap
+
+export type SpacePermissions = {
+  nonePermissions?: SpacePermissionMap
+  everyonePermissions?: SpacePermissionMap
+  followerPermissions?: SpacePermissionMap
+  spaceOwnerPermissions?: SpacePermissionMap
+}
+
+export type SpacePermissionsKey = keyof SpacePermissions

@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-import { u64, Null, Enum, Option, Struct } from '@polkadot/types';
-import { PostId, PostExtension as IPostExtension, Comment as IComment } from '@subsocial/definitions/interfaces';
+import { PostId } from '@subsocial/definitions/interfaces';
 import { OptionEntity } from '.';
-import registry from '../registry';
 
 export type RegularPost = null
 export type SharedPost = PostId | string

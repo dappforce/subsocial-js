@@ -1,4 +1,4 @@
-import { Space, Post } from '@subsocial/types/substrate/interfaces'
+import { Space, Post } from '@subsocial/definitions/interfaces'
 import { Visibility } from './types'
 
 type StructWithHidden = Space | Post
@@ -6,7 +6,7 @@ type StructWithHidden = Space | Post
 export const isHidden = (struct?: StructWithHidden) => !struct || struct.hidden.valueOf()
 export const isVisible = (struct?: StructWithHidden): struct is StructWithHidden => !isHidden(struct)
 
-export const isEmptyContent = (struct?: StructWithHidden) => !struct || struct.content.isNone || struct.content.isNull
+export const isEmptyContent = (struct?: StructWithHidden) => !struct || struct.content.isNone || struct.content.isEmpty
 
 export const isUnlisted = (struct?: StructWithHidden) => isHidden(struct) || isEmptyContent(struct)
 export const isPublic = (struct?: StructWithHidden): struct is StructWithHidden => !isUnlisted(struct)

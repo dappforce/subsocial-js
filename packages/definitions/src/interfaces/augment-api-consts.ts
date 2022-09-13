@@ -1,12 +1,26 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { ApiTypes } from '@polkadot/api-base/types';
-import type { Vec, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
-import type { FrameSupportWeightsRuntimeDbWeight, FrameSupportWeightsWeightToFeeCoefficient, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, PalletPermissionsSpacePermissions, SpVersionRuntimeVersion } from '@polkadot/types/lookup';
+// import type lookup before we augment - in some environments
+// this is required to allow for ambient/previous definitions
+import '@polkadot/api-base/types/consts';
+
+import type { ApiTypes, AugmentedConst } from '@polkadot/api-base/types';
+import type { u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
+import type { FrameSupportWeightsRuntimeDbWeight, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, PalletPermissionsSpacePermissions, SpVersionRuntimeVersion } from '@polkadot/types/lookup';
+
+export type __AugmentedConst<ApiType extends ApiTypes> = AugmentedConst<ApiType>;
 
 declare module '@polkadot/api-base/types/consts' {
-  export interface AugmentedConsts<ApiType extends ApiTypes> {
+  interface AugmentedConsts<ApiType extends ApiTypes> {
+    authorship: {
+      /**
+       * The number of blocks back we should accept uncles.
+       * This means that we will deal with uncle-parents that are
+       * `UncleGenerations + 1` before `now`.
+       **/
+      uncleGenerations: u32 & AugmentedConst<ApiType>;
+    };
     balances: {
       /**
        * The minimum amount required to keep an account open.
@@ -22,39 +36,63 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       maxReserves: u32 & AugmentedConst<ApiType>;
     };
-    dotsamaClaims: {
-      accountsSetLimit: u32 & AugmentedConst<ApiType>;
-      initialClaimAmount: u128 & AugmentedConst<ApiType>;
-    };
-    grandpa: {
+    domains: {
       /**
-       * Max Authorities in use
+       * The amount held on deposit for storing the domain's structure.
        **/
-      maxAuthorities: u32 & AugmentedConst<ApiType>;
+      baseDomainDeposit: u128 & AugmentedConst<ApiType>;
+      /**
+       * The maximum number of domains that can be inserted into a storage at once.
+       **/
+      domainsInsertLimit: u32 & AugmentedConst<ApiType>;
+      /**
+       * Domain's maximum length.
+       **/
+      maxDomainLength: u32 & AugmentedConst<ApiType>;
+      /**
+       * Maximum number of domains that can be registered per account.
+       **/
+      maxDomainsPerAccount: u32 & AugmentedConst<ApiType>;
+      /**
+       * The maximum length of the domain's outer value.
+       **/
+      maxOuterValueLength: u32 & AugmentedConst<ApiType>;
+      /**
+       * Maximum number of promotional domains that can be registered per account.
+       **/
+      maxPromoDomainsPerAccount: u32 & AugmentedConst<ApiType>;
+      /**
+       * Domain's minimum length.
+       **/
+      minDomainLength: u32 & AugmentedConst<ApiType>;
+      /**
+       * The amount held on deposit per byte of the domain's outer value.
+       **/
+      outerValueByteDeposit: u128 & AugmentedConst<ApiType>;
+      /**
+       * The maximum period of time the domain may be held for.
+       **/
+      registrationPeriodLimit: u32 & AugmentedConst<ApiType>;
     };
     permissions: {
       defaultSpacePermissions: PalletPermissionsSpacePermissions & AugmentedConst<ApiType>;
     };
     posts: {
+      /**
+       * Max comments depth
+       **/
       maxCommentDepth: u32 & AugmentedConst<ApiType>;
     };
     roles: {
+      /**
+       * When deleting a role via `delete_role()` dispatch, this parameter is checked.
+       * If the number of users that own a given role is greater or equal to this number,
+       * then `TooManyUsersToDeleteRole` error will be returned and the dispatch will fail.
+       **/
       maxUsersToProcessPerDeleteRole: u16 & AugmentedConst<ApiType>;
     };
-    scheduler: {
-      /**
-       * The maximum weight that may be scheduled per block for any dispatchables of less
-       * priority than `schedule::HARD_DEADLINE`.
-       **/
-      maximumWeight: u64 & AugmentedConst<ApiType>;
-      /**
-       * The maximum number of scheduled calls in the queue for a single block.
-       * Not strictly enforced, but used for weight estimation.
-       **/
-      maxScheduledPerBlock: u32 & AugmentedConst<ApiType>;
-    };
     spaces: {
-      handleDeposit: u128 & AugmentedConst<ApiType>;
+      maxSpacesPerAccount: u32 & AugmentedConst<ApiType>;
     };
     system: {
       /**
@@ -120,14 +158,6 @@ declare module '@polkadot/api-base/types/consts' {
        * transactions.
        **/
       operationalFeeMultiplier: u8 & AugmentedConst<ApiType>;
-      /**
-       * The fee to be paid for making a transaction; the per-byte portion.
-       **/
-      transactionByteFee: u128 & AugmentedConst<ApiType>;
-      /**
-       * The polynomial that is applied in order to derive fee from weight.
-       **/
-      weightToFee: Vec<FrameSupportWeightsWeightToFeeCoefficient> & AugmentedConst<ApiType>;
     };
     utility: {
       /**
@@ -135,9 +165,12 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       batchedCallsLimit: u32 & AugmentedConst<ApiType>;
     };
-    utils: {
-      maxHandleLen: u32 & AugmentedConst<ApiType>;
-      minHandleLen: u32 & AugmentedConst<ApiType>;
+    vesting: {
+      maxVestingSchedules: u32 & AugmentedConst<ApiType>;
+      /**
+       * The minimum amount transferred to call `vested_transfer`.
+       **/
+      minVestedTransfer: u128 & AugmentedConst<ApiType>;
     };
   } // AugmentedConsts
 } // declare module

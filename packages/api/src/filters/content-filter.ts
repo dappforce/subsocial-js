@@ -1,9 +1,9 @@
-import { CommonContent } from '@subsocial/types'
+import { IpfsCommonContent, CommonContent } from '../types'
 import { ContentFilter } from './types'
 import { isEmptyObj, notDef } from '@subsocial/utils'
 
 type HasContent = {
-  content?: CommonContent
+  content?: CommonContent | IpfsCommonContent
 }
 
 type Props<T> = ContentFilter & {
