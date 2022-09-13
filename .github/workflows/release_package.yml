@@ -56,13 +56,6 @@ jobs:
           echo "RELEASE_TAG=latest" >> $GITHUB_ENV
           cp package.json ../package.json
 
-          # Bump types
-          cd ../../types/build/
-          cp ../package.json .
-          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
-          echo "RELEASE_TAG=latest" >> $GITHUB_ENV
-          cp package.json ../package.json
-
           # Bump utils
           cd ../../utils/build/
           cp ../package.json .
@@ -93,13 +86,6 @@ jobs:
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV          
           cp package.json ../package.json          
 
-          # Bump types
-          cd ../../types/build/
-          cp ../package.json .
-          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_LEVEL)" >> $GITHUB_ENV
-          echo "RELEASE_TAG=beta" >> $GITHUB_ENV
-          cp package.json ../package.json    
-
           # Bump utils
           cd ../../utils/build/
           cp ../package.json .
@@ -126,7 +112,6 @@ jobs:
           git add "CHANGELOG.md"
           git add "packages/api/package.json"
           git add "packages/definitions/package.json"
-          git add "packages/types/package.json"
           git add "packages/utils/package.json"          
           git commit -m "chore: release ${{ env.NEW_VERSION }}"
           git tag ${{ env.NEW_VERSION }}          
@@ -147,10 +132,6 @@ jobs:
            # publish utils
            cd ../../utils/build
            yarn publish --verbose --access public  --tag ${{ env.RELEASE_TAG }}
-
-           # publish types
-           cd ../../types/build
-           yarn publish --verbose --access public --tag ${{ env.RELEASE_TAG }}
 
       # Push changes to origin
       - name: Push changes to repository
