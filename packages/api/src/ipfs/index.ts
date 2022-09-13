@@ -217,7 +217,7 @@ export class SubsocialIpfsApi {
     }
   }
 
-  /** Add content in IPFS via Offchain */
+  /** Add content in IPFS using unixFs format*/
   async saveContentToIpfs(content: AnyJson | CommonContent) {
     const data = await this.client.add(JSON.stringify(content), { headers: this.writeHeaders })
     return data.cid.toV1().toString()
