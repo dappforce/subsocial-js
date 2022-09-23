@@ -260,3 +260,10 @@ export type SpacePermissions = {
 }
 
 export type SpacePermissionsKey = keyof SpacePermissions
+
+export type DomainStruct = {
+  owner: AccountId
+  outerValue?: string
+  expiresAt: string
+  innerSpace?: string
+}

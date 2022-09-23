@@ -1,7 +1,8 @@
 import { Option } from '@polkadot/types/codec'
+import { PalletDomainsDomainMeta } from '@polkadot/types/lookup'
 import { Post, Space, SpacePermissionSet, SpacePermissions as BlockchainSpacePermissions } from '@subsocial/definitions/interfaces'
 import { notEmptyObj } from '@subsocial/utils'
-import { SpacePermissionKey, SpacePermissionMap, SpacePermissions, SpacePermissionsKey } from '../../types'
+import { DomainStruct, SpacePermissionKey, SpacePermissionMap, SpacePermissions, SpacePermissionsKey } from '../../types'
 import { CanHaveContent, CanHaveSpaceId, CommentExtension, CommentStruct, CommonContent, EntityData, EntityId, FlatPostExtension, FlatSuperCommon, HasId, HasOwner, PostStruct, SharedPostExtension, SharedPostStruct, SpaceOrPostStruct, SpaceStruct, SuperCommonStruct, FlatSpaceOrPost } from '../../types/'
 
 type EntityDataWithField<S extends {}> = EntityData<HasId & S, CommonContent> | (HasId & S)
@@ -147,4 +148,23 @@ export function flattenPostStruct (struct: Post): PostStruct {
 
 export function flattenPostStructs (structs: Post[]): PostStruct[] {
   return structs.map(flattenPostStruct)
+}
+
+export function flattenDomainStruct (struct: PalletDomainsDomainMeta): DomainStruct {
+  let innerSpace: string | undefined = undefined
+  const innerValue = struct.innerValue.unwrapOr(undefined)
+  if (innerValue?.isSpace) {
+    innerSpace = innerValue.asSpace.toString()
+  }
+
+  return {
+    owner: struct.owner.toHuman(),
+    expiresAt: struct.expiresAt.toString(),
+    outerValue: struct.outerValue.toHuman()?.toString(),
+    innerSpace
+  }
+}
+
+export function flattenDomainStructs (structs: PalletDomainsDomainMeta[]) {
+  return structs.map(flattenDomainStruct)
 }

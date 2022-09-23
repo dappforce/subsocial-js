@@ -12,7 +12,7 @@ import { FindPostQuery, FindPostsQuery, FindPostsWithDetailsQuery, FindSpaceQuer
 import { BasicSubsocialApi } from './basic'
 import { SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId, SpaceStruct, PostStruct } from '../types'
 import { getFirstOrUndefined, idsToBns, idToBn } from '@subsocial/utils'
-import { flattenSpaceStructs, flattenPostStructs } from './flatteners'
+import { flattenSpaceStructs, flattenPostStructs, flattenDomainStruct, flattenDomainStructs } from './flatteners'
 import { CreateSubsocialApiProps, SubsocialApiProps } from '../types'
 import { getSubstrateApi } from '../connections'
 
@@ -153,6 +153,18 @@ export class SubsocialApi implements ISubsocialApi {
     return convertToNewPostWithAllDetailsArray(
        await this.base.findUnlistedPostsWithAllDetails(idsToBns(ids))
     )
+  }
+
+  //------------------------------------------------
+  // Domains
+
+  async findDomains (domainNames: string[]) {
+    const structs = await this.blockchain.registeredDomains(domainNames)
+    return flattenDomainStructs(structs)
+  }
+
+  async findDomain (domainName: string) {
+    return getFirstOrUndefined(await this.findDomains([domainName]))
   }
   
 }

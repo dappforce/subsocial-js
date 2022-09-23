@@ -5,7 +5,6 @@ import axios, {  } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
 import { SubsocialContext, ContentResult, UseServerProps, CommonContent } from '../types';
 import { create, IPFSHTTPClient } from 'ipfs-http-client';
-import * as dagCBOR from '@ipld/dag-cbor'
 import { u8aToHex } from '@polkadot/util'
 import { AnyJson } from '@polkadot/types-codec/types'
 
@@ -19,7 +18,6 @@ enum CID_KIND {
   CBOR = 113,
   UNIXFS = 112
 }
-
 
 type CrustAuthProps = {
   publicAddress: string
@@ -72,15 +70,22 @@ export class SubsocialIpfsApi {
   private _client!: IPFSHTTPClient
 
   private _ipfsNodeUrl: string
+  private _ipfsAdminNodeUrl: string | undefined
+  private _ipfsClusterUrl: string | undefined
 
   /** Offchain gateway */
   private offchainUrl!: string
   private useServer?: UseServerProps
 
-  private ipfsClusterUrl: string | undefined
   private writeHeaders: Headers | undefined
   private pinHeaders: Headers | undefined
-  private crustAuthToken: string | undefined
+
+  private createIpfsClient (headers?: Headers) {
+    this._client = create({
+      url: this._ipfsAdminNodeUrl || this._ipfsNodeUrl + '/api/v0',
+      headers
+    })
+  }
 
   constructor({ 
     ipfsNodeUrl,
@@ -89,13 +94,11 @@ export class SubsocialIpfsApi {
     offchainUrl,
     useServer
   }: SubsocialIpfsProps) {
-    this.ipfsClusterUrl = ipfsClusterUrl
-
-    this._client = create({
-      url: ipfsAdminNodeUrl || ipfsNodeUrl + '/api/v0',
-    })
-
+    this._ipfsClusterUrl = ipfsClusterUrl
+    this._ipfsAdminNodeUrl = ipfsAdminNodeUrl
     this._ipfsNodeUrl = ipfsNodeUrl
+
+    this.createIpfsClient()
 
     if (offchainUrl) {
       this.offchainUrl = `${offchainUrl}/v1`
@@ -122,20 +125,21 @@ export class SubsocialIpfsApi {
 
   setWriteHeaders (headers: Headers) {
     this.writeHeaders = headers
+    this.createIpfsClient(headers)
   }
 
   setPinHeaders (headers: Headers) {
     this.pinHeaders = headers
   }
 
-  async getContentArray<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+  async getContentArray<T extends IpfsCommonContent> (cids: IpfsCid[], timeout?: number): Promise<ContentResult<T>> {
     return this.useServer
-      ? this.getContentArrayFromOffchain(cids, contentName)
-      : this.getContentArrayFromIpfs(cids, contentName)
+      ? this.getContentArrayFromOffchain(cids, 'content')
+      : this.getContentArrayFromIpfs(cids, timeout)
   }
 
-  async getContent<T extends IpfsCommonContent> (cid: IpfsCid, contentName?: string): Promise<T | undefined> {
-    const content = await this.getContentArray<T>([ cid ], contentName)
+  async getContent<T extends IpfsCommonContent> (cid: IpfsCid, timeout?: number): Promise<T | undefined> {
+    const content = await this.getContentArray<T>([ cid ], timeout)
     return content[cid.toString()]
   }
 
@@ -155,38 +159,36 @@ export class SubsocialIpfsApi {
   // IPFS functionality
 
   /** Return object with contents from IPFS by cids array */
-  async getContentArrayFromIpfs<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
+  async getContentArrayFromIpfs<T extends IpfsCommonContent> (cids: IpfsCid[], timeout?: number): Promise<ContentResult<T>> {
     try {
       const ipfsCids = getUniqueCids(cids)
 
       const content: ContentResult<T> = {}
 
       const loadContentFns = ipfsCids.map(async cid => {
+        const cidStr = cid.toString()
       
         const isCbor = cid.code === CID_KIND.CBOR
-        const res = await axios.get(
-          `${this._ipfsNodeUrl}/ipfs/${cid.toV1()}?timeout=5000ms${isCbor ? '&format=raw' : ''}`, { 
-          responseType: 'arraybuffer',
-        })
-      
-        const data = new Uint8Array(res.data)
-        const cidStr = cid.toString()
 
-              
         if (isCbor) {
-          content[cidStr] = dagCBOR.decode(data)
-        }
-      
-        if (cid.code == CID_KIND.UNIXFS) {
+          const res = await this.client.dag.get(cid, { timeout })
+          content[cidStr] = res.value
+        } else {
+          const res = await axios.get(
+            `${this._ipfsNodeUrl}/ipfs/${cid.toV1()}?timeout=${timeout}`, { 
+            responseType: 'arraybuffer',
+          })
+
+          const data = new Uint8Array(res.data)
           content[cidStr] = JSON.parse(String.fromCharCode(...data))
         }
       });
 
       await Promise.all(loadContentFns);
-      log.debug(`Loaded ${pluralize({ count: cids.length, singularText: contentName })}`)
+      log.debug(`Loaded ${cids.length} cid(s)`)
       return content
     } catch (err) {
-      console.error(`Failed to load ${contentName}(s) by ${cids.length} cid(s):`, err)
+      console.error(`Failed to load ${cids.length} cid(s):`, err)
       return {};
     }
   }
@@ -197,30 +199,30 @@ export class SubsocialIpfsApi {
       cid: cid.toString(),
     })
 
-    const res = await axios.post(this.ipfsClusterUrl + '/pins/', data, {
+    const res = await axios.post(this._ipfsClusterUrl + '/pins/', data, {
       headers: this.pinHeaders,
     })
 
     if (res.status === 200) {
-      log.debug(`CID ${cid.toString()} was pinned to ${this.ipfsClusterUrl}`)
+      log.debug(`CID ${cid.toString()} was pinned to ${this._ipfsClusterUrl}`)
     }
   }
 
   /** Unpin content in IPFS */
   async unpinContentFromIpfs(cid: IpfsCid) {
-    const res = await axios.delete(this.ipfsClusterUrl + '/pins/' + cid.toString(), {
+    const res = await axios.delete(this._ipfsClusterUrl + '/pins/' + cid.toString(), {
       headers: this.pinHeaders,
     })
 
     if (res.status === 200) {
-      log.debug(`CID ${cid.toString()} was unpinned from ${this.ipfsClusterUrl}`)
+      log.debug(`CID ${cid.toString()} was unpinned from ${this._ipfsClusterUrl}`)
     }
   }
 
   /** Add content in IPFS using unixFs format*/
   async saveContentToIpfs(content: AnyJson | CommonContent) {
-    const data = await this.client.add(JSON.stringify(content), { headers: this.writeHeaders })
-    return data.cid.toV1().toString()
+    const data = await this.client.dag.put(content, { headers: this.writeHeaders })
+    return data.toV1().toString()
   }
 
   /** Add file in IPFS */
