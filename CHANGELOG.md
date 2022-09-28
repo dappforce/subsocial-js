@@ -33,7 +33,8 @@ We have done really huge update of our SDK. Get feedback of our early
   - repliesCountByPostId
   - accountFollowersCountByAccountId
   - accountsFollowedCountByAccount
- 
+- add `filters` arg for `find(Space|Post)Structs` methods in Subsocial API
+
 ### Changed
 - remove @subsocial/types package and combine it with @subsocial/api
 - reorganize imports for @subsocial/api

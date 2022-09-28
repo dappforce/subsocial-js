@@ -34,5 +34,5 @@ export class OptionOptionText extends Option<Option<Text>> {
 }
 
 export function OptionEntity<T> (value?: T): T | null {
-  return value || null
+  return typeof value !== 'undefined' ? value : null
 }

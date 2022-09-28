@@ -8,7 +8,7 @@ import {
   convertToNewPostWithSomeDetails,
   convertToNewPostWithSomeDetailsArray,
 } from './flatteners/utils'
-import { FindPostQuery, FindPostsQuery, FindPostsWithDetailsQuery, FindSpaceQuery } from '../filters'
+import { Filters, FindPostQuery, FindPostsQuery, FindPostsWithDetailsQuery, FindSpaceQuery } from '../filters'
 import { BasicSubsocialApi } from './basic'
 import { SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId, SpaceStruct, PostStruct } from '../types'
 import { getFirstOrUndefined, idsToBns, idToBn } from '@subsocial/utils'
@@ -21,11 +21,11 @@ export interface ISubsocialApi {
   findPublicSpaces: (ids: AnyId[]) => Promise<SpaceData[]>
   findUnlistedSpaces: (ids: AnyId[]) => Promise<SpaceData[]>
 
-  findSpaceStructs: (ids: AnyId[]) => Promise<SpaceStruct[]>
-  findPostStructs: (ids: AnyId[]) => Promise<PostStruct[]>
+  findSpaceStructs: (ids: AnyId[], filters?: Filters) => Promise<SpaceStruct[]>
+  findPostStructs: (ids: AnyId[], filters?: Filters) => Promise<PostStruct[]>
 
-  findSpaceStruct: (id: AnyId) => Promise<SpaceStruct | undefined>
-  findPostStruct: (id: AnyId) => Promise<PostStruct | undefined>
+  findSpaceStruct: (id: AnyId, filters?: Filters) => Promise<SpaceStruct | undefined>
+  findPostStruct: (id: AnyId, filters?: Filters) => Promise<PostStruct | undefined>
 
   findPost: (query: FindPostQuery) => Promise<PostData | undefined>
   findPublicPosts: (ids: AnyId[]) => Promise<PostData[]>
@@ -73,22 +73,22 @@ export class SubsocialApi implements ISubsocialApi {
     return this._base.substrate.api
   }
 
-  public async findSpaceStructs (ids: AnyId[]): Promise<SpaceStruct[]> {
-    const structs = await this.base.substrate.findSpaces({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
+  public async findSpaceStructs (ids: AnyId[], filters?: Filters): Promise<SpaceStruct[]> {
+    const structs = await this.base.substrate.findSpaces({ ids: idsToBns(ids), ...filters })
     return flattenSpaceStructs(structs)
   }
 
-  public async findPostStructs (ids: AnyId[]): Promise<PostStruct[]> {
-    const structs = await this.base.substrate.findPosts({ ids: idsToBns(ids), visibility: 'onlyPublic', withContentOnly: true })
+  public async findPostStructs (ids: AnyId[], filters?: Filters): Promise<PostStruct[]> {
+    const structs = await this.base.substrate.findPosts({ ids: idsToBns(ids), ...filters })
     return flattenPostStructs(structs)
   }
 
-  public async findSpaceStruct (id: AnyId): Promise<SpaceStruct | undefined> {
-    return getFirstOrUndefined(await this.findSpaceStructs([ id ]))
+  public async findSpaceStruct (id: AnyId, filters?: Filters): Promise<SpaceStruct | undefined> {
+    return getFirstOrUndefined(await this.findSpaceStructs([ id ], filters))
   }
 
-  public async findPostStruct (id: AnyId): Promise<PostStruct | undefined> {
-    return getFirstOrUndefined(await this.findPostStructs([ id ]))
+  public async findPostStruct (id: AnyId, filters?: Filters): Promise<PostStruct | undefined> {
+    return getFirstOrUndefined(await this.findPostStructs([ id ], filters))
   }
 
   public async findSpace (query: FindSpaceQuery) {
