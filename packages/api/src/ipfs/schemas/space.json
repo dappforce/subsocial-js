@@ -1,0 +1,58 @@
+{
+  "id": "subsocial-space-content",
+  "title": "SpaceContent",
+  "description": "",
+  "type": "object",
+  "keyTemplate": [
+    {
+      "type": "auto"
+    }
+  ],
+  "definition": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": ""
+      },
+      "about": {
+        "type": "string",
+        "description": ""
+      },
+      "image": {
+        "type": "string",
+        "description": ""
+      },
+      "email": {
+        "type": "string",
+        "description": ""
+      },
+      "tags": {
+        "type": "array",
+        "description": "",
+        "minItems": 0,
+        "items": { "$ref": "#" }
+      },
+      "links": {
+        "type": "array",
+        "description": "",
+        "minItems": 0,
+        "items": { "$ref": "#" }
+      },
+      "banner": {
+        "type": "string",
+        "description": "Banner for Sub.id in format: {kind-of-source}://{id}. Example: rmrk1://9867747-24d6d7cd9a97d46d3e-PARACHAINS-ARE-SEXY-SUBBANNERS-PARACHAINS_ARE_SEXY-0000000000000086"
+      },
+      "topics": {
+        "type": "array",
+        "description": "",
+        "minItems": 0,
+        "items": { "$ref": "#" }
+      }
+    }
+  }
+}
