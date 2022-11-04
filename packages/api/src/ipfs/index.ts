@@ -1,6 +1,6 @@
 import { Content, IpfsCid as RuntimeIpfsCid } from '@subsocial/definitions/interfaces';
 import { IpfsCommonContent, IpfsCommentContent, IpfsCid, ImportCandidate } from '../types/ipfs';
-import { newLogger, pluralize, isEmptyArray } from '@subsocial/utils';
+import { newLogger, isEmptyArray } from '@subsocial/utils';
 import axios, {  } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
 import { SubsocialContext, ContentResult, UseServerProps, CommonContent } from '../types';

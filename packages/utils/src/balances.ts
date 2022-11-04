@@ -10,9 +10,11 @@ export const simpleFormatBalance = (balance: BN | string | number, decimals?: nu
 
 const TEN_BN = new BigNumber(10)
 
+/** Add decimals to the balance. Example balanceWithDecimal(5, 10) // 50000000000 */
 export const balanceWithDecimal = (balance: string | number, decimal: number) =>
   new BigNumber(balance).multipliedBy(TEN_BN.pow(new BigNumber(decimal)))
 
+/** Extract decimals from the balance. Example convertToBalanceWithDecimal("50000000000", 10) // 5 */
 export const convertToBalanceWithDecimal = (balance: string | number, decimal: number) =>
   new BigNumber(balance).dividedBy(TEN_BN.pow(new BigNumber(decimal)))
 

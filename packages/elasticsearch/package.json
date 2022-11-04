@@ -1,7 +1,7 @@
 {
-  "name": "@subsocial/api",
+  "name": "@subsocial/elasticsearch",
   "version": "0.7.8-dev.0",
-  "description": "JavaScript API for Subsocial blockchain.",
+  "description": "Elasticsearch API for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
   "main": "index.js",
@@ -19,14 +19,8 @@
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
-    "@polkadot/api": "latest",
-    "@polkadot/types": "latest",
-    "@polkadot/types-known": "latest",
-    "@polkadot/types-support": "latest",
-    "@subsocial/definitions": "0.7.8-dev.0",
-    "@subsocial/utils": "0.7.8-dev.0",
-    "axios": "^0.24.0",
-    "ipfs-http-client": "56.0.3"
+    "@elastic/elasticsearch": "7.4.0",
+    "@subsocial/utils": "0.7.8-dev.0"
   },
   "scripts": {
     "build": "tsc && cp ./README.md ./build",

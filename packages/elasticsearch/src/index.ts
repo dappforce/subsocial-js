@@ -1,5 +1,5 @@
 
-import { ElasticIndex, ElasticIndexName, ElasticPostDoc, ElasticSpaceDoc, PostContent, SpaceContent } from '../types'
+import { ElasticIndex, ElasticIndexName, ElasticPostDoc, ElasticSpaceDoc } from './types'
 import {isEmptyObj, newLogger} from '@subsocial/utils'
 import { Client } from '@elastic/elasticsearch'
 
