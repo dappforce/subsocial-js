@@ -20,8 +20,11 @@ module.exports = {
 
     // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     'plugin:@typescript-eslint/recommended',
+
+    // Integrate with prettier
+    'prettier',
   ],
-  plugins: [ 'jsx-a11y', 'prefer-object-spread', 'prettier', 'react-hooks' ],
+  plugins: ['jsx-a11y', 'prefer-object-spread', 'prettier', 'react-hooks'],
   rules: {
     // In an ideal world, we'd never have to use @ts-ignore, but that's not
     // possible right now.
@@ -76,46 +79,35 @@ module.exports = {
     // We're using TypeScript, so prop-types aren't so interesting
     'react/prop-types': 'off',
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': [ 'off' ],
+    '@typescript-eslint/no-unused-vars': ['off'],
     'comma-spacing': 'warn',
-    'array-bracket-spacing': [ 'warn', 'always' ],
+    'array-bracket-spacing': ['warn', 'always'],
     'react/display-name': 'off',
     'padded-blocks': 'off',
     'prefer-promise-reject-errors': 'warn',
     '@typescript-eslint/explicit-member-accessibility': 'off',
-    '@typescript-eslint/indent': [ 'warn', 2 ],
+    '@typescript-eslint/indent': ['warn', 2],
     '@typescript-eslint/no-use-before-define': 'off',
-    '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/prefer-interface': 'off',
     '@typescript-eslint/no-object-literal-type-assertion': 'off',
     '@typescript-eslint/camelcase': 'off',
-    'react/prop-types': 'off',
     '@typescript-eslint/array-type': 'off',
 
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'react/react-in-jsx-scope': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    'semi': [ 'warn', 'never' ],
-    'react/prop-types': 'off',
-    'quotes': [ 'warn', 'single' ],
+    quotes: ['warn', 'single', { avoidEscape: true }],
     'no-multi-spaces': 'error',
-    'space-before-function-paren': [ 'warn', 'always' ],
+    'space-before-function-paren': ['warn', 'always'],
     'non-nullish value': 'off',
-    'react/display-name': 'off',
     '@typescript-eslint/ban-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'off',
-    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
-    'react-hooks/exhaustive-deps': 'off', // Checks effect dependencies
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-use-before-define': 'off',
-    '@typescript-eslint/member-delimiter-style': [ 'warn', { 'multiline': { 'delimiter': 'none' } } ],
+    '@typescript-eslint/member-delimiter-style': [
+      'warn',
+      { multiline: { delimiter: 'none' } },
+    ],
     'prefer-const': 'off',
-    'jsx-quotes': [ 'warn', 'prefer-single' ],
-    'object-curly-spacing': [ 'warn', 'always' ],
-    'array-bracket-spacing': [ 'warn', 'always' ],
+    'jsx-quotes': ['warn', 'prefer-single'],
+    'object-curly-spacing': ['warn', 'always'],
   },
-};
+}
