@@ -81,7 +81,6 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['off'],
     'comma-spacing': 'warn',
-    'array-bracket-spacing': ['warn', 'always'],
     'react/display-name': 'off',
     'padded-blocks': 'off',
     'prefer-promise-reject-errors': 'warn',
