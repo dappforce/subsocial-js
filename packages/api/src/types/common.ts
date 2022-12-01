@@ -2,6 +2,7 @@ import { AccountId } from '@polkadot/types/interfaces';
 import BN from 'bn.js';
 import { SpaceId, PostId, Space, Post, ReactionId } from '@subsocial/definitions/interfaces';
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
+import { SubsocialIpfsProps } from '../ipfs';
 
 export type HttpRequestMethod = 'post' | 'get'
 
@@ -13,10 +14,8 @@ export type SubsocialContext = {
   useServer?: UseServerProps
 }
 
-export type SubsocialApiProps = SubsocialContext & {
+export type SubsocialApiProps = SubsocialContext & SubsocialIpfsProps & {
   substrateApi: SubstrateApi,
-  ipfsNodeUrl: string,
-  offchainUrl: string
 }
 
 export type CreateSubsocialApiProps = Omit<SubsocialApiProps, 'substrateApi'> & {

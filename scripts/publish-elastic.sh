@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd ./packages/api/build
+cd ./packages/elasticsearch/build
 cp ../package.json .
 npm publish --access public 

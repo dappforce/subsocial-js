@@ -351,6 +351,41 @@ export class SubsocialSubstrateApi {
     return getUniqueIds(permissions)
   }
 
+  // ---------------------------------------------------------------------
+  // Domains
+
+  //* Get domain names by key pairs [Owner, SpaceId] */
+  async getDomainNames (keys: [AnyAccountId, AnySpaceId][]): Promise<string[]> {
+    const api = await this.api
+
+    const domainNames = await api.query.domains.domainByInnerValue.multi(keys.map(([ account, spaceId ]) => ([account, { Space: spaceId }])))
+    return domainNames?.map(x => x.toHuman()) as string[]
+  }
+
+  async domainNameBySpaceId (accountId: AnyAccountId, spaceId: AnySpaceId): Promise<string | undefined> {
+    return getFirstOrUndefined(await this.getDomainNames([ [accountId, spaceId] ]))
+  }
+
+  //* Get domain structs by domain names [example.sub, example.ksm, ...] */
+  async registeredDomains (domainNames: string[]) {
+    const api = await this.api
+    const structs = await api.query.domains.registeredDomains.multi(domainNames)
+
+    return structs.filter(x => x.isSome).map(x => x.unwrap())
+  }
+
+  async registeredDomain (domainName: string) {
+    return this.registeredDomains([domainName])
+  }
+
+  async domainsByOwner (accountId: AnyAccountId): Promise<string[]> {
+    const api = await this.api
+
+    const domains = await api.query.domains.domainsByOwner(accountId)
+    return domains.toHuman() as string[]
+  }
+
+
 }
 
 const logger = newLogger(SubsocialSubstrateApi.name);

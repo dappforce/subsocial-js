@@ -19,13 +19,12 @@
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
   "dependencies": {
-    "@elastic/elasticsearch": "7.4.0",
     "@polkadot/api": "latest",
     "@polkadot/types": "latest",
     "@polkadot/types-known": "latest",
     "@polkadot/types-support": "latest",
-    "@subsocial/definitions": "0.7.0-dev.7",
-    "@subsocial/utils": "0.7.0-dev.7",
+    "@subsocial/definitions": "latest",
+    "@subsocial/utils": "latest",
     "axios": "^0.24.0",
     "ipfs-http-client": "56.0.3"
   },

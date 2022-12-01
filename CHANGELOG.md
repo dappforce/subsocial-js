@@ -33,10 +33,9 @@ We have done really huge update of our SDK. Get feedback of our early
   - repliesCountByPostId
   - accountFollowersCountByAccountId
   - accountsFollowedCountByAccount
- 
-### Changed
-- remove @subsocial/types package and combine it with @subsocial/api
-- reorganize imports for @subsocial/api
-- rename `FlatSubsocialApi` to `SubsocialApi`
-- set `api.subsocial` as deprecated
-  
+- add `filters` arg for `find(Space|Post)Structs` methods in Subsocial API
+- add methods to `SubsocialApi`:
+  - findSpaces
+  - findPosts
+  - findProfileSpaces
+

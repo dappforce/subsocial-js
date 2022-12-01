@@ -1,11 +1,13 @@
 {
-  "name": "@subsocial/config",
-  "version": "1.0.0",
-  "description": "JavaScript config files for Subsocial blockchain.",
+  "name": "@subsocial/elasticsearch",
+  "version": "0.0.0",
+  "description": "Elasticsearch API for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
+  "main": "index.js",
   "publishConfig": {
     "access": "public",
+    "directory": " build",
     "registry": "https://registry.npmjs.org"
   },
   "repository": {
@@ -16,13 +18,13 @@
     "url": "https://github.com/dappforce/dappforce-subsocial-js/issues"
   },
   "homepage": "https://github.com/dappforce/dappforce-subsocial-js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "dependencies": {
+    "@elastic/elasticsearch": "7.4.0",
+    "@subsocial/utils": "latest"
   },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.6.1",
-    "@typescript-eslint/parser": "^4.6.1",
-    "eslint": "^7.12.1"
+  "scripts": {
+    "build": "tsc && cp ./README.md ./build",
+    "build:watch": "tsc --watch"
   },
   "keywords": [
     "dappforce",
@@ -30,6 +32,7 @@
     "substrate",
     "polkadot",
     "kusama",
-    "eslint"
-  ]
+    "ipfs"
+  ],
+  "gitHead": "fb1408775bb4a66b694a32090f9d7115b6c68f70"
 }

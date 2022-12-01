@@ -3,9 +3,10 @@
   "packages": [
     "packages/api",
     "packages/utils",
-    "packages/definitions"
+    "packages/definitions",
+    "@subsocial/elasticsearch"
   ],
-  "version": "0.7.0-dev.7",
+  "version": "0.0.0",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

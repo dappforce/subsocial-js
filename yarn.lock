@@ -1925,6 +1925,35 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@subsocial/definitions@0.7.8-dev.0":
+  version "0.7.8-dev.0"
+  resolved "https://registry.yarnpkg.com/@subsocial/definitions/-/definitions-0.7.8-dev.0.tgz#cc87fb03beeb089261c9cd0a711fb31dfe5fdc78"
+  integrity sha512-gWzNm9wLixvWdYhdHVgS2xEznzgK/WNt0c2ghF1d9MJNGj38BtYZIeyoTnXL1Rq31pOo8I2iVvYDh5/AHcm3mA==
+  dependencies:
+    "@polkadot/api" latest
+    lodash.camelcase "^4.3.0"
+
+"@subsocial/utils@0.7.8-dev.0":
+  version "0.7.8-dev.0"
+  resolved "https://registry.yarnpkg.com/@subsocial/utils/-/utils-0.7.8-dev.0.tgz#51b87167f815d7e24825e1910715e88af903feef"
+  integrity sha512-ps7igm+EV8WMlH+8tvo85Zpr4sE8RXFMKly+Qaiz2pRYX+MQny/+7vQmmYXnDQ+2xZ0OBKxivnjzTqEbIqoyLA==
+  dependencies:
+    "@polkadot/util-crypto" latest
+    "@sindresorhus/slugify" "^1.1.0"
+    bignumber.js "^9.0.1"
+    bn.js "^5.1.1"
+    chalk "^3.0.0"
+    dayjs "^1.10.7"
+    lodash.isempty "^4.4.0"
+    lodash.memoize "^4.1.2"
+    lodash.truncate "^4.4.2"
+    loglevel "^1.7.0"
+    loglevel-plugin-prefix "^0.8.4"
+    remark "^13.0.0"
+    remark-gfm "^1.0.0"
+    remark-html "^13.0.1"
+    strip-markdown "^4.0.0"
+
 "@substrate/connect-extension-protocol@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@substrate/connect-extension-protocol/-/connect-extension-protocol-1.0.1.tgz#fa5738039586c648013caa6a0c95c43265dbe77d"
@@ -8211,7 +8240,7 @@ source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-source-map@^0.7.3:
+source-map@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.4.tgz#a9bbe705c9d8846f4e08ff6765acf0f1b0898656"
   integrity sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==

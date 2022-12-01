@@ -65,8 +65,3 @@ export type ElasticPostDoc = {
   body?: string;
   tags?: string[];
 }
-
-export type ElasticProfileDoc = {
-  name?: string;
-  about?: string;
-}
