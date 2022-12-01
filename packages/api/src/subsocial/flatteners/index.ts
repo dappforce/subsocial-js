@@ -4,6 +4,7 @@ import { Post, Space, SpacePermissionSet, SpacePermissions as BlockchainSpacePer
 import { notEmptyObj } from '@subsocial/utils'
 import { DomainStruct, SpacePermissionKey, SpacePermissionMap, SpacePermissions, SpacePermissionsKey } from '../../types'
 import { CanHaveContent, CanHaveSpaceId, CommentExtension, CommentStruct, CommonContent, EntityData, EntityId, FlatPostExtension, FlatSuperCommon, HasId, HasOwner, PostStruct, SharedPostExtension, SharedPostStruct, SpaceOrPostStruct, SpaceStruct, SuperCommonStruct, FlatSpaceOrPost } from '../../types/'
+export * from './utils'
 
 type EntityDataWithField<S extends {}> = EntityData<HasId & S, CommonContent> | (HasId & S)
 
