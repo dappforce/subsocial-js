@@ -6,9 +6,9 @@
 import '@polkadot/api-base/types/events';
 
 import type { ApiTypes, AugmentedEvent } from '@polkadot/api-base/types';
-import type { Bytes, Null, Option, Result, U8aFixed, Vec, i64, u128, u32, u64, u8 } from '@polkadot/types-codec';
+import type { Bytes, Null, Option, Result, U8aFixed, Vec, i64, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletReactionsReactionKind, SpRuntimeDispatchError, SubsocialSupportUser, XcmV1MultiLocation, XcmV2Response, XcmV2TraitsError, XcmV2TraitsOutcome, XcmV2Xcm, XcmVersionedMultiAssets, XcmVersionedMultiLocation } from '@polkadot/types/lookup';
+import type { FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, PalletReactionsReactionKind, SpRuntimeDispatchError, SubsocialParachainRuntimeProxyType, SubsocialSupportUser, XcmV1MultiLocation, XcmV2Response, XcmV2TraitsError, XcmV2TraitsOutcome, XcmV2Xcm, XcmVersionedMultiAssets, XcmVersionedMultiLocation } from '@polkadot/types/lookup';
 
 export type __AugmentedEvent<ApiType extends ApiTypes> = AugmentedEvent<ApiType>;
 
@@ -299,6 +299,29 @@ declare module '@polkadot/api-base/types/events' {
        * Profile's space id was updated for this account.
        **/
       ProfileUpdated: AugmentedEvent<ApiType, [account: AccountId32, spaceId: Option<u64>], { account: AccountId32, spaceId: Option<u64> }>;
+    };
+    proxy: {
+      /**
+       * An announcement was placed to make a call in the future.
+       **/
+      Announced: AugmentedEvent<ApiType, [real: AccountId32, proxy: AccountId32, callHash: H256], { real: AccountId32, proxy: AccountId32, callHash: H256 }>;
+      /**
+       * Anonymous account has been created by new proxy with given
+       * disambiguation index and proxy type.
+       **/
+      AnonymousCreated: AugmentedEvent<ApiType, [anonymous: AccountId32, who: AccountId32, proxyType: SubsocialParachainRuntimeProxyType, disambiguationIndex: u16], { anonymous: AccountId32, who: AccountId32, proxyType: SubsocialParachainRuntimeProxyType, disambiguationIndex: u16 }>;
+      /**
+       * A proxy was added.
+       **/
+      ProxyAdded: AugmentedEvent<ApiType, [delegator: AccountId32, delegatee: AccountId32, proxyType: SubsocialParachainRuntimeProxyType, delay: u32], { delegator: AccountId32, delegatee: AccountId32, proxyType: SubsocialParachainRuntimeProxyType, delay: u32 }>;
+      /**
+       * A proxy was executed correctly, with the given.
+       **/
+      ProxyExecuted: AugmentedEvent<ApiType, [result: Result<Null, SpRuntimeDispatchError>], { result: Result<Null, SpRuntimeDispatchError> }>;
+      /**
+       * A proxy was removed.
+       **/
+      ProxyRemoved: AugmentedEvent<ApiType, [delegator: AccountId32, delegatee: AccountId32, proxyType: SubsocialParachainRuntimeProxyType, delay: u32], { delegator: AccountId32, delegatee: AccountId32, proxyType: SubsocialParachainRuntimeProxyType, delay: u32 }>;
     };
     reactions: {
       PostReactionCreated: AugmentedEvent<ApiType, [account: AccountId32, postId: u64, reactionId: u64, reactionKind: PalletReactionsReactionKind], { account: AccountId32, postId: u64, reactionId: u64, reactionKind: PalletReactionsReactionKind }>;

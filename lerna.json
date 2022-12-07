@@ -4,7 +4,7 @@
     "packages/api",
     "packages/utils",
     "packages/definitions",
-    "@subsocial/elasticsearch"
+    "packages/elasticsearch"
   ],
   "version": "0.0.0",
   "npmClient": "yarn",
