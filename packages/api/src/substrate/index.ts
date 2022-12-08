@@ -150,7 +150,7 @@ export class SubsocialSubstrateApi {
   // ---------------------------------------------------------------------
   // Multiple
 
-  async findStructs<T extends SupportedSubstrateResult>
+  private async findStructs<T extends SupportedSubstrateResult>
   (storageItem: StorageItem, ids: SupportedSubstrateId[]): Promise<T[]> {
     const storage = storageItem.storage
 
