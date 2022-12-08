@@ -95,7 +95,7 @@ export class SubsocialApi implements ISubsocialApi {
   // Structs from chain
 
   /**
-   * Find and load an array of information about space structs (can be Unlisted or Public, depending on filters set on `query`) from Subsocial blockchain and IPFS 
+   * Find and load an array of information about space structs (can be Unlisted or Public, depending on `filters`) from Subsocial blockchain and IPFS 
    * by a given array of space `ids` and `filters` object.
    * 
    *
@@ -112,7 +112,7 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load an array of information about post structs (can be Unlisted or Public, depending on filters set on `query`) from Subsocial blockchain and IPFS 
+   * Find and load an array of information about post structs (can be Unlisted or Public, depending on `filters`) from Subsocial blockchain and IPFS 
    * by a given array of post `ids` and `filters` object.
    * 
    *
@@ -129,7 +129,7 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load information about space structs (can be Unlisted or Public, depending on filters set on `query`) from Subsocial blockchain and IPFS 
+   * Find and load information about space structs (can be Unlisted or Public, depending on `filters`) from Subsocial blockchain and IPFS 
    * by a given space `id` and `filters` object.
    * 
    *
@@ -145,7 +145,7 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load information about post structs (can be Unlisted or Public, depending on filters set on `query`) from Subsocial blockchain and IPFS 
+   * Find and load information about post structs (can be Unlisted or Public, depending on `filters`) from Subsocial blockchain and IPFS 
    * by a given post `id` and `filters` object.
    * 
    *
