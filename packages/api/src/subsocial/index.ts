@@ -286,7 +286,7 @@ export class SubsocialApi implements ISubsocialApi {
   // Posts with details
 
 /**
-   * Find and load an array of posts or a post with (optionally) details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * Find and load an information about post with some details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
    * These methods are **deprecated**, because it is slow (although quite useful for UI).
 */  
   public async findPostWithSomeDetails (query: FindPostQuery) {
@@ -295,30 +295,50 @@ export class SubsocialApi implements ISubsocialApi {
     )
   }
 
+/**
+   * Find and load an information about post with all details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+*/  
   public async findPostWithAllDetails (id: AnyId) {
     return convertToNewPostWithAllDetails(
        await this.base.findPostWithAllDetails(idToBn(id))
     )
   }
 
+/**
+   * Find and load an array of information about post with all details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+*/  
   public async findPostsWithAllDetails (query: FindPostsQuery) {
     return convertToNewPostWithAllDetailsArray(
        await this.base.findPostsWithAllDetails(query)
     )
   }
 
+/**
+   * Find and load an array of information about public post with some details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+*/  
   public async findPublicPostsWithSomeDetails (query: FindPostsWithDetailsQuery) {
     return convertToNewPostWithSomeDetailsArray(
        await this.base.findPublicPostsWithSomeDetails(query)
     )
   }
 
+/**
+   * Find and load an array of information about public post with all details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+*/  
   public async findPublicPostsWithAllDetails (ids: AnyId[]) {
     return convertToNewPostWithAllDetailsArray(
        await this.base.findPublicPostsWithAllDetails(idsToBns(ids))
     )
   }
 
+/**
+   * Find and load an array of information about unlisted post with all details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+*/  
   public async findUnlistedPostsWithAllDetails (ids: AnyId[]) {
     return convertToNewPostWithAllDetailsArray(
        await this.base.findUnlistedPostsWithAllDetails(idsToBns(ids))
