@@ -384,12 +384,12 @@ export class SubsocialApi implements ISubsocialApi {
   // Domains
 
   /**
-   * Find and load an array of information about domain structs from Subsocial blockchain and IPFS by a given array of `domainNames`.
+   * Find and load an array of information about domain structs from Subsocial blockchain by a given array of `domainNames`.
    *
    * 
    * @param domainNames - An array of domain names.
    *
-   * @returns An array of data about desired domain structs aggregated from blockchain and IPFS. If no corresponding domains to given array of `domainNames`,
+   * @returns An array of data about desired domain structs aggregated from Subsocial blockchain. If no corresponding domains to given array of `domainNames`,
    * an empty array is returned.
    */  
   async findDomains (domainNames: string[]) {
@@ -398,12 +398,12 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load data about a domain from Subsocial blockchain and IPFS by a given string of `domainName`.
+   * Find and load data about a domain from Subsocial blockchain by a given string of `domainName`.
    *
    * 
    * @param domainName - A string of domain name.
    *
-   * @returns Data about desired domain name aggregated from blockchain and IPFS. If no corresponding domain name to given `domainName`,
+   * @returns Data about desired domain name aggregated from Subsocial blockchain. If no corresponding domain name to given `domainName`,
    * `undefined` is returned.
    */  
   async findDomain (domainName: string) {
