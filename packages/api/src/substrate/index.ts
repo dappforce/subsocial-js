@@ -46,7 +46,7 @@ export class SubsocialSubstrateApi {
     return new SubsocialSubstrateApi({ api })
   }
 
-  getPalletQuery = async (pallet: PalletName) => {
+  private getPalletQuery = async (pallet: PalletName) => {
     const api = await this.api
     return api.query[pallet]
   };
