@@ -356,8 +356,9 @@ export class SubsocialApi implements ISubsocialApi {
    *
    * @param accounts - An array of the account ids related to the desired profile spaces
    *
-   * @returns An array of data about the desired profile spaces aggregated from the Subsocial blockchain and IPFS. If there are no
-   * profile spaces corresponding to the given array of `accounts`, an empty array is returned.
+   * @returns Find and load an array of information about the profile space of each accountId in the array 
+   * from the Subsocial blockchain and IPFS. 
+   *
    */  
   public async findProfileSpaces (accounts: AnyAccountId[]) {
     const profileSpaces = await this.base.findProfileSpaces(accounts)
