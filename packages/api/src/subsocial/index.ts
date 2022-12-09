@@ -95,16 +95,16 @@ export class SubsocialApi implements ISubsocialApi {
   // Structs from chain
 
   /**
-   * Find and load an array of information about space structs (can be Unlisted or Public, depending on `filters`) from Subsocial blockchain and IPFS 
+   * Find and load an array of information about space structs (can be Unlisted or Public, depending on `filters`) from the Subsocial blockchain and IPFS 
    * by a given array of space `ids` and `filters` object.
    * 
    *
-   * @param ids -  An array of space ids of desired space structs.
+   * @param ids -  An array of the space ids of the desired space structs.
    * 
-   * @param filters - (Optional) An object containing visibility filter (`hidden` field) and content filter (with or without IPFS content).
+   * @param filters - (Optional) An object containing a visibility filter (`hidden` field) and content filter (with or without IPFS content).
    *
-   * @returns An array of information about space structs aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * space structs to given space `ids` and `filters`, an empty array is returned.
+   * @returns An array of information about space structs aggregated from the Subsocial blockchain and IPFS. If there are no
+   * space structs corresponding to the given space `ids` and `filters`, an empty array is returned.
    */  
   public async findSpaceStructs (ids: AnyId[], filters?: Filters): Promise<SpaceStruct[]> {
     const structs = await this.blockchain.findSpaces({ ids: idsToBns(ids), ...filters })
@@ -112,16 +112,16 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load an array of information about post structs (can be Unlisted or Public, depending on `filters`) from Subsocial blockchain and IPFS 
+   * Find and load an array of information about post structs (can be Unlisted or Public, depending on `filters`) from the Subsocial blockchain and IPFS 
    * by a given array of post `ids` and `filters` object.
    * 
    *
-   * @param ids -  An array of post ids of desired post structs.
+   * @param ids -  An array of the post ids of the desired post structs.
    * 
-   * @param filters - (Optional) An object containing visibility filter (`hidden` field) and content filter (with or without IPFS content).
+   * @param filters - (Optional) An object containing a visibility filter (`hidden` field) and content filter (with or without IPFS content).
    *
-   * @returns An array of information about post structs aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * post structs to given post `ids` and `filters` object, an empty array is returned.
+   * @returns An array of information about post structs aggregated from the Subsocial blockchain and IPFS. If there are no
+   * post structs corresponding to the given post `ids` and `filters` object, an empty array is returned.
    */  
   public async findPostStructs (ids: AnyId[], filters?: Filters): Promise<PostStruct[]> {
     const structs = await this.blockchain.findPosts({ ids: idsToBns(ids), ...filters })
@@ -129,32 +129,32 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load information about space structs (can be Unlisted or Public, depending on `filters`) from Subsocial blockchain and IPFS 
+   * Find and load information about space structs (can be Unlisted or Public, depending on `filters`) from the Subsocial blockchain and IPFS 
    * by a given space `id` and `filters` object.
    * 
    *
-   * @param id -  Space id of desired space structs.
+   * @param id -  The space id of the desired space structs.
    * 
-   * @param filters - (Optional) An object containing visibility filter (`hidden` field) and content filter (with or without IPFS content).
+   * @param filters - (Optional) An object containing a visibility filter (`hidden` field) and content filter (with or without IPFS content).
    *
-   * @returns Data about space structs aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * space structs to given space `id` and `filters` object, undefined is returned.
+   * @returns Data about space structs aggregated from the Subsocial blockchain and IPFS. If there are no
+   * space structs corresponding to the given space `id` and `filters` object, undefined is returned.
    */  
   public async findSpaceStruct (id: AnyId, filters?: Filters): Promise<SpaceStruct | undefined> {
     return getFirstOrUndefined(await this.findSpaceStructs([ id ], filters))
   }
 
   /**
-   * Find and load information about post structs (can be Unlisted or Public, depending on `filters`) from Subsocial blockchain and IPFS 
+   * Find and load information about post structs (can be Unlisted or Public, depending on `filters`) from the Subsocial blockchain and IPFS 
    * by a given post `id` and `filters` object.
    * 
    *
-   * @param id -  Post id of desired post structs.
+   * @param id -  The post id of the desired post structs.
    * 
-   * @param filters - (Optional) An object containing visibility filter (`hidden` field) and content filter (with or without IPFS content).
+   * @param filters - (Optional) An object containing a visibility filter (`hidden` field) and content filter (with or without IPFS content).
    *
-   * @returns Data about post structs aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * post structs to given post `id` and `filters` object, undefined is returned.
+   * @returns Data about post structs aggregated from the Subsocial blockchain and IPFS. If there are no
+   * post structs corresponding to the given post `id` and `filters` object, undefined is returned.
    */  
   public async findPostStruct (id: AnyId, filters?: Filters): Promise<PostStruct | undefined> {
     return getFirstOrUndefined(await this.findPostStructs([ id ], filters))
@@ -165,13 +165,13 @@ export class SubsocialApi implements ISubsocialApi {
 
 
   /**
-   * Find and load data about a space (can be Unlisted or Public, depending on filters set on `query`) from Subsocial blockchain and IPFS by a given `query` object.
+   * Find and load data about a space (can be Unlisted or Public, depending on filters set on `query`) from the Subsocial blockchain and IPFS by a given `query` object.
    * 
    *
-   * @param query - An object containing desired space `id`, visibility filter (`hidden` field), and content filter (with or without IPFS content).
+   * @param query - An object containing the desired space `id`, a visibility filter (`hidden` field), and a content filter (with or without IPFS content).
    *
-   * @returns Data about a space aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * space to given `query` object, undefined is returned.
+   * @returns Data about a space aggregated from the Subsocial blockchain and IPFS. If there is no
+   * space corresponding to the given `query` object, undefined is returned.
    */  
 
   public async findSpace (query: FindSpaceQuery) {
@@ -180,13 +180,13 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load an array of information about spaces (can be Unlisted or Public, depending on `filter` object) from Subsocial blockchain and IPFS by a given `filter` object.
+   * Find and load an array of information about spaces (can be Unlisted or Public, depending on `filter` object) from the Subsocial blockchain and IPFS by a given `filter` object.
    * 
    *
-   * @param filter - An object containing desired space `ids`, visibility filter (`hidden` field), and content filter (with or without IPFS content).
+   * @param filter - An object containing the desired space `ids`, a visibility filter (`hidden` field), and a content filter (with or without IPFS content).
    *
-   * @returns An array of data about desired spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * spaces to given `filter` object, undefined is returned.
+   * @returns An array of data about desired spaces aggregated from the Subsocial blockchain and IPFS. If there are no
+   * spaces corresponding to the given `filter` object, undefined is returned.
    */  
   public async findSpaces (filter: FindSpacesQuery) {
     return convertToNewSpaceDataArray(
@@ -195,17 +195,17 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load an array of information about public spaces from Subsocial blockchain and IPFS by a given array of
+   * Find and load an array of information about public spaces from the Subsocial blockchain and IPFS by a given array of
    * space `ids`.
    *
-   * Space is considered public if it meets the next conditions:
+   * A space is considered public if it meets the following conditions:
    * - The `hidden` field on its blockchain structure is `false`.
-   * - And there is a corresponding JSON file that represents the space's content on IPFS.
+   * - There is a corresponding JSON file that represents the space's content on IPFS.
    *
-   * @param ids - An array of ids of desired spaces.
+   * @param ids - An array of the ids of the desired spaces.
    *
-   * @returns An array of data about desired spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * spaces to given array of `ids`, an empty array is returned.
+   * @returns An array of data about the desired spaces aggregated from the Subsocial blockchain and IPFS. If there are no
+   * spaces corresponding to the given array of `ids`, an empty array is returned.
    */  
   public async findPublicSpaces (ids: AnyId[]) {
     return convertToNewSpaceDataArray(
@@ -214,17 +214,17 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load an array of information about unlisted spaces from Subsocial blockchain and IPFS by a given array of
+   * Find and load an array of information about unlisted spaces from the Subsocial blockchain and IPFS by a given array of
    * space `ids`.
    *
-   * Space is considered unlisted if it meets either of these conditions:
-   * - The `hidden` field on it's blockchain structure is `true`.
-   * - Or there is no corresponding JSON file that represents the space's content on IPFS.
+   * A space is considered unlisted if it meets either of these conditions:
+   * - The `hidden` field on its blockchain structure is `true`.
+   * - There is no corresponding JSON file that represents the space's content on IPFS.
    *
-   * @param ids - An array of ids of desired spaces.
+   * @param ids - An array of the ids of the desired spaces.
    *
-   * @returns An array of data about desired spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * spaces to given array of `ids`, an empty array is returned.
+   * @returns An array of data about the desired spaces aggregated from the Subsocial blockchain and IPFS. If there are no
+   * spaces corresponding to the given array of `ids`, an empty array is returned.
    */  
   public async findUnlistedSpaces (ids: AnyId[]) {
     return convertToNewSpaceDataArray(
@@ -236,13 +236,13 @@ export class SubsocialApi implements ISubsocialApi {
   // Posts
 
   /**
-   * Find and load data about a post from Subsocial blockchain and IPFS by a given `query` object.
+   * Find and load data about a post from the Subsocial blockchain and IPFS by a given `query` object.
    *
    *
-   * @param query - An object containing desired post `id`, visibility filter (`hidden` field), and content filter (with or without IPFS content).
+   * @param query - An object containing the desired post `id`, a visibility filter (`hidden` field), and a content filter (with or without IPFS content).
    *
-   * @returns Data about a post aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * post to given `query` object, undefined is returned.
+   * @returns Data about a post aggregated from the Subsocial blockchain and IPFS. If there is no 
+   * post corresponding to the given `query` object, undefined is returned.
    */  
   public async findPost (query: FindPostQuery) {
     const posts = await this.findPosts({ ...query, ids: [ idToBn(query.id) ] })
@@ -250,13 +250,13 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
 /**
-   * Find and load an array of information about posts (can be Unlisted or Public, depending on `filter` object) from Subsocial blockchain and IPFS by a given `filter` object.
+   * Find and load an array of information about posts (can be Unlisted or Public, depending on `filter` object) from the Subsocial blockchain and IPFS by a given `filter` object.
    * 
    *
-   * @param filter - An object containing desired post `ids`, visibility filter (`hidden` field), and content filter (with or without IPFS content).
+   * @param filter - An object containing the desired post `ids`, a visibility filter (`hidden` field), and a content filter (with or without IPFS content).
    *
-   * @returns An array of data about desired posts aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * posts to given `filter` object, an empty array is returned.
+   * @returns An array of data about the desired posts aggregated from the Subsocial blockchain and IPFS. If there are no 
+   * posts corresponding to the given `filter` object, an empty array is returned.
    */  
   public async findPosts (filter: FindPostsQuery) {
     return convertToNewPostDataArray(
@@ -265,16 +265,16 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
 /**
-   * Find and load an array of information public posts from Subsocial blockchain and IPFS by a given array of post `ids`.
+   * Find and load an array of public posts from the Subsocial blockchain and IPFS by a given array of post `ids`.
    * 
-   * Post is considered public if it meets the next conditions:
+   * A post is considered public if it meets the following conditions:
    * - The `hidden` field on its blockchain structure is `false`.
-   * - And there is a corresponding JSON file that represents the space's content on IPFS.
+   * - There is a corresponding JSON file that represents the space's content on IPFS.
    *
-   * @param ids - An array of ids of desired posts.
+   * @param ids - An array of the ids of the desired posts.
    *
-   * @returns An array of data about desired posts aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * posts to given array of `ids`, an empty array is returned.
+   * @returns An array of data about the desired posts aggregated from the Subsocial blockchain and IPFS. If there are no 
+   * posts corresponding to the given array of `ids`, an empty array is returned.
    */  
   public async findPublicPosts (ids: AnyId[]) {
     return convertToNewPostDataArray(
@@ -286,8 +286,8 @@ export class SubsocialApi implements ISubsocialApi {
   // Posts with details
 
 /**
-   * Find and load an information about post with some details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
-   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+   * Find and load information about a post with some of its details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because they are slow (although quite useful for UI).
 */  
   public async findPostWithSomeDetails (query: FindPostQuery) {
     return convertToNewPostWithSomeDetails(
@@ -296,8 +296,8 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
 /**
-   * Find and load an information about post with all details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
-   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+   * Find and load information about a post with all of its details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because they are slow (although quite useful for UI).
 */  
   public async findPostWithAllDetails (id: AnyId) {
     return convertToNewPostWithAllDetails(
@@ -306,8 +306,8 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
 /**
-   * Find and load an array of information about post with all details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
-   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+   * Find and load an array of information about a post with all of its details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because they are slow (although quite useful for UI).
 */  
   public async findPostsWithAllDetails (query: FindPostsQuery) {
     return convertToNewPostWithAllDetailsArray(
@@ -316,8 +316,8 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
 /**
-   * Find and load an array of information about public post with some details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
-   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+   * Find and load an array of information about a public post with some of its details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because they are slow (although quite useful for UI).
 */  
   public async findPublicPostsWithSomeDetails (query: FindPostsWithDetailsQuery) {
     return convertToNewPostWithSomeDetailsArray(
@@ -326,8 +326,8 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
 /**
-   * Find and load an array of information about public post with all details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
-   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+   * Find and load an array of information about a public post with all of its details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because they are slow (although quite useful for UI).
 */  
   public async findPublicPostsWithAllDetails (ids: AnyId[]) {
     return convertToNewPostWithAllDetailsArray(
@@ -336,8 +336,8 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
 /**
-   * Find and load an array of information about unlisted post with all details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
-   * These methods are **deprecated**, because it is slow (although quite useful for UI).
+   * Find and load an array of information about an unlisted post with all of its details: extension (PostExtensionData), owner (SpaceData), and space (SpaceData).
+   * These methods are **deprecated**, because they are slow (although quite useful for UI).
 */  
   public async findUnlistedPostsWithAllDetails (ids: AnyId[]) {
     return convertToNewPostWithAllDetailsArray(
@@ -354,10 +354,10 @@ export class SubsocialApi implements ISubsocialApi {
    *
    * A profile space is just a space set to a profile. 
    *
-   * @param accounts - An array of account ids related to desired profile spaces
+   * @param accounts - An array of the account ids related to the desired profile spaces
    *
-   * @returns An array of data about desired profile spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
-   * profile spaces to given array of `accounts`, an empty array is returned.
+   * @returns An array of data about the desired profile spaces aggregated from the Subsocial blockchain and IPFS. If there are no
+   * profile spaces corresponding to the given array of `accounts`, an empty array is returned.
    */  
   public async findProfileSpaces (accounts: AnyAccountId[]) {
     const profileSpaces = await this.base.findProfileSpaces(accounts)
@@ -365,14 +365,14 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load information about a profile space from Subsocial blockchain and IPFS using account id.
+   * Find and load information about a profile space from the Subsocial blockchain and IPFS using an account id.
    *
    *
    * A profile space is just a space set to a profile. 
    * 
-   * @param account - Account id corresponding to desired space profile.
+   * @param account - An account id corresponding to a desired space profile.
    *
-   * @returns Data about desired profile space aggregated from blockchain and IPFS. If no corresponding space to given account id,
+   * @returns Data about the desired profile space aggregated from the Subsocial blockchain and IPFS. If there is space corresponding to the given account id,
    * `undefined` is returned.
    */  
   public async findProfileSpace (account: AnyAccountId) {
@@ -384,12 +384,12 @@ export class SubsocialApi implements ISubsocialApi {
   // Domains
 
   /**
-   * Find and load an array of information about domain structs from Subsocial blockchain by a given array of `domainNames`.
+   * Find and load an array of information about some domain structs from the Subsocial blockchain by a given array of `domainNames`.
    *
    * 
    * @param domainNames - An array of domain names.
    *
-   * @returns An array of data about desired domain structs aggregated from Subsocial blockchain. If no corresponding domains to given array of `domainNames`,
+   * @returns An array of data about the desired domain structs aggregated from the Subsocial blockchain. If there are no domains corresponding to the given array of `domainNames`,
    * an empty array is returned.
    */  
   async findDomains (domainNames: string[]) {
@@ -398,12 +398,12 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /**
-   * Find and load data about a domain from Subsocial blockchain by a given string of `domainName`.
+   * Find and load data about a domain from the Subsocial blockchain by a given string of `domainName`.
    *
    * 
-   * @param domainName - A string of domain name.
+   * @param domainName - A string that is a domain name.
    *
-   * @returns Data about desired domain name aggregated from Subsocial blockchain. If no corresponding domain name to given `domainName`,
+   * @returns Data about a desired domain name from the Subsocial blockchain. If there is no domain name corresponding to the given `domainName`,
    * `undefined` is returned.
    */  
   async findDomain (domainName: string) {
