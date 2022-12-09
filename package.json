@@ -15,6 +15,7 @@
     "publish:types": "yarn build:types && ./scripts/publish-types.sh",
     "publish:utils": "yarn build:utils && ./scripts/publish-utils.sh",
     "publish:api": "yarn build:api && ./scripts/publish-api.sh",
+    "publish:docs": "yarn clean:build && ./scripts/generate-docs.sh",
     "publish:all": "yarn build && ./scripts/publish-all.sh",
     "get-metadata": "./scripts/get-metadata.sh",
     "generate:defs": "lerna run generate --scope=@subsocial/definitions",
