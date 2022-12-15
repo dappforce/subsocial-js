@@ -12,6 +12,15 @@ export class BasicSubsocialApi extends InnerSubsocialApi {
     findProfileSpaces: this.findProfileSpaces.bind(this)
   }
 
+  /**
+   * Find and load an array of information about spaces (both for Unlisted and Public spaces) from the Subsocial blockchain and IPFS by a given array of
+   * space `ids`.
+   *
+   * @param ids - An array of the ids of the desired spaces.
+   *
+   * @returns An array of data about desired spaces aggregated from the Subsocial blockchain and IPFS. If there are no
+   * spaces corresponding to the given array of `ids`, an empty array is returned.
+   */  
   async findAllSpaces (ids: AnySpaceId[]) {
     return this.findSpaces({ ids })
   }
@@ -20,11 +29,11 @@ export class BasicSubsocialApi extends InnerSubsocialApi {
    * Find and load an array of information about public spaces from Subsocial blockchain and IPFS by a given array of
    * space `ids`.
    *
-   * Space is considered public if it meets the next conditions:
-   * - The `hidden` field on its' blockchain structure is `false`.
-   * - And there is a corresponding JSON file that represents the space's content on IPFS.
+   * A space is considered public if it meets the following conditions:
+   * - The `hidden` field on its blockchain structure is `false`.
+   * - There is a corresponding JSON file that represents the space's content on IPFS.
    *
-   * @param ids - An array of ids of desired spaces.
+   * @param ids - An array of the ids of the desired spaces.
    *
    * @returns An array of data about desired spaces aggregated from Subsocial blockchain and IPFS. If no corresponding
    * spaces to given array of `ids`, an empty array is returned.
@@ -50,6 +59,16 @@ export class BasicSubsocialApi extends InnerSubsocialApi {
     return this.findSpaces({ ids, visibility: 'onlyUnlisted' })
   }
 
+  /**
+   * Find and load an array of information about posts (both Unlisted and Public posts) from the Subsocial blockchain and IPFS by a given array of
+   * post `ids`.
+   *
+   *
+   * @param ids - An array of the ids of the desired posts.
+   *
+   * @returns An array of data about desired posts aggregated from the Subsocial blockchain and IPFS. If there are no
+   * posts corresponding to the given array of `ids`, an empty array is returned.
+   */    
   async findAllPosts (ids: AnySpaceId[]) {
     return this.findPosts({ ids })
   }
@@ -58,11 +77,11 @@ export class BasicSubsocialApi extends InnerSubsocialApi {
    * Find and load an array of information about public posts from Subsocial blockchain and IPFS by a given array of
    * post `ids`.
    *
-   * Post is considered public if it meets the next conditions:
-   * - The `hidden` field on its' blockchain structure is `false`.
-   * - And there is a corresponding JSON file that represents the post's content on IPFS.
+   * A post is considered public if it meets the following conditions:
+   * - The `hidden` field on its blockchain structure is `false`.
+   * - There is a corresponding JSON file that represents the post's content on IPFS.
    *
-   * @param ids - An array of ids of desired posts.
+   * @param ids - An array of the ids of the desired posts.
    *
    * @returns An array of data about desired posts aggregated from Subsocial blockchain and IPFS. If no corresponding
    * posts to given array of `ids`, an empty array is returned.
@@ -114,6 +133,17 @@ export class BasicSubsocialApi extends InnerSubsocialApi {
     return this.findPostsWithAllDetails({ ids, visibility: 'onlyUnlisted' })
   }
 
+  /**
+   * Find and load an array of information about profile spaces from the Subsocial blockchain and IPFS by a given array of
+   * account ids `accountsIds`.
+   *
+   * A profile space is just a space set to a profile. 
+   *
+   * @param accountsIds - An array of the account ids related to the desired profile spaces
+   *
+   * @returns An array of data about desired profile spaces aggregated from the Subsocial blockchain and IPFS. If there are no
+   * profile spaces corresponding to the given array of `spaceIds`, an empty array is returned.
+   */  
   async findProfileSpaces (accountIds: AnyAccountId[]) {
     const spaceIds = await this.substrate.profileSpaceIdsByAccounts(accountIds)
     return this.findAllSpaces(bnsToIds(spaceIds))
