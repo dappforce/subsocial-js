@@ -1,0 +1,90 @@
+name: build and deploy document
+on:
+  workflow_dispatch:        
+
+jobs:
+  front_build:
+    name: build & Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Extract branch name
+        shell: bash
+        run: echo "name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV        
+        id: extract_branch
+
+      - name: Prepare
+        id: prep
+        run: |
+          echo "image=dappforce/subsocial-js-doc:${{ env.name }}-$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Login to DockerHub
+        uses: docker/login-action@master
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-single-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-single-buildx
+
+      - name: Build staging image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          builder: ${{ steps.buildx.outputs.name }}
+          file: docker/Dockerfile
+          push: true
+          tags: |
+                  ${{ env.image }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  deploy:
+    name: deploy
+    needs: front_build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV        
+        id: extract_branch
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN_PROD }}
+
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.K8S_PROD }}
+
+      - name: scaledown replicas
+        run: kubectl -n doc scale deployment/doc --replicas=1
+        
+      - name: Update image name 
+        run: kubectl -n doc patch deployment doc -p  '{"spec":{"template":{"spec":{"containers":[{"name":"doc","image":"dappforce/subsocial-js-doc:${{ env.name }}-$(echo $GITHUB_SHA | head -c7)"}]}}}}'
+
+      - name: Verify deployment
+        run: kubectl -n doc rollout status deployment/doc
+
+      - name: add replicas
+        run: kubectl -n doc scale deployment/doc --replicas=2
+
+      - name: Verify deployment
+        run: kubectl -n doc rollout status deployment/doc
