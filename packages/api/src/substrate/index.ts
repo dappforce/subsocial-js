@@ -474,7 +474,7 @@ export class SubsocialSubstrateApi {
    * 
    * @param followedAddress - Id of followedAccount.
    *    
-   * @returns An boolean value whether `myAddress` is following `followedAddress` or not, retrieved from Subsocial blockchain.
+   * @returns A boolean value whether `myAddress` is following `followedAddress` or not, retrieved from Subsocial blockchain.
    * 
    */  
   async isAccountFollower (myAddress: AnyAccountId, followedAddress: AnyAccountId): Promise<boolean> {
