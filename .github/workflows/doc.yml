@@ -66,6 +66,11 @@ jobs:
         run: echo "name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV        
         id: extract_branch
 
+      - name: Prepare
+        id: prep
+        run: |
+          echo "image=dappforce/subsocial-js-doc:${{ env.name }}-$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
+        
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -78,7 +83,7 @@ jobs:
         run: kubectl -n doc scale deployment/doc --replicas=1
         
       - name: Update image name 
-        run: kubectl -n doc patch deployment doc -p  '{"spec":{"template":{"spec":{"containers":[{"name":"doc","image":"dappforce/subsocial-js-doc:${{ env.name }}-$(echo $GITHUB_SHA | head -c7)"}]}}}}'
+        run: kubectl -n doc patch deployment doc -p  '{"spec":{"template":{"spec":{"containers":[{"name":"doc","image":"${{ env.image }}"}]}}}}'
 
       - name: Verify deployment
         run: kubectl -n doc rollout status deployment/doc
