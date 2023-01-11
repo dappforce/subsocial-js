@@ -18,7 +18,7 @@
     "out": "docs",
     "excludeExternals": true,
     "name": "Subsocial JS SDK",
-    "theme": "./themes/docs-theme",
+    "customCss": "./themes/main.css",
     "hideGenerator": true,
   }
 }

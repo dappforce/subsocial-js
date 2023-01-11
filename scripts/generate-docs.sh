@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yarn typedoc --theme default
+yarn typedoc

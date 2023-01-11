@@ -72,21 +72,39 @@ export class SubsocialApi implements ISubsocialApi {
     return this._base 
   }
 
+  /** 
+    * Getter for an ApiPromise to connect to Subsocial nodes and query chain states, but in raw format.
+    * The raw formatted data needs to be flattened first in order to be readable by JavaScript.
+    * 
+    * Accessors for private field {@link _base}*/
   get base () {
     return this._base 
   }
 
-   /** Accessors for private field {@link _base.substrate}*/
+   /** 
+    * Getter for an ApiPromise to connect to Subsocial nodes and query chain states.
+    * It is useful in the case of querying data about posts, spaces, and profiles.
+    * 
+    * Accessors for private field {@link _base.substrate}*/
   get blockchain() {
     return this._base.substrate
   }
 
-  /** Accessors for private field {@link _base.ipfs}*/
+  /** 
+   * Getter for an aggregated ApiPromise to work with IPFS.
+   * It is useful for getting the contents of spaces, posts, and profiles.
+   * 
+   * Accessors for private field {@link _base.ipfs}*/
   get ipfs() {
     return this._base.ipfs
   }
 
-   /** Accessors for private field {@link _base.substrate.api}*/
+   /** 
+    * Getter for a Polkadot ApiPromise without wrappers to call functions from Subsocial Pallets.
+    * It is useful for creating specific txs or queries.
+    * 
+    * Accessors for private field {@link _base.substrate.api}
+    **/
   get substrateApi() {
     return this._base.substrate.api
   }
