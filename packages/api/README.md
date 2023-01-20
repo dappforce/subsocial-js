@@ -13,4 +13,8 @@ Subsocial provides the back-end tech, allowing for easy deployment of decentrali
 
 ## Need Help?
 
-In case you need help, the best way to reach us is through our [Subsocial Devs](https://t.me/+oUpF3nTHlCkwNzA6) Telegram chat or [#developers channel](https://discord.gg/avccqJAW3C) on our Discord server.
+In case you need help, the best way to reach us is through our <a href="https://t.me/+oUpF3nTHlCkwNzA6" target="_blank">Subsocial Devs</a> Telegram chat or <a href="https://discord.gg/avccqJAW3C" target="_blank">#developers channel</a> on our Discord server.
+
+## License
+
+Subsocial is <a href="https://github.com/dappforce/subsocial-js/blob/master/LICENSE" target="_blank">GPL 3.0</a> licensed.
