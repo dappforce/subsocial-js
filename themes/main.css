@@ -21,4 +21,5 @@ div.col-4.col-menu.menu-sticky-wrap.menu-highlight {
 div.tsd-page-title > h2 {
     /* aligns horizontally title h2 with left menubar */
     margin: -0.2rem 0;
+    font-size: 1.875rem;
 }
