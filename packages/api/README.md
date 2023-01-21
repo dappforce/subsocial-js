@@ -1,4 +1,4 @@
-# Subsocial's JS SDK
+# Subsocial JS SDK
 
 Subsocial's JS SDK is a library for building social networking applications on top of the Subsocial blockchain. The library will help developers easily interact with the Subsocial blockchain from their UI, without prior knowledge of Subsocial’s pallet implementations. Inside the library, you will find the APIs required to perform different operations on the blockchain, which are <a href="https://docs.subsocial.network/docs/develop/how-to-guides/apiTypes" target="_blank">detailed here</a>. 
 
