@@ -18,6 +18,7 @@
     "out": "docs",
     "excludeExternals": true,
     "name": "Subsocial JS SDK",
+    "readme": "./README.md",
     "customCss": "./themes/main.css",
     "hideGenerator": true,
   }
