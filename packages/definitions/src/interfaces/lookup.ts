@@ -314,7 +314,7 @@ export default {
    * Lookup37: subsocial_parachain_runtime::ProxyType
    **/
   SubsocialParachainRuntimeProxyType: {
-    _enum: ['Any', 'DomainRegistrar']
+    _enum: ['Any', 'DomainRegistrar', 'SocialActions', 'Management']
   },
   /**
    * Lookup39: pallet_utility::pallet::Event
