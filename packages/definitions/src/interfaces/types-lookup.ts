@@ -342,7 +342,9 @@ declare module '@polkadot/types/lookup' {
   interface SubsocialParachainRuntimeProxyType extends Enum {
     readonly isAny: boolean;
     readonly isDomainRegistrar: boolean;
-    readonly type: 'Any' | 'DomainRegistrar';
+    readonly isSocialActions: boolean;
+    readonly isManagement: boolean;
+    readonly type: 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management';
   }
 
   /** @name PalletUtilityEvent (39) */

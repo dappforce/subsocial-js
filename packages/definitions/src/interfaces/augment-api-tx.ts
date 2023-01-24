@@ -384,7 +384,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Weight is a function of the number of proxies the user has (P).
        * # </weight>
        **/
-      addProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u32]>;
+      addProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u32]>;
       /**
        * Publish the hash of a proxy-call that will be made in the future.
        * 
@@ -434,7 +434,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * # </weight>
        * TODO: Might be over counting 1 read
        **/
-      anonymous: AugmentedSubmittable<(proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array, index: u16 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialParachainRuntimeProxyType, u32, u16]>;
+      anonymous: AugmentedSubmittable<(proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array, index: u16 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialParachainRuntimeProxyType, u32, u16]>;
       /**
        * Removes a previously spawned anonymous proxy.
        * 
@@ -457,7 +457,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Weight is a function of the number of proxies the user has (P).
        * # </weight>
        **/
-      killAnonymous: AugmentedSubmittable<(spawner: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | number | Uint8Array, index: u16 | AnyNumber | Uint8Array, height: Compact<u32> | AnyNumber | Uint8Array, extIndex: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u16, Compact<u32>, Compact<u32>]>;
+      killAnonymous: AugmentedSubmittable<(spawner: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | number | Uint8Array, index: u16 | AnyNumber | Uint8Array, height: Compact<u32> | AnyNumber | Uint8Array, extIndex: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u16, Compact<u32>, Compact<u32>]>;
       /**
        * Dispatch the given `call` from an account that the sender is authorised for through
        * `add_proxy`.
@@ -475,7 +475,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Weight is a function of the number of proxies the user has (P).
        * # </weight>
        **/
-      proxy: AugmentedSubmittable<(real: AccountId32 | string | Uint8Array, forceProxyType: Option<SubsocialParachainRuntimeProxyType> | null | Uint8Array | SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | number, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, Option<SubsocialParachainRuntimeProxyType>, Call]>;
+      proxy: AugmentedSubmittable<(real: AccountId32 | string | Uint8Array, forceProxyType: Option<SubsocialParachainRuntimeProxyType> | null | Uint8Array | SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | number, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, Option<SubsocialParachainRuntimeProxyType>, Call]>;
       /**
        * Dispatch the given `call` from an account that the sender is authorized for through
        * `add_proxy`.
@@ -495,7 +495,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - P: the number of proxies the user has.
        * # </weight>
        **/
-      proxyAnnounced: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, real: AccountId32 | string | Uint8Array, forceProxyType: Option<SubsocialParachainRuntimeProxyType> | null | Uint8Array | SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | number, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, AccountId32, Option<SubsocialParachainRuntimeProxyType>, Call]>;
+      proxyAnnounced: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, real: AccountId32 | string | Uint8Array, forceProxyType: Option<SubsocialParachainRuntimeProxyType> | null | Uint8Array | SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | number, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, AccountId32, Option<SubsocialParachainRuntimeProxyType>, Call]>;
       /**
        * Remove the given announcement of a delegate.
        * 
@@ -560,7 +560,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Weight is a function of the number of proxies the user has (P).
        * # </weight>
        **/
-      removeProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u32]>;
+      removeProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u32]>;
     };
     reactions: {
       createPostReaction: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, kind: PalletReactionsReactionKind | 'Upvote' | 'Downvote' | number | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletReactionsReactionKind]>;
