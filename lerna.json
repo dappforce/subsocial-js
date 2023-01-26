@@ -6,7 +6,7 @@
     "packages/definitions",
     "packages/elasticsearch"
   ],
-  "version": "0.0.0",
+  "version": "0.7.10",
   "npmClient": "yarn",
   "useWorkspaces": true
 }
