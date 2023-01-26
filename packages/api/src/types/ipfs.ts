@@ -1,5 +1,6 @@
 import { CID } from 'ipfs-http-client'
 import { IpfsCid as RuntimeIpfsCid } from '@subsocial/definitions/interfaces'
+import { TweetPostContent } from '@subsocial/utils'
 
 export type IpfsCommonContent =
   IpfsCommentContent |
@@ -32,6 +33,7 @@ export type IpfsPostContent = CommonPostContent & {
   image: string
   tags: string[]
   canonical: string
+  tweet?: TweetPostContent
   link?: string
 }
 
