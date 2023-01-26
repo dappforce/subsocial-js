@@ -38,4 +38,9 @@ We have done really huge update of our SDK. Get feedback of our early
   - findSpaces
   - findPosts
   - findProfileSpaces
+- add `twitterParser` to `utils`:
+  - parseHashtags
+  - parseUsernames
+  - parseTextToMarkdown
+- add `createTwitterURL` to `utils`
 
