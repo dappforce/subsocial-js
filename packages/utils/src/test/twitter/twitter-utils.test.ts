@@ -32,27 +32,27 @@ const mocks = {
 
 describe("Hashtag parser", () => {
   test("should return a defined value when given a non-empty string", () => {
-    expect(twitterParser.parseHashtag(mocks.longTweet)).toBeDefined()
+    expect(twitterParser.parseHashtags(mocks.longTweet)).toBeDefined()
   })
 
   test("should return a string when given a non-empty string", () => {
-    expect(typeof twitterParser.parseHashtag(mocks.longTweet)).toBe("string")
+    expect(typeof twitterParser.parseHashtags(mocks.longTweet)).toBe("string")
   })
 
   test("should return markdown-formatted string when given a string with hashtag", () => {
-    expect(twitterParser.parseHashtag(mocks.inputHashtag)).toMatch(mocks.outputHashtag)
+    expect(twitterParser.parseHashtags(mocks.inputHashtag)).toMatch(mocks.outputHashtag)
   })
 
   test("should not parse the hashtag if it is followed by digits only", () => {
-    expect(twitterParser.parseHashtag(mocks.inputHashtagDigitOnly)).toMatch(mocks.inputHashtagDigitOnly)
+    expect(twitterParser.parseHashtags(mocks.inputHashtagDigitOnly)).toMatch(mocks.inputHashtagDigitOnly)
   })
 
   test("should not work for letters or numbers in front of the # symbol", () => {
-    expect(twitterParser.parseHashtag(mocks.inputNoWhiteSpace)).toMatch(mocks.inputNoWhiteSpace)
+    expect(twitterParser.parseHashtags(mocks.inputNoWhiteSpace)).toMatch(mocks.inputNoWhiteSpace)
   })
 
   test("should cut words in hashtag if punctuation is present", () => {
-    expect(twitterParser.parseHashtag(mocks.inputHashtagWithPunctuation)).toMatch(
+    expect(twitterParser.parseHashtags(mocks.inputHashtagWithPunctuation)).toMatch(
       mocks.outputHashtagWithPunctuation,
     )
   })
@@ -60,19 +60,19 @@ describe("Hashtag parser", () => {
 
 describe("Username parser", () => {
   test("should return a defined value when given a non-empty string", () => {
-    expect(twitterParser.parseUsername(mocks.longTweet)).toBeDefined()
+    expect(twitterParser.parseUsernames(mocks.longTweet)).toBeDefined()
   })
 
   test("should return a string when given a non-empty string", () => {
-    expect(typeof twitterParser.parseUsername(mocks.longTweet)).toBe("string")
+    expect(typeof twitterParser.parseUsernames(mocks.longTweet)).toBe("string")
   })
 
   test("should return markdown-formatted string when given a string with @ symbol", () => {
-    expect(twitterParser.parseUsername(mocks.inputUsername)).toMatch(mocks.outputUsername)
+    expect(twitterParser.parseUsernames(mocks.inputUsername)).toMatch(mocks.outputUsername)
   })
 
   test("should return the same string if usernames preceeded with characters", () => {
-    expect(twitterParser.parseUsername(mocks.inputUsernameWithCharPrefix)).toMatch(
+    expect(twitterParser.parseUsernames(mocks.inputUsernameWithCharPrefix)).toMatch(
       mocks.inputUsernameWithCharPrefix,
     )
   })
