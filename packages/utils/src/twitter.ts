@@ -1,6 +1,6 @@
 import { TweetPostContent } from './types/twitter'
 
-const BASE_TWITTER_URL = "https://twitter.com"
+const BASE_TWITTER_URL = 'https://twitter.com'
 
 const parseHashtags = (text: string) => {
   const result = text.replace(
@@ -42,5 +42,5 @@ export const twitterParser = {
 }
 
 export const createTwitterURL = (tweet: TweetPostContent) => {
-    return `${BASE_TWITTER_URL}/${tweet.username}/status/${tweet.id}`
+  return `${BASE_TWITTER_URL}/${tweet.username}/status/${tweet.id}`
 }
