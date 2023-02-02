@@ -27,11 +27,11 @@ const parseLinks = (text: string) => {
 }
 
 const parseTextToMarkdown = (text: string) => {
-  const hashtagsParsed = parseHashtags(text)
-  const hashtagAndUsernamesParsed = parseUsernames(hashtagsParsed)
-  const linksParsed = parseLinks(hashtagAndUsernamesParsed)
+  const linksParsed = parseLinks(text)
+  const linksAndHashtagsParsed = parseHashtags(linksParsed)
+  const markdown = parseUsernames(linksAndHashtagsParsed)
 
-  return linksParsed
+  return markdown
 }
 
 export const twitterParser = {
