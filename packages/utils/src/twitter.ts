@@ -20,14 +20,22 @@ const parseUsernames = (text: string) => {
   return result
 }
 
+const parseLinks = (text: string) => {
+  const urlRegex =
+      /\b(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))\b/g
+  return text.replace(urlRegex, '<$1>')
+}
+
 const parseTextToMarkdown = (text: string) => {
   const hashtagsParsed = parseHashtags(text)
-  const markdownWithLinks = parseUsernames(hashtagsParsed)
+  const hashtagAndUsernamesParsed = parseUsernames(hashtagsParsed)
+  const linksParsed = parseLinks(hashtagAndUsernamesParsed)
 
-  return markdownWithLinks
+  return linksParsed
 }
 
 export const twitterParser = {
+  parseLinks,
   parseHashtags,
   parseUsernames,
   parseTextToMarkdown,
