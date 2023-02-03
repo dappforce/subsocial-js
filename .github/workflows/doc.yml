@@ -95,8 +95,8 @@ jobs:
       - name: Verify deployment
         run: kubectl -n doc rollout status deployment/doc
 
-  back-bk-prod-deploy:
-    name: bk-prod-deploy
+  doc-bk-prod-deploy:
+    name: doc-bk-prod-deploy
     needs: front_build
     runs-on: ubuntu-latest    
     steps:
