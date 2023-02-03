@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 0.7.12 - 2023-02-03
+## 0.7.12 - 2022-02-03
+- add `parseTwitterToMarkdown` and `createTwitterURL` to `@subsocial/utils`, for support parsing Twitter posts to Markdown and creating Twitter saved content provided by [Post4ever](https://post4ever.app)
+
+## 0.7.10 - 2022-12-03
 We have done really huge update of our SDK. Get feedback of our early
 
 ### Added
@@ -39,8 +42,3 @@ We have done really huge update of our SDK. Get feedback of our early
   - findSpaces
   - findPosts
   - findProfileSpaces
-- add `twitterParser` to `utils`:
-  - parseHashtags
-  - parseUsernames
-  - parseTextToMarkdown
-- add `createTwitterURL` to `utils`
