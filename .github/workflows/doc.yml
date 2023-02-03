@@ -45,6 +45,7 @@ jobs:
           push: true
           tags: |
                   ${{ env.image }}
+                  docker.io/dappforce/subsocial-js-doc:master-latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -93,3 +94,25 @@ jobs:
 
       - name: Verify deployment
         run: kubectl -n doc rollout status deployment/doc
+
+  doc-bk-prod-deploy:
+    name: doc-bk-prod-deploy
+    needs: front_build
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+      - name: Extract branch name
+        shell: bash
+        run: echo "name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+        id: extract_branch
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.BACKUP_HOST }}
+          username: ${{ secrets.BACKUP_USERNAME }}
+          key: ${{ secrets.BACKUP_KEY }}
+          port: ${{ secrets.BACKUP_PORT }}
+          script: |
+            cd /root/doc
+            ./update.sh           
