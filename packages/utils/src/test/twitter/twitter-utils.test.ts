@@ -37,6 +37,9 @@ const mocks = {
     'Polkaverse https://polkaverse.com and google here https://google.com',
   outputMultipleLink:
     'Polkaverse [https://polkaverse.com](https://polkaverse.com) and google here [https://google.com](https://google.com)',
+  inputWithEmailAndPhone: '082342342341234 test@test.com should not be parsed',
+  inputWithHtml: '<script>let a = 0; alert("test")</script> is a script that should be <sanitized',
+  outputWithHtml: '&lt;script&gt;let a = 0; alert("test")&lt;/script&gt; is a script that should be &lt;sanitized',
   inputAllFormat:
     'Polkaverse tag #Polkaverse with link https://polkaverse.com#test to @SubsocialChain with link https://polkaverse.com#test@subsocial and https://google.com . and link https://polkaverse.com.@SubsocialChain https://polkaverse.com.#test',
   outputAllFormat:
@@ -132,6 +135,14 @@ describe('All Format Parser', () => {
     expect(typeof parseTwitterTextToMarkdown(mocks.longTweet)).toBe(
       'string'
     )
+  })
+
+  test('should not parse email and phone number', () => {
+    expect(parseTwitterTextToMarkdown(mocks.inputWithEmailAndPhone)).toMatch(mocks.inputWithEmailAndPhone)
+  })
+
+  test('should sanitize html', () => {
+    expect(parseTwitterTextToMarkdown(mocks.inputWithHtml)).toMatch(mocks.outputWithHtml)
   })
 
   test('should return markdown-formatted strings for usernames and hashtags', () => {

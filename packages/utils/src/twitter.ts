@@ -8,6 +8,9 @@ export const parseTwitterTextToMarkdown = (text: string) => {
     mention: 'twitter',
     hashtag: 'twitter',
     stripPrefix: false,
+    phone: false,
+    email: false,
+    sanitizeHtml: true,
     replaceFn: function (match) {
       const href = match.getAnchorHref()
       const text = match.getAnchorText()
