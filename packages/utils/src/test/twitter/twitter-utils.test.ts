@@ -31,8 +31,8 @@ const mocks = {
   outputUsername:
     '[@SubsocialChain](https://twitter.com/SubsocialChain) is a decentralised social finance platform.',
   inputUsernameWithCharPrefix: '123@TwitterSupport',
-  inputLink: 'Polkaverse link https://polkaverse.com',
-  outputLink: 'Polkaverse link [https://polkaverse.com](https://polkaverse.com)',
+  inputLink: 'Polkaverse link https://polkaverse.com google.com',
+  outputLink: 'Polkaverse link [https://polkaverse.com](https://polkaverse.com) [google.com](http://google.com)',
   inputMultipleLink:
     'Polkaverse https://polkaverse.com and google here https://google.com',
   outputMultipleLink:
