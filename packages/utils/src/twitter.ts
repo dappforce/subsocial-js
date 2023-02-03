@@ -1,38 +1,27 @@
 import { TweetPostContent } from './types/twitter'
+import Autolinker from 'autolinker'
 
-const BASE_TWITTER_URL = "https://twitter.com"
+const BASE_TWITTER_URL = 'https://twitter.com'
 
-const parseHashtag = (text: string) => {
-  const result = text.replace(
-    /(\s#)(\w+[a-zA-Z0-9]+)/g,
-    ` [#$2](${BASE_TWITTER_URL}/hashtag/$2?src=hashtag_click)`
-  )
+export const parseTwitterTextToMarkdown = (text: string) => {
+  const parsed = Autolinker.link(text, {
+    mention: 'twitter',
+    hashtag: 'twitter',
+    stripPrefix: false,
+    phone: false,
+    email: false,
+    sanitizeHtml: true,
+    replaceFn: function (match) {
+      const href = match.getAnchorHref()
+      const text = match.getAnchorText()
 
-  return result
-}
+      return `[${text}](${href})`
+    },
+  })
 
-const parseUsername = (text: string) => {
-  const result = text.replace(
-    /(?<!\w)@([a-zA-Z0-9_]+){1,15}/g,
-    `[@$1](${BASE_TWITTER_URL}/$1)`
-  )
-
-  return result
-}
-
-const parseTextToMarkdown = (text: string) => {
-  const hashtagParsed = parseHashtag(text)
-  const markdownWithLinks = parseUsername(hashtagParsed)
-
-  return markdownWithLinks
-}
-
-export const twitterParser = {
-  parseHashtag,
-  parseUsername,
-  parseTextToMarkdown,
+  return parsed
 }
 
 export const createTwitterURL = (tweet: TweetPostContent) => {
-    return `${BASE_TWITTER_URL}/${tweet.username}/status/${tweet.id}`
+  return `${BASE_TWITTER_URL}/${tweet.username}/status/${tweet.id}`
 }

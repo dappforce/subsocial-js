@@ -5,10 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
- 
-We have done really huge update of our SDK. Get feedback of our early 
- 
+## Unreleased
+
+## 0.7.12 - 2022-02-03
+- add `parseTwitterToMarkdown` and `createTwitterURL` to `@subsocial/utils`, for support parsing Twitter posts to Markdown and creating Twitter saved content provided by [Post4ever](https://post4ever.app)
+
+## 0.7.10 - 2022-12-03
+We have done really huge update of our SDK. Get feedback of our early
+
 ### Added
 - definitions for Subsocial Parachain Node
 - new methods for IPFS instance:
@@ -38,4 +42,3 @@ We have done really huge update of our SDK. Get feedback of our early
   - findSpaces
   - findPosts
   - findProfileSpaces
-
