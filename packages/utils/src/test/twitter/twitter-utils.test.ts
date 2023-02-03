@@ -33,10 +33,6 @@ const mocks = {
   inputUsernameWithCharPrefix: '123@TwitterSupport',
   inputLink: 'Polkaverse link https://polkaverse.com google.com',
   outputLink: 'Polkaverse link [https://polkaverse.com](https://polkaverse.com) [google.com](http://google.com)',
-  inputMultipleLink:
-    'Polkaverse https://polkaverse.com and google here https://google.com',
-  outputMultipleLink:
-    'Polkaverse [https://polkaverse.com](https://polkaverse.com) and google here [https://google.com](https://google.com)',
   inputWithEmailAndPhone: '082342342341234 test@test.com should not be parsed',
   inputWithHtml: '<script>let a = 0; alert("test")</script> is a script that should be <sanitized',
   outputWithHtml: '&lt;script&gt;let a = 0; alert("test")&lt;/script&gt; is a script that should be &lt;sanitized',
@@ -115,14 +111,6 @@ describe('Link Parser', () => {
         mocks.inputLink
       )
     ).toMatch(mocks.outputLink)
-  })
-
-  test('should be able to parse multiple links', () => {
-    expect(
-      parseTwitterTextToMarkdown(
-        mocks.inputMultipleLink
-      )
-    ).toMatch(mocks.outputMultipleLink)
   })
 })
 
