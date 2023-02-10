@@ -365,6 +365,7 @@ declare module '@polkadot/api-base/types/submittable' {
     };
     profiles: {
       forceSetSpaceAsProfile: AugmentedSubmittable<(account: AccountId32 | string | Uint8Array, spaceIdOpt: Option<u64> | null | Uint8Array | u64 | AnyNumber) => SubmittableExtrinsic<ApiType>, [AccountId32, Option<u64>]>;
+      createSpaceAsProfile: AugmentedSubmittable<(content: SubsocialSupportContent | { None: any } | { Other: any } | { IPFS: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialSupportContent]>;
       resetProfile: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       setProfile: AugmentedSubmittable<(spaceId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
     };
