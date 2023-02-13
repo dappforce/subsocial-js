@@ -314,7 +314,7 @@ export default {
    * Lookup37: subsocial_parachain_runtime::ProxyType
    **/
   SubsocialParachainRuntimeProxyType: {
-    _enum: ['Any', 'DomainRegistrar', 'SocialActions', 'Management']
+    _enum: ['Any', 'DomainRegistrar', 'SocialActions', 'Management', 'SocialActionsProxy']
   },
   /**
    * Lookup39: pallet_utility::pallet::Event
@@ -2152,6 +2152,7 @@ export default {
       },
       delete_role: {
         roleId: 'u64',
+        userCount: 'u32',
       },
       grant_role: {
         roleId: 'u64',
@@ -2226,9 +2227,8 @@ export default {
         spaceId: 'u64',
       },
       reset_profile: 'Null',
-      force_set_space_as_profile: {
-        account: 'AccountId32',
-        spaceIdOpt: 'Option<u64>'
+      create_space_as_profile: {
+        content: 'SubsocialSupportContent'
       }
     }
   },
@@ -2567,7 +2567,7 @@ export default {
    * Lookup311: pallet_roles::pallet::Error<T>
    **/
   PalletRolesError: {
-    _enum: ['RoleNotFound', 'RoleIdOverflow', 'NoPermissionToManageRoles', 'NoUpdatesProvided', 'NoPermissionsProvided', 'NoUsersProvided', 'TooManyUsersToDeleteRole', 'RoleAlreadyDisabled', 'RoleAlreadyEnabled']
+    _enum: ['RoleNotFound', 'RoleIdOverflow', 'NoPermissionToManageRoles', 'NoUpdatesProvided', 'NoPermissionsProvided', 'NoUsersProvided', 'TooManyUsersToDeleteRole', 'IncorrectUserCount', 'RoleAlreadyDisabled', 'RoleAlreadyEnabled']
   },
   /**
    * Lookup313: pallet_account_follows::pallet::Error<T>
@@ -2579,7 +2579,7 @@ export default {
    * Lookup314: pallet_profiles::pallet::Error<T>
    **/
   PalletProfilesError: {
-    _enum: ['SocialAccountNotFound', 'NoSpaceSetAsProfile']
+    _enum: ['NoSpaceSetAsProfile']
   },
   /**
    * Lookup316: pallet_space_follows::pallet::Error<T>

@@ -423,10 +423,6 @@ declare module '@polkadot/api-base/types/errors' {
        * There is no space set as profile.
        **/
       NoSpaceSetAsProfile: AugmentedError<ApiType>;
-      /**
-       * Social account was not found by id.
-       **/
-      SocialAccountNotFound: AugmentedError<ApiType>;
     };
     proxy: {
       /**
@@ -510,6 +506,10 @@ declare module '@polkadot/api-base/types/errors' {
       SameReaction: AugmentedError<ApiType>;
     };
     roles: {
+      /**
+       * The user count sent doesn't match the real user count.
+       **/
+      IncorrectUserCount: AugmentedError<ApiType>;
       /**
        * No permissions provided when trying to create a new role.
        * A role must have at least one permission.
