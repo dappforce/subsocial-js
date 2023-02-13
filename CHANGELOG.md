@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.7.13 - 2023-02-13
 ### Added
 - add `get-metadata.js` for definitions, for fast updating types after chain upgrades
 - support `createSpaceAsProfile` in definitions
 
 ## 0.7.12 - 2023-02-03
-
 ### Added
 - add `parseTwitterToMarkdown` and `createTwitterURL` to `@subsocial/utils`, for support parsing Twitter posts to Markdown and creating Twitter saved content provided by [Post4ever](https://post4ever.app)
 
