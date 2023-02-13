@@ -344,7 +344,8 @@ declare module '@polkadot/types/lookup' {
     readonly isDomainRegistrar: boolean;
     readonly isSocialActions: boolean;
     readonly isManagement: boolean;
-    readonly type: 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management';
+    readonly isSocialActionsProxy: boolean;
+    readonly type: 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy';
   }
 
   /** @name PalletUtilityEvent (39) */
@@ -2304,6 +2305,7 @@ declare module '@polkadot/types/lookup' {
     readonly isDeleteRole: boolean;
     readonly asDeleteRole: {
       readonly roleId: u64;
+      readonly userCount: u32;
     } & Struct;
     readonly isGrantRole: boolean;
     readonly asGrantRole: {
@@ -2411,12 +2413,11 @@ declare module '@polkadot/types/lookup' {
       readonly spaceId: u64;
     } & Struct;
     readonly isResetProfile: boolean;
-    readonly isForceSetSpaceAsProfile: boolean;
-    readonly asForceSetSpaceAsProfile: {
-      readonly account: AccountId32;
-      readonly spaceIdOpt: Option<u64>;
+    readonly isCreateSpaceAsProfile: boolean;
+    readonly asCreateSpaceAsProfile: {
+      readonly content: SubsocialSupportContent;
     } & Struct;
-    readonly type: 'SetProfile' | 'ResetProfile' | 'ForceSetSpaceAsProfile';
+    readonly type: 'SetProfile' | 'ResetProfile' | 'CreateSpaceAsProfile';
   }
 
   /** @name PalletSpaceFollowsCall (266) */
@@ -2803,9 +2804,10 @@ declare module '@polkadot/types/lookup' {
     readonly isNoPermissionsProvided: boolean;
     readonly isNoUsersProvided: boolean;
     readonly isTooManyUsersToDeleteRole: boolean;
+    readonly isIncorrectUserCount: boolean;
     readonly isRoleAlreadyDisabled: boolean;
     readonly isRoleAlreadyEnabled: boolean;
-    readonly type: 'RoleNotFound' | 'RoleIdOverflow' | 'NoPermissionToManageRoles' | 'NoUpdatesProvided' | 'NoPermissionsProvided' | 'NoUsersProvided' | 'TooManyUsersToDeleteRole' | 'RoleAlreadyDisabled' | 'RoleAlreadyEnabled';
+    readonly type: 'RoleNotFound' | 'RoleIdOverflow' | 'NoPermissionToManageRoles' | 'NoUpdatesProvided' | 'NoPermissionsProvided' | 'NoUsersProvided' | 'TooManyUsersToDeleteRole' | 'IncorrectUserCount' | 'RoleAlreadyDisabled' | 'RoleAlreadyEnabled';
   }
 
   /** @name PalletAccountFollowsError (313) */
@@ -2821,9 +2823,8 @@ declare module '@polkadot/types/lookup' {
 
   /** @name PalletProfilesError (314) */
   interface PalletProfilesError extends Enum {
-    readonly isSocialAccountNotFound: boolean;
     readonly isNoSpaceSetAsProfile: boolean;
-    readonly type: 'SocialAccountNotFound' | 'NoSpaceSetAsProfile';
+    readonly type: 'NoSpaceSetAsProfile';
   }
 
   /** @name PalletSpaceFollowsError (316) */

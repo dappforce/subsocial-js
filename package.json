@@ -18,7 +18,7 @@
     "publish:docs": "yarn clean:build && ./scripts/generate-docs.sh",
     "publish:all": "yarn build && ./scripts/publish-all.sh",
     "get-metadata": "./scripts/get-metadata.sh",
-    "generate:defs": "lerna run generate --scope=@subsocial/definitions",
+    "generate:defs": "cd packages/definitions && node get-metadata.js && lerna run generate --scope=@subsocial/definitions",
     "clean": "lerna clean && yarn clean:build",
     "clean:modules": "lerna clean",
     "clean:build": "find . -name \"build\" -type d -prune -exec rm -rf '{}' +",
@@ -35,5 +35,5 @@
     "ts-jest": "^26.5.1",
     "typescript": "4.6.x"
   },
-  "version": "0.7.12"
+  "version": "0.7.13"
 }
