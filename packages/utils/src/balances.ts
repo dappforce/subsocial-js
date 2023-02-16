@@ -42,6 +42,7 @@ const num1M = num1K ** 2
 const num1B = num1K ** 3
 const num1T = num1K ** 4
 
+/** Shorten number format. For example, 1_000_000 becomes 1M  */
 export function toShortMoney ({ num, ...props }: ShortMoneyProps): string {
   if (num >= num1K && num < num1M) {
     return moneyToString({ num: num / num1K, ...props }) + 'K'
