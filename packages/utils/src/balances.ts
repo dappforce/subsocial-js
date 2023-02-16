@@ -2,10 +2,12 @@ import { formatBalance, formatNumber } from '@polkadot/util'
 import BN from 'bn.js'
 import BigNumber from 'bignumber.js'
 
+/** Extract decimals from the balance and converts it to human readable format */
 export const simpleFormatBalance = (balance: BN | string | number, decimals?: number, currency?: string, withUnit = true) => {
   const { unit, decimals: defaultDecimals } = formatBalance.getDefaults()
 
-  return formatBalance(balance, { decimals: decimals || defaultDecimals, forceUnit: currency || unit, withUnit })
+  const usedCurrency = currency || unit
+  return formatBalance(balance, { decimals: decimals || defaultDecimals, forceUnit: usedCurrency, withUnit: withUnit && usedCurrency })
 }
 
 const TEN_BN = new BigNumber(10)
