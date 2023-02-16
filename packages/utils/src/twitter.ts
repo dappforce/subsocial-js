@@ -1,4 +1,3 @@
-import { TweetPostContent } from './types/twitter'
 import Autolinker from 'autolinker'
 
 const BASE_TWITTER_URL = 'https://twitter.com'
