@@ -62,6 +62,7 @@ export class SubsocialApi implements ISubsocialApi {
     this._base = new BasicSubsocialApi(props)
   }
 
+  /** Create an instance of subsocial api with given config and connected substrate node */
   static async create ({ substrateNodeUrl, ...props }: CreateSubsocialApiProps) {
     const substrateApi = await getSubstrateApi(substrateNodeUrl)
     return new SubsocialApi({ substrateApi, ...props })
