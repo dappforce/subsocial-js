@@ -22,6 +22,6 @@ export const parseTwitterTextToMarkdown = (text: string) => {
   return parsed
 }
 
-export const createTwitterURL = (tweet: TweetPostContent) => {
+export const createTwitterURL = (tweet: { username: string; id: string }) => {
   return `${BASE_TWITTER_URL}/${tweet.username}/status/${tweet.id}`
 }
