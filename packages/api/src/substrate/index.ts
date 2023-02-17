@@ -1,7 +1,7 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { bool, GenericAccountId, Tuple } from '@polkadot/types';
-import { Space, SpaceId, Post, PostId, Reaction, ReactionId, RoleId, User } from '../types/substrate';
-import { getFirstOrUndefined, idToBn, isEmptyArray, newLogger, pluralize } from '@subsocial/utils';
+import { Space, Post, Reaction, RoleId, User } from '../types/substrate';
+import { asString, asStringArray, getFirstOrUndefined, idToBn, isEmptyArray, newLogger, pluralize } from '@subsocial/utils';
 import { asAccountId, getUniqueIds, SupportedSubstrateId, SupportedSubstrateResult } from '../utils';
 import { FindSpaceQuery, FindSpacesQuery, FindPostsQuery, FindPostQuery, visibilityFilter } from '../filters';
 import {
@@ -98,15 +98,16 @@ export class SubsocialSubstrateApi {
    *
    * @param accountId - An account id of desired reaction ids.
    *    
-   * @param structIds - An array of post ids of desired reaction ids.
+   * @param postIds - An array of post ids of desired reaction ids.
    *    
    * @returns An array of reaction ids aggregated from Subsocial blockchain. If no corresponding reaction ids to given
    * `accountId` and `structIds`, an empty array is returned.
    * 
    */  
-  async getReactionIdsByAccount (accountId: AnyAccountId, structIds: AnyPostId[]): Promise<ReactionId[]> {
-    const queryParams = structIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ accountId, idToBn(id) ]));
-    return this.queryPalletMulti({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
+  private async getReactionIdsByAccount (accountId: AnyAccountId, postIds: AnyPostId[]): Promise<string[]> {
+    const queryParams = postIds.map(id => new Tuple(registry, [ GenericAccountId, 'u64' ], [ accountId, idToBn(id) ]));
+    const ids = await this.queryPalletMulti({ pallet: 'reactions', storage: 'postReactionIdByAccount' }, queryParams)
+    return asStringArray(ids)
   }
 
   // ---------------------------------------------------------------------
@@ -343,8 +344,8 @@ export class SubsocialSubstrateApi {
    * `accountId` and `postId`, undefined is returned.
    * 
    */  
-  async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<ReactionId | undefined> {
-    return getFirstOrUndefined(await this.getReactionIdsByAccount(accountId, [ postId ]))
+  async getPostReactionIdByAccount (accountId: AnyAccountId, postId: AnyPostId): Promise<string | undefined> {
+    return getFirstOrUndefined(await this.getReactionIdsByAccount(accountId, [ postId ]))?.toString()
   }
 
   /**
@@ -360,7 +361,7 @@ export class SubsocialSubstrateApi {
    * `accountId` and and array of `postIds`, an empty array is returned.
    * 
    */  
-  async getPostReactionIdsByAccount (accountId: AnyAccountId, postIds: AnyPostId[]): Promise<ReactionId[]> {
+  async getPostReactionIdsByAccount (accountId: AnyAccountId, postIds: AnyPostId[]): Promise<string[]> {
     return this.getReactionIdsByAccount(accountId, postIds)
   }
 
@@ -370,21 +371,23 @@ export class SubsocialSubstrateApi {
   /**
    * Find and load next space id from Subsocial blockchain.
    *    
-   * @returns An integer of the next space id.
+   * @returns An string of the next space id.
    * 
    */  
-  async nextSpaceId (): Promise<SpaceId> {
-    return this.querySpaces('nextSpaceId')
+  async nextSpaceId (): Promise<string> {
+    const id = await this.querySpaces('nextSpaceId')
+    return asString(id)
   }
 
   /**
    * Find and load next post id from Subsocial blockchain.
    *    
-   * @returns An integer of the next post id.
+   * @returns An string of the next post id.
    * 
    */  
-  async nextPostId (): Promise<PostId> {
-    return this.queryPosts('nextPostId')
+  async nextPostId (): Promise<string> {
+    const id = await this.queryPosts('nextPostId')
+    return asString(id)
   }
 
   /**
@@ -396,8 +399,9 @@ export class SubsocialSubstrateApi {
    * post `id`, an empty array is returned.
    * 
    */  
-  async getReplyIdsByPostId (id: AnyPostId): Promise<PostId[]> {
-    return this.queryPosts('replyIdsByPostId', id);
+  async getReplyIdsByPostId (id: AnyPostId): Promise<string[]> {
+    const ids = await this.queryPosts('replyIdsByPostId', id);
+    return asStringArray(ids);
   }
 
   /**
@@ -409,8 +413,9 @@ export class SubsocialSubstrateApi {
    * account `id`, an empty array is returned.
    * 
    */  
-  async spaceIdsByOwner (id: AnyAccountId): Promise<SpaceId[]> {
-    return this.querySpaces('spaceIdsByOwner', asAccountId(id))
+  async spaceIdsByOwner (id: AnyAccountId): Promise<string[]> {
+    const ids = await this.querySpaces('spaceIdsByOwner', asAccountId(id))
+    return asStringArray(ids)
   }
 
   /**
@@ -422,8 +427,9 @@ export class SubsocialSubstrateApi {
    * account `id`, an empty array is returned.
    * 
    */  
-  async spaceIdsFollowedByAccount (id: AnyAccountId): Promise<SpaceId[]> {
-    return this.queryPallet({ pallet: 'spaceFollows', storage: 'spacesFollowedByAccount' }, asAccountId(id))
+  async spaceIdsFollowedByAccount (id: AnyAccountId): Promise<string[]> {
+    const ids = await this.queryPallet({ pallet: 'spaceFollows', storage: 'spacesFollowedByAccount' }, asAccountId(id))
+    return asStringArray(ids)
   }
 
   /**
@@ -435,8 +441,9 @@ export class SubsocialSubstrateApi {
    * space `id`, an empty array is returned.
    * 
    */  
-  async postIdsBySpaceId (id: AnySpaceId): Promise<PostId[]> {
-    return this.queryPosts('postIdsBySpaceId', id)
+  async postIdsBySpaceId (id: AnySpaceId): Promise<string[]> {
+    const ids = await this.queryPosts('postIdsBySpaceId', id)
+    return asStringArray(ids)
   }
 
   /**
@@ -447,8 +454,9 @@ export class SubsocialSubstrateApi {
    * @returns Data of profile space id from Subsocial blockchain. 
    * 
    */  
-  async profileSpaceIdByAccount (accountId: AnyAccountId): Promise<SpaceId> {
-    return this.queryProfiles('profileSpaceIdByAccount', accountId)
+  async profileSpaceIdByAccount (accountId: AnyAccountId): Promise<string> {
+    const id = await this.queryProfiles('profileSpaceIdByAccount', accountId)
+    return asString(id)
   }
 
   /**
@@ -460,8 +468,9 @@ export class SubsocialSubstrateApi {
    * array of `accountIds`, an empty array is returned.
    * 
    */  
-  async profileSpaceIdsByAccounts (accountIds: AnyAccountId[]): Promise<SpaceId[]> {
-    return this.queryPalletMulti({ pallet: 'profiles', storage: 'profileSpaceIdByAccount'}, accountIds)
+  async profileSpaceIdsByAccounts (accountIds: AnyAccountId[]): Promise<string[]> {
+    const ids = await this.queryPalletMulti({ pallet: 'profiles', storage: 'profileSpaceIdByAccount'}, accountIds)
+    return asStringArray(ids)
   }
 
   // ---------------------------------------------------------------------
