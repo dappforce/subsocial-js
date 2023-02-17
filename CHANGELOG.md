@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change the return type of ids in `api.blockchain` functions to string
 - Change argument of `createTwitterURL` to accept object with only required properties
+- Make `api.blockchain.getReactionIdsByAccount` private, because its same as `api.blockchain.getPostReactionIdsByAccount`
 
 ### Deprecated
 - Make `api.base` deprecated. All the functionality provided by it are all implemented in the top-level API. e.g. `api.base.findPost` <=> `api.findPost`
