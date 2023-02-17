@@ -52,10 +52,11 @@ function flattenCreatedField (struct: Pick<SuperCommonStruct, 'created'>): HasCr
 
 function flattenUpdatedField (struct: { updated?: Option<WhoAndWhen> }): HasUpdated {
   const updated = struct.updated?.unwrapOr(undefined)
+  if (!updated) return {}
   return {
-    updatedByAccount: updated?.account.toHuman(),
-    updatedAtBlock: updated?.block.toNumber(),
-    updatedAtTime: updated?.time.toNumber(),
+    updatedByAccount: updated?.account?.toHuman(),
+    updatedAtBlock: updated?.block?.toNumber(),
+    updatedAtTime: updated?.time?.toNumber(),
   }
 }
 
