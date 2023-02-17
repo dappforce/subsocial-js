@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+# 0.7.14 - 2023-02-17
+
+### Added
+- Add flatten function for reactions
+- Add `findReaction` and `findReactions` to top-level API (wrappers around `api.blockchain.findReaction` and `api.blockchain.findReactions`)
+- Add new type `ReactionStruct`
+
+### Fixed
+- Fix behavior of `simpleFormatBalance` `currency` argument not working
+
+### Changed
+- Change the return type of ids in `api.blockchain` functions to string
+- Change argument of `createTwitterURL` to accept object with only required properties
+
+### Deprecated
+- Make `api.base` deprecated. All the functionality provided by it are all implemented in the top-level API. e.g. `api.base.findPost` <=> `api.findPost`
+
 ## 0.7.13 - 2023-02-13
 ### Added
 - add `get-metadata.js` for definitions, for fast updating types after chain upgrades
