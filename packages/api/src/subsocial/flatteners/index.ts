@@ -50,8 +50,8 @@ function flattenCreatedField (struct: Pick<SuperCommonStruct, 'created'>): HasCr
   }
 }
 
-function flattenUpdatedField (struct: { updated: Option<WhoAndWhen> }): HasUpdated {
-  const updated = struct.updated.unwrapOr(undefined)
+function flattenUpdatedField (struct: { updated?: Option<WhoAndWhen> }): HasUpdated {
+  const updated = struct.updated?.unwrapOr(undefined)
   return {
     updatedByAccount: updated?.account.toHuman(),
     updatedAtBlock: updated?.block.toNumber(),
