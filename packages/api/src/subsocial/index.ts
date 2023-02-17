@@ -23,10 +23,14 @@ import {
   AnyId,
   SpaceStruct,
   PostStruct,
-  AnyAccountId, SubsocialApiProps, CreateSubsocialApiProps
+  AnyAccountId,
+  SubsocialApiProps,
+  CreateSubsocialApiProps,
+  AnyReactionId,
+  ReactionStruct
 } from '../types'
 import { getFirstOrUndefined, idsToBns, idToBn } from '@subsocial/utils'
-import { flattenSpaceStructs, flattenPostStructs, flattenDomainStructs } from './flatteners'
+import { flattenSpaceStructs, flattenPostStructs, flattenDomainStructs, flattenReaction, flattenReactions } from './flatteners'
 import { getSubstrateApi } from '../connections'
 
 export interface ISubsocialApi {
@@ -53,6 +57,9 @@ export interface ISubsocialApi {
 
   findProfileSpace: (accountId: AnyAccountId) => Promise<SpaceData | undefined>
   findProfileSpaces: (accountIds: AnyAccountId[]) => Promise<SpaceData[]>
+
+  findReaction: (id: AnyReactionId) => Promise<ReactionStruct | undefined>
+  findReactions: (id: AnyReactionId[]) => Promise<ReactionStruct[] | undefined>
 }
 
 export class SubsocialApi implements ISubsocialApi {
@@ -429,6 +436,17 @@ export class SubsocialApi implements ISubsocialApi {
    */  
   async findDomain (domainName: string) {
     return getFirstOrUndefined(await this.findDomains([domainName]))
+  }
+
+  async findReaction (id: AnyId) {
+    const reaction = await this.blockchain.findReaction(idToBn(id))
+    if (!reaction) return undefined
+    return flattenReaction(reaction)
+  }
+
+  async findReactions (id: AnyId[]) {
+    const reactions = await this.blockchain.findReactions(idsToBns(id))
+    return flattenReactions(reactions)
   }
   
 }
