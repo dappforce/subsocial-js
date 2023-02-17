@@ -74,12 +74,13 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /** 
+    * @deprecated
     * Getter for an ApiPromise to connect to Subsocial nodes and query chain states, but in raw format.
     * The raw formatted data needs to be flattened first in order to be readable by JavaScript.
     * 
     * Accessors for private field {@link _base}*/
   get base () {
-    return this._base 
+    return this._base
   }
 
    /** 
