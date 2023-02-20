@@ -5,7 +5,6 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 RUN yarn install \
-    && yarn clean:build \
     &&  yarn typedoc --theme default
 
 From oap75/serve-nginx
