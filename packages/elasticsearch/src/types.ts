@@ -1,24 +1,20 @@
 export type ElasticIndexTypes =
   'all' |
-  'profiles' |
   'spaces' |
   'posts'
 
 export type ElasticIndexName =
-  'subsocial_profiles' |
   'subsocial_spaces' |
   'subsocial_posts'
 
 export type IElasticIndex = Record<string, ElasticIndexName>
 
 export const ElasticIndex: IElasticIndex = {
-  profiles: 'subsocial_profiles',
   spaces: 'subsocial_spaces',
   posts: 'subsocial_posts',
 }
 
 export const AllElasticIndexes: ElasticIndexName[] = [
-  ElasticIndex.profiles,
   ElasticIndex.spaces,
   ElasticIndex.posts
 ]
@@ -26,9 +22,11 @@ export const AllElasticIndexes: ElasticIndexName[] = [
 export const ElasticFields = {
   space: {
     name: 'name',
+    /** @deprecated use `username` instead */
     handle: 'handle',
     about: 'about',
     tags: 'tags',
+    username: 'username'
   },
   post: {
     title: 'title',
@@ -37,10 +35,6 @@ export const ElasticFields = {
   },
   comment: {
     body: 'body',
-  },
-  profile: {
-    name: 'name',
-    about: 'about',
   },
 }
 
@@ -54,7 +48,9 @@ export type ElasticQueryParams = {
 
 export type ElasticSpaceDoc = {
   name?: string;
+  /** @deprecated use `username` instead */
   handle?: string;
+  username?: string;
   about?: string;
   tags?: string[];
 }
