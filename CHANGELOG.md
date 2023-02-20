@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-# 0.8.1 - 2023-02-17
+## 0.8.1 - 2023-02-17
 
 ### Added
 - Add flatten function for reactions
