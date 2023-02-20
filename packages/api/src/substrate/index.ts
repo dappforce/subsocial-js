@@ -371,7 +371,7 @@ export class SubsocialSubstrateApi {
   /**
    * Find and load next space id from Subsocial blockchain.
    *    
-   * @returns An string of the next space id.
+   * @returns A string of the next space id.
    * 
    */  
   async nextSpaceId (): Promise<string> {
@@ -382,7 +382,7 @@ export class SubsocialSubstrateApi {
   /**
    * Find and load next post id from Subsocial blockchain.
    *    
-   * @returns An string of the next post id.
+   * @returns A string of the next post id.
    * 
    */  
   async nextPostId (): Promise<string> {
