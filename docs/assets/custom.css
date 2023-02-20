@@ -1,0 +1,25 @@
+.container-main {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.col-menu {
+    border-left: transparent;
+    border-right: 1px solid var(--color-accent);
+}
+
+div.col-8.col-content {
+    padding-left: 16px;
+}
+
+div.col-4.col-menu.menu-sticky-wrap.menu-highlight {
+    /* apply css rules on content columns to menubar */
+    padding: 2rem 1rem 2rem 0;
+    margin: 2rem auto;
+}
+
+div.tsd-page-title > h2 {
+    /* aligns horizontally title h2 with left menubar */
+    margin: -0.2rem 0;
+    font-size: 1.875rem;
+}
