@@ -1,3 +1,4 @@
+/** Extract video id of link given. Current supported link format: youtube & youtu.be */
 export function extractVideoId(url: string): string | false {
   const regExp =
     /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -5,9 +6,11 @@ export function extractVideoId(url: string): string | false {
   return match && match[7].length == 11 ? match[7] : false;
 }
 
-export const allowEmbedList = [ 'vimeo', 'youtube', 'youtu.be', 'soundcloud' ]
+export const allowEmbedList = [ 'vimeo', 'youtube', 'youtu.be', 'soundcloud' ] as const
+export type AllowEmbedList = typeof allowEmbedList[number]
 
-export const getEmbedUrl = (url: string, embed: string | undefined) => {
+/** Generate embed url for video url given with the given embed format */
+export const getEmbedUrl = (url: string, embed: AllowEmbedList | undefined) => {
     if (!embed) return
 
     const urls: Record<string, string> = {
@@ -21,6 +24,7 @@ export const getEmbedUrl = (url: string, embed: string | undefined) => {
     return urls[embed]
 }
 
+/** Other supported social platform links */
 type SocialBrand =
     'facebook' |
     'twitter' |
@@ -77,6 +81,7 @@ const socialLinksRegExp: Record<SocialBrand, RegExp[]> = {
     ]
 }
 
+/** Check if the link is from the specific social brand given */
 export const isSocialBrandLink = (brand: SocialBrand, link: string): boolean => {
     if (!link) {
         return false
@@ -86,6 +91,7 @@ export const isSocialBrandLink = (brand: SocialBrand, link: string): boolean => 
     return !!socialLinksRegExp[brand].find(r => r.test(link))
 }
 
+/** Get the social platform where the link is originated */
 export const getLinkBrand = (link: string): LinkLabel | undefined => {
     for (const key in socialLinksRegExp) {
         const brand = key as SocialBrand

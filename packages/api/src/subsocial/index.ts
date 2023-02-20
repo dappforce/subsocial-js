@@ -23,10 +23,14 @@ import {
   AnyId,
   SpaceStruct,
   PostStruct,
-  AnyAccountId, SubsocialApiProps, CreateSubsocialApiProps
+  AnyAccountId,
+  SubsocialApiProps,
+  CreateSubsocialApiProps,
+  AnyReactionId,
+  ReactionStruct
 } from '../types'
 import { getFirstOrUndefined, idsToBns, idToBn } from '@subsocial/utils'
-import { flattenSpaceStructs, flattenPostStructs, flattenDomainStructs } from './flatteners'
+import { flattenSpaceStructs, flattenPostStructs, flattenDomainStructs, flattenReaction, flattenReactions } from './flatteners'
 import { getSubstrateApi } from '../connections'
 
 export interface ISubsocialApi {
@@ -53,6 +57,9 @@ export interface ISubsocialApi {
 
   findProfileSpace: (accountId: AnyAccountId) => Promise<SpaceData | undefined>
   findProfileSpaces: (accountIds: AnyAccountId[]) => Promise<SpaceData[]>
+
+  findReaction: (id: AnyReactionId) => Promise<ReactionStruct | undefined>
+  findReactions: (id: AnyReactionId[]) => Promise<ReactionStruct[] | undefined>
 }
 
 export class SubsocialApi implements ISubsocialApi {
@@ -62,6 +69,7 @@ export class SubsocialApi implements ISubsocialApi {
     this._base = new BasicSubsocialApi(props)
   }
 
+  /** Create an instance of subsocial api with given config and connected substrate node */
   static async create ({ substrateNodeUrl, ...props }: CreateSubsocialApiProps) {
     const substrateApi = await getSubstrateApi(substrateNodeUrl)
     return new SubsocialApi({ substrateApi, ...props })
@@ -73,12 +81,13 @@ export class SubsocialApi implements ISubsocialApi {
   }
 
   /** 
+    * @deprecated
     * Getter for an ApiPromise to connect to Subsocial nodes and query chain states, but in raw format.
     * The raw formatted data needs to be flattened first in order to be readable by JavaScript.
     * 
     * Accessors for private field {@link _base}*/
   get base () {
-    return this._base 
+    return this._base
   }
 
    /** 
@@ -427,6 +436,39 @@ export class SubsocialApi implements ISubsocialApi {
    */  
   async findDomain (domainName: string) {
     return getFirstOrUndefined(await this.findDomains([domainName]))
+  }
+
+
+  //------------------------------------------------
+  // Reactions
+
+
+  /**
+   * Find and load data about a reaction from the Subsocial blockchain by a given `id`.
+   * 
+   *
+   * @param id - The desired reaction id 
+   *
+   * @returns Data about the reaction consisting the reaction kind, creation, update metadata if any. If there is no
+   * reaction with given id, undefined is returned.
+   */
+  async findReaction (id: AnyId) {
+    const reaction = await this.blockchain.findReaction(idToBn(id))
+    if (!reaction) return undefined
+    return flattenReaction(reaction)
+  }
+
+  /**
+   * Find and load an array of information about a reactions from the Subsocial blockchain from all the given id in `ids` array.
+   * 
+   *
+   * @param ids - An array containing the desired reaction `ids`.
+   *
+   * @returns An array of data about desired reactions.
+   */  
+  async findReactions (id: AnyId[]) {
+    const reactions = await this.blockchain.findReactions(idsToBns(id))
+    return flattenReactions(reactions)
   }
   
 }

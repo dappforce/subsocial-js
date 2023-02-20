@@ -1,8 +1,8 @@
 import { Option } from '@polkadot/types/codec'
 import { PalletDomainsDomainMeta } from '@polkadot/types/lookup'
-import { Post, Space, SpacePermissionSet, SpacePermissions as BlockchainSpacePermissions } from '@subsocial/definitions/interfaces'
+import { Post, Space, SpacePermissionSet, SpacePermissions as BlockchainSpacePermissions, Reaction, WhoAndWhen } from '@subsocial/definitions/interfaces'
 import { notEmptyObj } from '@subsocial/utils'
-import { DomainStruct, SpacePermissionKey, SpacePermissionMap, SpacePermissions, SpacePermissionsKey } from '../../types'
+import { DomainStruct, HasCreated, HasUpdated, ReactionEnum, ReactionStruct, SpacePermissionKey, SpacePermissionMap, SpacePermissions, SpacePermissionsKey } from '../../types'
 import { CanHaveContent, CanHaveSpaceId, CommentExtension, CommentStruct, CommonContent, EntityData, EntityId, FlatPostExtension, FlatSuperCommon, HasId, HasOwner, PostStruct, SharedPostExtension, SharedPostStruct, SpaceOrPostStruct, SpaceStruct, SuperCommonStruct, FlatSpaceOrPost } from '../../types/'
 export * from './utils'
 
@@ -41,14 +41,28 @@ function getContentFields ({ content }: SuperCommonStruct): CanHaveContent {
   return res
 }
 
-export function flattenCommonFields (struct: SuperCommonStruct): FlatSuperCommon {
+function flattenCreatedField (struct: Pick<SuperCommonStruct, 'created'>): HasCreated {
   const { created } = struct
-
   return {
-    // created:
     createdByAccount: created.account.toHuman(),
     createdAtBlock: created.block.toNumber(),
     createdAtTime: created.time.toNumber(),
+  }
+}
+
+function flattenUpdatedField (struct: { updated?: Option<WhoAndWhen> }): HasUpdated {
+  const updated = struct.updated?.unwrapOr(undefined)
+  if (!updated) return {}
+  return {
+    updatedByAccount: updated?.account?.toHuman(),
+    updatedAtBlock: updated?.block?.toNumber(),
+    updatedAtTime: updated?.time?.toNumber(),
+  }
+}
+
+export function flattenCommonFields (struct: SuperCommonStruct): FlatSuperCommon {
+  return {
+    ...flattenCreatedField(struct),
 
     isUpdated: struct.edited.toHuman(),
     ...getContentFields(struct),
@@ -168,4 +182,17 @@ export function flattenDomainStruct (struct: PalletDomainsDomainMeta): DomainStr
 
 export function flattenDomainStructs (structs: PalletDomainsDomainMeta[]) {
   return structs.map(flattenDomainStruct)
+}
+
+export function flattenReaction (rawReaction: Reaction): ReactionStruct {
+  return {
+    ...flattenCreatedField(rawReaction),
+    ...flattenUpdatedField(rawReaction),
+    id: rawReaction.id.toString(),
+    kind: rawReaction.kind.isUpvote ? ReactionEnum.Upvote : ReactionEnum.Downvote,
+  }
+}
+
+export function flattenReactions (rawReactions: Reaction[]): ReactionStruct[] {
+  return rawReactions.map(flattenReaction)
 }

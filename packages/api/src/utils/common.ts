@@ -87,6 +87,7 @@ export const getPostIdFromExtension = (postData?: HasPostStruct): PostId | undef
 
 export const isIpfs = (content?: Content) => content && (content.isIpfs || (content as any).IPFS)
 
+/** Validate whether given string is a cid or not. Returns undefined if empty, and throws error if not a cid */
 export const asIpfsCid = (cid: IpfsCid): CID | undefined => {
   if (!cid) return undefined
 
@@ -101,6 +102,7 @@ export const asIpfsCid = (cid: IpfsCid): CID | undefined => {
   }
 }
 
+/** Check whether given string is a cid or not. */
 export const isValidIpfsCid = (cid: IpfsCid) => {
   try {
     return !!asIpfsCid(cid)

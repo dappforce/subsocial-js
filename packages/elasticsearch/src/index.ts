@@ -6,12 +6,12 @@ import { Client } from '@elastic/elasticsearch'
 const log = newLogger('Elastic')
 
 export type SubsocialElasticApiProps = {
- url: string,
- auth: {
-    username: string,
-     password: string
- }
- ssl: boolean
+    url: string,
+    auth: {
+        username: string,
+        password: string
+    }
+    ssl: boolean
 }
 
 type CommonIndexProps<T extends ElasticSpaceDoc | ElasticPostDoc> = {
@@ -64,7 +64,8 @@ export class SubsocialElasticApi {
                 name: c.name,
                 about: c.about,
                 tags: c.tags,
-                handle: c.handle
+                handle: c.handle,
+                username: c.username,
             }
         })
     }
