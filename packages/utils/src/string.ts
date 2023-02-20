@@ -16,4 +16,3 @@ export const asString = (x: { toString: () => string }): string => {
 export const asStringArray = (x: { toString: () => string }[]): string[] => {
   return x.map(asString)
 }
-  

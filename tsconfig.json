@@ -14,7 +14,7 @@
     "declaration": true,
   },
   "typedocOptions": {
-    "entryPoints": ["packages/api/src/subsocial/index.ts", "packages/api/src/substrate/index.ts"],
+    "entryPoints": ["packages/api/src/subsocial/index.ts", "packages/api/src/substrate/index.ts", "packages/utils/src/index.ts"],
     "out": "docs",
     "excludeExternals": true,
     "name": "Subsocial JS SDK",

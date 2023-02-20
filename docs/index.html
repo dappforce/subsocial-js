@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Subsocial JS SDK</title><meta name="description" content="Documentation for Subsocial JS SDK"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Subsocial JS SDK</title><meta name="description" content="Documentation for Subsocial JS SDK"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><link rel="stylesheet" href="assets/custom.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base=".">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -12,26 +12,37 @@
 <div class="col-8 col-content">
 <div class="tsd-page-title">
 <h2>Subsocial JS SDK</h2></div>
-<div class="tsd-panel tsd-typography">
-<a href="#subsocial-api-by-dappforce" id="subsocial-api-by-dappforce" style="color: inherit; text-decoration: none;">
-  <h1>Subsocial API by <a href="https://github.com/dappforce">DappForce</a></h1>
-</a>
-<p>JavaScript API wrappers for Substrate and IPFS specific to Subsocial blockchain.</p>
+<div class="tsd-panel tsd-typography"><p><a href="https://codeclimate.com/github/olehmell/subsocial-sdk"><img src="https://img.shields.io/codeclimate/maintainability-percentage/olehmell/subsocial-sdk?logo=code-climate&style=flat-square" alt="maintainability"></a></p>
 
-<a href="#install" id="install" style="color: inherit; text-decoration: none;">
-  <h2>Install</h2>
+<a href="#subsocial-js-sdk-by-dappforce" id="subsocial-js-sdk-by-dappforce" style="color: inherit; text-decoration: none;">
+  <h1>Subsocial JS SDK by <a href="https://github.com/dappforce">DappForce</a></h1>
 </a>
-<p>Using npm:</p>
-<pre><code class="language-bash"><span class="hl-0">npm i @subsocial/api</span>
-</code></pre>
-<p>Using yarn:</p>
-<pre><code class="language-bash"><span class="hl-0">yarn add @subsocial/api</span>
-</code></pre>
+<p>Subsocial&#39;s JS SDK is a library for building social networking applications on top of the Subsocial blockchain. The library will help developers easily interact with the Subsocial blockchain from their UI, without prior knowledge of Subsocial’s pallet implementations. Inside the library, you will find the APIs required to perform different operations on the blockchain, which are <a href="https://docs.subsocial.network/docs/develop/how-to-guides/apiTypes" target="_blank">detailed here</a>. </p>
+
+<a href="#what-is-subsocial" id="what-is-subsocial" style="color: inherit; text-decoration: none;">
+  <h2>What is Subsocial?</h2>
+</a>
+<p>Subsocial provides the back-end tech, allowing for easy deployment of decentralized social dapps that share a social graph and content base. Users own their content and social connections on Subsocial, which automatically solves most of the problems of web2 social networks. Applications built on Subsocial do not have to be specifically focused on social networking, as Subsocial can support dapps like YouTube, Shopify, or even Airbnb. You can learn more about Subsocial by reading the <a href="https://docs.subsocial.network/docs/basics/" target="_blank">lightpaper</a>.</p>
+
+<a href="#docs-amp-tools" id="docs-amp-tools" style="color: inherit; text-decoration: none;">
+  <h2>Docs &amp; Tools</h2>
+</a>
+<ul>
+<li><a href="https://docs.subsocial.network/docs/develop/developer-quickstart/" target="_blank">Subsocial Starter</a> – a React app template that helps you start building on Subsocial. It uses the SDK and hides away the boilerplate code and boring configuration.</li>
+<li><a href="https://docs.subsocial.network/docs/develop/sdk-cheatsheet/" target="_blank">SDK cheatsheet</a> – a short description of the most commonly used methods of the SDK.</li>
+<li><a href="https://js-sdk-api.subsocial.network/" target="_blank">TypeDoc API</a> – detailed documentation of the SDK where you can learn about all its methods, parameters, and interfaces; API references (Subsocial and Substrate API); JS objects; and more.</li>
+<li><a href="https://play.subsocial.network/" target="_blank">Playground</a> – an easy-to-use web app to experiment with Subsocial’s SDK. You can run different code samples and see the execution results.</li>
+</ul>
+
+<a href="#need-help" id="need-help" style="color: inherit; text-decoration: none;">
+  <h2>Need Help?</h2>
+</a>
+<p>In case you need help, the best way to reach us is through our <a href="https://t.me/+oUpF3nTHlCkwNzA6" target="_blank">Subsocial Devs</a> Telegram chat or <a href="https://discord.gg/avccqJAW3C" target="_blank">#developers channel</a> on our Discord server.</p>
 
 <a href="#license" id="license" style="color: inherit; text-decoration: none;">
   <h2>License</h2>
 </a>
-<p>Subsocial is <a href="./LICENSE">GPL 3.0</a> licensed.</p>
+<p>Subsocial JS SDK is <a href="./LICENSE">GPL 3.0</a> licensed.</p>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
@@ -53,6 +64,9 @@
 <ul>
 <li class="current selected"><a href="modules.html">Subsocial JS SDK</a>
 <ul>
-<li class="tsd-kind-module"><a href="modules/subsocial.html">subsocial</a></li>
-<li class="tsd-kind-module"><a href="modules/substrate.html">substrate</a></li></ul></li></ul></div></details></nav></div></div>
+<li class="tsd-kind-module"><a href="modules/api_src_subsocial.html">api/src/subsocial</a></li>
+<li class="tsd-kind-module"><a href="modules/api_src_substrate.html">api/src/substrate</a></li>
+<li class="tsd-kind-module"><a href="modules/utils_src.html">utils/src</a>
+<ul>
+<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="modules/utils_src.newLogger.html">new<wbr/>Logger</a></li></ul></li></ul></li></ul></div></details></nav></div></div>
 <div class="overlay"></div><script src="assets/main.js"></script></body></html>
