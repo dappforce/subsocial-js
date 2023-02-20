@@ -43,6 +43,12 @@ export type HasCreated = {
   createdAtTime: number
 }
 
+export type HasUpdated = {
+  updatedByAccount?: string
+  updatedAtBlock?: number
+  updatedAtTime?: number
+}
+
 export type CanBeUpdated = {
   isUpdated?: boolean
 }
@@ -82,6 +88,10 @@ export type PostStruct = FlatSpaceOrPost & CanHaveSpaceId & {
   isRegularPost: boolean
   isSharedPost: boolean
   isComment: boolean
+}
+
+export type ReactionStruct = FlatSuperCommon & HasId & HasUpdated & {
+  kind: ReactionEnum
 }
 
 export type CommentExtension = {

@@ -146,7 +146,7 @@ export class BasicSubsocialApi extends InnerSubsocialApi {
    */  
   async findProfileSpaces (accountIds: AnyAccountId[]) {
     const spaceIds = await this.substrate.profileSpaceIdsByAccounts(accountIds)
-    return this.findAllSpaces(bnsToIds(spaceIds))
+    return this.findAllSpaces(spaceIds)
   }
 
   // Functions that return a single element

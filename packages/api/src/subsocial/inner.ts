@@ -1,5 +1,5 @@
 import { IpfsSpaceContent, IpfsCommonContent, IpfsCid, IpfsPostContent } from '../types/ipfs';
-import { AnySpaceId, AnyPostId, CommonStruct,SubsocialApiProps, RawCommonData, RawPostData, RawSpaceData } from '../types';
+import { AnySpaceId, AnyPostId, CommonStruct,SubsocialApiProps, RawCommonData, RawPostData, RawSpaceData, ContentResult } from '../types';
 import { Space, Post } from '@subsocial/definitions/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from '../ipfs';
@@ -7,7 +7,6 @@ import { SubsocialSubstrateApi } from '../substrate';
 import { getUniqueIds, SupportedSubstrateId } from '../utils/common';
 import { FindPostQuery, FindSpacesQuery, FindPostsQuery, FindSpaceQuery } from '../filters';
 import { contentFilter } from '../filters/content-filter';
-import { ContentResult } from '../types';
 
 /** Using this class, you can get all the data of posts, spaces and profiles from blockchain storages and ipfs */
 export class InnerSubsocialApi {
