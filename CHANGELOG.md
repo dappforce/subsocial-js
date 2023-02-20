@@ -7,8 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-# 0.7.14 - 2023-02-17
-
 ### Added
 - Add flatten function for reactions
 - Add `findReaction` and `findReactions` to top-level API (wrappers around `api.blockchain.findReaction` and `api.blockchain.findReactions`)
