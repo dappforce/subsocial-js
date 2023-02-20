@@ -11,6 +11,7 @@ export type HasTitleOrBody = {
   body: string
 }
 
+/** Create slug from the content title or body, appended with the id at the end */
 export const createPostSlug = memoize((postId: string, content?: HasTitleOrBody) => {
   let slug: string = '' + postId
 
@@ -28,6 +29,7 @@ export const createPostSlug = memoize((postId: string, content?: HasTitleOrBody)
   return slug
 })
 
+/** Extract post id from the slug generated from `createPostSlug` */
 export const getPostIdFromSlug = (slug: string): string | undefined => {
   return slug.split(SLUG_SEPARATOR).pop()
 }

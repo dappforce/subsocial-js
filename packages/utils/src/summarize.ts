@@ -34,6 +34,11 @@ export const summarize = (
     })
 }
 
+/**
+ * Convert markdown to plain text and shorten it up to `limit` chars.
+ * 
+ * @returns `summary` and `isShowMore` flag which is `true` if the original text is longer than the summary.
+ */
 export const summarizeMd = (
   md: string,
   opts: SummarizeOpt = {}

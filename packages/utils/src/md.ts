@@ -25,6 +25,7 @@ export const buildMdToEntity = (processMd: ProccesMdFn)=>
       .replace(/&#x3A;/g, ':')
   }
 
+/** Convert text in markdown format to plain text */
 export const mdToText = buildMdToEntity(processMdToText)
 
 const processMdToHtml = remark()
@@ -32,4 +33,5 @@ const processMdToHtml = remark()
   .use(html)
   .processSync
 
+/** Convert text in markdown format to html text */
 export const mdToHtml = buildMdToEntity(processMdToHtml)
