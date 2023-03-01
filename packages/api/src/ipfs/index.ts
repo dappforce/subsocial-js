@@ -1,12 +1,14 @@
-import { Content, IpfsCid as RuntimeIpfsCid } from '@subsocial/definitions/interfaces';
-import { IpfsCommonContent, IpfsCommentContent, IpfsCid, ImportCandidate } from '../types/ipfs';
-import { newLogger, isEmptyArray } from '@subsocial/utils';
-import axios, {  } from 'axios';
-import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
-import { SubsocialContext, ContentResult, UseServerProps, CommonContent } from '../types';
-import { create, IPFSHTTPClient } from 'ipfs-http-client';
-import { u8aToHex } from '@polkadot/util'
-import { AnyJson } from '@polkadot/types-codec/types'
+import {Content, IpfsCid as RuntimeIpfsCid} from '@subsocial/definitions/interfaces';
+import {ImportCandidate, IpfsCid, IpfsCommentContent, IpfsCommonContent} from '../types/ipfs';
+import {isEmptyArray, newLogger} from '@subsocial/utils';
+import axios from 'axios';
+import {asIpfsCid, getUniqueIds, isIpfs} from '../utils/common';
+import {CommonContent, ContentResult, SubsocialContext, UseServerProps} from '../types';
+import {create, IPFSHTTPClient} from 'ipfs-http-client';
+import {u8aToHex} from '@polkadot/util'
+import {AnyJson} from '@polkadot/types-codec/types'
+
+const getIpfsUrl = (url: string) => url + '/api/v0'
 
 type HasContentField = {
   content: Content
@@ -68,6 +70,7 @@ export class SubsocialIpfsApi {
 
   /** IPFS node readonly gateway */
   private _client!: IPFSHTTPClient
+  private _adminClient!: IPFSHTTPClient
 
   private _ipfsNodeUrl: string
   private _ipfsAdminNodeUrl: string | undefined
@@ -82,9 +85,16 @@ export class SubsocialIpfsApi {
 
   private createIpfsClient (headers?: Headers) {
     this._client = create({
-      url: this._ipfsAdminNodeUrl || this._ipfsNodeUrl + '/api/v0',
+      url: getIpfsUrl(this._ipfsNodeUrl),
       headers
     })
+
+    this._adminClient = this._ipfsAdminNodeUrl
+      ? create({
+        url: getIpfsUrl(this._ipfsAdminNodeUrl),
+        headers
+      })
+      : this._client
   }
 
   constructor({ 
@@ -110,16 +120,17 @@ export class SubsocialIpfsApi {
     const sig = u8aToHex(auth.signedAddress)
 
     const authHeaderRaw = `sub-${auth.publicAddress}:${sig}`
-    const authToken = Buffer.from(authHeaderRaw).toString('base64')
-
-    return authToken
+    return Buffer.from(authHeaderRaw).toString('base64')
   }
 
   get client () {
     return this._client
   }
-  
 
+  get adminClient () {
+    return this._client
+  }
+  
   // ---------------------------------------------------------------------
   // Main interfaces
 
@@ -133,9 +144,7 @@ export class SubsocialIpfsApi {
   }
 
   async getContentArray<T extends IpfsCommonContent> (cids: IpfsCid[], timeout?: number): Promise<ContentResult<T>> {
-    return this.useServer
-      ? this.getContentArrayFromOffchain(cids, 'content')
-      : this.getContentArrayFromIpfs(cids, timeout)
+    return this.getContentArrayFromIpfs(cids, timeout)
   }
 
   async getContent<T extends IpfsCommonContent> (cid: IpfsCid, timeout?: number): Promise<T | undefined> {
@@ -221,40 +230,18 @@ export class SubsocialIpfsApi {
 
   /** Add content in IPFS using unixFs format*/
   async saveContentToIpfs(content: AnyJson | CommonContent) {
-    const data = await this.client.dag.put(content, { headers: this.writeHeaders })
+    const data = await this.adminClient.dag.put(content, { headers: this.writeHeaders })
     return data.toV1().toString()
   }
 
   /** Add file in IPFS */
   async saveFileToIpfs(file: ImportCandidate) {
-    const data = await this.client.add(file, { headers: this.writeHeaders })
+    const data = await this.adminClient.add(file, { headers: this.writeHeaders })
     return data.cid.toV1().toString()
   }
 
   // ---------------------------------------------------------------------
   // Offchain functionality
-
-  /** @deprecated Return object with contents from IPFS through offchain by cids array */
-  async getContentArrayFromOffchain<T extends IpfsCommonContent> (cids: IpfsCid[], contentName = 'content'): Promise<ContentResult<T>> {
-    try {
-
-      const res = this.useServer?.httpRequestMethod === 'get'
-        ? await axios.get(`${this.offchainUrl}/ipfs/get?cids=${cids.join('&cids=')}`)
-        : await axios.post(`${this.offchainUrl}/ipfs/get`, { cids })
-
-      if (res.status !== 200) {
-        log.error(`${this.getContentArrayFromIpfs.name}: Offchain server responded with status code ${res.status} and message: ${res.statusText}`)
-        return {}
-      }
-
-      const contents = res.data;
-      log.debug(`Loaded ${cids.length} ${contentName}`)
-      return contents;
-    } catch (error) {
-      log.error('Failed to get content from IPFS via Offchain API:', error)
-      return {};
-    }
-  }
 
   /** @deprecated Unpin content in IPFS via Offchain */
   async removeContent (cid: IpfsCid) {
