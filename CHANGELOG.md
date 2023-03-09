@@ -7,25 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.8.3 - 2023-03-09
 ### Added
 - add HTTP support for connecting to Substrate node
 
 ## 0.8.2 - 2023-03-02
-
 ### Added
 - add adminClient for IPFS instance for better management of IPFS
 
 ## 0.8.1 - 2023-02-17
-
 ### Added
 - Add flatten function for reactions
 - Add `findReaction` and `findReactions` to top-level API (wrappers around `api.blockchain.findReaction` and `api.blockchain.findReactions`)
 - Add new type `ReactionStruct`
 - Add new attribute `username` for Space in Elastic Index type
 - Add typedoc for `@subsocial/utils` package
-
-### Fixed
-- Fix behavior of `simpleFormatBalance` `currency` argument not working
 
 ### Changed
 - Change the return type of ids in `api.blockchain` functions to string
@@ -38,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Remove `profiles` from elastic index types
+
+### Fixed
+- Fix behavior of `simpleFormatBalance` `currency` argument not working
 
 ## 0.7.13 - 2023-02-13
 ### Added
