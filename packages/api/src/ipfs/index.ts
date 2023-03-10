@@ -2,21 +2,11 @@ import {
   Content,
   IpfsCid as RuntimeIpfsCid
 } from '@subsocial/definitions/interfaces'
-import {
-  ImportCandidate,
-  IpfsCid,
-  IpfsCommentContent,
-  IpfsCommonContent
-} from '../types/ipfs'
+import { ImportCandidate, IpfsCid, IpfsCommonContent } from '../types/ipfs'
 import { isEmptyArray, newLogger } from '@subsocial/utils'
 import axios from 'axios'
 import { asIpfsCid, getUniqueIds, isIpfs } from '../utils/common'
-import {
-  CommonContent,
-  ContentResult,
-  SubsocialContext,
-  UseServerProps
-} from '../types'
+import { CommonContent, ContentResult, SubsocialContext } from '../types'
 import { create, IPFSHTTPClient } from 'ipfs-http-client'
 import { u8aToHex } from '@polkadot/util'
 import { AnyJson } from '@polkadot/types-codec/types'
