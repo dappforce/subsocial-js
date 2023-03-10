@@ -78,6 +78,7 @@ export type SubsocialIpfsProps = SubsocialContext & {
   ipfsAdminNodeUrl?: IpfsUrl
   ipfsClusterUrl?: IpfsUrl
   offchainUrl?: string
+  headers?: Headers
 }
 
 /** Aggregated API to work with IPFS: get the content of the spaces of posts and profiles. */
@@ -92,8 +93,6 @@ export class SubsocialIpfsApi {
 
   /** Offchain gateway */
   private offchainUrl!: string
-  private useServer?: UseServerProps
-
   private writeHeaders: Headers | undefined
   private pinHeaders: Headers | undefined
 
@@ -116,17 +115,16 @@ export class SubsocialIpfsApi {
     ipfsAdminNodeUrl,
     ipfsClusterUrl,
     offchainUrl,
-    useServer
+    headers
   }: SubsocialIpfsProps) {
     this._ipfsClusterUrl = ipfsClusterUrl
     this._ipfsAdminNodeUrl = ipfsAdminNodeUrl
     this._ipfsNodeUrl = ipfsNodeUrl
 
-    this.createIpfsClient()
+    this.createIpfsClient(headers)
 
     if (offchainUrl) {
       this.offchainUrl = `${offchainUrl}/v1`
-      this.useServer = useServer
     }
   }
 
@@ -172,18 +170,6 @@ export class SubsocialIpfsApi {
     return content[cid.toString()]
   }
 
-  async saveContent(content?: AnyJson | IpfsCommentContent) {
-    return this.useServer
-      ? this.saveContentToOffchain(content as IpfsCommentContent)
-      : this.saveContentToIpfs(content)
-  }
-
-  async saveFile(file: Blob | File) {
-    return this.useServer
-      ? this.saveFileToOffchain(file)
-      : this.saveFileToIpfs(file)
-  }
-
   // --------------------------------------------------------------------
   // IPFS functionality
 
@@ -203,7 +189,9 @@ export class SubsocialIpfsApi {
         const isCbor = cid.code === CID_KIND.CBOR
 
         if (isCbor) {
-          const res = await this.client.dag.get(cid, { timeout })
+          const res = await this.client.dag.get(cid, {
+            timeout
+          })
           content[cidStr] = res.value
         } else {
           const res = await axios.get(
@@ -259,7 +247,7 @@ export class SubsocialIpfsApi {
   }
 
   /** Add content in IPFS using unixFs format*/
-  async saveContentToIpfs(content: AnyJson | CommonContent) {
+  async saveContent(content: AnyJson | CommonContent) {
     const data = await this.adminClient.dag.put(content, {
       headers: this.writeHeaders
     })
@@ -267,7 +255,7 @@ export class SubsocialIpfsApi {
   }
 
   /** Add file in IPFS */
-  async saveFileToIpfs(file: ImportCandidate) {
+  async saveFile(file: ImportCandidate) {
     const data = await this.adminClient.add(file, {
       headers: this.writeHeaders
     })
