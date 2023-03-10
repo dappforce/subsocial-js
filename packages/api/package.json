@@ -26,7 +26,7 @@
     "@subsocial/definitions": "latest",
     "@subsocial/utils": "latest",
     "axios": "^0.24.0",
-    "ipfs-http-client": "60.0.0"
+    "ipfs-http-client": "52.0.5"
   },
   "scripts": {
     "build": "tsc && cp ./README.md ./build",
