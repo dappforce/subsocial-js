@@ -108,6 +108,8 @@ export class SubsocialIpfsApi {
           headers
         })
       : this._client
+
+    this.writeHeaders = headers
   }
 
   constructor({
@@ -122,6 +124,7 @@ export class SubsocialIpfsApi {
     this._ipfsNodeUrl = ipfsNodeUrl
 
     this.createIpfsClient(headers)
+    this.pinHeaders = headers
 
     if (offchainUrl) {
       this.offchainUrl = `${offchainUrl}/v1`
@@ -147,7 +150,6 @@ export class SubsocialIpfsApi {
   // Main interfaces
 
   setWriteHeaders(headers: Headers) {
-    this.writeHeaders = headers
     this.createIpfsClient(headers)
   }
 
