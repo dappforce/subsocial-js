@@ -216,9 +216,10 @@ export class SubsocialIpfsApi {
   }
 
   /** Pin content in IPFS */
-  async pinContent(cid: IpfsCid) {
+  async pinContent(cid: IpfsCid, properties?: Record<any, any>) {
     const data = JSON.stringify({
-      cid: cid.toString()
+      cid: cid.toString(),
+      ...properties
     })
 
     const res = await axios.post(this._ipfsClusterUrl + '/pins/', data, {
@@ -231,7 +232,7 @@ export class SubsocialIpfsApi {
   }
 
   /** Unpin content in IPFS */
-  async unpinContentFromIpfs(cid: IpfsCid) {
+  async unpinContent(cid: IpfsCid) {
     const res = await axios.delete(
       this._ipfsClusterUrl + '/pins/' + cid.toString(),
       {
