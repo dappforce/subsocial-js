@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- deprecated `useServer` for IPFS
+- add headers for IPFS constructor
+
 ## 0.8.3 - 2023-03-09
 ### Added
 - add HTTP support for connecting to Substrate node
