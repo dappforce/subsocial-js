@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.8.6-beta.1",
+  "version": "0.8.6-beta.2",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "index.js",
