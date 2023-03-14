@@ -212,10 +212,10 @@ export class SubsocialIpfsApi {
 
   /** Pin content in IPFS */
   async pinContent(cid: IpfsCid, properties?: Record<any, any>) {
-    const data = JSON.stringify({
+    const data = {
       cid: cid.toString(),
       ...properties
-    })
+    }
 
     const res = await axios.post(this._ipfsClusterUrl + '/pins/', data, {
       headers: this.pinHeaders
