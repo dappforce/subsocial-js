@@ -77,12 +77,12 @@ export class SubsocialIpfsApi {
   private _client!: IPFSHTTPClient
   private _adminClient!: IPFSHTTPClient
 
-  private _ipfsNodeUrl: string
-  private _ipfsAdminNodeUrl: string | undefined
-  private _ipfsClusterUrl: string | undefined
+  private readonly _ipfsNodeUrl: string
+  private readonly _ipfsAdminNodeUrl: string | undefined
+  private readonly _ipfsClusterUrl: string | undefined
 
   /** Offchain gateway */
-  private offchainUrl!: string
+  private readonly offchainUrl!: string
   private writeHeaders: Headers | undefined
   private pinHeaders: Headers | undefined
 
@@ -176,33 +176,36 @@ export class SubsocialIpfsApi {
       const content: ContentResult<T> = {}
 
       const loadContentFns = ipfsCids.map(async cid => {
-        const cidStr = cid.toString()
+        try {
+          const cidStr = cid.toString()
 
-        const isCbor = cid.code === CID_KIND.CBOR
+          const isCbor = cid.code === CID_KIND.CBOR
 
-        if (isCbor) {
-          const res = await this.client.dag.get(cid, {
-            timeout
-          })
-          content[cidStr] = res.value
-        } else {
-          const res = await axios.get(
-            `${this._ipfsNodeUrl}/ipfs/${cid.toV1()}?timeout=${timeout}`,
-            {
-              responseType: 'arraybuffer'
+          if (isCbor) {
+            const res = await this.client.dag.get(cid, {
+              timeout
+            })
+            content[cidStr] = res.value
+          } else {
+            const res = await axios.get(
+              `${this._ipfsNodeUrl}/ipfs/${cid.toV1()}?timeout=${timeout}`
+            )
+            const data = res.data
+
+            if (typeof data === 'object') {
+              content[cidStr] = data
             }
-          )
-
-          const data = new Uint8Array(res.data)
-          content[cidStr] = JSON.parse(String.fromCharCode(...data))
+          }
+        } catch (err) {
+          log.error(`Failed to load cid ${cid.toString()}:`, err)
         }
       })
 
-      await Promise.all(loadContentFns)
+      await Promise.allSettled(loadContentFns)
       log.debug(`Loaded ${cids.length} cid(s)`)
       return content
     } catch (err) {
-      console.error(`Failed to load ${cids.length} cid(s):`, err)
+      log.error(`Failed to load ${cids.length} cid(s):`, err)
       return {}
     }
   }
@@ -221,6 +224,8 @@ export class SubsocialIpfsApi {
     if (res.status === 200) {
       log.debug(`CID ${cid.toString()} was pinned to ${this._ipfsClusterUrl}`)
     }
+
+    return res
   }
 
   /** Unpin content in IPFS */
@@ -237,6 +242,8 @@ export class SubsocialIpfsApi {
         `CID ${cid.toString()} was unpinned from ${this._ipfsClusterUrl}`
       )
     }
+
+    return res
   }
 
   /** Add content in IPFS using unixFs format*/
