@@ -10,7 +10,7 @@ import { CommonContent, ContentResult, SubsocialContext } from '../types'
 import { create, IPFSHTTPClient } from 'ipfs-http-client'
 import { u8aToHex } from '@polkadot/util'
 import { AnyJson } from '@polkadot/types-codec/types'
-
+import sortJson from 'sort-json'
 const getIpfsUrl = (url: string) => url + '/api/v0'
 
 type HasContentField = {
@@ -246,7 +246,7 @@ export class SubsocialIpfsApi {
     return res
   }
 
-  /** Add content in IPFS using unixFs format*/
+  /** Add content in IPFS using Crob format*/
   async saveContent(content: AnyJson | CommonContent) {
     const data = await this.adminClient.dag.put(content, {
       headers: this.writeHeaders
@@ -254,9 +254,19 @@ export class SubsocialIpfsApi {
     return data.toV1().toString()
   }
 
-  /** Add file in IPFS */
+  /** Add file in IPFS using unixFs */
   async saveFile(file: ImportCandidate) {
     const data = await this.adminClient.add(file, {
+      headers: this.writeHeaders
+    })
+    return data.cid.toV1().toString()
+  }
+
+  /** Add JSON in IPFS using unixFs */
+  async saveJson(json: AnyJson) {
+    const minifiedJson = JSON.stringify(sortJson(json, { depth: 3 }))
+
+    const data = await this.adminClient.add(minifiedJson, {
       headers: this.writeHeaders
     })
     return data.cid.toV1().toString()

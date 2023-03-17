@@ -26,7 +26,8 @@
     "@subsocial/definitions": "latest",
     "@subsocial/utils": "latest",
     "axios": "^0.24.0",
-    "ipfs-http-client": "56.0.3"
+    "ipfs-http-client": "56.0.3",
+    "sort-json": "^2.0.1"
   },
   "scripts": {
     "build": "tsc && cp ./README.md ./build",
@@ -40,5 +41,8 @@
     "kusama",
     "ipfs"
   ],
-  "gitHead": "fb1408775bb4a66b694a32090f9d7115b6c68f70"
+  "gitHead": "fb1408775bb4a66b694a32090f9d7115b6c68f70",
+  "devDependencies": {
+    "@types/sort-json": "^2.0.1"
+  }
 }
