@@ -2,15 +2,15 @@ import {
   Content,
   IpfsCid as RuntimeIpfsCid
 } from '@subsocial/definitions/interfaces'
-import { ImportCandidate, IpfsCid, IpfsCommonContent } from '../types/ipfs'
+import { ImportCandidate, IpfsCid, IpfsCommonContent } from '../types'
 import { isEmptyArray, newLogger } from '@subsocial/utils'
 import axios from 'axios'
-import { asIpfsCid, getUniqueIds, isIpfs } from '../utils/common'
+import { asIpfsCid, getUniqueIds, isIpfs } from '../utils'
 import { CommonContent, ContentResult, SubsocialContext } from '../types'
 import { create, IPFSHTTPClient } from 'ipfs-http-client'
 import { u8aToHex } from '@polkadot/util'
 import { AnyJson } from '@polkadot/types-codec/types'
-
+import jsonStringify from 'json-stable-stringify'
 const getIpfsUrl = (url: string) => url + '/api/v0'
 
 type HasContentField = {
@@ -246,7 +246,7 @@ export class SubsocialIpfsApi {
     return res
   }
 
-  /** Add content in IPFS using unixFs format*/
+  /** Add content in IPFS using Crob format*/
   async saveContent(content: AnyJson | CommonContent) {
     const data = await this.adminClient.dag.put(content, {
       headers: this.writeHeaders
@@ -254,9 +254,17 @@ export class SubsocialIpfsApi {
     return data.toV1().toString()
   }
 
-  /** Add file in IPFS */
+  /** Add file in IPFS using unixFs */
   async saveFile(file: ImportCandidate) {
     const data = await this.adminClient.add(file, {
+      headers: this.writeHeaders
+    })
+    return data.cid.toV1().toString()
+  }
+
+  /** Add JSON in IPFS using unixFs */
+  async saveJson(json: Record<any, any>) {
+    const data = await this.adminClient.add(jsonStringify(json), {
       headers: this.writeHeaders
     })
     return data.cid.toV1().toString()
