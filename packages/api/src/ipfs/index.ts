@@ -2,21 +2,11 @@ import {
   Content,
   IpfsCid as RuntimeIpfsCid
 } from '@subsocial/definitions/interfaces'
-import {
-  ImportCandidate,
-  IpfsCid,
-  IpfsCommentContent,
-  IpfsCommonContent
-} from '../types/ipfs'
+import { ImportCandidate, IpfsCid, IpfsCommonContent } from '../types/ipfs'
 import { isEmptyArray, newLogger } from '@subsocial/utils'
 import axios from 'axios'
 import { asIpfsCid, getUniqueIds, isIpfs } from '../utils/common'
-import {
-  CommonContent,
-  ContentResult,
-  SubsocialContext,
-  UseServerProps
-} from '../types'
+import { CommonContent, ContentResult, SubsocialContext } from '../types'
 import { create, IPFSHTTPClient } from 'ipfs-http-client'
 import { u8aToHex } from '@polkadot/util'
 import { AnyJson } from '@polkadot/types-codec/types'
@@ -78,6 +68,7 @@ export type SubsocialIpfsProps = SubsocialContext & {
   ipfsAdminNodeUrl?: IpfsUrl
   ipfsClusterUrl?: IpfsUrl
   offchainUrl?: string
+  headers?: Headers
 }
 
 /** Aggregated API to work with IPFS: get the content of the spaces of posts and profiles. */
@@ -86,14 +77,12 @@ export class SubsocialIpfsApi {
   private _client!: IPFSHTTPClient
   private _adminClient!: IPFSHTTPClient
 
-  private _ipfsNodeUrl: string
-  private _ipfsAdminNodeUrl: string | undefined
-  private _ipfsClusterUrl: string | undefined
+  private readonly _ipfsNodeUrl: string
+  private readonly _ipfsAdminNodeUrl: string | undefined
+  private readonly _ipfsClusterUrl: string | undefined
 
   /** Offchain gateway */
-  private offchainUrl!: string
-  private useServer?: UseServerProps
-
+  private readonly offchainUrl!: string
   private writeHeaders: Headers | undefined
   private pinHeaders: Headers | undefined
 
@@ -109,6 +98,8 @@ export class SubsocialIpfsApi {
           headers
         })
       : this._client
+
+    this.writeHeaders = headers
   }
 
   constructor({
@@ -116,17 +107,17 @@ export class SubsocialIpfsApi {
     ipfsAdminNodeUrl,
     ipfsClusterUrl,
     offchainUrl,
-    useServer
+    headers
   }: SubsocialIpfsProps) {
     this._ipfsClusterUrl = ipfsClusterUrl
     this._ipfsAdminNodeUrl = ipfsAdminNodeUrl
     this._ipfsNodeUrl = ipfsNodeUrl
 
-    this.createIpfsClient()
+    this.createIpfsClient(headers)
+    this.pinHeaders = headers
 
     if (offchainUrl) {
       this.offchainUrl = `${offchainUrl}/v1`
-      this.useServer = useServer
     }
   }
 
@@ -149,7 +140,6 @@ export class SubsocialIpfsApi {
   // Main interfaces
 
   setWriteHeaders(headers: Headers) {
-    this.writeHeaders = headers
     this.createIpfsClient(headers)
   }
 
@@ -172,18 +162,6 @@ export class SubsocialIpfsApi {
     return content[cid.toString()]
   }
 
-  async saveContent(content?: AnyJson | IpfsCommentContent) {
-    return this.useServer
-      ? this.saveContentToOffchain(content as IpfsCommentContent)
-      : this.saveContentToIpfs(content)
-  }
-
-  async saveFile(file: Blob | File) {
-    return this.useServer
-      ? this.saveFileToOffchain(file)
-      : this.saveFileToIpfs(file)
-  }
-
   // --------------------------------------------------------------------
   // IPFS functionality
 
@@ -198,40 +176,46 @@ export class SubsocialIpfsApi {
       const content: ContentResult<T> = {}
 
       const loadContentFns = ipfsCids.map(async cid => {
-        const cidStr = cid.toString()
+        try {
+          const cidStr = cid.toString()
 
-        const isCbor = cid.code === CID_KIND.CBOR
+          const isCbor = cid.code === CID_KIND.CBOR
 
-        if (isCbor) {
-          const res = await this.client.dag.get(cid, { timeout })
-          content[cidStr] = res.value
-        } else {
-          const res = await axios.get(
-            `${this._ipfsNodeUrl}/ipfs/${cid.toV1()}?timeout=${timeout}`,
-            {
-              responseType: 'arraybuffer'
+          if (isCbor) {
+            const res = await this.client.dag.get(cid, {
+              timeout
+            })
+            content[cidStr] = res.value
+          } else {
+            const res = await axios.get(
+              `${this._ipfsNodeUrl}/ipfs/${cid.toV1()}?timeout=${timeout}`
+            )
+            const data = res.data
+
+            if (typeof data === 'object') {
+              content[cidStr] = data
             }
-          )
-
-          const data = new Uint8Array(res.data)
-          content[cidStr] = JSON.parse(String.fromCharCode(...data))
+          }
+        } catch (err) {
+          log.error(`Failed to load cid ${cid.toString()}:`, err)
         }
       })
 
-      await Promise.all(loadContentFns)
+      await Promise.allSettled(loadContentFns)
       log.debug(`Loaded ${cids.length} cid(s)`)
       return content
     } catch (err) {
-      console.error(`Failed to load ${cids.length} cid(s):`, err)
+      log.error(`Failed to load ${cids.length} cid(s):`, err)
       return {}
     }
   }
 
   /** Pin content in IPFS */
-  async pinContent(cid: IpfsCid) {
-    const data = JSON.stringify({
-      cid: cid.toString()
-    })
+  async pinContent(cid: IpfsCid, properties?: Record<any, any>) {
+    const data = {
+      cid: cid.toString(),
+      ...properties
+    }
 
     const res = await axios.post(this._ipfsClusterUrl + '/pins/', data, {
       headers: this.pinHeaders
@@ -240,10 +224,12 @@ export class SubsocialIpfsApi {
     if (res.status === 200) {
       log.debug(`CID ${cid.toString()} was pinned to ${this._ipfsClusterUrl}`)
     }
+
+    return res
   }
 
   /** Unpin content in IPFS */
-  async unpinContentFromIpfs(cid: IpfsCid) {
+  async unpinContent(cid: IpfsCid) {
     const res = await axios.delete(
       this._ipfsClusterUrl + '/pins/' + cid.toString(),
       {
@@ -256,10 +242,12 @@ export class SubsocialIpfsApi {
         `CID ${cid.toString()} was unpinned from ${this._ipfsClusterUrl}`
       )
     }
+
+    return res
   }
 
   /** Add content in IPFS using unixFs format*/
-  async saveContentToIpfs(content: AnyJson | CommonContent) {
+  async saveContent(content: AnyJson | CommonContent) {
     const data = await this.adminClient.dag.put(content, {
       headers: this.writeHeaders
     })
@@ -267,7 +255,7 @@ export class SubsocialIpfsApi {
   }
 
   /** Add file in IPFS */
-  async saveFileToIpfs(file: ImportCandidate) {
+  async saveFile(file: ImportCandidate) {
     const data = await this.adminClient.add(file, {
       headers: this.writeHeaders
     })
