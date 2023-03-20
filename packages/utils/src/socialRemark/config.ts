@@ -2,16 +2,20 @@ import {
   SocialRemarkMessageAction,
   SocialRemarkMessageProtocolName,
   SocialRemarkMessageVersion
-} from './types';
+} from './types'
 
 export type SocialRemarkConfigData = {
-  protNames?: Array<SocialRemarkMessageProtocolName>;
-  actions?: SocialRemarkMessageAction[];
-  versions?: SocialRemarkMessageVersion[];
-};
+  protNames?: Array<SocialRemarkMessageProtocolName>
+  actions?: SocialRemarkMessageAction[]
+  versions?: SocialRemarkMessageVersion[]
+}
 
+/**
+ * SocialRemark config which will be used as global config for all
+ * SocialRemark instances
+ */
 export class SocialRemarkConfig {
-  private static instance: SocialRemarkConfig;
+  private static instance: SocialRemarkConfig
 
   private conf: Required<SocialRemarkConfigData> = {
     protNames: ['social'],
@@ -24,23 +28,23 @@ export class SocialRemarkConfig {
       'NRG_GEN_REFUND'
     ],
     versions: ['0.1']
-  };
+  }
 
   static getInstance(): SocialRemarkConfig {
     if (!SocialRemarkConfig.instance) {
-      SocialRemarkConfig.instance = new SocialRemarkConfig();
+      SocialRemarkConfig.instance = new SocialRemarkConfig()
     }
-    return SocialRemarkConfig.instance;
+    return SocialRemarkConfig.instance
   }
 
   public get config() {
-    return this.conf;
+    return this.conf
   }
 
   public setConfig(data: SocialRemarkConfigData) {
     this.conf = {
       ...this.conf,
       ...data
-    };
+    }
   }
 }

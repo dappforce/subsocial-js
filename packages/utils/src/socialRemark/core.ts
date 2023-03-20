@@ -6,81 +6,109 @@ import {
   SocialRemarkMessageProtocolName,
   SocialRemarkMessageVersion,
   SubSclSource
-} from './types';
-import { SocialRemarkConfig, SocialRemarkConfigData } from './config';
-import { decorateRemarkContentValue } from './decorators';
+} from './types'
+import { SocialRemarkConfig, SocialRemarkConfigData } from './config'
+import { decorateRemarkContentValue } from './decorators'
 
 export class SocialRemark {
-  private maybeRemarkMsg: unknown;
+  private maybeRemarkMsg: unknown
 
+  /**
+   * Set global config for all new SocialRemark instances
+   * @param data: SocialRemarkConfigData
+   */
   static setConfig(data: SocialRemarkConfigData) {
-    SocialRemarkConfig.getInstance().setConfig(data);
+    SocialRemarkConfig.getInstance().setConfig(data)
   }
 
   private msgParsed: SocialRemarkMessage<
     SocialRemarkMessageAction,
     boolean
-  > | null = null;
+  > | null = null
 
   private protNames: Set<SocialRemarkMessageProtocolName> = new Set(
     SocialRemarkConfig.getInstance().config.protNames
-  );
+  )
 
   private versions: Set<SocialRemarkMessageVersion> = new Set(
     SocialRemarkConfig.getInstance().config.versions
-  );
+  )
 
   private actions: Set<SocialRemarkMessageAction> = new Set(
     SocialRemarkConfig.getInstance().config.actions
-  );
+  )
 
-  private msgDelimiter: string = '::';
+  private msgDelimiter: string = '::'
 
+  /**
+   * Get SocialRemark full data, if it's available. Otherwise, go throw error.
+   */
   public get message():
     | SocialRemarkMessage<SocialRemarkMessageAction, boolean>
     | never {
-    if (!this.msgParsed) throw new Error('Message is not available.');
-    return this.msgParsed!;
+    if (!this.msgParsed) throw new Error('Message is not available.')
+    return this.msgParsed!
   }
 
+  /**
+   * Get SocialRemark instance message content, if it's valid and available.
+   */
   public get content() {
     return this.msgParsed && this.msgParsed.valid
       ? this.msgParsed.content
-      : null;
+      : null
   }
 
+  /**
+   * Get SocialRemark instance version, if it's valid and available.
+   */
   public get version() {
-    return this.msgParsed ? this.msgParsed.version : null;
+    return this.msgParsed ? this.msgParsed.version : null
   }
 
+  /**
+   * Is SocialRemark valid.
+   */
   public get isValidMessage(): boolean {
-    return !!this.msgParsed && this.msgParsed.valid;
+    return !!this.msgParsed && this.msgParsed.valid
   }
 
+  /**
+   * Convert bytes to string.
+   * @param src: unknown
+   */
   static bytesToString(src: unknown): string {
-    if (!src || !Buffer.isBuffer(src)) return '';
-    return Buffer.from(src).toString('utf-8');
+    if (!src || !Buffer.isBuffer(src)) return ''
+    return Buffer.from(src).toString('utf-8')
   }
 
+  /**
+   * Create SocialRemark from raw string remark message.
+   * @param maybeRemarkMsg: unknown
+   */
   public fromMessage(maybeRemarkMsg: unknown): SocialRemark {
-    this.maybeRemarkMsg = maybeRemarkMsg;
-    this.parseMsg(maybeRemarkMsg);
-    return this;
+    this.maybeRemarkMsg = maybeRemarkMsg
+    this.parseMsg(maybeRemarkMsg)
+    return this
   }
 
+  /**
+   * Create SocialRemark from source map.
+   * @param rmrkSrc: SubSclSource<SocialRemarkMessageAction>
+   */
   public fromSource(
     rmrkSrc: SubSclSource<SocialRemarkMessageAction>
   ): SocialRemark {
-    this.isRemarkSourceValid(rmrkSrc);
+    this.isRemarkSourceValid(rmrkSrc)
 
     try {
       this.msgParsed = {
         ...rmrkSrc,
         valid: true
-      };
+      }
       const contentPropsMap =
         // @ts-ignore
-        REMARK_CONTENT_VERSION_ACTION_MAP[rmrkSrc.version][rmrkSrc.action];
+        REMARK_CONTENT_VERSION_ACTION_MAP[rmrkSrc.version][rmrkSrc.action]
       for (const contentPropName in contentPropsMap) {
         // @ts-ignore
         this.msgParsed.content[contentPropName] = decorateRemarkContentValue(
@@ -88,32 +116,33 @@ export class SocialRemark {
           contentPropName as RemarkContentProps,
           // @ts-ignore
           rmrkSrc.content[contentPropName]
-        );
+        )
       }
     } catch (e) {
-      console.log(e);
-      throw new Error(
-        'Error has been occurred during remark message creation.'
-      );
+      console.log(e)
+      throw new Error('Error has been occurred during remark message creation.')
     }
-    return this;
+    return this
   }
 
+  /**
+   * Encode SocialRemark message to remark string.
+   */
   public toMessage(): string {
     if (!this.isValidMessage)
-      throw new Error('Remark is not valid for build message.');
+      throw new Error('Remark is not valid for build message.')
 
-    const msg: string[] = [];
-    msg.push(this.message.protName);
-    msg.push(this.message.version);
-    msg.push(this.message.action);
+    const msg: string[] = []
+    msg.push(this.message.protName)
+    msg.push(this.message.version)
+    msg.push(this.message.action)
 
     try {
       const contentPropsMap =
         // @ts-ignore
         REMARK_CONTENT_VERSION_ACTION_MAP[this.message.version][
           this.message.action
-        ];
+        ]
       for (const contentPropName in contentPropsMap) {
         // @ts-ignore
         msg[contentPropsMap[contentPropName]] = decorateRemarkContentValue(
@@ -121,17 +150,15 @@ export class SocialRemark {
           contentPropName as RemarkContentProps,
           // @ts-ignore
           this.message.content[contentPropName]
-        );
+        )
       }
     } catch (e) {
-      console.log(e);
-      throw new Error(
-        'Error has been occurred during remark message creation.'
-      );
+      console.log(e)
+      throw new Error('Error has been occurred during remark message creation.')
     }
 
     //TODO add validations
-    return msg.join(this.msgDelimiter);
+    return msg.join(this.msgDelimiter)
   }
 
   /**
@@ -139,11 +166,11 @@ export class SocialRemark {
    */
 
   private parseMsg(srcMsg: unknown): void {
-    if (!srcMsg || typeof srcMsg !== 'string') return;
+    if (!srcMsg || typeof srcMsg !== 'string') return
 
     const chunkedMsg = (
       Buffer.isBuffer(srcMsg) ? SocialRemark.bytesToString(srcMsg) : srcMsg
-    ).split(this.msgDelimiter);
+    ).split(this.msgDelimiter)
 
     if (
       !chunkedMsg ||
@@ -152,7 +179,7 @@ export class SocialRemark {
       !this.isValidVersion(chunkedMsg[1]) ||
       !this.isValidAction(chunkedMsg[2])
     )
-      return;
+      return
 
     this.msgParsed = {
       protName: chunkedMsg[0] as SocialRemarkMessageProtocolName,
@@ -160,46 +187,41 @@ export class SocialRemark {
       action: chunkedMsg[2] as SocialRemarkMessageAction,
       valid: false,
       content: null
-    };
+    }
 
     try {
       const contentPropsMap: Record<RemarkContentProps, number> =
         // @ts-ignore
         REMARK_CONTENT_VERSION_ACTION_MAP[this.msgParsed.version][
           this.msgParsed.action
-        ];
+        ]
 
       for (const contentPropName in contentPropsMap) {
         // @ts-ignore
-        if (!this.msgParsed.content) this.msgParsed.content = {};
+        if (!this.msgParsed.content) this.msgParsed.content = {}
         // @ts-ignore
         this.msgParsed.content[contentPropName] = decorateRemarkContentValue(
           this.msgParsed.action,
           contentPropName as RemarkContentProps,
           // @ts-ignore
           chunkedMsg[contentPropsMap[contentPropName]]
-        );
+        )
       }
 
-      this.msgParsed.valid = true;
+      this.msgParsed.valid = true
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
   private isValidProtName(src: string): boolean {
-    // TODO remove type casting
-    return !!(
-      src && this.protNames.has(src as SocialRemarkMessageProtocolName)
-    );
+    return !!(src && this.protNames.has(src as SocialRemarkMessageProtocolName))
   }
   private isValidVersion(src: string): boolean {
-    // TODO remove type casting
-    return !!(src && this.versions.has(src as SocialRemarkMessageVersion));
+    return !!(src && this.versions.has(src as SocialRemarkMessageVersion))
   }
   private isValidAction(src: string): boolean {
-    // TODO remove type casting
-    return !!(src && this.actions.has(src as SocialRemarkMessageAction));
+    return !!(src && this.actions.has(src as SocialRemarkMessageAction))
   }
 
   private isRemarkSourceValid(
@@ -208,7 +230,7 @@ export class SocialRemark {
     if (!rmrkSrc)
       throw new Error(
         'Remark source is invalid - source has not been provided.'
-      );
+      )
 
     if (!this.isValidProtName(rmrkSrc.protName))
       throw new Error(
@@ -217,7 +239,7 @@ export class SocialRemark {
         }" has been provided but expected - "${[...this.protNames.keys()].join(
           ' || '
         )}"`
-      );
+      )
 
     if (!this.isValidVersion(rmrkSrc.version))
       throw new Error(
@@ -226,7 +248,7 @@ export class SocialRemark {
         }" has been provided but expected - "${[...this.versions.keys()].join(
           ' || '
         )}"`
-      );
+      )
 
     if (!this.isValidAction(rmrkSrc.action))
       throw new Error(
@@ -235,8 +257,8 @@ export class SocialRemark {
         }" has been provided but expected - "${[...this.actions.keys()].join(
           ' || '
         )}"`
-      );
+      )
 
-    return true;
+    return true
   }
 }
