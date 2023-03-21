@@ -21,8 +21,8 @@ Core part options:
 - `action` - The message action (available actions: `DMN_REG`, `DMN_REG_OK`, `DMN_REG_REFUND`, `NRG_GEN`, `NRG_GEN_OK`, `NRG_GEN_REFUND`)
 
 Content options:
-- `op_id` - unique operation identified. Should be the same for all actions of one operation (the same `op_id` value for `DMN_REG` , `DMN_REG_OK` , `DMN_REG_REFUND` of A single domain registration flow. Necessary for relating actions with each other.)
-- `target` - The recipient of a domain or energy _(this can be an address in any SS58 format, the SocialRemark instance will convert it to Subsocial's format under the hood (prefix: 28))_
+- `op_id` - A unique operation identifier that is used to build a relationship between Domain Registration actions, in order to associate a particular `DMN_REG_OK` or `DMN_REG_REFUND` to the corresponding `DMN_REG`.
+- `target` - The owner of a new domain or receiver of energy _(this can be an address in any SS58 format, the SocialRemark instance will convert it to Subsocial's format under the hood (prefix: 28))_
 - `domain_name` - The domain name purchased by the target
 - `energy_amount` - The amount of energy purchased by the target
 - `token` - The type of token (for example, SUB, DOT, or KSM) used in the purchase process
