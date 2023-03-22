@@ -1,46 +1,31 @@
-import { RemarkContentProps, SocialRemarkMessageAction } from './types';
-import { addressFromAnyToFormatted } from './utils';
+import { RemarkContentProps, SocialRemarkMessageAction } from './types'
+import { addressFromAnyToFormatted } from './utils'
+
+const handlersMap: Map<
+  SocialRemarkMessageAction,
+  Map<RemarkContentProps, (val: string) => unknown>
+> = new Map([
+  [
+    'DMN_REG',
+    new Map([['target', value => addressFromAnyToFormatted(value, 28)]])
+  ],
+  [
+    'DMN_REG_OK',
+    new Map([['target', value => addressFromAnyToFormatted(value, 28)]])
+  ],
+  [
+    'DMN_REG_REFUND',
+    new Map([['target', value => addressFromAnyToFormatted(value, 28)]])
+  ]
+])
 
 export function decorateRemarkContentValue(
   action: SocialRemarkMessageAction,
   propName: RemarkContentProps,
   value: string
 ) {
-  switch (action) {
-    case 'DMN_REG': {
-      switch (propName) {
-        case 'target': {
-          return addressFromAnyToFormatted(value, 28);
-          break;
-        }
-        default:
-          return value;
-      }
-      break;
-    }
-    case 'DMN_REG_OK': {
-      switch (propName) {
-        case 'target': {
-          return addressFromAnyToFormatted(value, 28);
-          break;
-        }
-        default:
-          return value;
-      }
-      break;
-    }
-    case 'DMN_REG_REFUND': {
-      switch (propName) {
-        case 'target': {
-          return addressFromAnyToFormatted(value, 28);
-          break;
-        }
-        default:
-          return value;
-      }
-      break;
-    }
-    default:
-      return value;
-  }
+  if (handlersMap.has(action) && handlersMap.get(action)!.has(propName))
+    return handlersMap.get(action)!.get(propName)!(value)
+
+  return value
 }
