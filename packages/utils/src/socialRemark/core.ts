@@ -2,7 +2,7 @@ import {
   REMARK_CONTENT_VERSION_ACTION_MAP,
   RemarkContentProps,
   SocialRemarkMessage,
-  SocialRemarkMessageAction,
+  SocialRemarkMessageAction, SocialRemarkMessageDestination,
   SocialRemarkMessageProtocolName,
   SocialRemarkMessageVersion,
   SubSclSource
@@ -34,16 +34,21 @@ export class SocialRemark {
     SocialRemarkConfig.getInstance().config.versions
   )
 
+  private destinations: Set<SocialRemarkMessageDestination> = new Set(
+    SocialRemarkConfig.getInstance().config.destinations
+  )
+
   private actions: Set<SocialRemarkMessageAction> = new Set(
     SocialRemarkConfig.getInstance().config.actions
   )
+
 
   private msgDelimiter: string = '::'
 
   /**
    * Get SocialRemark full data, if it's available. Otherwise, go throw error.
    */
-  public get message():
+  public get source():
     | SocialRemarkMessage<SocialRemarkMessageAction, boolean>
     | never {
     if (!this.msgParsed) throw new Error('Message is not available.')
@@ -51,7 +56,7 @@ export class SocialRemark {
   }
 
   /**
-   * Get SocialRemark instance message content, if it's valid and available.
+   * Get SocialRemark instance source content, if it's valid and available.
    */
   public get content() {
     return this.msgParsed && this.msgParsed.valid
@@ -126,30 +131,31 @@ export class SocialRemark {
   }
 
   /**
-   * Encode SocialRemark message to remark string.
+   * Encode SocialRemark source to remark string.
    */
   public toMessage(): string {
     if (!this.isValidMessage)
       throw new Error('Remark is not valid for build message.')
 
     const msg: string[] = []
-    msg.push(this.message.protName)
-    msg.push(this.message.version)
-    msg.push(this.message.action)
+    msg.push(this.source.protName)
+    msg.push(this.source.version)
+    msg.push(this.source.destination)
+    msg.push(this.source.action)
 
     try {
       const contentPropsMap =
         // @ts-ignore
-        REMARK_CONTENT_VERSION_ACTION_MAP[this.message.version][
-          this.message.action
+        REMARK_CONTENT_VERSION_ACTION_MAP[this.source.version][
+          this.source.action
         ]
       for (const contentPropName in contentPropsMap) {
         // @ts-ignore
         msg[contentPropsMap[contentPropName]] = decorateRemarkContentValue(
-          this.message.action,
+          this.source.action,
           contentPropName as RemarkContentProps,
           // @ts-ignore
-          this.message.content[contentPropName]
+          this.source.content[contentPropName]
         )
       }
     } catch (e) {
@@ -177,14 +183,16 @@ export class SocialRemark {
       chunkedMsg.length === 0 ||
       !this.isValidProtName(chunkedMsg[0]) ||
       !this.isValidVersion(chunkedMsg[1]) ||
-      !this.isValidAction(chunkedMsg[2])
+      !this.isValidDestination(chunkedMsg[2]) ||
+      !this.isValidAction(chunkedMsg[3])
     )
       return
 
     this.msgParsed = {
       protName: chunkedMsg[0] as SocialRemarkMessageProtocolName,
       version: chunkedMsg[1] as SocialRemarkMessageVersion,
-      action: chunkedMsg[2] as SocialRemarkMessageAction,
+      destination: chunkedMsg[2] as SocialRemarkMessageDestination,
+      action: chunkedMsg[3] as SocialRemarkMessageAction,
       valid: false,
       content: null
     }
@@ -220,6 +228,9 @@ export class SocialRemark {
   private isValidVersion(src: string): boolean {
     return !!(src && this.versions.has(src as SocialRemarkMessageVersion))
   }
+  private isValidDestination(src: string): boolean {
+    return !!(src && this.destinations.has(src as SocialRemarkMessageDestination))
+  }
   private isValidAction(src: string): boolean {
     return !!(src && this.actions.has(src as SocialRemarkMessageAction))
   }
@@ -246,6 +257,15 @@ export class SocialRemark {
         `Remark source is invalid - protocol version "${
           rmrkSrc.version
         }" has been provided but expected - "${[...this.versions.keys()].join(
+          ' || '
+        )}"`
+      )
+
+    if (!this.isValidDestination(rmrkSrc.destination))
+      throw new Error(
+        `Remark source is invalid - destination "${
+          rmrkSrc.destination
+        }" has been provided but expected - "${[...this.destinations.keys()].join(
           ' || '
         )}"`
       )

@@ -4,6 +4,7 @@ export {
   SubSclSource,
   SocialRemarkMessageContent,
   SocialRemarkMessageProtocolName,
+  SocialRemarkDestChainsNameId,
   SocialRemarkMessageAction,
   SocialRemarkMessageVersion,
   RemarkContentProps,
