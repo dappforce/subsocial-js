@@ -64,7 +64,7 @@ describe('SocialRemark Unit', () => {
   test('SocialRemark from Message to Source', () => {
     const remarkSource = new SocialRemark().fromMessage(
       subsclRemarkMessageDomainRegPay
-    ).message;
+    ).source;
 
     expect(remarkSource.valid).toEqual(true);
 
@@ -92,7 +92,7 @@ describe('SocialRemark Unit', () => {
   test('SocialRemark from Message with target as public key to Source with target as Subsocial', () => {
     const source = new SocialRemark().fromMessage(
       getRemarkMessage(testRemarkTitle, '0.1', SocialRemarkDestChainsNameId.soonsocial,'DMN_REG', testPublicKey)
-    ).message;
+    ).source;
 
     expect(source).toMatchObject({
       protName: testRemarkTitle,
@@ -144,6 +144,6 @@ describe('SocialRemark Unit', () => {
     });
 
     expect(remarkInst.isValidMessage).toEqual(true);
-    expect(testAddressSubsocial).toEqual(remarkInst.message.content!.target);
+    expect(testAddressSubsocial).toEqual(remarkInst.source.content!.target);
   });
 });

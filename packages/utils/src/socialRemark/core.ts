@@ -48,7 +48,7 @@ export class SocialRemark {
   /**
    * Get SocialRemark full data, if it's available. Otherwise, go throw error.
    */
-  public get message():
+  public get source():
     | SocialRemarkMessage<SocialRemarkMessageAction, boolean>
     | never {
     if (!this.msgParsed) throw new Error('Message is not available.')
@@ -56,7 +56,7 @@ export class SocialRemark {
   }
 
   /**
-   * Get SocialRemark instance message content, if it's valid and available.
+   * Get SocialRemark instance source content, if it's valid and available.
    */
   public get content() {
     return this.msgParsed && this.msgParsed.valid
@@ -131,31 +131,31 @@ export class SocialRemark {
   }
 
   /**
-   * Encode SocialRemark message to remark string.
+   * Encode SocialRemark source to remark string.
    */
   public toMessage(): string {
     if (!this.isValidMessage)
       throw new Error('Remark is not valid for build message.')
 
     const msg: string[] = []
-    msg.push(this.message.protName)
-    msg.push(this.message.version)
-    msg.push(this.message.destination)
-    msg.push(this.message.action)
+    msg.push(this.source.protName)
+    msg.push(this.source.version)
+    msg.push(this.source.destination)
+    msg.push(this.source.action)
 
     try {
       const contentPropsMap =
         // @ts-ignore
-        REMARK_CONTENT_VERSION_ACTION_MAP[this.message.version][
-          this.message.action
+        REMARK_CONTENT_VERSION_ACTION_MAP[this.source.version][
+          this.source.action
         ]
       for (const contentPropName in contentPropsMap) {
         // @ts-ignore
         msg[contentPropsMap[contentPropName]] = decorateRemarkContentValue(
-          this.message.action,
+          this.source.action,
           contentPropName as RemarkContentProps,
           // @ts-ignore
-          this.message.content[contentPropName]
+          this.source.content[contentPropName]
         )
       }
     } catch (e) {
