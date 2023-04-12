@@ -3,16 +3,18 @@ import { describe, expect, test } from '@jest/globals'
 import {
   SocialRemark,
   SocialRemarkMessageProtocolName,
-  SubSclSource
+  SubSclSource,
+  SocialRemarkDestChainsNameId,
 } from '../../socialRemark';
 
 function getRemarkMessage(
   testRemarkProtName: string,
   protocolVersion: string,
+  destination: string,
   action: string,
   target: string
 ) {
-  return `${testRemarkProtName}::${protocolVersion}::${action}::0xa6a548df942e68a32fab3d325a25d8b5306a938aafc6bf205c2edc516cb92000::${target}::testDomain.sub::DOT`;
+  return `${testRemarkProtName}::${protocolVersion}::${destination}::${action}::0xa6a548df942e68a32fab3d325a25d8b5306a938aafc6bf205c2edc516cb92000::${target}::testDomain.sub::DOT`;
 }
 
 describe('SocialRemark Unit', () => {
@@ -30,12 +32,14 @@ describe('SocialRemark Unit', () => {
   const subsclRemarkMessageDomainRegPay = getRemarkMessage(
     testRemarkTitle,
     protocolVersion,
+    SocialRemarkDestChainsNameId.soonsocial,
     'DMN_REG',
     testAddressSubsocial
   );
   const subsclRemarkSourceDomainRegPay: SubSclSource<'DMN_REG'> = {
     protName: testRemarkTitle,
     version: protocolVersion,
+    destination: SocialRemarkDestChainsNameId.soonsocial,
     action: 'DMN_REG',
     content: {
       domainName: 'testDomain.sub',
@@ -71,7 +75,15 @@ describe('SocialRemark Unit', () => {
 
   test('SocialRemark from Message to Source with invalid protocol version', () => {
     const isValid = new SocialRemark().fromMessage(
-      getRemarkMessage(testRemarkTitle, '0.2', 'DMN_REG', testAddressSubsocial)
+      getRemarkMessage(testRemarkTitle, '0.2', SocialRemarkDestChainsNameId.soonsocial, 'DMN_REG', testAddressSubsocial)
+    ).isValidMessage;
+
+    expect(isValid).toEqual(false);
+  });
+
+  test('SocialRemark from Message to Source with invalid destination chain', () => {
+    const isValid = new SocialRemark().fromMessage(
+      getRemarkMessage(testRemarkTitle, '0.2', '4', 'DMN_REG', testAddressSubsocial)
     ).isValidMessage;
 
     expect(isValid).toEqual(false);
@@ -79,12 +91,13 @@ describe('SocialRemark Unit', () => {
 
   test('SocialRemark from Message with target as public key to Source with target as Subsocial', () => {
     const source = new SocialRemark().fromMessage(
-      getRemarkMessage(testRemarkTitle, '0.1', 'DMN_REG', testPublicKey)
+      getRemarkMessage(testRemarkTitle, '0.1', SocialRemarkDestChainsNameId.soonsocial,'DMN_REG', testPublicKey)
     ).message;
 
     expect(source).toMatchObject({
       protName: testRemarkTitle,
       version: protocolVersion,
+      destination: SocialRemarkDestChainsNameId.soonsocial,
       action: 'DMN_REG',
       content: {
         domainName: 'testDomain.sub',
@@ -100,6 +113,7 @@ describe('SocialRemark Unit', () => {
       .fromSource({
         protName: testRemarkTitle,
         version: protocolVersion,
+        destination: SocialRemarkDestChainsNameId.soonsocial,
         action: 'DMN_REG',
         content: {
           domainName: 'testDomain.sub',
@@ -111,7 +125,7 @@ describe('SocialRemark Unit', () => {
       .toMessage();
 
     expect(message).toEqual(
-      getRemarkMessage(testRemarkTitle, '0.1', 'DMN_REG', testAddressSubsocial)
+      getRemarkMessage(testRemarkTitle, '0.1', SocialRemarkDestChainsNameId.soonsocial, 'DMN_REG', testAddressSubsocial)
     );
   });
 
@@ -119,6 +133,7 @@ describe('SocialRemark Unit', () => {
     const remarkInst = new SocialRemark().fromSource({
       protName: testRemarkTitle,
       version: protocolVersion,
+      destination: SocialRemarkDestChainsNameId.soonsocial,
       action: 'DMN_REG',
       content: {
         domainName: 'testDomain.sub',
