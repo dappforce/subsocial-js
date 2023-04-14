@@ -47,6 +47,7 @@ export type RemarkContentProps =
   | keyof EnergyGenerateRefundContent;
 
 export type SocialRemarkMessageVersion = '0.1';
+export type SocialRemarkMessageDestination = '1' | '2' | '3';
 export type SocialRemarkMessageAction =
   | 'DMN_REG'
   | 'DMN_REG_OK'
@@ -58,6 +59,12 @@ export type SocialRemarkMessageAction =
 export type SocialRemarkMessageProtocolName =
   | 'social'
   | string;
+
+export enum SocialRemarkDestChainsNameId {
+  subsocial = '1',
+  xsocial = '2',
+  soonsocial = '3',
+}
 
 export type SocialRemarkMessageContent<
   A extends SocialRemarkMessageAction | string
@@ -81,6 +88,7 @@ export type SocialRemarkMessage<
 > = {
   protName: SocialRemarkMessageProtocolName;
   version: SocialRemarkMessageVersion;
+  destination: SocialRemarkMessageDestination;
   action: A;
   valid: V; // TODO make this prop optional
   content: V extends true ? SocialRemarkMessageContent<A> : null;
@@ -102,40 +110,40 @@ type VersionActionPropsMap = Record<
 export const REMARK_CONTENT_VERSION_ACTION_MAP: VersionActionPropsMap = {
   '0.1': {
     DMN_REG: {
-      opId: 3,
-      target: 4,
-      domainName: 5,
-      token: 6
+      opId: 4,
+      target: 5,
+      domainName: 6,
+      token: 7
     },
     DMN_REG_OK: {
-      opId: 3,
-      target: 4,
-      domainName: 5,
-      token: 6
+      opId: 4,
+      target: 5,
+      domainName: 6,
+      token: 7
     },
     DMN_REG_REFUND: {
-      opId: 3,
-      target: 4,
-      domainName: 5,
-      token: 6
+      opId: 4,
+      target: 5,
+      domainName: 6,
+      token: 7
     },
     NRG_GEN: {
-      opId: 3,
-      target: 4,
-      energyAmount: 5,
-      token: 6
+      opId: 4,
+      target: 5,
+      energyAmount: 6,
+      token: 7
     },
     NRG_GEN_OK: {
-      opId: 3,
-      target: 4,
-      energyAmount: 5,
-      token: 6
+      opId: 4,
+      target: 5,
+      energyAmount: 6,
+      token: 7
     },
     NRG_GEN_REFUND: {
-      opId: 3,
-      target: 4,
-      energyAmount: 5,
-      token: 6
+      opId: 4,
+      target: 5,
+      energyAmount: 6,
+      token: 7
     }
   }
 };

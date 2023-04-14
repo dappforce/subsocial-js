@@ -1,13 +1,15 @@
 import {
   SocialRemarkMessageAction,
   SocialRemarkMessageProtocolName,
-  SocialRemarkMessageVersion
+  SocialRemarkMessageVersion,
+  SocialRemarkMessageDestination,
 } from './types'
 
 export type SocialRemarkConfigData = {
   protNames?: Array<SocialRemarkMessageProtocolName>
   actions?: SocialRemarkMessageAction[]
   versions?: SocialRemarkMessageVersion[]
+  destinations?: SocialRemarkMessageDestination[]
 }
 
 /**
@@ -27,7 +29,8 @@ export class SocialRemarkConfig {
       'NRG_GEN_OK',
       'NRG_GEN_REFUND'
     ],
-    versions: ['0.1']
+    versions: ['0.1'],
+    destinations: ['1', '2', '3']
   }
 
   static getInstance(): SocialRemarkConfig {

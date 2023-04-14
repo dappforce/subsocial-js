@@ -5,9 +5,9 @@ The SocialRemark protocol is designed to process cross-chain actions.
 ## SocialRemark message format
 
 - Domain Registration
-  `prot_name::version::action::op_id::target::domain_name::token`
+  `prot_name::version::destination::action::op_id::target::domain_name::token`
 - Energy Generation
-  `prot_name::version::action::op_id::target::energy_amount::token`
+  `prot_name::version::destination::action::op_id::target::energy_amount::token`
 
 A Remark message has 2 parts:
 - the core part (which is the same for all messages): `prot_name::version::action`
@@ -18,6 +18,8 @@ A Remark message has 2 parts:
 Core part options:
 - `prot_name` - The protocol name (the default valid value is `social`, but it can be configured with the `.setConfig()` method)
 - `version` - The protocol version (the current available version is `0.1`)
+- `destination` - The chain which will be used for cross-chain actions. User can use predefined chain IDs which are
+    exposed in SocialRemark utility library.
 - `action` - The message action (available actions: `DMN_REG`, `DMN_REG_OK`, `DMN_REG_REFUND`, `NRG_GEN`, `NRG_GEN_OK`, `NRG_GEN_REFUND`)
 
 Content options:
@@ -30,7 +32,7 @@ Content options:
 Here is a dummy example of a SocialRemark message:
 
 ```
-social::0.1::DMN_REG::0x44d8d9f1bc70e45eb773731f9ffc5d3646df56497c40cdfff37c8ceb71fa2-2104480009442407::3t5NA8UKsGzrCDMfp8XMEBghiYthWGXGsHbjtJY45NUJDY5P::somenewdomain.sub::DOT
+social::0.1::1::DMN_REG::0x44d8d9f1bc70e45eb773731f9ffc5d3646df56497c40cdfff37c8ceb71fa2-2104480009442407::3t5NA8UKsGzrCDMfp8XMEBghiYthWGXGsHbjtJY45NUJDY5P::somenewdomain.sub::DOT
 ```
 
 ## Usage examples:
@@ -48,8 +50,9 @@ SocialRemark.setConfig({ protNames: ['social_custom'] })
 
 const remarkSource: SubSclSource<'DMN_REG'> = {
   protName: 'social_custom',
-  action: 'DMN_REG',
   version: '0.1',
+  action: 'DMN_REG',
+  destination: 1,
   content: {
     opId: `${randomAsNumber()}`,
     domainName: `somenewdomain.sub`,
