@@ -81,7 +81,7 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       ExistingVestingSchedule: AugmentedError<ApiType>;
       /**
-       * Balance too low to send value
+       * Balance too low to send value.
        **/
       InsufficientBalance: AugmentedError<ApiType>;
       /**
@@ -130,6 +130,10 @@ declare module '@polkadot/api-base/types/errors' {
        * Too many candidates
        **/
       TooManyCandidates: AugmentedError<ApiType>;
+      /**
+       * Too many invulnerables
+       **/
+      TooManyInvulnerables: AugmentedError<ApiType>;
       /**
        * Unknown error
        **/
@@ -230,6 +234,9 @@ declare module '@polkadot/api-base/types/errors' {
        * Value coefficient is not a positive number.
        **/
       ValueCoefficientIsNotPositive: AugmentedError<ApiType>;
+    };
+    freeProxy: {
+      OnlyFirstProxyCanBeFree: AugmentedError<ApiType>;
     };
     parachainSystem: {
       /**
