@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.8.6",
+  "version": "0.8.8",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "index.js",
@@ -40,7 +40,8 @@
     "@types/circular-json": "^0.4.0",
     "@types/lodash.isempty": "^4.4.6",
     "@types/lodash.truncate": "^4.4.6",
-    "@types/loglevel": "^1.6.3"
+    "@types/loglevel": "^1.6.3",
+    "@types/node": "^16.15.3"
   },
   "scripts": {
     "build": "tsc && cp ./README.md ./build",
