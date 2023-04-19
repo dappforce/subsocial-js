@@ -25,9 +25,11 @@ export class SocialRemarkConfig {
       'DMN_REG',
       'DMN_REG_OK',
       'DMN_REG_REFUND',
+      'DMN_REG_REFUND_OK',
       'NRG_GEN',
       'NRG_GEN_OK',
-      'NRG_GEN_REFUND'
+      'NRG_GEN_REFUND',
+      'NRG_GEN_REFUND_OK'
     ],
     versions: ['0.1'],
     destinations: ['1', '2', '3']
