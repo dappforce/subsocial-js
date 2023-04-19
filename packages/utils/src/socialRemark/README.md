@@ -16,14 +16,14 @@ A Remark message has 2 parts:
   - `op_id::target::energy_amount::token`
 
 Core part options:
-- `prot_name` - The protocol name (the default valid value is `social`, but it can be configured with the `.setConfig()` method)
+- `prot_name` - The protocol name which must be configured with the `.setConfig()` method
 - `version` - The protocol version (the current available version is `0.1`)
 - `destination` - The chain which will be used for cross-chain actions. User can use predefined chain IDs which are
     exposed in SocialRemark utility library.
-- `action` - The message action (available actions: `DMN_REG`, `DMN_REG_OK`, `DMN_REG_REFUND`, `NRG_GEN`, `NRG_GEN_OK`, `NRG_GEN_REFUND`)
+- `action` - The message action (available actions: `DMN_REG`, `DMN_REG_OK`, `DMN_REG_REFUND`, `DMN_REG_REFUND_OK`, `NRG_GEN`, `NRG_GEN_OK`, `NRG_GEN_REFUND`, `NRG_GEN_REFUND_OK`)
 
 Content options:
-- `op_id` - A unique operation identifier that is used to build a relationship between Domain Registration actions, in order to associate a particular `DMN_REG_OK` or `DMN_REG_REFUND` to the corresponding `DMN_REG`.
+- `op_id` - A unique operation identifier that is used to build a relationship between Domain Registration actions, in order to associate a particular `DMN_REG_OK` or `DMN_REG_REFUND_OK` to the corresponding `DMN_REG`.
 - `target` - The owner of a new domain or receiver of energy _(this can be an address in any SS58 format, the SocialRemark instance will convert it to Subsocial's format under the hood (prefix: 28))_
 - `domain_name` - The domain name purchased by the target
 - `energy_amount` - The amount of energy purchased by the target
