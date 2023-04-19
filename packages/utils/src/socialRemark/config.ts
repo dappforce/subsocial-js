@@ -20,7 +20,7 @@ export class SocialRemarkConfig {
   private static instance: SocialRemarkConfig
 
   private conf: Required<SocialRemarkConfigData> = {
-    protNames: ['social'],
+    protNames: [],
     actions: [
       'DMN_REG',
       'DMN_REG_OK',

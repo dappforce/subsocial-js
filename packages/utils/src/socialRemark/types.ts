@@ -58,9 +58,7 @@ export type SocialRemarkMessageAction =
   | 'NRG_GEN_REFUND'
   | 'NRG_GEN_REFUND_OK';
 
-export type SocialRemarkMessageProtocolName =
-  | 'social'
-  | string;
+export type SocialRemarkMessageProtocolName = string;
 
 export enum SocialRemarkDestChainsNameId {
   subsocial = '1',

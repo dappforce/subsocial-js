@@ -16,7 +16,7 @@ A Remark message has 2 parts:
   - `op_id::target::energy_amount::token`
 
 Core part options:
-- `prot_name` - The protocol name (the default valid value is `social`, but it can be configured with the `.setConfig()` method)
+- `prot_name` - The protocol name which must be configured with the `.setConfig()` method
 - `version` - The protocol version (the current available version is `0.1`)
 - `destination` - The chain which will be used for cross-chain actions. User can use predefined chain IDs which are
     exposed in SocialRemark utility library.
