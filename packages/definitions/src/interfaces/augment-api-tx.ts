@@ -8,8 +8,8 @@ import '@polkadot/api-base/types/submittable';
 import type { ApiTypes, AugmentedSubmittable, SubmittableExtrinsic, SubmittableExtrinsicFunction } from '@polkadot/api-base/types';
 import type { BTreeSet, Bytes, Compact, Option, Vec, bool, i64, u128, u16, u32, u64 } from '@polkadot/types-codec';
 import type { AnyNumber, IMethod, ITuple } from '@polkadot/types-codec/types';
-import type { AccountId32, Call, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
-import type { CumulusPrimitivesParachainInherentParachainInherentData, PalletDomainsInnerValue, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletVestingVestingInfo, SpRuntimeHeader, SubsocialParachainRuntimeOriginCaller, SubsocialParachainRuntimeProxyType, SubsocialParachainRuntimeSessionKeys, SubsocialSupportContent, SubsocialSupportUser, SubsocialSupportWhoAndWhen, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
+import type { AccountId32, Call, H256, MultiAddress } from '@polkadot/types/interfaces/runtime';
+import type { CumulusPrimitivesParachainInherentParachainInherentData, PalletDomainsInnerValue, PalletPermissionsSpacePermission, PalletPermissionsSpacePermissions, PalletPostsPostExtension, PalletPostsPostUpdate, PalletReactionsReactionKind, PalletRolesRoleUpdate, PalletSpacesSpaceUpdate, PalletVestingVestingInfo, SpRuntimeHeader, SpWeightsWeightV2Weight, SubsocialParachainRuntimeOriginCaller, SubsocialParachainRuntimeProxyType, SubsocialParachainRuntimeSessionKeys, SubsocialSupportContent, SubsocialSupportUser, SubsocialSupportWhoAndWhen, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
 
 export type __AugmentedSubmittable = AugmentedSubmittable<() => unknown>;
 export type __SubmittableExtrinsic<ApiType extends ApiTypes> = SubmittableExtrinsic<ApiType>;
@@ -210,6 +210,9 @@ declare module '@polkadot/api-base/types/submittable' {
        **/
       updateValueCoefficient: AugmentedSubmittable<(newCoefficient: i64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [i64]>;
     };
+    freeProxy: {
+      addFreeProxy: AugmentedSubmittable<(delegate: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, SubsocialParachainRuntimeProxyType, u32]>;
+    };
     parachainSystem: {
       authorizeUpgrade: AugmentedSubmittable<(codeHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H256]>;
       enactAuthorizedUpgrade: AugmentedSubmittable<(code: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
@@ -379,12 +382,8 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `proxy_type`: The permissions allowed for this proxy account.
        * - `delay`: The announcement period required of the initial proxy. Will generally be
        * zero.
-       * 
-       * # <weight>
-       * Weight is a function of the number of proxies the user has (P).
-       * # </weight>
        **/
-      addProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u32]>;
+      addProxy: AugmentedSubmittable<(delegate: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, SubsocialParachainRuntimeProxyType, u32]>;
       /**
        * Publish the hash of a proxy-call that will be made in the future.
        * 
@@ -401,14 +400,8 @@ declare module '@polkadot/api-base/types/submittable' {
        * Parameters:
        * - `real`: The account that the proxy will make a call on behalf of.
        * - `call_hash`: The hash of the call to be made by the `real` account.
-       * 
-       * # <weight>
-       * Weight is a function of:
-       * - A: the number of announcements made.
-       * - P: the number of proxies the user has.
-       * # </weight>
        **/
-      announce: AugmentedSubmittable<(real: AccountId32 | string | Uint8Array, callHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, H256]>;
+      announce: AugmentedSubmittable<(real: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, callHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, H256]>;
       /**
        * Spawn a fresh new account that is guaranteed to be otherwise inaccessible, and
        * initialize it with a proxy of `proxy_type` for `origin` sender.
@@ -428,36 +421,27 @@ declare module '@polkadot/api-base/types/submittable' {
        * same sender, with the same parameters.
        * 
        * Fails if there are insufficient funds to pay for deposit.
-       * 
-       * # <weight>
-       * Weight is a function of the number of proxies the user has (P).
-       * # </weight>
-       * TODO: Might be over counting 1 read
        **/
-      anonymous: AugmentedSubmittable<(proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array, index: u16 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialParachainRuntimeProxyType, u32, u16]>;
+      createPure: AugmentedSubmittable<(proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array, index: u16 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [SubsocialParachainRuntimeProxyType, u32, u16]>;
       /**
-       * Removes a previously spawned anonymous proxy.
+       * Removes a previously spawned pure proxy.
        * 
        * WARNING: **All access to this account will be lost.** Any funds held in it will be
        * inaccessible.
        * 
        * Requires a `Signed` origin, and the sender account must have been created by a call to
-       * `anonymous` with corresponding parameters.
+       * `pure` with corresponding parameters.
        * 
-       * - `spawner`: The account that originally called `anonymous` to create this account.
-       * - `index`: The disambiguation index originally passed to `anonymous`. Probably `0`.
-       * - `proxy_type`: The proxy type originally passed to `anonymous`.
-       * - `height`: The height of the chain when the call to `anonymous` was processed.
-       * - `ext_index`: The extrinsic index in which the call to `anonymous` was processed.
+       * - `spawner`: The account that originally called `pure` to create this account.
+       * - `index`: The disambiguation index originally passed to `pure`. Probably `0`.
+       * - `proxy_type`: The proxy type originally passed to `pure`.
+       * - `height`: The height of the chain when the call to `pure` was processed.
+       * - `ext_index`: The extrinsic index in which the call to `pure` was processed.
        * 
-       * Fails with `NoPermission` in case the caller is not a previously created anonymous
-       * account whose `anonymous` call has corresponding parameters.
-       * 
-       * # <weight>
-       * Weight is a function of the number of proxies the user has (P).
-       * # </weight>
+       * Fails with `NoPermission` in case the caller is not a previously created pure
+       * account whose `pure` call has corresponding parameters.
        **/
-      killAnonymous: AugmentedSubmittable<(spawner: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, index: u16 | AnyNumber | Uint8Array, height: Compact<u32> | AnyNumber | Uint8Array, extIndex: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u16, Compact<u32>, Compact<u32>]>;
+      killPure: AugmentedSubmittable<(spawner: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, index: u16 | AnyNumber | Uint8Array, height: Compact<u32> | AnyNumber | Uint8Array, extIndex: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, SubsocialParachainRuntimeProxyType, u16, Compact<u32>, Compact<u32>]>;
       /**
        * Dispatch the given `call` from an account that the sender is authorised for through
        * `add_proxy`.
@@ -470,12 +454,8 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `real`: The account that the proxy will make a call on behalf of.
        * - `force_proxy_type`: Specify the exact proxy type to be used and checked for this call.
        * - `call`: The call to be made by the `real` account.
-       * 
-       * # <weight>
-       * Weight is a function of the number of proxies the user has (P).
-       * # </weight>
        **/
-      proxy: AugmentedSubmittable<(real: AccountId32 | string | Uint8Array, forceProxyType: Option<SubsocialParachainRuntimeProxyType> | null | Uint8Array | SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, Option<SubsocialParachainRuntimeProxyType>, Call]>;
+      proxy: AugmentedSubmittable<(real: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, forceProxyType: Option<SubsocialParachainRuntimeProxyType> | null | Uint8Array | SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, Option<SubsocialParachainRuntimeProxyType>, Call]>;
       /**
        * Dispatch the given `call` from an account that the sender is authorized for through
        * `add_proxy`.
@@ -488,14 +468,8 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `real`: The account that the proxy will make a call on behalf of.
        * - `force_proxy_type`: Specify the exact proxy type to be used and checked for this call.
        * - `call`: The call to be made by the `real` account.
-       * 
-       * # <weight>
-       * Weight is a function of:
-       * - A: the number of announcements made.
-       * - P: the number of proxies the user has.
-       * # </weight>
        **/
-      proxyAnnounced: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, real: AccountId32 | string | Uint8Array, forceProxyType: Option<SubsocialParachainRuntimeProxyType> | null | Uint8Array | SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, AccountId32, Option<SubsocialParachainRuntimeProxyType>, Call]>;
+      proxyAnnounced: AugmentedSubmittable<(delegate: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, real: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, forceProxyType: Option<SubsocialParachainRuntimeProxyType> | null | Uint8Array | SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, MultiAddress, Option<SubsocialParachainRuntimeProxyType>, Call]>;
       /**
        * Remove the given announcement of a delegate.
        * 
@@ -507,14 +481,8 @@ declare module '@polkadot/api-base/types/submittable' {
        * Parameters:
        * - `delegate`: The account that previously announced the call.
        * - `call_hash`: The hash of the call to be made.
-       * 
-       * # <weight>
-       * Weight is a function of:
-       * - A: the number of announcements made.
-       * - P: the number of proxies the user has.
-       * # </weight>
        **/
-      rejectAnnouncement: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, callHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, H256]>;
+      rejectAnnouncement: AugmentedSubmittable<(delegate: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, callHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, H256]>;
       /**
        * Remove a given announcement.
        * 
@@ -526,25 +494,15 @@ declare module '@polkadot/api-base/types/submittable' {
        * Parameters:
        * - `real`: The account that the proxy will make a call on behalf of.
        * - `call_hash`: The hash of the call to be made by the `real` account.
-       * 
-       * # <weight>
-       * Weight is a function of:
-       * - A: the number of announcements made.
-       * - P: the number of proxies the user has.
-       * # </weight>
        **/
-      removeAnnouncement: AugmentedSubmittable<(real: AccountId32 | string | Uint8Array, callHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, H256]>;
+      removeAnnouncement: AugmentedSubmittable<(real: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, callHash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, H256]>;
       /**
        * Unregister all proxy accounts for the sender.
        * 
        * The dispatch origin for this call must be _Signed_.
        * 
-       * WARNING: This may be called on accounts created by `anonymous`, however if done, then
+       * WARNING: This may be called on accounts created by `pure`, however if done, then
        * the unreserved fees will be inaccessible. **All access to this account will be lost.**
-       * 
-       * # <weight>
-       * Weight is a function of the number of proxies the user has (P).
-       * # </weight>
        **/
       removeProxies: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       /**
@@ -555,12 +513,8 @@ declare module '@polkadot/api-base/types/submittable' {
        * Parameters:
        * - `proxy`: The account that the `caller` would like to remove as a proxy.
        * - `proxy_type`: The permissions currently enabled for the removed proxy account.
-       * 
-       * # <weight>
-       * Weight is a function of the number of proxies the user has (P).
-       * # </weight>
        **/
-      removeProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, SubsocialParachainRuntimeProxyType, u32]>;
+      removeProxy: AugmentedSubmittable<(delegate: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, proxyType: SubsocialParachainRuntimeProxyType | 'Any' | 'DomainRegistrar' | 'SocialActions' | 'Management' | 'SocialActionsProxy' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, SubsocialParachainRuntimeProxyType, u32]>;
     };
     reactions: {
       createPostReaction: AugmentedSubmittable<(postId: u64 | AnyNumber | Uint8Array, kind: PalletReactionsReactionKind | 'Upvote' | 'Downvote' | number | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, PalletReactionsReactionKind]>;
@@ -711,13 +665,9 @@ declare module '@polkadot/api-base/types/submittable' {
        * - The weight of this call is defined by the caller.
        * # </weight>
        **/
-      sudoUncheckedWeight: AugmentedSubmittable<(call: Call | IMethod | string | Uint8Array, weight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Call, u64]>;
+      sudoUncheckedWeight: AugmentedSubmittable<(call: Call | IMethod | string | Uint8Array, weight: SpWeightsWeightV2Weight | { refTime?: any; proofSize?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Call, SpWeightsWeightV2Weight]>;
     };
     system: {
-      /**
-       * A dispatch that will fill the block weight up to the given ratio.
-       **/
-      fillBlock: AugmentedSubmittable<(ratio: Perbill | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Perbill]>;
       /**
        * Kill all storage items with a key that starts with the given prefix.
        * 
@@ -818,13 +768,13 @@ declare module '@polkadot/api-base/types/submittable' {
       /**
        * Send a batch of dispatch calls.
        * 
-       * May be called from any origin.
+       * May be called from any origin except `None`.
        * 
        * - `calls`: The calls to be dispatched from the same origin. The number of call must not
        * exceed the constant: `batched_calls_limit` (available in constant metadata).
        * 
-       * If origin is root then call are dispatch without checking origin filter. (This includes
-       * bypassing `frame_system::Config::BaseCallFilter`).
+       * If origin is root then the calls are dispatched without checking origin filter. (This
+       * includes bypassing `frame_system::Config::BaseCallFilter`).
        * 
        * # <weight>
        * - Complexity: O(C) where C is the number of calls to be batched.
@@ -841,13 +791,13 @@ declare module '@polkadot/api-base/types/submittable' {
        * Send a batch of dispatch calls and atomically execute them.
        * The whole transaction will rollback and fail if any of the calls failed.
        * 
-       * May be called from any origin.
+       * May be called from any origin except `None`.
        * 
        * - `calls`: The calls to be dispatched from the same origin. The number of call must not
        * exceed the constant: `batched_calls_limit` (available in constant metadata).
        * 
-       * If origin is root then call are dispatch without checking origin filter. (This includes
-       * bypassing `frame_system::Config::BaseCallFilter`).
+       * If origin is root then the calls are dispatched without checking origin filter. (This
+       * includes bypassing `frame_system::Config::BaseCallFilter`).
        * 
        * # <weight>
        * - Complexity: O(C) where C is the number of calls to be batched.
@@ -871,19 +821,28 @@ declare module '@polkadot/api-base/types/submittable' {
        * Send a batch of dispatch calls.
        * Unlike `batch`, it allows errors and won't interrupt.
        * 
-       * May be called from any origin.
+       * May be called from any origin except `None`.
        * 
        * - `calls`: The calls to be dispatched from the same origin. The number of call must not
        * exceed the constant: `batched_calls_limit` (available in constant metadata).
        * 
-       * If origin is root then call are dispatch without checking origin filter. (This includes
-       * bypassing `frame_system::Config::BaseCallFilter`).
+       * If origin is root then the calls are dispatch without checking origin filter. (This
+       * includes bypassing `frame_system::Config::BaseCallFilter`).
        * 
        * # <weight>
        * - Complexity: O(C) where C is the number of calls to be batched.
        * # </weight>
        **/
       forceBatch: AugmentedSubmittable<(calls: Vec<Call> | (Call | IMethod | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
+      /**
+       * Dispatch a function call with a specified weight.
+       * 
+       * This function does not check the weight of the call, and instead allows the
+       * Root origin to specify the weight of the call.
+       * 
+       * The dispatch origin for this call must be _Root_.
+       **/
+      withWeight: AugmentedSubmittable<(call: Call | IMethod | string | Uint8Array, weight: SpWeightsWeightV2Weight | { refTime?: any; proofSize?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Call, SpWeightsWeightV2Weight]>;
     };
     vesting: {
       /**

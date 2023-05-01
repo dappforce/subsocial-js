@@ -133,7 +133,7 @@ export class SubsocialIpfsApi {
   }
 
   get adminClient() {
-    return this._client
+    return this._adminClient
   }
 
   // ---------------------------------------------------------------------

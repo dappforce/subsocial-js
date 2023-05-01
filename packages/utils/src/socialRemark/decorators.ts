@@ -16,6 +16,10 @@ const handlersMap: Map<
   [
     'DMN_REG_REFUND',
     new Map([['target', value => addressFromAnyToFormatted(value, 28)]])
+  ],
+  [
+    'DMN_REG_REFUND_OK',
+    new Map([['target', value => addressFromAnyToFormatted(value, 28)]])
   ]
 ])
 

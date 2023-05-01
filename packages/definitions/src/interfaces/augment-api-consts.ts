@@ -7,7 +7,7 @@ import '@polkadot/api-base/types/consts';
 
 import type { ApiTypes, AugmentedConst } from '@polkadot/api-base/types';
 import type { u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
-import type { FrameSupportWeightsRuntimeDbWeight, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, PalletPermissionsSpacePermissions, SpVersionRuntimeVersion } from '@polkadot/types/lookup';
+import type { FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, PalletPermissionsSpacePermissions, SpVersionRuntimeVersion, SpWeightsRuntimeDbWeight } from '@polkadot/types/lookup';
 
 export type __AugmentedConst<ApiType extends ApiTypes> = AugmentedConst<ApiType>;
 
@@ -149,9 +149,9 @@ declare module '@polkadot/api-base/types/consts' {
       /**
        * The weight of runtime database operations the runtime can invoke.
        **/
-      dbWeight: FrameSupportWeightsRuntimeDbWeight & AugmentedConst<ApiType>;
+      dbWeight: SpWeightsRuntimeDbWeight & AugmentedConst<ApiType>;
       /**
-       * The designated SS85 prefix of this chain.
+       * The designated SS58 prefix of this chain.
        * 
        * This replaces the "ss58Format" property declared in the chain spec. Reason is
        * that the runtime should know about the prefix in order to make use of it as
