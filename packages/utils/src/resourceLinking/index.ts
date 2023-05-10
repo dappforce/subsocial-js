@@ -1,0 +1,1 @@
+export { SocialResource } from './socialResource'
