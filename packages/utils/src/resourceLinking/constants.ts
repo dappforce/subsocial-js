@@ -1,4 +1,3 @@
-export const urlHref = 'https://rmrk.gril.chat'
 export const substrateChains = [
   'subsocial',
   'xsocial',
@@ -8,4 +7,4 @@ export const substrateChains = [
   'zeitgeist'
 ] as const
 
-export const evmChains = ['polygon', 'ethereum'] as const
+export const evmChains = ['123', 'ethereum'] as const

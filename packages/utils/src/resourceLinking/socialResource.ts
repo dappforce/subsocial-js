@@ -1,6 +1,5 @@
 import { ResourceTypeMap, UrlConfig, Schema } from './types'
 import { NodeAttributes, SocialResourceGraph } from './graph'
-import { urlHref } from './constants'
 
 export class SocialResource {
   private ingestedDataType: null | 'meta' | 'url' = null
@@ -30,7 +29,7 @@ export class SocialResource {
   }
 
   public get build(): {
-    url: () => string
+    url: (href: string) => string
     resourceId: () => string
   } {
     return {
@@ -130,13 +129,13 @@ export class SocialResource {
     throw new Error(msg)
   }
 
-  buildUrl(): string {
+  buildUrl(href: string): string {
     if (!this.resourceMetaData) {
       this.maybeException('Social Resource is missing ingested data.')
       this.isIngestedDataValid = false
       return ''
     }
-    let url = `${urlHref}?resourceLocation=${this.resourceMetaData.schema}`
+    let url = `${href}?resourceLocation=${this.resourceMetaData.schema}`
 
     const appendUrlParameter = (nodeName: string, nodeAttr: NodeAttributes) => {
       if (

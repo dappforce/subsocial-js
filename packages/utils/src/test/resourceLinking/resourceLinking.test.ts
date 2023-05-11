@@ -28,11 +28,11 @@ describe('Resource Linking Unit', () => {
       }
     })
 
-    expect(resourceNft.build.url()).toEqual(
-      'https://rmrk.gril.chat?resourceLocation=chain&chainType=substrate&chainName=astar&resourceType=nft&resourceValue=111'
+    expect(resourceNft.build.url('https://grill.chat/1004')).toEqual(
+      'https://grill.chat/1004?resourceLocation=chain&chainType=substrate&chainName=astar&resourceType=nft&resourceValue=111'
     )
-    expect(resourceBlock.build.url()).toEqual(
-      'https://rmrk.gril.chat?resourceLocation=chain&chainType=substrate&chainName=astar&resourceType=block&resourceValue=123'
+    expect(resourceBlock.build.url('https://grill.chat/1004')).toEqual(
+      'https://grill.chat/1004?resourceLocation=chain&chainType=substrate&chainName=astar&resourceType=block&resourceValue=123'
     )
   })
 
@@ -57,6 +57,7 @@ describe('Resource Linking Unit', () => {
         resourceValue: { collectionId: '0x78764g2873y2g8giui27' }
       }
     })
+
     const resourceTweet: SocialResource = new SocialResource(
       true
     ).ingest.metaData({
