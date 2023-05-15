@@ -1,4 +1,4 @@
-import { ResourceTypeMap, UrlConfig, Schema } from './types'
+import { UrlConfig, Schema } from './types'
 import { NodeAttributes, SocialResourceGraph } from './graph'
 
 export class SocialResource {
@@ -18,9 +18,7 @@ export class SocialResource {
 
   public get ingest(): {
     url: (rqwUrl: string) => SocialResource
-    metaData: <S extends Schema, Rt extends ResourceTypeMap[S]>(
-      rawMetaData: UrlConfig<S, Rt>
-    ) => SocialResource
+    metaData: <S extends Schema>(rawMetaData: UrlConfig<S>) => SocialResource
   } {
     return {
       url: this.parseUrl.bind(this),
@@ -112,9 +110,7 @@ export class SocialResource {
     return this
   }
 
-  private parseMetadata<S extends Schema, Rt extends ResourceTypeMap[S]>(
-    rawMetaData: UrlConfig<S, Rt>
-  ) {
+  private parseMetadata<S extends Schema>(rawMetaData: UrlConfig<S>) {
     this.ingestedDataType = 'meta'
     this.ingestedData = rawMetaData
     // TODO add ingested data validation
@@ -148,7 +144,9 @@ export class SocialResource {
         this.resourceStructGraph.mapNodes(appendUrlParameter, nodeName)
       } else if (nodeAttr.configName === 'resourceValue') {
         url += `&${nodeAttr.urlKeyName}=${
-          this.resourceMetaData!.config.resourceValue[nodeName]
+          this.resourceMetaData!.config.resourceValue[
+            nodeName as keyof UrlConfig['config']['resourceValue']
+          ]
         }`
       }
     }
@@ -160,6 +158,7 @@ export class SocialResource {
 
     return url
   }
+
   buildResourceId(): string {
     if (!this.resourceMetaData) {
       this.maybeException('Social Resource is missing ingested data.')
@@ -185,7 +184,11 @@ export class SocialResource {
         }
         this.resourceStructGraph.mapNodes(appendResIdParameter, nodeName)
       } else if (nodeAttr.configName === 'resourceValue') {
-        resId += `:${this.resourceMetaData!.config.resourceValue[nodeName]}`
+        resId += `:${
+          this.resourceMetaData!.config.resourceValue[
+            nodeName as keyof UrlConfig['config']['resourceValue']
+          ]
+        }`
       }
     }
 

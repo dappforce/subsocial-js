@@ -29,7 +29,7 @@ describe('Resource Linking Unit', () => {
     })
 
     expect(resourceNft.build.url('https://grill.chat/1004')).toEqual(
-      'https://grill.chat/1004?resourceLocation=chain&chainType=substrate&chainName=astar&resourceType=nft&resourceValue=111'
+      'https://grill.chat/1004?resourceLocation=chain&chainType=substrate&chainName=astar&resourceType=nft&resourceValue=111&resourceValue=2'
     )
     expect(resourceBlock.build.url('https://grill.chat/1004')).toEqual(
       'https://grill.chat/1004?resourceLocation=chain&chainType=substrate&chainName=astar&resourceType=block&resourceValue=123'
@@ -41,9 +41,9 @@ describe('Resource Linking Unit', () => {
       schema: 'chain',
       config: {
         chainType: 'substrate',
-        chainName: 'astar',
-        resourceType: 'block',
-        resourceValue: { blockNumber: '100555' }
+        chainName: 'zeitgeist',
+        resourceType: 'market',
+        resourceValue: { accountAddress: 'kijuevkjebnovu' }
       }
     })
     const resourceNft: SocialResource = new SocialResource(
@@ -54,7 +54,10 @@ describe('Resource Linking Unit', () => {
         chainType: 'substrate',
         chainName: 'astar',
         resourceType: 'nft',
-        resourceValue: { collectionId: '0x78764g2873y2g8giui27' }
+        resourceValue: {
+          collectionId: '0x78764g2873y2g8giui27',
+          nftId: '87364'
+        }
       }
     })
 
@@ -82,10 +85,10 @@ describe('Resource Linking Unit', () => {
     })
 
     expect(resource.build.resourceId()).toEqual(
-      'chain://substrate:astar/block:100555'
+      'chain://substrate:zeitgeist/market:kijuevkjebnovu'
     )
     expect(resourceNft.build.resourceId()).toEqual(
-      'chain://substrate:astar/nft:0x78764g2873y2g8giui27'
+      'chain://substrate:astar/nft:0x78764g2873y2g8giui27:87364'
     )
     expect(resourceTweet.build.resourceId()).toEqual(
       'twitter://tweet:98938u459928734982734937653987'

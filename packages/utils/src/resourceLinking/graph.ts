@@ -168,6 +168,12 @@ export class SocialResourceGraph {
       urlKeyName: 'resourceValue',
       resourceIdPairValue: true
     })
+    this.graph.addNode('nftId', {
+      configName: 'resourceValue',
+      configParentName: 'config',
+      urlKeyName: 'resourceValue',
+      resourceIdPairValue: true
+    })
     this.graph.addNode('id', {
       configName: 'resourceValue',
       configParentName: 'config',
@@ -184,17 +190,16 @@ export class SocialResourceGraph {
      */
 
     this.graph.addDirectedEdge('rootNode', 'ipfs')
-    this.graph.addDirectedEdge('rootNode', 'twitter')
-    this.graph.addDirectedEdge('rootNode', 'chain')
-
     this.graph.addDirectedEdge('ipfs', 'cid')
     this.graph.addDirectedEdge('cid', 'id')
 
+    this.graph.addDirectedEdge('rootNode', 'twitter')
     this.graph.addDirectedEdge('twitter', 'user')
     this.graph.addDirectedEdge('twitter', 'tweet')
     this.graph.addDirectedEdge('user', 'id')
     this.graph.addDirectedEdge('tweet', 'id')
 
+    this.graph.addDirectedEdge('rootNode', 'chain')
     this.graph.addDirectedEdge('chain', 'evm')
     this.graph.addDirectedEdge('chain', 'substrate')
 
@@ -236,6 +241,7 @@ export class SocialResourceGraph {
     this.graph.addDirectedEdge('tx', 'txHash')
     this.graph.addDirectedEdge('token', 'tokenAddress')
     this.graph.addDirectedEdge('nft', 'collectionId')
+    this.graph.addDirectedEdge('nft', 'nftId')
     this.graph.addDirectedEdge('proposal', 'accountAddress')
     this.graph.addDirectedEdge('market', 'accountAddress')
 

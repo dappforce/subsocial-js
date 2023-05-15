@@ -60,21 +60,15 @@ export type IpfsSchemaConfig<Rt extends keyof IpfsResourceValueMap> = {
   resourceValue: IpfsResourceValueMap[Rt]
 }
 
-export type SchemaConfig<
-  S extends Schema,
-  Rt extends ResourceTypeMap[S]
-> = S extends 'chain'
-  ? ChainSchemaConfig<Rt>
+export type SchemaConfig<S extends Schema> = S extends 'chain'
+  ? ChainSchemaConfig<ChainResourceType>
   : S extends 'twitter'
-  ? TwitterSchemaConfig<Rt>
+  ? TwitterSchemaConfig<TwitterResourceType>
   : S extends 'ipfs'
-  ? IpfsSchemaConfig<Rt>
+  ? IpfsSchemaConfig<IpfsResourceType>
   : never
 
-export type UrlConfig<
-  S extends Schema = any,
-  Rt extends ResourceTypeMap[S] = any
-> = {
+export type UrlConfig<S extends Schema = any> = {
   schema: S
-  config: SchemaConfig<S, Rt>
+  config: SchemaConfig<S>
 }
