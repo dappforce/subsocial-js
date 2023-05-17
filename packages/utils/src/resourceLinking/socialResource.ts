@@ -1,4 +1,5 @@
 import { UrlConfig } from './types'
+import sortKeys from 'sort-keys'
 
 export class SocialResource {
   private ingestedData: null | string | UrlConfig = null
@@ -6,6 +7,10 @@ export class SocialResource {
   private resourceParams: null | UrlConfig = null
 
   constructor(private exceptionIfFailed: boolean = false) {}
+
+  public get ingestedResourceParams(): UrlConfig | null {
+    return this.resourceParams
+  }
 
   public get ingest(): {
     resourceParams: (rawParams: UrlConfig) => SocialResource
@@ -25,8 +30,7 @@ export class SocialResource {
 
   private parseMetadata(rawParams: UrlConfig) {
     this.ingestedData = rawParams
-    // TODO add ingested data validation
-    this.resourceParams = rawParams
+    this.resourceParams = sortKeys(rawParams, { deep: true })
     return this
   }
 
@@ -42,23 +46,18 @@ export class SocialResource {
       this.maybeException('Social Resource is missing ingested data.')
       return ''
     }
-    let resId = `${this.resourceParams.schema}:/`
+    const { schema, resourceValue, ...other } = this.resourceParams
+    let resId = `${schema}:/`
 
-    for (const paramName in this.resourceParams) {
-      if (paramName === 'schema') continue
-      if (paramName !== 'resourceValue') {
-        resId += `/${paramName}:${
-          this.resourceParams[paramName as keyof UrlConfig]
-        }`
-      } else {
-        for (const valProp in this.resourceParams.resourceValue) {
-          resId += `/${valProp}:${
-            this.resourceParams.resourceValue[
-              valProp as keyof UrlConfig['resourceValue']
-            ]
-          }`
-        }
-      }
+    for (const paramName in other) {
+      resId += `/${paramName}:${
+        other[paramName as keyof Omit<UrlConfig, 'schema' | 'resourceValue'>]
+      }`
+    }
+    for (const valProp in resourceValue) {
+      resId += `/${valProp}:${
+        resourceValue[valProp as keyof UrlConfig['resourceValue']]
+      }`
     }
     return resId
   }
