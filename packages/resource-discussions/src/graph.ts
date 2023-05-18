@@ -119,7 +119,7 @@ export class SocialResourceGraph {
     })
 
     /**
-     * Set Chain Name and Chain Edges
+     * ==== Set Chain Name and Chain Edges ====
      */
 
     /**
