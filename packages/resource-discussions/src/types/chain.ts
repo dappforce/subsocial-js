@@ -79,7 +79,17 @@ type SubstrateChainResourceTypeValue =
   | ChainMarkerResourceType
   | ChainProposalResourceType
 
+type AnyChainResourceTypeValueBase =
+  | ChainResourceTypeValueBase
+  | ChainMarkerResourceType
+  | ChainProposalResourceType
+
 type EvmChainResourceTypeValue = ChainResourceTypeValueBase
+type AnyChainResourceTypeValue =
+  | ChainBlockResourceType
+  | ChainTxResourceType
+  | ChainTokenResourceType
+  | ChainAccountResourceType
 
 export type ChainSchemaConfig = {
   schema: 'chain'
@@ -92,4 +102,8 @@ export type ChainSchemaConfig = {
       chainType: 'evm'
       chainName: string
     } & EvmChainResourceTypeValue)
+  | ({
+      chainType: string
+      chainName: string
+    } & AnyChainResourceTypeValue)
 )

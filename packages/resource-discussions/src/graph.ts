@@ -1,8 +1,9 @@
 import Graph from 'graphology'
-import { evmChains, substrateChains } from './constants'
+import utils from './utiils'
 
 export type NodeAttributes = {
   keyName: string
+  anyChildNodeName?: string
   valueDecodeDecorator?: () => string
   valueEncodeDecorator?: () => string
 }
@@ -29,10 +30,43 @@ export class SocialResourceGraph {
   }
 
   mapNodes(
-    callback: (nodeName: string, attr: NodeAttributes) => void,
+    callback: ({
+      nodeName,
+      nodeAttr,
+      anyNodeName,
+      anyValueFallbackCall
+    }: {
+      nodeName: string
+      nodeAttr: NodeAttributes
+      anyNodeName?: string
+      anyValueFallbackCall: boolean
+    }) => boolean,
     nodeName: string = 'rootNode'
-  ) {
-    this.resourceGraph.mapOutboundNeighbors(nodeName, callback)
+  ): boolean {
+    let isMatched = false
+    const outboundNeighbors = this.resourceGraph.outboundNeighbors(nodeName)
+    const parentNodeAttrs = this.resourceGraph.getNodeAttributes(nodeName)
+
+    for (const neighbor of outboundNeighbors) {
+      const loopMatch = callback({
+        nodeName: neighbor,
+        nodeAttr: this.resourceGraph.getNodeAttributes(neighbor),
+        anyValueFallbackCall: false
+      })
+      isMatched = loopMatch ? loopMatch : isMatched
+    }
+
+    if (!isMatched) {
+      return callback({
+        nodeName: parentNodeAttrs.anyChildNodeName ?? '',
+        nodeAttr: this.resourceGraph.getNodeAttributes(
+          parentNodeAttrs.anyChildNodeName ?? ''
+        ),
+        anyNodeName: parentNodeAttrs.anyChildNodeName,
+        anyValueFallbackCall: true
+      })
+    }
+    return isMatched
   }
 
   private initGraph() {
@@ -45,21 +79,17 @@ export class SocialResourceGraph {
      * Set schema
      */
     this.graph.addNode('chain', {
-      keyName: 'schema'
+      keyName: 'schema',
+      anyChildNodeName: '*_chainType'
     })
     this.graph.addNode('social', {
-      keyName: 'schema'
+      keyName: 'schema',
+      anyChildNodeName: '*_social_app'
     })
 
     /**
      * Set Chain Type
      */
-    this.graph.addNode('evm', {
-      keyName: 'chainType'
-    })
-    this.graph.addNode('substrate', {
-      keyName: 'chainType'
-    })
 
     /**
      * Set Resource Type
@@ -123,44 +153,31 @@ export class SocialResourceGraph {
      */
 
     /**
-     * Set Edges
+     * === Set Edges ===
      */
 
+    /**
+     * Social
+     */
     this.graph.addDirectedEdge('rootNode', 'social')
-    this.graph.addDirectedEdge('social', 'post')
-    this.graph.addDirectedEdge('social', 'profile')
+    utils.social.initSocialAllNodesEdges(this.graph)
+    utils.social.initSocialAnyNodesEdges(this.graph)
     this.graph.addDirectedEdge('post', 'id')
     this.graph.addDirectedEdge('profile', 'id')
+
+    /**
+     * Chain
+     */
+
+    utils.chain.initChainSubstrateAllNodesEdges(this.graph)
+    utils.chain.initChainEvmAllNodesEdges(this.graph)
+    utils.chain.initChainSubstrateAnyNodesEdges(this.graph)
+    utils.chain.initChainEvmAnyNodesEdges(this.graph)
+    utils.chain.initChainAnyTypeNodesEdges(this.graph)
 
     this.graph.addDirectedEdge('rootNode', 'chain')
     this.graph.addDirectedEdge('chain', 'evm')
     this.graph.addDirectedEdge('chain', 'substrate')
-
-    substrateChains.forEach(chainName => {
-      this.resourceGraph.addNode(chainName, {
-        keyName: 'chainName'
-      })
-      this.resourceGraph.addDirectedEdge('substrate', chainName)
-
-      this.resourceGraph.addDirectedEdge(chainName, 'block')
-      this.resourceGraph.addDirectedEdge(chainName, 'tx')
-      this.resourceGraph.addDirectedEdge(chainName, 'token')
-      this.resourceGraph.addDirectedEdge(chainName, 'nft')
-      this.resourceGraph.addDirectedEdge(chainName, 'proposal')
-      this.resourceGraph.addDirectedEdge(chainName, 'market')
-    })
-
-    evmChains.forEach(chainName => {
-      this.resourceGraph.addNode(chainName, {
-        keyName: 'chainName'
-      })
-      this.resourceGraph.addDirectedEdge('evm', chainName)
-
-      this.resourceGraph.addDirectedEdge(chainName, 'block')
-      this.resourceGraph.addDirectedEdge(chainName, 'tx')
-      this.resourceGraph.addDirectedEdge(chainName, 'token')
-      this.resourceGraph.addDirectedEdge(chainName, 'nft')
-    })
 
     this.graph.addDirectedEdge('block', 'blockNumber')
     this.graph.addDirectedEdge('tx', 'txHash')

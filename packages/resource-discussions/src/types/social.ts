@@ -1,4 +1,4 @@
-export type SocialApp = 'twitter' | 'youtube'
+export type SocialApp = 'twitter' | 'youtube' | string
 type SocialResourceType = 'post' | 'profile'
 
 export type SocialResourceValue<R extends SocialResourceType> = R extends 'post'
