@@ -1,8 +1,11 @@
 import { UrlConfig } from './types'
-import sortKeys from 'sort-keys'
+import { NodeAttributes, SocialResourceGraph } from './graph'
 
 export class SocialResource {
   private ingestedData: null | string | UrlConfig = null
+
+  private resourceStructGraph: SocialResourceGraph =
+    SocialResourceGraph.getInstance()
 
   private resourceParams: null | UrlConfig = null
 
@@ -30,7 +33,7 @@ export class SocialResource {
 
   private parseMetadata(rawParams: UrlConfig) {
     this.ingestedData = rawParams
-    this.resourceParams = sortKeys(rawParams, { deep: true })
+    this.resourceParams = rawParams
     return this
   }
 
@@ -41,24 +44,59 @@ export class SocialResource {
     throw new Error(msg)
   }
 
+  // buildResourceId(): string {
+  //   if (!this.resourceParams) {
+  //     this.maybeException('Social Resource is missing ingested data.')
+  //     return ''
+  //   }
+  //   const { schema, resourceValue, ...other } = this.resourceParams
+  //   let resId = `${schema}:/`
+  //
+  //   for (const paramName in other) {
+  //     resId += `/${paramName}:${
+  //       other[paramName as keyof Omit<UrlConfig, 'schema' | 'resourceValue'>]
+  //     }`
+  //   }
+  //   for (const valProp in resourceValue) {
+  //     resId += `/${valProp}:${
+  //       resourceValue[valProp as keyof UrlConfig['resourceValue']]
+  //     }`
+  //   }
+  //   return resId
+  // }
+
   buildResourceId(): string {
     if (!this.resourceParams) {
       this.maybeException('Social Resource is missing ingested data.')
       return ''
     }
-    const { schema, resourceValue, ...other } = this.resourceParams
-    let resId = `${schema}:/`
+    let resId = `${this.resourceParams.schema}:/`
 
-    for (const paramName in other) {
-      resId += `/${paramName}:${
-        other[paramName as keyof Omit<UrlConfig, 'schema' | 'resourceValue'>]
-      }`
+    const appendResIdParameter = (
+      nodeName: string,
+      nodeAttr: NodeAttributes
+    ) => {
+      if (
+        nodeAttr.keyName !== 'resourceValue' &&
+        this.resourceParams![nodeAttr.keyName as keyof UrlConfig] === nodeName
+      ) {
+        resId += `/${nodeAttr.keyName}:${nodeName}`
+
+        this.resourceStructGraph.mapNodes(appendResIdParameter, nodeName)
+      } else if (nodeAttr.keyName === 'resourceValue') {
+        resId += `/${nodeAttr.keyName}:${
+          this.resourceParams!.resourceValue[
+            nodeName as keyof UrlConfig['resourceValue']
+          ]
+        }`
+      }
     }
-    for (const valProp in resourceValue) {
-      resId += `/${valProp}:${
-        resourceValue[valProp as keyof UrlConfig['resourceValue']]
-      }`
-    }
+
+    this.resourceStructGraph.mapNodes(
+      appendResIdParameter,
+      this.resourceParams.schema
+    )
+
     return resId
   }
 }
