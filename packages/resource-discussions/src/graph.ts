@@ -1,11 +1,17 @@
 import Graph from 'graphology'
 import utils from './utiils'
+import { UrlConfig } from './types'
 
 export type NodeAttributes = {
   keyName: string
   anyChildNodeName?: string
-  valueDecodeDecorator?: () => string
-  valueEncodeDecorator?: () => string
+}
+
+export type NodeHandlerParams = {
+  nodeName: string
+  nodeAttr: NodeAttributes
+  anyNodeName?: string
+  anyValueFallbackCall: boolean
 }
 
 export class SocialResourceGraph {
@@ -30,22 +36,27 @@ export class SocialResourceGraph {
   }
 
   mapNodes(
-    callback: ({
-      nodeName,
-      nodeAttr,
-      anyNodeName,
-      anyValueFallbackCall
-    }: {
-      nodeName: string
-      nodeAttr: NodeAttributes
-      anyNodeName?: string
-      anyValueFallbackCall: boolean
-    }) => boolean,
-    nodeName: string = 'rootNode'
+    callback: (params: NodeHandlerParams) => boolean,
+    nodeName: string = 'rootNode',
+    resourceParams: UrlConfig | null
   ): boolean {
     let isMatched = false
-    const outboundNeighbors = this.resourceGraph.outboundNeighbors(nodeName)
-    const parentNodeAttrs = this.resourceGraph.getNodeAttributes(nodeName)
+    let outboundNeighbors = []
+    let parentNodeAttrs: NodeAttributes = {
+      keyName: '',
+      anyChildNodeName: ''
+    }
+
+    try {
+      outboundNeighbors = this.resourceGraph.outboundNeighbors(nodeName)
+      parentNodeAttrs = this.resourceGraph.getNodeAttributes(nodeName)
+    } catch (e) {
+      if (parentNodeAttrs.keyName)
+        return utils.common.throwWrongGraphNodeError(parentNodeAttrs.keyName)
+      return utils.common.throwWrongGraphNodeError(
+        utils.common.getFieldNameByValue(nodeName, resourceParams)
+      )
+    }
 
     for (const neighbor of outboundNeighbors) {
       const loopMatch = callback({
@@ -57,14 +68,21 @@ export class SocialResourceGraph {
     }
 
     if (!isMatched) {
-      return callback({
-        nodeName: parentNodeAttrs.anyChildNodeName ?? '',
-        nodeAttr: this.resourceGraph.getNodeAttributes(
-          parentNodeAttrs.anyChildNodeName ?? ''
-        ),
-        anyNodeName: parentNodeAttrs.anyChildNodeName,
-        anyValueFallbackCall: true
-      })
+      try {
+        return callback({
+          nodeName: parentNodeAttrs.anyChildNodeName ?? '',
+          nodeAttr: this.resourceGraph.getNodeAttributes(
+            parentNodeAttrs.anyChildNodeName ?? ''
+          ),
+          anyNodeName: parentNodeAttrs.anyChildNodeName,
+          anyValueFallbackCall: true
+        })
+      } catch (e) {
+        const nodeNeighborKeyName = this.resourceGraph.getNodeAttributes(
+          outboundNeighbors[0]
+        ).keyName
+        return utils.common.throwWrongGraphNodeError(nodeNeighborKeyName)
+      }
     }
     return isMatched
   }

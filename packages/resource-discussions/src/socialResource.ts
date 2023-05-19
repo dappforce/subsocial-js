@@ -1,5 +1,6 @@
 import { UrlConfig } from './types'
-import { NodeAttributes, SocialResourceGraph } from './graph'
+import { NodeAttributes, NodeHandlerParams, SocialResourceGraph } from './graph'
+import utils from './utiils'
 
 export class SocialResource {
   private ingestedData: null | string | UrlConfig = null
@@ -56,18 +57,17 @@ export class SocialResource {
       nodeAttr,
       anyNodeName,
       anyValueFallbackCall = false
-    }: {
-      nodeName: string
-      nodeAttr: NodeAttributes
-      anyNodeName?: string
-      anyValueFallbackCall: boolean
-    }): boolean => {
+    }: NodeHandlerParams): boolean => {
       if (
         nodeAttr.keyName !== 'resourceValue' &&
         this.resourceParams![nodeAttr.keyName as keyof UrlConfig] === nodeName
       ) {
         resId += `/${nodeAttr.keyName}:${nodeName}`
-        return this.resourceStructGraph.mapNodes(appendResIdParameter, nodeName)
+        return this.resourceStructGraph.mapNodes(
+          appendResIdParameter,
+          nodeName,
+          this.resourceParams
+        )
       } else if (
         nodeAttr.keyName !== 'resourceValue' &&
         anyValueFallbackCall &&
@@ -76,13 +76,18 @@ export class SocialResource {
         resId += `/${nodeAttr.keyName}:${
           this.resourceParams![nodeAttr.keyName as keyof UrlConfig]
         }`
-        return this.resourceStructGraph.mapNodes(appendResIdParameter, nodeName)
+        return this.resourceStructGraph.mapNodes(
+          appendResIdParameter,
+          nodeName,
+          this.resourceParams
+        )
       } else if (nodeAttr.keyName === 'resourceValue') {
-        resId += `/${nodeName}:${
+        const paramVal =
           this.resourceParams!.resourceValue[
             nodeName as keyof UrlConfig['resourceValue']
           ]
-        }`
+        if (!paramVal) utils.common.throwWrongGraphNodeError(nodeAttr.keyName)
+        resId += `/${nodeName}:${paramVal}`
 
         return true
       }
@@ -91,7 +96,8 @@ export class SocialResource {
 
     this.resourceStructGraph.mapNodes(
       appendResIdParameter,
-      this.resourceParams.schema
+      this.resourceParams.schema,
+      this.resourceParams
     )
 
     return resId

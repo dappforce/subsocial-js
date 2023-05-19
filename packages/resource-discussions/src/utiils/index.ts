@@ -6,6 +6,7 @@ import {
   initChainAnyTypeNodesEdges
 } from './chainUtils'
 import { initSocialAllNodesEdges, initSocialAnyNodesEdges } from './socialUtils'
+import { throwWrongGraphNodeError, getFieldNameByValue } from './common'
 
 export default {
   chain: {
@@ -18,5 +19,9 @@ export default {
   social: {
     initSocialAllNodesEdges: initSocialAllNodesEdges,
     initSocialAnyNodesEdges: initSocialAnyNodesEdges
+  },
+  common: {
+    throwWrongGraphNodeError: throwWrongGraphNodeError,
+    getFieldNameByValue: getFieldNameByValue
   }
 }

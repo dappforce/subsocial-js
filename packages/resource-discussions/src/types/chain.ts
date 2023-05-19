@@ -13,7 +13,6 @@ type ChainResourceType =
   | 'proposal'
   | 'market'
   | 'nft'
-type SocialResourceType = 'post' | 'profile'
 
 export type ChainResourceValue<R extends ChainResourceType> = R extends 'block'
   ? { blockNumber: BlockNumber }
@@ -75,11 +74,6 @@ type ChainResourceTypeValueBase =
   | ChainAccountResourceType
 
 type SubstrateChainResourceTypeValue =
-  | ChainResourceTypeValueBase
-  | ChainMarkerResourceType
-  | ChainProposalResourceType
-
-type AnyChainResourceTypeValueBase =
   | ChainResourceTypeValueBase
   | ChainMarkerResourceType
   | ChainProposalResourceType
