@@ -1,4 +1,6 @@
 import { UrlConfig } from '../types'
+import { NodeAttributes } from '../graph'
+import Graph from 'graphology'
 
 export function throwWrongGraphNodeError(resourceParamName: string): never {
   throw new Error(
@@ -15,4 +17,13 @@ export function getFieldNameByValue(
     if (src[fieldName as keyof UrlConfig] === value) return fieldName
   }
   return 'unknown'
+}
+
+export function createNodeWithoutDuplicate(
+  graph: Graph<NodeAttributes>,
+  nodeName: string,
+  nodeAttr: NodeAttributes
+) {
+  if (graph.findNode(node => node === nodeName)) return
+  graph.addNode(nodeName, nodeAttr)
 }

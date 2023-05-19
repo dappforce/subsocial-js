@@ -1,5 +1,5 @@
 import { UrlConfig } from './types'
-import { NodeAttributes, NodeHandlerParams, SocialResourceGraph } from './graph'
+import { NodeHandlerParams, SocialResourceGraph } from './graph'
 import utils from './utiils'
 
 export class SocialResource {
@@ -10,26 +10,76 @@ export class SocialResource {
 
   private resourceParams: null | UrlConfig = null
 
-  constructor(private exceptionIfFailed: boolean = false) {}
+  private resourceIdSectionSeparator: string = '/'
+  private resourceIdValueSeparator: string = ':'
+
+  constructor(
+    resourceParams: UrlConfig,
+    private exceptionIfFailed: boolean = false
+  ) {
+    this.parseMetadata(resourceParams)
+  }
 
   public get ingestedResourceParams(): UrlConfig | null {
     return this.resourceParams
   }
 
-  public get ingest(): {
-    resourceParams: (rawParams: UrlConfig) => SocialResource
-  } {
-    return {
-      resourceParams: this.parseMetadata.bind(this)
+  public toResourceId(): string {
+    if (!this.resourceParams) {
+      this.maybeException('SocialResource is missing ingested data.')
+      return ''
     }
-  }
+    let resourceId = `${this.resourceParams.schema}:${this.resourceIdSectionSeparator}`
 
-  public get build(): {
-    resourceId: () => string
-  } {
-    return {
-      resourceId: this.buildResourceId.bind(this)
+    const appendResIdParameter = ({
+      nodeName,
+      nodeAttr,
+      anyNodeName,
+      anyValueFallbackCall = false
+    }: NodeHandlerParams): boolean => {
+      if (
+        nodeAttr.keyName !== 'resourceValue' &&
+        this.resourceParams![nodeAttr.keyName as keyof UrlConfig] === nodeName
+      ) {
+        resourceId += `${this.resourceIdSectionSeparator}${nodeAttr.keyName}${this.resourceIdValueSeparator}${nodeName}`
+        return this.resourceStructGraph.mapNodes(
+          appendResIdParameter,
+          nodeName,
+          this.resourceParams
+        )
+      } else if (
+        nodeAttr.keyName !== 'resourceValue' &&
+        anyValueFallbackCall &&
+        anyNodeName === nodeName
+      ) {
+        resourceId += `${this.resourceIdSectionSeparator}${nodeAttr.keyName}${
+          this.resourceIdValueSeparator
+        }${this.resourceParams![nodeAttr.keyName as keyof UrlConfig]}`
+        return this.resourceStructGraph.mapNodes(
+          appendResIdParameter,
+          nodeName,
+          this.resourceParams
+        )
+      } else if (nodeAttr.keyName === 'resourceValue') {
+        const paramVal =
+          this.resourceParams!.resourceValue[
+            nodeName as keyof UrlConfig['resourceValue']
+          ]
+        if (!paramVal) utils.common.throwWrongGraphNodeError(nodeAttr.keyName)
+        resourceId += `${this.resourceIdSectionSeparator}${nodeName}${this.resourceIdValueSeparator}${paramVal}`
+
+        return true
+      }
+      return false
     }
+
+    this.resourceStructGraph.mapNodes(
+      appendResIdParameter,
+      this.resourceParams.schema,
+      this.resourceParams
+    )
+
+    return resourceId
   }
 
   private parseMetadata(rawParams: UrlConfig) {
@@ -43,63 +93,5 @@ export class SocialResource {
   ): void | never {
     if (!this.exceptionIfFailed) return
     throw new Error(msg)
-  }
-
-  buildResourceId(): string {
-    if (!this.resourceParams) {
-      this.maybeException('Social Resource is missing ingested data.')
-      return ''
-    }
-    let resId = `${this.resourceParams.schema}:/`
-
-    const appendResIdParameter = ({
-      nodeName,
-      nodeAttr,
-      anyNodeName,
-      anyValueFallbackCall = false
-    }: NodeHandlerParams): boolean => {
-      if (
-        nodeAttr.keyName !== 'resourceValue' &&
-        this.resourceParams![nodeAttr.keyName as keyof UrlConfig] === nodeName
-      ) {
-        resId += `/${nodeAttr.keyName}:${nodeName}`
-        return this.resourceStructGraph.mapNodes(
-          appendResIdParameter,
-          nodeName,
-          this.resourceParams
-        )
-      } else if (
-        nodeAttr.keyName !== 'resourceValue' &&
-        anyValueFallbackCall &&
-        anyNodeName === nodeName
-      ) {
-        resId += `/${nodeAttr.keyName}:${
-          this.resourceParams![nodeAttr.keyName as keyof UrlConfig]
-        }`
-        return this.resourceStructGraph.mapNodes(
-          appendResIdParameter,
-          nodeName,
-          this.resourceParams
-        )
-      } else if (nodeAttr.keyName === 'resourceValue') {
-        const paramVal =
-          this.resourceParams!.resourceValue[
-            nodeName as keyof UrlConfig['resourceValue']
-          ]
-        if (!paramVal) utils.common.throwWrongGraphNodeError(nodeAttr.keyName)
-        resId += `/${nodeName}:${paramVal}`
-
-        return true
-      }
-      return false
-    }
-
-    this.resourceStructGraph.mapNodes(
-      appendResIdParameter,
-      this.resourceParams.schema,
-      this.resourceParams
-    )
-
-    return resId
   }
 }

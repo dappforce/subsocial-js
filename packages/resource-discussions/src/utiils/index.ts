@@ -3,10 +3,21 @@ import {
   initChainEvmAnyNodesEdges,
   initChainSubstrateAllNodesEdges,
   initChainEvmAllNodesEdges,
-  initChainAnyTypeNodesEdges
+  initChainAnyTypeNodesEdges,
+  initChainResourceTypeNodes,
+  initChainResourceValueNodes
 } from './chainUtils'
-import { initSocialAllNodesEdges, initSocialAnyNodesEdges } from './socialUtils'
-import { throwWrongGraphNodeError, getFieldNameByValue } from './common'
+import {
+  initSocialAllNodesEdges,
+  initSocialAnyNodesEdges,
+  initSocialResourceTypeNodes,
+  initSocialResourceValueNodes
+} from './socialUtils'
+import {
+  throwWrongGraphNodeError,
+  getFieldNameByValue,
+  createNodeWithoutDuplicate
+} from './common'
 
 export default {
   chain: {
@@ -14,14 +25,19 @@ export default {
     initChainEvmAnyNodesEdges: initChainEvmAnyNodesEdges,
     initChainSubstrateAllNodesEdges: initChainSubstrateAllNodesEdges,
     initChainEvmAllNodesEdges: initChainEvmAllNodesEdges,
-    initChainAnyTypeNodesEdges: initChainAnyTypeNodesEdges
+    initChainAnyTypeNodesEdges: initChainAnyTypeNodesEdges,
+    initChainResourceTypeNodes: initChainResourceTypeNodes,
+    initChainResourceValueNodes: initChainResourceValueNodes
   },
   social: {
     initSocialAllNodesEdges: initSocialAllNodesEdges,
-    initSocialAnyNodesEdges: initSocialAnyNodesEdges
+    initSocialAnyNodesEdges: initSocialAnyNodesEdges,
+    initSocialResourceTypeNodes: initSocialResourceTypeNodes,
+    initSocialResourceValueNodes: initSocialResourceValueNodes
   },
   common: {
     throwWrongGraphNodeError: throwWrongGraphNodeError,
-    getFieldNameByValue: getFieldNameByValue
+    getFieldNameByValue: getFieldNameByValue,
+    createNodeWithoutDuplicate: createNodeWithoutDuplicate
   }
 }

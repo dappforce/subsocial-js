@@ -1,6 +1,6 @@
 import { ChainSchemaConfig } from './chain'
 import { SocialSchemaConfig } from './social'
-export type Schema = 'chain' | 'social'
-export type SocialApp = 'twitter' | 'youtube'
+export { chainResourceTypes, chainResourceValues } from './chain'
+export { socialResourceTypes, socialResourceValues } from './social'
 
 export type UrlConfig = ChainSchemaConfig | SocialSchemaConfig

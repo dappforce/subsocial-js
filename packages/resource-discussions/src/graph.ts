@@ -1,9 +1,23 @@
 import Graph from 'graphology'
 import utils from './utiils'
-import { UrlConfig } from './types'
+import {
+  chainResourceTypes,
+  chainResourceValues,
+  socialResourceTypes,
+  socialResourceValues,
+  UrlConfig
+} from './types'
+import { createNodeWithoutDuplicate } from './utiils/common'
 
 export type NodeAttributes = {
-  keyName: string
+  keyName:
+    | 'schema'
+    | 'chainType'
+    | 'chainName'
+    | 'resourceType'
+    | 'resourceValue'
+    | 'app'
+    | ''
   anyChildNodeName?: string
 }
 
@@ -90,88 +104,33 @@ export class SocialResourceGraph {
   private initGraph() {
     this.graph = new Graph({ type: 'directed' })
 
-    this.graph.addNode('rootNode', {
+    /**
+     * ====================
+     * === Create nodes ===
+     * ====================
+     */
+    utils.common.createNodeWithoutDuplicate(this.graph, 'rootNode', {
       keyName: ''
     })
-    /**
-     * Set schema
-     */
-    this.graph.addNode('chain', {
+    utils.common.createNodeWithoutDuplicate(this.graph, 'chain', {
       keyName: 'schema',
       anyChildNodeName: '*_chainType'
     })
-    this.graph.addNode('social', {
+    utils.common.createNodeWithoutDuplicate(this.graph, 'social', {
       keyName: 'schema',
       anyChildNodeName: '*_social_app'
     })
 
-    /**
-     * Set Chain Type
-     */
+    utils.chain.initChainResourceTypeNodes(this.graph)
+    utils.chain.initChainResourceValueNodes(this.graph)
+
+    utils.social.initSocialResourceTypeNodes(this.graph)
+    utils.social.initSocialResourceValueNodes(this.graph)
 
     /**
-     * Set Resource Type
-     */
-    this.graph.addNode('post', {
-      keyName: 'resourceType'
-    })
-    this.graph.addNode('profile', {
-      keyName: 'resourceType'
-    })
-    this.graph.addNode('account', {
-      keyName: 'resourceType'
-    })
-    this.graph.addNode('block', {
-      keyName: 'resourceType'
-    })
-    this.graph.addNode('tx', {
-      keyName: 'resourceType'
-    })
-    this.graph.addNode('token', {
-      keyName: 'resourceType'
-    })
-    this.graph.addNode('nft', {
-      keyName: 'resourceType'
-    })
-    this.graph.addNode('proposal', {
-      keyName: 'resourceType'
-    })
-    this.graph.addNode('market', {
-      keyName: 'resourceType'
-    })
-
-    /**
-     * Set Resource Value
-     */
-
-    this.graph.addNode('blockNumber', {
-      keyName: 'resourceValue'
-    })
-    this.graph.addNode('txHash', {
-      keyName: 'resourceValue'
-    })
-    this.graph.addNode('tokenAddress', {
-      keyName: 'resourceValue'
-    })
-    this.graph.addNode('accountAddress', {
-      keyName: 'resourceValue'
-    })
-    this.graph.addNode('collectionId', {
-      keyName: 'resourceValue'
-    })
-    this.graph.addNode('nftId', {
-      keyName: 'resourceValue'
-    })
-    this.graph.addNode('id', {
-      keyName: 'resourceValue'
-    })
-
-    /**
-     * ==== Set Chain Name and Chain Edges ====
-     */
-
-    /**
-     * === Set Edges ===
+     * ====================
+     * === Create Edges ===
+     * ====================
      */
 
     /**
@@ -180,8 +139,14 @@ export class SocialResourceGraph {
     this.graph.addDirectedEdge('rootNode', 'social')
     utils.social.initSocialAllNodesEdges(this.graph)
     utils.social.initSocialAnyNodesEdges(this.graph)
-    this.graph.addDirectedEdge('post', 'id')
-    this.graph.addDirectedEdge('profile', 'id')
+    this.graph.addDirectedEdge(
+      socialResourceTypes.post,
+      socialResourceValues.id
+    )
+    this.graph.addDirectedEdge(
+      socialResourceTypes.profile,
+      socialResourceValues.id
+    )
 
     /**
      * Chain
@@ -194,16 +159,38 @@ export class SocialResourceGraph {
     utils.chain.initChainAnyTypeNodesEdges(this.graph)
 
     this.graph.addDirectedEdge('rootNode', 'chain')
+
     this.graph.addDirectedEdge('chain', 'evm')
     this.graph.addDirectedEdge('chain', 'substrate')
 
-    this.graph.addDirectedEdge('block', 'blockNumber')
-    this.graph.addDirectedEdge('tx', 'txHash')
-    this.graph.addDirectedEdge('token', 'tokenAddress')
-    this.graph.addDirectedEdge('nft', 'collectionId')
-    this.graph.addDirectedEdge('nft', 'nftId')
-    this.graph.addDirectedEdge('proposal', 'accountAddress')
-    this.graph.addDirectedEdge('market', 'accountAddress')
+    this.graph.addDirectedEdge(
+      chainResourceTypes.block,
+      chainResourceValues.blockNumber
+    )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.tx,
+      chainResourceValues.txHash
+    )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.token,
+      chainResourceValues.tokenAddress
+    )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.nft,
+      chainResourceValues.collectionId
+    )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.nft,
+      chainResourceValues.nftId
+    )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.proposal,
+      chainResourceValues.id
+    )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.market,
+      chainResourceValues.id
+    )
 
     return this
   }

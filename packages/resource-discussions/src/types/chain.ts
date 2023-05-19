@@ -1,9 +1,49 @@
+export const config = {
+  name: 'chain',
+  supportedChainNames: {
+    substrate: [
+      'subsocial',
+      'xsocial',
+      'soonsocial',
+      'polkadot',
+      'kusama',
+      'astar',
+      'zeitgeist'
+    ] as const,
+    evm: [
+      /// Eth
+      '1'
+    ] as const
+  }
+}
+
+export const chainResourceTypes = {
+  block: 'block',
+  tx: 'tx',
+  token: 'token',
+  account: 'account',
+  proposal: 'proposal',
+  market: 'market',
+  nft: 'nft'
+} as const
+
+export const chainResourceValues = {
+  blockNumber: 'blockNumber',
+  txHash: 'txHash',
+  tokenAddress: 'tokenAddress',
+  accountAddress: 'accountAddress',
+  collectionId: 'collectionId',
+  nftId: 'nftId',
+  id: 'id'
+} as const
+
 export type BlockNumber = string
 export type TxHash = string
 export type TokenAddress = string
 export type AccountAddress = string
 export type CollectionId = string
 export type NftId = string
+export type Id = string
 
 type ChainResourceType =
   | 'block'
@@ -23,11 +63,9 @@ export type ChainResourceValue<R extends ChainResourceType> = R extends 'block'
   : R extends 'account'
   ? { accountAddress: AccountAddress }
   : R extends 'proposal'
-  ? { accountAddress: AccountAddress }
+  ? { id: Id }
   : R extends 'market'
-  ? { accountAddress: AccountAddress }
-  : R extends 'account' | 'proposal' | 'market'
-  ? { accountAddress: AccountAddress }
+  ? { id: Id }
   : R extends 'nft'
   ? { collectionId: CollectionId; nftId?: NftId }
   : never
@@ -90,11 +128,11 @@ export type ChainSchemaConfig = {
 } & (
   | ({
       chainType: 'substrate'
-      chainName: string
+      chainName: typeof config.supportedChainNames.substrate | string
     } & SubstrateChainResourceTypeValue)
   | ({
       chainType: 'evm'
-      chainName: string
+      chainName: typeof config.supportedChainNames.evm | string
     } & EvmChainResourceTypeValue)
   | ({
       chainType: string

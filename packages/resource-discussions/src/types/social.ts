@@ -1,6 +1,15 @@
 export type SocialApp = 'twitter' | 'youtube' | string
 type SocialResourceType = 'post' | 'profile'
 
+export const socialResourceTypes = {
+  post: 'post',
+  profile: 'profile'
+} as const
+
+export const socialResourceValues = {
+  id: 'id'
+} as const
+
 export type SocialResourceValue<R extends SocialResourceType> = R extends 'post'
   ? { id: string }
   : R extends 'profile'
