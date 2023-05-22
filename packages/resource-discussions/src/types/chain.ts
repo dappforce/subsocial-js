@@ -1,21 +1,4 @@
-export const config = {
-  name: 'chain',
-  supportedChainNames: {
-    substrate: [
-      'subsocial',
-      'xsocial',
-      'soonsocial',
-      'polkadot',
-      'kusama',
-      'astar',
-      'zeitgeist'
-    ] as const,
-    evm: [
-      /// Eth
-      '1'
-    ] as const
-  }
-}
+import { evmChains, substrateChains } from '../constants'
 
 export const chainResourceTypes = {
   block: 'block',
@@ -27,6 +10,17 @@ export const chainResourceTypes = {
   nft: 'nft'
 } as const
 
+export const chainResourceValueRequiredState = {
+  blockNumber: true,
+  txHash: true,
+  tokenAddress: true,
+  accountAddress: true,
+  collectionId: true,
+  nftId: false,
+  nftProtocol: false,
+  id: true
+}
+
 export const chainResourceValues = {
   blockNumber: 'blockNumber',
   txHash: 'txHash',
@@ -34,6 +28,7 @@ export const chainResourceValues = {
   accountAddress: 'accountAddress',
   collectionId: 'collectionId',
   nftId: 'nftId',
+  nftProtocol: 'nftProtocol',
   id: 'id'
 } as const
 
@@ -43,6 +38,7 @@ export type TokenAddress = string
 export type AccountAddress = string
 export type CollectionId = string
 export type NftId = string
+export type NftProtocol = string
 export type Id = string
 
 type ChainResourceType =
@@ -67,7 +63,7 @@ export type ChainResourceValue<R extends ChainResourceType> = R extends 'block'
   : R extends 'market'
   ? { id: Id }
   : R extends 'nft'
-  ? { collectionId: CollectionId; nftId?: NftId }
+  ? { collectionId: CollectionId; nftId?: NftId; nftProtocol?: NftProtocol }
   : never
 
 type ChainBlockResourceType = {
@@ -128,11 +124,11 @@ export type ChainSchemaParameters = {
 } & (
   | ({
       chainType: 'substrate'
-      chainName: typeof config.supportedChainNames.substrate | string
+      chainName: (typeof substrateChains)[number] | string
     } & SubstrateChainResourceTypeValue)
   | ({
       chainType: 'evm'
-      chainName: typeof config.supportedChainNames.evm | string
+      chainName: string
     } & EvmChainResourceTypeValue)
   | ({
       chainType: string

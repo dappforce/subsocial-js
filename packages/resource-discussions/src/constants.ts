@@ -5,12 +5,11 @@ export const substrateChains = [
   'polkadot',
   'kusama',
   'astar',
-  'zeitgeist'
+  'zeitgeist',
+  'moonbeam',
+  'moonriver',
 ] as const
 
-export const evmChains = [
-  /// Eth
-  '1'
-] as const
+export const evmChains = [] as const
 
 export const socialApps = ['twitter', 'youtube'] as const

@@ -3,6 +3,7 @@ import Graph from 'graphology'
 import { substrateChains, evmChains } from '../constants'
 import { chainResourceTypes, chainResourceValues } from '../types'
 import { createNodeWithoutDuplicate } from './common'
+import { chainResourceValueRequiredState } from '../types/chain'
 
 export function initChainResourceTypeNodes(graph: Graph<NodeAttributes>) {
   for (const resType in chainResourceTypes) {
@@ -15,7 +16,11 @@ export function initChainResourceTypeNodes(graph: Graph<NodeAttributes>) {
 export function initChainResourceValueNodes(graph: Graph<NodeAttributes>) {
   for (const resType in chainResourceValues) {
     createNodeWithoutDuplicate(graph, resType, {
-      keyName: 'resourceValue'
+      keyName: 'resourceValue',
+      isRequired:
+        chainResourceValueRequiredState[
+          resType as keyof typeof chainResourceValueRequiredState
+        ]
     })
   }
 }
@@ -38,6 +43,10 @@ export function initChainAnyTypeNodesEdges(graph: Graph<NodeAttributes>) {
   graph.addDirectedEdge('*_chainType_*_chainName', chainResourceTypes.account)
 }
 
+/**
+ * Substrate chain type
+ */
+
 export function initChainSubstrateAnyNodesEdges(graph: Graph<NodeAttributes>) {
   createNodeWithoutDuplicate(graph, '*_substrate_chainName', {
     keyName: 'chainName'
@@ -47,18 +56,6 @@ export function initChainSubstrateAnyNodesEdges(graph: Graph<NodeAttributes>) {
   graph.addDirectedEdge('*_substrate_chainName', chainResourceTypes.tx)
   graph.addDirectedEdge('*_substrate_chainName', chainResourceTypes.token)
   graph.addDirectedEdge('*_substrate_chainName', chainResourceTypes.account)
-}
-
-export function initChainEvmAnyNodesEdges(graph: Graph<NodeAttributes>) {
-  createNodeWithoutDuplicate(graph, '*_evm_chainName', {
-    keyName: 'chainName'
-  })
-  graph.addDirectedEdge('evm', '*_evm_chainName')
-
-  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.block)
-  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.tx)
-  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.token)
-  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.account)
 }
 
 export function initChainSubstrateAllNodesEdges(graph: Graph<NodeAttributes>) {
@@ -78,8 +75,28 @@ export function initChainSubstrateAllNodesEdges(graph: Graph<NodeAttributes>) {
     graph.addDirectedEdge(chainName, chainResourceTypes.token)
     graph.addDirectedEdge(chainName, chainResourceTypes.nft)
     graph.addDirectedEdge(chainName, chainResourceTypes.proposal)
-    graph.addDirectedEdge(chainName, chainResourceTypes.market)
+    if (chainName === 'zeitgeist')
+      graph.addDirectedEdge(chainName, chainResourceTypes.market)
   })
+
+  initChainSubstrateAnyNodesEdges(graph)
+}
+
+/**
+ * EVM chain type
+ */
+
+export function initChainEvmAnyNodesEdges(graph: Graph<NodeAttributes>) {
+  createNodeWithoutDuplicate(graph, '*_evm_chainName', {
+    keyName: 'chainName'
+  })
+  graph.addDirectedEdge('evm', '*_evm_chainName')
+
+  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.block)
+  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.tx)
+  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.token)
+  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.account)
+  graph.addDirectedEdge('*_evm_chainName', chainResourceTypes.nft)
 }
 
 export function initChainEvmAllNodesEdges(graph: Graph<NodeAttributes>) {
@@ -99,4 +116,6 @@ export function initChainEvmAllNodesEdges(graph: Graph<NodeAttributes>) {
     graph.addDirectedEdge(chainName, chainResourceTypes.token)
     graph.addDirectedEdge(chainName, chainResourceTypes.nft)
   })
+
+  initChainEvmAnyNodesEdges(graph)
 }

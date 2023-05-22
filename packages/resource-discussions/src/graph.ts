@@ -7,7 +7,6 @@ import {
   socialResourceValues,
   ResourceParameters
 } from './types'
-import { createNodeWithoutDuplicate } from './utiils/common'
 
 export type NodeAttributes = {
   keyName:
@@ -18,6 +17,7 @@ export type NodeAttributes = {
     | 'resourceValue'
     | 'app'
     | ''
+  isRequired?: boolean
   anyChildNodeName?: string
 }
 
@@ -82,21 +82,21 @@ export class SocialResourceGraph {
     }
 
     if (!isMatched) {
-      try {
+      if (parentNodeAttrs.anyChildNodeName) {
         return callback({
-          nodeName: parentNodeAttrs.anyChildNodeName ?? '',
+          nodeName: parentNodeAttrs.anyChildNodeName,
           nodeAttr: this.resourceGraph.getNodeAttributes(
-            parentNodeAttrs.anyChildNodeName ?? ''
+            parentNodeAttrs.anyChildNodeName
           ),
           anyNodeName: parentNodeAttrs.anyChildNodeName,
           anyValueFallbackCall: true
         })
-      } catch (e) {
-        const nodeNeighborKeyName = this.resourceGraph.getNodeAttributes(
-          outboundNeighbors[0]
-        ).keyName
-        return utils.common.throwWrongGraphNodeError(nodeNeighborKeyName)
       }
+
+      const nodeNeighborKeyName = this.resourceGraph.getNodeAttributes(
+        outboundNeighbors[0]
+      ).keyName
+      utils.common.throwWrongGraphNodeError(nodeNeighborKeyName)
     }
     return isMatched
   }
@@ -139,6 +139,10 @@ export class SocialResourceGraph {
     this.graph.addDirectedEdge('rootNode', 'social')
     utils.social.initSocialAllNodesEdges(this.graph)
     utils.social.initSocialAnyNodesEdges(this.graph)
+
+    /**
+     * Resource values for social resource types
+     */
     this.graph.addDirectedEdge(
       socialResourceTypes.post,
       socialResourceValues.id
@@ -154,8 +158,6 @@ export class SocialResourceGraph {
 
     utils.chain.initChainSubstrateAllNodesEdges(this.graph)
     utils.chain.initChainEvmAllNodesEdges(this.graph)
-    utils.chain.initChainSubstrateAnyNodesEdges(this.graph)
-    utils.chain.initChainEvmAnyNodesEdges(this.graph)
     utils.chain.initChainAnyTypeNodesEdges(this.graph)
 
     this.graph.addDirectedEdge('rootNode', 'chain')
@@ -163,6 +165,9 @@ export class SocialResourceGraph {
     this.graph.addDirectedEdge('chain', 'evm')
     this.graph.addDirectedEdge('chain', 'substrate')
 
+    /**
+     * Resource values for chain resource types
+     */
     this.graph.addDirectedEdge(
       chainResourceTypes.block,
       chainResourceValues.blockNumber
@@ -182,6 +187,10 @@ export class SocialResourceGraph {
     this.graph.addDirectedEdge(
       chainResourceTypes.nft,
       chainResourceValues.nftId
+    )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.nft,
+      chainResourceValues.nftProtocol
     )
     this.graph.addDirectedEdge(
       chainResourceTypes.proposal,

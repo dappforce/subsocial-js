@@ -1,10 +1,15 @@
-export type SocialApp = 'twitter' | 'youtube' | string
+import { socialApps } from '../constants'
+
 type SocialResourceType = 'post' | 'profile'
 
 export const socialResourceTypes = {
   post: 'post',
   profile: 'profile'
 } as const
+
+export const socialResourceValueRequiredState = {
+  id: true
+}
 
 export const socialResourceValues = {
   id: 'id'
@@ -30,5 +35,5 @@ type SocialResourceTypeValue =
   | SocialProfileResourceType
 
 export type SocialSchemaParameters = { schema: 'social' } & {
-  app: SocialApp
+  app: (typeof socialApps)[number] | string
 } & SocialResourceTypeValue

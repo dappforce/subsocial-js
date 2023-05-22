@@ -3,6 +3,7 @@ import Graph from 'graphology'
 import { socialApps } from '../constants'
 import { socialResourceTypes, socialResourceValues } from '../types'
 import { createNodeWithoutDuplicate } from './common'
+import { socialResourceValueRequiredState } from '../types/social'
 
 export function initSocialResourceTypeNodes(graph: Graph<NodeAttributes>) {
   for (const resType in socialResourceTypes) {
@@ -14,7 +15,11 @@ export function initSocialResourceTypeNodes(graph: Graph<NodeAttributes>) {
 export function initSocialResourceValueNodes(graph: Graph<NodeAttributes>) {
   for (const resType in socialResourceValues) {
     createNodeWithoutDuplicate(graph, resType, {
-      keyName: 'resourceValue'
+      keyName: 'resourceValue',
+      isRequired:
+        socialResourceValueRequiredState[
+          resType as keyof typeof socialResourceValueRequiredState
+        ]
     })
   }
 }
