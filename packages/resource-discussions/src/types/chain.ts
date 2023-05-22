@@ -123,7 +123,7 @@ type AnyChainResourceTypeValue =
   | ChainTokenResourceType
   | ChainAccountResourceType
 
-export type ChainSchemaConfig = {
+export type ChainSchemaParameters = {
   schema: 'chain'
 } & (
   | ({

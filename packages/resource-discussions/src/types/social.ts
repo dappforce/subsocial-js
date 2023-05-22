@@ -29,6 +29,6 @@ type SocialResourceTypeValue =
   | SocialPostResourceType
   | SocialProfileResourceType
 
-export type SocialSchemaConfig = { schema: 'social' } & {
+export type SocialSchemaParameters = { schema: 'social' } & {
   app: SocialApp
 } & SocialResourceTypeValue

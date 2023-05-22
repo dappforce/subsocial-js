@@ -5,7 +5,7 @@ import {
   chainResourceValues,
   socialResourceTypes,
   socialResourceValues,
-  UrlConfig
+  ResourceParameters
 } from './types'
 import { createNodeWithoutDuplicate } from './utiils/common'
 
@@ -52,7 +52,7 @@ export class SocialResourceGraph {
   mapNodes(
     callback: (params: NodeHandlerParams) => boolean,
     nodeName: string = 'rootNode',
-    resourceParams: UrlConfig | null
+    resourceParams: ResourceParameters | null
   ): boolean {
     let isMatched = false
     let outboundNeighbors = []

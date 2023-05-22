@@ -1,4 +1,4 @@
-import { UrlConfig } from '../types'
+import { ResourceParameters } from '../types'
 import { NodeAttributes } from '../graph'
 import Graph from 'graphology'
 
@@ -10,11 +10,11 @@ export function throwWrongGraphNodeError(resourceParamName: string): never {
 
 export function getFieldNameByValue(
   value: string,
-  src: UrlConfig | null
+  src: ResourceParameters | null
 ): string {
   if (!src) return ''
   for (const fieldName in src) {
-    if (src[fieldName as keyof UrlConfig] === value) return fieldName
+    if (src[fieldName as keyof ResourceParameters] === value) return fieldName
   }
   return 'unknown'
 }

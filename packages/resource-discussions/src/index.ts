@@ -1,2 +1,2 @@
 export { SocialResource } from './socialResource'
-export { UrlConfig } from './types'
+export { ResourceParameters } from './types'
