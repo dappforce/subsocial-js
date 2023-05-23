@@ -1,4 +1,6 @@
-index.ts
 tsconfig.json
+tsup.config.ts
 yarn.lock
 node_modules
+src
+tests
