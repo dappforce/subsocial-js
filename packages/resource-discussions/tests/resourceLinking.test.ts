@@ -22,7 +22,7 @@ describe('Resource Linking Unit', () => {
       resourceValue: {
         collectionId: '0xCdEF95b8581612fFB7c3980bC6b563503755ad72',
         nftId: '87364',
-        nftProtocol: 'v2'
+        nftStandard: 'v2'
       }
     })
 
@@ -58,7 +58,7 @@ describe('Resource Linking Unit', () => {
       'chain://chainType:substrate/chainName:zeitgeist/resourceType:market/id:3tPeACp24szE4MTpvP9LDBR11kAVc8NnjCE2JxLHz2dpvopu'
     )
     expect(resourceNft.toResourceId()).toEqual(
-      'chain://chainType:substrate/chainName:astar/resourceType:nft/collectionId:0xCdEF95b8581612fFB7c3980bC6b563503755ad72/nftId:87364/nftProtocol:v2'
+      'chain://chainType:substrate/chainName:astar/resourceType:nft/collectionId:0xCdEF95b8581612fFB7c3980bC6b563503755ad72/nftId:87364/nftStandard:v2'
     )
     expect(resourceTweet.toResourceId()).toEqual(
       'social://app:twitter/resourceType:profile/id:98938u459928734982734937653987'

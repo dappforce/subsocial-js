@@ -190,7 +190,7 @@ export class SocialResourceGraph {
     )
     this.graph.addDirectedEdge(
       chainResourceTypes.nft,
-      chainResourceValues.nftProtocol
+      chainResourceValues.nftStandard
     )
     this.graph.addDirectedEdge(
       chainResourceTypes.proposal,
