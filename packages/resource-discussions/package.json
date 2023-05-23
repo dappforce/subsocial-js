@@ -9,17 +9,27 @@
   "unpkg": "build/index.global.js",
   "scripts": {
     "build": "rm -rf build && tsup src/index.ts --format cjs,esm,iife --dts --minify",
+    "prepare": "yarn build",
     "publish:npm": "yarn build && npm publish --access public"
+  },
+  "exports": {
+    ".": {
+      "import": "./build/index.js",
+      "require": "./build/index.cjs",
+      "types": "./build/index.d.ts"
+    },
+    "./package.json": "./package.json"
   },
   "keywords": [
     "Social Resource",
-    "Subsocial"
+    "Subsocial",
+    "resource-discussions"
   ],
   "dependencies": {
-    "graphology": "^0.25.1",
-    "graphology-types": "^0.24.7"
+    "graphology": "^0.25.1"
   },
   "devDependencies": {
+    "graphology-types": "^0.24.7",
     "@swc/core": "^1.3.55",
     "tsup": "^6.7.0"
   }
