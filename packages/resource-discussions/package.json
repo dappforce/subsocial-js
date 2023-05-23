@@ -1,24 +1,16 @@
 {
   "name": "@subsocial/resource-discussions",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.5",
   "description": "Support tool for work with resource-discussions pallet",
   "repository": "",
-  "main": "build/index.js",
-  "module": "build/index.mjs",
-  "types": "build/index.d.ts",
-  "unpkg": "build/index.global.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "unpkg": "dist/index.global.js",
   "scripts": {
     "build": "rm -rf build && tsup src/index.ts --format cjs,esm,iife --dts --minify",
     "prepare": "yarn build",
     "publish:npm": "yarn build && npm publish --access public"
-  },
-  "exports": {
-    ".": {
-      "import": "./build/index.js",
-      "require": "./build/index.cjs",
-      "types": "./build/index.d.ts"
-    },
-    "./package.json": "./package.json"
   },
   "keywords": [
     "Social Resource",

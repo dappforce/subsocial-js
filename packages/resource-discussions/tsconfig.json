@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": "build",
     "target": "es2016",
     "module": "commonjs",
     "esModuleInterop": true,
@@ -8,8 +7,6 @@
     "strict": true,
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
-    "noEmit": true,
-    "declaration": true
-  },
-  "exclude": ["build", "node_modules"]
+    "noEmit": true
+  }
 }
