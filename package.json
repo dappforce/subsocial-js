@@ -4,7 +4,8 @@
     "packages/api",
     "packages/utils",
     "packages/definitions",
-    "packages/elasticsearch"
+    "packages/elasticsearch",
+    "packages/resource-discussions"
   ],
   "repository": "https://github.com/dappforce/subsocial-js",
   "scripts": {
