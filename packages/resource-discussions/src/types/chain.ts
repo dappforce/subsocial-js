@@ -17,7 +17,7 @@ export const chainResourceValueRequiredState = {
   accountAddress: true,
   collectionId: true,
   nftId: false,
-  nftStandard: false,
+  standard: false,
   id: true
 }
 
@@ -28,7 +28,7 @@ export const chainResourceValues = {
   accountAddress: 'accountAddress',
   collectionId: 'collectionId',
   nftId: 'nftId',
-  nftStandard: 'nftStandard',
+  standard: 'standard',
   id: 'id'
 } as const
 
@@ -36,9 +36,9 @@ export type BlockNumber = string
 export type TxHash = string
 export type TokenAddress = string
 export type AccountAddress = string
+export type Standard = string
 export type CollectionId = string
 export type NftId = string
-export type NftStandard = string
 export type Id = string
 
 type ChainResourceType =
@@ -63,7 +63,7 @@ export type ChainResourceValue<R extends ChainResourceType> = R extends 'block'
   : R extends 'market'
   ? { id: Id }
   : R extends 'nft'
-  ? { collectionId: CollectionId; nftId?: NftId; nftStandard?: NftStandard }
+  ? { collectionId: CollectionId; nftId?: NftId; standard?: Standard }
   : never
 
 type ChainBlockResourceType = {
@@ -127,7 +127,7 @@ export type ChainSchemaParameters = {
       chainName: (typeof substrateChains)[number] | string
     } & SubstrateChainResourceTypeValue)
   | ({
-      chainType: 'evm'
+      chainType: (typeof evmChains)[number] | 'evm'
       chainName: string
     } & EvmChainResourceTypeValue)
   | ({

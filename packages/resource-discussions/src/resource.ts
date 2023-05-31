@@ -1,12 +1,11 @@
 import { ResourceParameters } from './types'
-import { NodeHandlerParams, SocialResourceGraph } from './graph'
+import { NodeHandlerParams, ResourceGraph } from './graph'
 import utils from './utiils'
 
-export class SocialResource {
+export class Resource {
   private ingestedData: null | string | ResourceParameters = null
 
-  private resourceStructGraph: SocialResourceGraph =
-    SocialResourceGraph.getInstance()
+  private resourceStructGraph: ResourceGraph = ResourceGraph.getInstance()
 
   private resourceParams: null | ResourceParameters = null
 

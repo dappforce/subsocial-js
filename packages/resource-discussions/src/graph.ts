@@ -28,19 +28,19 @@ export type NodeHandlerParams = {
   anyValueFallbackCall: boolean
 }
 
-export class SocialResourceGraph {
-  private static instance: SocialResourceGraph
+export class ResourceGraph {
+  private static instance: ResourceGraph
   public graph: Graph<NodeAttributes> | null = null
 
   constructor() {
     this.initGraph()
   }
 
-  static getInstance(): SocialResourceGraph {
-    if (!SocialResourceGraph.instance) {
-      SocialResourceGraph.instance = new SocialResourceGraph()
+  static getInstance(): ResourceGraph {
+    if (!ResourceGraph.instance) {
+      ResourceGraph.instance = new ResourceGraph()
     }
-    return SocialResourceGraph.instance
+    return ResourceGraph.instance
   }
 
   get resourceGraph(): Graph<NodeAttributes> {
@@ -190,7 +190,7 @@ export class SocialResourceGraph {
     )
     this.graph.addDirectedEdge(
       chainResourceTypes.nft,
-      chainResourceValues.nftStandard
+      chainResourceValues.standard
     )
     this.graph.addDirectedEdge(
       chainResourceTypes.proposal,
