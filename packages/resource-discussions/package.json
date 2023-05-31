@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/resource-discussions",
-  "version": "0.0.2-beta.1",
+  "version": "0.0.3",
   "description": "Support tool for work with resource-discussions pallet",
   "repository": "",
   "main": "dist/index.js",
