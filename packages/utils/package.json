@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/utils",
-  "version": "0.8.11",
+  "version": "0.8.13",
   "description": "JavaScript utils for Subsocial blockchain.",
   "author": "DappForce contributors",
   "main": "index.js",
@@ -34,7 +34,8 @@
     "remark": "^13.0.0",
     "remark-gfm": "^1.0.0",
     "remark-html": "^13.0.1",
-    "strip-markdown": "^4.0.0"
+    "strip-markdown": "^4.0.0",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@types/circular-json": "^0.4.0",

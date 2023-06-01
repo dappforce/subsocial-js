@@ -8,8 +8,28 @@ export const substrateChains = [
   'zeitgeist',
   'moonbeam',
   'moonriver',
+  'crust',
+  'kilt',
+  'phala',
+  'hydradx',
+  'bifrost',
+  'statemint'
 ] as const
 
-export const evmChains = [] as const
+export const evmChains = [
+  'ethereum',
+  'bsc',
+  'polygon',
+  'avalanche',
+  'fantom',
+  'optimism'
+] as const
 
-export const socialApps = ['twitter', 'youtube'] as const
+export const socialApps = [
+  'twitter',
+  'youtube',
+  'medium',
+  'github',
+  'reddit',
+  'linkedin'
+] as const

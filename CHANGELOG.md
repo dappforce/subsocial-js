@@ -7,16 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.8.13 - 2023-05-31
+### Added
+- add nacl realisation for asymmetric encryption to `@subsocial/utils`
+
 ## 0.8.11 - 2023-05-01
+### Added
 - fix `adminClient` for IPFS instance
-
-## 0.8.10 - 2023-04-19
-
-## 0.8.9 - 2023-04-18
-
-## 0.8.8 - 2023-04-12
-
-## 0.8.7 - 2023-03-22
 
 ## 0.8.7-beta.2 - 2023-03-17
 ### Added

@@ -1,10 +1,10 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { SocialResource } from '../src'
+import { Resource } from '../src'
 
 describe('Resource Linking Unit', () => {
   test('SocialResource should ingest parameters and build ResourceId', () => {
-    const resource: SocialResource = new SocialResource({
+    const resource: Resource = new Resource({
       schema: 'chain',
       chainType: 'substrate',
       chainName: 'zeitgeist',
@@ -14,7 +14,7 @@ describe('Resource Linking Unit', () => {
       }
     })
 
-    const resourceNft: SocialResource = new SocialResource({
+    const resourceNft: Resource = new Resource({
       schema: 'chain',
       chainType: 'substrate',
       chainName: 'astar',
@@ -22,11 +22,11 @@ describe('Resource Linking Unit', () => {
       resourceValue: {
         collectionId: '0xCdEF95b8581612fFB7c3980bC6b563503755ad72',
         nftId: '87364',
-        nftStandard: 'v2'
+        standard: 'v2'
       }
     })
 
-    const resourceTweet: SocialResource = new SocialResource({
+    const resourceTweet: Resource = new Resource({
       schema: 'social',
       app: 'twitter',
       resourceType: 'profile',
@@ -35,7 +35,7 @@ describe('Resource Linking Unit', () => {
       }
     })
 
-    const resourceAnyChainType: SocialResource = new SocialResource({
+    const resourceAnyChainType: Resource = new Resource({
       schema: 'chain',
       chainType: 'bitcoin',
       chainName: 'onebit',
@@ -45,7 +45,7 @@ describe('Resource Linking Unit', () => {
       }
     })
 
-    const resourceAnySocialType: SocialResource = new SocialResource({
+    const resourceAnySocialType: Resource = new Resource({
       schema: 'social',
       app: 'medium',
       resourceType: 'post',
@@ -58,7 +58,7 @@ describe('Resource Linking Unit', () => {
       'chain://chainType:substrate/chainName:zeitgeist/resourceType:market/id:3tPeACp24szE4MTpvP9LDBR11kAVc8NnjCE2JxLHz2dpvopu'
     )
     expect(resourceNft.toResourceId()).toEqual(
-      'chain://chainType:substrate/chainName:astar/resourceType:nft/collectionId:0xCdEF95b8581612fFB7c3980bC6b563503755ad72/nftId:87364/nftStandard:v2'
+      'chain://chainType:substrate/chainName:astar/resourceType:nft/collectionId:0xCdEF95b8581612fFB7c3980bC6b563503755ad72/nftId:87364/standard:v2'
     )
     expect(resourceTweet.toResourceId()).toEqual(
       'social://app:twitter/resourceType:profile/id:98938u459928734982734937653987'
@@ -73,7 +73,7 @@ describe('Resource Linking Unit', () => {
   })
 
   test('SocialResource should ingest invalid params (not resourceValue) and throw Error.', () => {
-    const resourceInvalidResourceValue: SocialResource = new SocialResource(
+    const resourceInvalidResourceValue: Resource = new Resource(
       // @ts-ignore
       {
         schema: 'chain',
@@ -91,7 +91,7 @@ describe('Resource Linking Unit', () => {
     )
   })
   test('SocialResource should ingest invalid params (resourceValue) and throw Error.', () => {
-    const resourceInvalidResourceValue: SocialResource = new SocialResource({
+    const resourceInvalidResourceValue: Resource = new Resource({
       schema: 'chain',
       chainType: 'evm',
       chainName: '1',
@@ -107,7 +107,7 @@ describe('Resource Linking Unit', () => {
     )
   })
   test('SocialResource should ingest invalid schema parameter and throw Error.', () => {
-    const resourceInvalidResourceValue: SocialResource = new SocialResource({
+    const resourceInvalidResourceValue: Resource = new Resource({
       // @ts-ignore
       schema: 'radio',
       chainType: 'substrate',
@@ -124,7 +124,7 @@ describe('Resource Linking Unit', () => {
   })
 
   test('SocialResource should ingest parameters without "schema" field and throw Error.', () => {
-    const resourceInvalidResourceValue: SocialResource = new SocialResource({
+    const resourceInvalidResourceValue: Resource = new Resource({
       // @ts-ignore
       section: 'internet',
       chainType: 'substrate',
