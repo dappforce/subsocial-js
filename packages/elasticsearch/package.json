@@ -1,6 +1,6 @@
 {
   "name": "@subsocial/elasticsearch",
-  "version": "0.8.13",
+  "version": "0.8.14",
   "description": "Elasticsearch API for Subsocial blockchain.",
   "author": "DappForce contributors",
   "license": "GPL-3.0-only",
