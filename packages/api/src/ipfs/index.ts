@@ -187,14 +187,14 @@ export class SubsocialIpfsApi {
             })
             content[cidStr] = res.value
           } else {
-            const res = await axios.get(
-              `${this._ipfsNodeUrl}/ipfs/${cid.toV1()}?timeout=${timeout}`
-            )
-            const data = res.data
+            const res = await this.client.cat(cid, { timeout })
 
-            if (typeof data === 'object') {
-              content[cidStr] = data
+            let data = ''
+            for await (const chunk of res) {
+              data += chunk.toString()
             }
+
+            content[cidStr] = JSON.parse(data)
           }
         } catch (err) {
           log.error(`Failed to load cid ${cid.toString()}:`, err)
