@@ -5,7 +5,8 @@
     "packages/utils",
     "packages/definitions",
     "packages/elasticsearch",
-    "packages/resource-discussions"
+    "packages/resource-discussions",
+    "packages/data-hub-sdk"
   ],
   "version": "0.7.11",
   "npmClient": "yarn",
