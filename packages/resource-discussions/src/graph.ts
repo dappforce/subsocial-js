@@ -151,6 +151,10 @@ export class ResourceGraph {
       socialResourceTypes.profile,
       socialResourceValues.id
     )
+    this.graph.addDirectedEdge(
+      socialResourceTypes.space,
+      socialResourceValues.id
+    )
 
     /**
      * Chain
