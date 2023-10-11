@@ -139,4 +139,32 @@ describe('Resource Linking Unit', () => {
       'Provided parameters for resource are invalid. Please, check field "schema".'
     )
   })
+
+  test('SocialResource should ingest parameters with "schema === social"', () => {
+    const resourceValue: Resource = new Resource({
+      schema: 'social',
+      app: 'subid',
+      resourceType: 'space',
+      resourceValue: {
+        id: 'spaceId'
+      }
+    })
+
+    const resourceCreator: Resource = new Resource({
+      schema: 'chain',
+      chainType: 'substrate',
+      chainName: 'subsocial',
+      resourceType: 'creator',
+      resourceValue: {
+        id: 'spaceId'
+      }
+    })
+
+    expect(resourceCreator.toResourceId()).toEqual(
+      'chain://chainType:substrate/chainName:subsocial/resourceType:creator/id:spaceId'
+    )
+    expect(resourceValue.toResourceId()).toEqual(
+      'social://app:subid/resourceType:space/id:spaceId'
+    )
+  })
 })

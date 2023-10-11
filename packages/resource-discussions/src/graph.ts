@@ -151,6 +151,10 @@ export class ResourceGraph {
       socialResourceTypes.profile,
       socialResourceValues.id
     )
+    this.graph.addDirectedEdge(
+      socialResourceTypes.space,
+      socialResourceValues.id
+    )
 
     /**
      * Chain
@@ -198,6 +202,10 @@ export class ResourceGraph {
     )
     this.graph.addDirectedEdge(
       chainResourceTypes.market,
+      chainResourceValues.id
+    )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.creator,
       chainResourceValues.id
     )
 

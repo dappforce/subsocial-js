@@ -31,5 +31,7 @@ export const socialApps = [
   'medium',
   'github',
   'reddit',
-  'linkedin'
+  'linkedin',
+  'subid',
+  'polkaverse',
 ] as const
