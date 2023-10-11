@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.8.14 - 2023-05-31
+### Added
+- update `pinContent` method: add property 'asLink' that allow use ipfsCluster for pinning `@subsocial/utils`
+- remove `memoize` for createPostSlug fn
+
 ## 0.8.13 - 2023-05-31
 ### Added
 - add nacl realisation for asymmetric encryption to `@subsocial/utils`
