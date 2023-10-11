@@ -150,6 +150,19 @@ describe('Resource Linking Unit', () => {
       }
     })
 
+    const resourceCreator: Resource = new Resource({
+      schema: 'chain',
+      chainType: 'substrate',
+      chainName: 'subsocial',
+      resourceType: 'creator',
+      resourceValue: {
+        id: 'spaceId'
+      }
+    })
+
+    expect(resourceCreator.toResourceId()).toEqual(
+      'chain://chainType:substrate/chainName:subsocial/resourceType:creator/id:spaceId'
+    )
     expect(resourceValue.toResourceId()).toEqual(
       'social://app:subid/resourceType:space/id:spaceId'
     )

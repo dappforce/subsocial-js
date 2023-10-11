@@ -7,7 +7,8 @@ export const chainResourceTypes = {
   account: 'account',
   proposal: 'proposal',
   market: 'market',
-  nft: 'nft'
+  nft: 'nft',
+  creator: 'creator'
 } as const
 
 export const chainResourceValueRequiredState = {
@@ -49,6 +50,7 @@ type ChainResourceType =
   | 'proposal'
   | 'market'
   | 'nft'
+  | 'creator'
 
 export type ChainResourceValue<R extends ChainResourceType> = R extends 'block'
   ? { blockNumber: BlockNumber }
@@ -61,6 +63,8 @@ export type ChainResourceValue<R extends ChainResourceType> = R extends 'block'
   : R extends 'proposal'
   ? { id: Id }
   : R extends 'market'
+  ? { id: Id }
+  : R extends 'creator'
   ? { id: Id }
   : R extends 'nft'
   ? { collectionId: CollectionId; nftId?: NftId; standard?: Standard }
@@ -100,6 +104,11 @@ type ChainNftResourceType = {
   resourceValue: ChainResourceValue<'nft'>
 }
 
+type ChainCreatorResourceType = {
+  resourceType: 'creator'
+  resourceValue: ChainResourceValue<'creator'>
+}
+
 type ChainResourceTypeValueBase =
   | ChainBlockResourceType
   | ChainNftResourceType
@@ -111,6 +120,7 @@ type SubstrateChainResourceTypeValue =
   | ChainResourceTypeValueBase
   | ChainMarkerResourceType
   | ChainProposalResourceType
+  | ChainCreatorResourceType
 
 type EvmChainResourceTypeValue = ChainResourceTypeValueBase
 type AnyChainResourceTypeValue =

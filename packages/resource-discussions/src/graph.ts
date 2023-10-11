@@ -204,6 +204,10 @@ export class ResourceGraph {
       chainResourceTypes.market,
       chainResourceValues.id
     )
+    this.graph.addDirectedEdge(
+      chainResourceTypes.creator,
+      chainResourceValues.id
+    )
 
     return this
   }

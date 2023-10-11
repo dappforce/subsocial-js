@@ -75,6 +75,7 @@ export function initChainSubstrateAllNodesEdges(graph: Graph<NodeAttributes>) {
     graph.addDirectedEdge(chainName, chainResourceTypes.token)
     graph.addDirectedEdge(chainName, chainResourceTypes.nft)
     graph.addDirectedEdge(chainName, chainResourceTypes.proposal)
+    graph.addDirectedEdge(chainName, chainResourceTypes.creator)
     if (chainName === 'zeitgeist')
       graph.addDirectedEdge(chainName, chainResourceTypes.market)
   })
